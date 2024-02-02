@@ -1,0 +1,37 @@
+PDT;0;Eau;Eau
+PDT;1;Eau + Antigel;Eau + Antigel
+PDT;2;Eau + Additif;Eau + Additif
+PDT;3;Eau + Additif + Antigel;Eau + Additif + Antigel
+PDT;4;Eau + Additif Batterie Li-ion;Eau + Additif Batterie Li-ion
+PDT;5;Eau + Additif Ecologique;Eau + Additif Ecologique
+PDT;6;Eau + Additif Sans Fluor;Eau + Additif Sans Fluor
+PDT;7;Brouillard Eau + Additif;Brouillard Eau + Additif
+PDT;8;Brouillard Eau;Brouillard Eau
+PDT;9;CO2;CO2
+PDT;10;Poudre ABC;Poudre ABC
+PDT;11;Poudre BC;Poudre BC
+PDT;12;Poudre D;Poudre D
+PDT;13;Modèle Déco;Modèle Déco
+PDT;14;Douche portative;Douche portative
+PDT;15;Foam;Foam
+PDT;16;FM200;FM200
+PDT;17;Novec;Novec
+PRS;0;PA;Aide PA
+PRS;1;PP;Aide PP
+CLF;0;A;A
+CLF;1;AB;AB
+CLF;2;ABC;ABC
+CLF;3;ABF;ABF
+CLF;4;BBC;BBC
+CLF;5;Douche portative;Douche portative
+CLF;6;D;D
+MOB;0;Portatif;Portatif
+MOB;1;Mobile sur roues Sphérique;Mobile sur roues Sphérique
+MOB;2;Mobile sur roues Cylindrique;Mobile sur roues Cylindrique
+MOB;3;Pendulaire Auto;Pendulaire Auto
+MOB;4;Perche fixe Auto;Perche fixe Auto
+MOB;5;Perche réglable Auto;Perche réglable Auto
+MOB;6;Gondole Auto;Gondole Auto
+MOB;7;Avec Tirette;Avec Tirette
+MOB;8;Fixe DAC;Fixe DAC
+MOB;9;Poste Fixe;Poste Fixe
