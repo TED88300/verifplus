@@ -99,8 +99,6 @@ class Client_ZonesState extends State<Client_Zones> {
   @override
   Widget build(BuildContext context) {
     double LargeurLabel = 140;
-    DbTools.gZone.Zones_Nom = "";
-    DbTools.gGroupe.Groupes_Nom = "";
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,

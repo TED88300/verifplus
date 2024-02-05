@@ -44,35 +44,50 @@ class Api_Gouv {
 
   static Future<bool> inseeToken() async {
     access_token = "";
-    Srv_DbTools.setSrvToken();
-    var request = http.MultipartRequest('POST', Uri.parse(Srv_DbTools.SrvUrl.toString()));
-    request.fields.addAll({'tic12z': Srv_DbTools.SrvToken, 'zasq': 'inseeToken'});
 
-    http.StreamedResponse response = await request.send();
 
-    if (response.statusCode == 200) {
-      var parsedJson = json.decode(await response.stream.bytesToString());
+    try {
 
-      print("parsedJson ${parsedJson['data']}");
+      Srv_DbTools.setSrvToken();
+      var request = http.MultipartRequest('POST', Uri.parse(Srv_DbTools.SrvUrl.toString()));
+      request.fields.addAll({'tic12z': Srv_DbTools.SrvToken, 'zasq': 'inseeToken'});
 
-      Map valueMap = json.decode(parsedJson['data']);
+      http.StreamedResponse response = await request.send();
 
-      print("valueMap $valueMap");
+      if (response.statusCode == 200) {
+        var parsedJson = json.decode(await response.stream.bytesToString());
 
-      InseeToken wInseeToken = InseeToken.fromJson(valueMap);
+        print("parsedJson ${parsedJson['data']}");
 
-      print("wInseeToken ${wInseeToken.toJson()}");
+        Map valueMap = json.decode(parsedJson['data']);
 
-      if (wInseeToken != null) {
-        print("access_token get");
-        access_token = wInseeToken.accessToken!;
-        print("access_token $access_token");
+        print("valueMap $valueMap");
+
+        InseeToken wInseeToken = InseeToken.fromJson(valueMap);
+
+        print("wInseeToken ${wInseeToken.toJson()}");
+
+        if (wInseeToken != null) {
+          print("access_token get");
+          access_token = wInseeToken.accessToken!;
+          print("access_token $access_token");
+        }
+      } else {
+        print(response.reasonPhrase);
       }
-    } else {
-      print(response.reasonPhrase);
+      return true;
+
+    } catch (e) {
+      print(e);
+      return false;
     }
-    return true;
-    return false;
+
+
+
+
+
+
+
   }
 
 

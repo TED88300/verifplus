@@ -14,6 +14,9 @@ import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie_Param.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Art.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Desc.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Ent.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_User.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_User_Desc.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_User_Hab.dart';
 import 'package:verifplus/Tools/DbTools/Db_Clients.dart';
 import 'package:verifplus/Tools/DbTools/Db_Groupes.dart';
 import 'package:verifplus/Tools/DbTools/Db_Inters.dart';
@@ -63,14 +66,16 @@ class SelLig {
 class DbTools {
   DbTools();
 
-  static String wDbPath = "qaiplum24b.db";
 
   static File gImageEdtFile = File("");
 
   static List<GrdBtnGrp> lGrdBtnGrp = [];
 
   static bool gTED = false;
-  static int gCurrentIndex = 3;
+
+  static bool gOffLine = false;
+
+  static int gCurrentIndex = 0;
   static int gCurrentIndex2 = 0;
   static int gCurrentIndex3 = 0;
 
@@ -111,18 +116,49 @@ class DbTools {
   static var database;
 
   static Future initSqlite() async {
-    await Srv_DbTools.getParam_SaisieAll();
-    await Srv_DbTools.getParam_ParamAll();
-
-    Srv_DbTools.ListParam_Param_Abrev.clear();
-    Srv_DbTools.ListParam_ParamAll.forEach((element) {
-      if (element.Param_Param_Type.compareTo("Abrev") == 0) {
-        Srv_DbTools.ListParam_Param_Abrev.add(element);
-      }
-    });
 
     var wgetDatabasesPath = await getDatabasesPath();
 //    print("getDatabasesPath() $wgetDatabasesPath");
+
+
+
+    String wCREATE_Param_Param = "CREATE TABLE Param_Param (Param_ParamId INTEGER NOT NULL, Param_Param_Type TEXT NOT NULL, Param_Param_ID TEXT NOT NULL, Param_Param_Text TEXT NOT NULL DEFAULT '', Param_Param_Int INTEGER NOT NULL DEFAULT 0, Param_Param_Double REAL NOT NULL DEFAULT 0, Param_Param_Ordre INTEGER NOT NULL DEFAULT 0);";
+
+
+    String wCREATE_Param_Saisie = "CREATE TABLE Param_Saisie (Param_SaisieId INTEGER NOT NULL, Param_Saisie_Organe TEXT NOT NULL DEFAULT '', Param_Saisie_Type TEXT NOT NULL DEFAULT '', Param_Saisie_ID TEXT NOT NULL DEFAULT '', Param_Saisie_Label TEXT NOT NULL DEFAULT '', Param_Saisie_Aide TEXT NOT NULL DEFAULT '', Param_Saisie_Controle TEXT NOT NULL DEFAULT '', Param_Saisie_Ordre INTEGER NOT NULL DEFAULT 0, Param_Saisie_Affichage TEXT NOT NULL DEFAULT '', Param_Saisie_Ordre_Affichage INTEGER NOT NULL DEFAULT 0, Param_Saisie_Affichage_Titre TEXT NOT NULL DEFAULT '', Param_Saisie_Affichage_L1 INTEGER NOT NULL DEFAULT 0, Param_Saisie_Affichage_L1_Ordre INTEGER NOT NULL DEFAULT 0, Param_Saisie_Affichage_L2 INTEGER NOT NULL DEFAULT 0, Param_Saisie_Affichage_L2_Ordre INTEGER NOT NULL DEFAULT 0, Param_Saisie_Icon TEXT NOT NULL DEFAULT '', Param_Saisie_Triger TEXT NOT NULL DEFAULT '');";
+    String wCREATE_Param_Saisie_Param = "CREATE TABLE Param_Saisie_Param (Param_Saisie_ParamId INTEGER NOT NULL, "
+        "Param_Saisie_Param_Id TEXT NOT NULL DEFAULT '', Param_Saisie_Param_Ordre INTEGER NOT NULL DEFAULT 0, "
+        "Param_Saisie_Param_Label TEXT NOT NULL DEFAULT '', Param_Saisie_Param_Abrev TEXT NOT NULL DEFAULT '', "
+        "Param_Saisie_Param_Aide TEXT NOT NULL DEFAULT '', Param_Saisie_Param_Default INTEGER NOT NULL DEFAULT 0, "
+        "Param_Saisie_Param_Init INTEGER NOT NULL DEFAULT 0, Param_Saisie_Param_Color TEXT NOT NULL DEFAULT 'Noir');";
+
+
+    String wCREATE_Users_Desc = "CREATE TABLE User_Desc (User_DescID INTEGER NOT NULL, User_Desc_UserID INTEGER NOT NULL, User_Desc_Param_DescID INTEGER NOT NULL, User_Desc_MaintPrev INTEGER NOT NULL, User_Desc_Install INTEGER NOT NULL, User_Desc_MaintCorrect INTEGER NOT NULL, User_Desc_Ordre INTEGER NOT NULL DEFAULT 0);";
+    String wCREATE_Users_Hab = "CREATE TABLE User_Hab (User_HabID INTEGER NOT NULL, User_Hab_UserID INTEGER NOT NULL, User_Hab_Param_HabID INTEGER NOT NULL, User_Hab_MaintPrev INTEGER NOT NULL, User_Hab_Install INTEGER NOT NULL, User_Hab_MaintCorrect INTEGER NOT NULL, User_Hab_Ordre INTEGER NOT NULL DEFAULT 0);";
+
+    String wCREATE_Users = "CREATE TABLE Users ("
+    "UserID INTEGER PRIMARY KEY AUTOINCREMENT,"
+    "User_Actif INTEGER NOT NULL DEFAULT 0,"
+    "User_Token_FBM TEXT NOT NULL DEFAULT '',"
+    "User_Matricule TEXT NOT NULL DEFAULT '',"
+    "User_Nom TEXT NOT NULL DEFAULT '',"
+    "User_Prenom TEXT NOT NULL DEFAULT '',"
+    "User_Adresse1 TEXT NOT NULL DEFAULT '',"
+    "User_Adresse2 TEXT NOT NULL DEFAULT '',"
+    "User_Cp TEXT NOT NULL DEFAULT '',"
+    "User_Ville TEXT NOT NULL DEFAULT '',"
+    "User_Tel TEXT NOT NULL DEFAULT '',"
+    "User_Mail TEXT NOT NULL DEFAULT '',"
+    "User_PassWord TEXT NOT NULL DEFAULT '',"
+    "User_Service TEXT NOT NULL DEFAULT '',"
+    "User_Fonction TEXT NOT NULL DEFAULT '',"
+    "User_Famille TEXT NOT NULL DEFAULT '',"
+    "User_Depot TEXT NOT NULL DEFAULT '',"
+    "User_NivHabID INTEGER NOT NULL DEFAULT 0,"
+    "User_Niv_Isole INTEGER NOT NULL DEFAULT 0,"
+    "User_TypeUserID INTEGER NOT NULL);";
+
+
     String wCREATE_Clients = "CREATE TABLE Clients (ClientsId  INTEGER PRIMARY KEY AUTOINCREMENT,Clients_Nom varchar(512) NOT NULL DEFAULT '',Clients_Adresse1 varchar(512) NOT NULL DEFAULT '',Clients_Adresse2 varchar(512) NOT NULL DEFAULT '',Clients_Cp varchar(32) NOT NULL DEFAULT '', Clients_Ville varchar(256) NOT NULL DEFAULT '', Clients_TelF varchar(32) NOT NULL DEFAULT '', Clients_TelP varchar(32) NOT NULL DEFAULT '', Clients_Mail varchar(512) NOT NULL DEFAULT '')";
     String wCREATE_Sites = "CREATE TABLE Sites (SitesId  INTEGER PRIMARY KEY AUTOINCREMENT,Sites_ClientId  INTEGER, Sites_Nom varchar(512) NOT NULL DEFAULT '',Sites_Adresse1 varchar(512) NOT NULL DEFAULT '',Sites_Adresse2 varchar(512) NOT NULL DEFAULT '',Sites_Cp varchar(32) NOT NULL DEFAULT '', Sites_Ville varchar(256) NOT NULL DEFAULT '', Sites_TelF varchar(32) NOT NULL DEFAULT '', Sites_TelP varchar(32) NOT NULL DEFAULT '', Sites_Mail varchar(512) NOT NULL DEFAULT '')";
     String wCREATE_Groupes = "CREATE TABLE Groupes (GroupesId  INTEGER PRIMARY KEY AUTOINCREMENT,Groupes_SiteId  INTEGER, Groupes_Nom varchar(512) NOT NULL DEFAULT '',Groupes_Adresse1 varchar(512) NOT NULL DEFAULT '',Groupes_Adresse2 varchar(512) NOT NULL DEFAULT '',Groupes_Cp varchar(32) NOT NULL DEFAULT '', Groupes_Ville varchar(256) NOT NULL DEFAULT '', Groupes_TelF varchar(32) NOT NULL DEFAULT '', Groupes_TelP varchar(32) NOT NULL DEFAULT '', Groupes_Mail varchar(512) NOT NULL DEFAULT '')";
@@ -208,18 +244,28 @@ class DbTools {
     String wCREATE_NF074_Pieces_Det_Inc =
         "CREATE TABLE NF074_Pieces_Det_Inc (NF074_Pieces_Det_IncId int(11) NOT NULL,NF074_Pieces_Det_Inc_DESC varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_FAB varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_PRS varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_CLF varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_MOB varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_PDT varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_POIDS varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_GAM varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_CODF varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_Inst int(11) NOT NULL DEFAULT 0,NF074_Pieces_Det_Inc_VerifAnn int(11) NOT NULL DEFAULT 0,NF074_Pieces_Det_Inc_Rech int(11) NOT NULL DEFAULT 0,NF074_Pieces_Det_Inc_MAA int(11) NOT NULL DEFAULT 0,NF074_Pieces_Det_Inc_Charge int(11) NOT NULL DEFAULT 0,NF074_Pieces_Det_Inc_RA int(11) NOT NULL DEFAULT 0,NF074_Pieces_Det_Inc_RES int(11) NOT NULL DEFAULT 0,NF074_Pieces_Det_Inc_CodearticlePD1 varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_DescriptionPD1 varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_QtePD1 int(11) NOT NULL,NF074_Pieces_Det_Inc_CodearticlePD2 varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_DescriptionPD2 varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_QtePD2 int(11) NOT NULL,NF074_Pieces_Det_Inc_CodearticlePD3 varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_DescriptionPD3 varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_QtePD3 int(11) NOT NULL);";
 
-//    print("wCREATE_Parcs_Art");
-    //  gColors.printWrapped("${wCREATE_Parcs_Art}");
+
+
+    //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
+     String wDbPath = "Rjeanornfer.db";
+    //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
 
     database = openDatabase(
       join(await getDatabasesPath(), wDbPath),
       onCreate: (db, version) async {
         print(">>>>>>>>>>>>>>> onCreate $version");
+
+
+        await db.execute(wCREATE_Users_Desc);
+        await db.execute(wCREATE_Users_Hab);
+        await db.execute(wCREATE_Param_Param);
+        await db.execute(wCREATE_Param_Saisie);
+        await db.execute(wCREATE_Param_Saisie_Param);
+        await db.execute(wCREATE_Users);
         await db.execute(wCREATE_Clients);
         await db.execute(wCREATE_Sites);
         await db.execute(wCREATE_Groupes);
         await db.execute(wCREATE_Intervention);
-
         await db.execute(wCREATE_Parcimgs);
         await db.execute(wCREATE_Parcs_Ent);
         await db.execute(wCREATE_Parcs_Desc);
@@ -241,8 +287,12 @@ class DbTools {
     );
 
     final db = await database;
-
-    DbTools.glfClients = await DbTools.getClients();
+    final tables = await db.rawQuery('SELECT * FROM sqlite_master ORDER BY name;');
+    print("-------------------> onOpen Liste des table ${tables.length}");
+    tables.forEach((element) {
+      print("-------------------> tables ${element}");
+    });
+//    DbTools.glfClients = await DbTools.getClients();
   }
 
   //************************************************
@@ -276,6 +326,180 @@ class DbTools {
       print(row.values);
     });
   }
+  
+  //************************************************
+  //**************** U S E R   H A B  **************
+  //************************************************
+
+  static Future<List<User_Hab>> getUser_Hab() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query("User_Hab");
+    return List.generate(maps.length, (i) {
+      return User_Hab(
+          maps[i]["User_HabID"],
+          maps[i]["User_Hab_UserID"],
+          maps[i]["User_Hab_Param_HabID"],
+          maps[i]["User_Hab_MaintPrev"]=="true",
+          maps[i]["User_Hab_Install"]=="true",
+          maps[i]["User_Hab_MaintCorrect"]=="true",
+          maps[i]["User_Hab_Ordre"],
+      );
+    });
+  }
+
+  static Future<void> inserUser_Hab(User_Hab wUser_Hab) async {
+    final db = await DbTools.database;
+    int? repid = await db.insert("User_Hab", wUser_Hab.toMap());
+    gLastID = repid!;
+  }
+
+
+  static Future<void> TrunckUser_Hab() async {
+    final db = await DbTools.database;
+    int? repid = await db.delete("User_Hab");
+  }
+
+  //************************************************
+  //************** U S E R   D E S C  **************
+  //************************************************
+
+  static Future<List<User_Desc>> getUser_Desc() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query("User_Desc");
+    return List.generate(maps.length, (i) {
+      return User_Desc(
+          maps[i]["User_DescID"],
+          maps[i]["User_Desc_UserID"],
+          maps[i]["User_Desc_Param_DescID"],
+          maps[i]["User_Desc_MaintPrev"]=="true",
+          maps[i]["User_Desc_Install"]=="true",
+          maps[i]["User_Desc_MaintCorrect"]=="true",
+          maps[i]["User_Desc_Ordre"],
+      );
+    });
+  }
+
+  static Future<void> inserUser_Desc(User_Desc wUser_Desc) async {
+    final db = await DbTools.database;
+    int? repid = await db.insert("User_Desc", wUser_Desc.toMap());
+    gLastID = repid!;
+  }
+
+
+  static Future<void> TrunckUser_Desc() async {
+    final db = await DbTools.database;
+    int? repid = await db.delete("User_Desc");
+  }
+
+
+
+  //************************************************
+  //*********** P A R A M   S A I S I E ************
+  //************************************************
+
+  static Future<List<Param_Saisie_Param>> getParam_Saisie_Param() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query("Param_Saisie_Param");
+    return List.generate(maps.length, (i) {
+      return Param_Saisie_Param(
+          maps[i]["Param_Saisie_ParamId"],
+          maps[i]["Param_Saisie_Param_Id"],
+          maps[i]["Param_Saisie_Param_Ordre"],
+          maps[i]["Param_Saisie_Param_Label"],
+          maps[i]["Param_Saisie_Param_Abrev"],
+          maps[i]["Param_Saisie_Param_Aide"],
+          maps[i]["Param_Saisie_Param_Default"]=="true",
+          maps[i]["Param_Saisie_Param_Init"]=="true",
+          SizedBox(),
+          maps[i]["Param_Saisie_Param_Color"],
+      );
+    });
+  }
+
+  static Future<void> inserParam_Saisie_Param(Param_Saisie_Param wParam_Saisie_Param) async {
+    final db = await DbTools.database;
+    int? repid = await db.insert("Param_Saisie_Param", wParam_Saisie_Param.toMap());
+    gLastID = repid!;
+  }
+
+
+  static Future<void> TrunckParam_Saisie_Param() async {
+    final db = await DbTools.database;
+    int? repid = await db.delete("Param_Saisie_Param");
+  }
+
+  //************************************************
+  //*********** P A R A M   S A I S I E ************
+  //************************************************
+
+  static Future<List<Param_Saisie>> getParam_Saisie() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query("Param_Saisie");
+    return List.generate(maps.length, (i) {
+      return Param_Saisie(
+          maps[i]["Param_SaisieId"],
+          maps[i]["Param_Saisie_Organe"],
+          maps[i]["Param_Saisie_Type"],
+          maps[i]["Param_Saisie_ID"],
+          maps[i]["Param_Saisie_Label"],
+          maps[i]["Param_Saisie_Aide"],
+          maps[i]["Param_Saisie_Controle"],
+          maps[i]["Param_Saisie_Ordre"],
+          maps[i]["Param_Saisie_Affichage"],
+          maps[i]["Param_Saisie_Ordre_Affichage"],
+          maps[i]["Param_Saisie_Affichage_Titre"],
+          (maps[i]["Param_Saisie_Affichage_L1"]==1),
+          maps[i]["Param_Saisie_Affichage_L1_Ordre"],
+          (maps[i]["Param_Saisie_Affichage_L2"]==1),
+          maps[i]["Param_Saisie_Affichage_L2_Ordre"],
+          maps[i]["Param_Saisie_Icon"],
+          maps[i]["Param_Saisie_Triger"],
+      );
+    });
+  }
+
+  static Future<void> inserParam_Saisie(Param_Saisie wParam_Saisie) async {
+    final db = await DbTools.database;
+    int? repid = await db.insert("Param_Saisie", wParam_Saisie.toMap());
+    gLastID = repid!;
+  }
+
+
+  static Future<void> TrunckParam_Saisie() async {
+    final db = await DbTools.database;
+    int? repid = await db.delete("Param_Saisie");
+  }
+
+  //************************************************
+  //******************** U S E R S *****************
+  //************************************************
+
+  static Future<List<User>> getUsers() async {
+    final db = await database;
+    List<Map<String, dynamic>> maps = await db.rawQuery("SELECT * FROM Users");
+    print("maps $maps");
+
+
+    return await List.generate(maps.length, (i) {
+      return User.fromMap(maps[i]);
+    });
+  }
+
+
+
+  static Future<void> inserUsers() async {
+    final db = await DbTools.database;
+    await TrunckUsers();
+    int? repid = await db.insert("Users", Srv_DbTools.gUserLogin.toMap());
+    gLastID = repid!;
+  }
+
+
+  static Future<void> TrunckUsers() async {
+    final db = await DbTools.database;
+    int? repid = await db.delete("Users");
+  }
+
 
   //************************************************
   //******************** I N T E R *****************
@@ -1331,6 +1555,7 @@ class DbTools {
   //******************** C L I E N T S *************
   //************************************************
 
+/*
   static List<Client> glfClients = [];
   static List<Client> lClientsz = [];
   static Client gClient = Client();
@@ -1354,10 +1579,12 @@ class DbTools {
       );
     });
   }
+*/
 
   //************************************************
   //******************** S I T E S *****************
   //************************************************
+/*
 
   static List<Site> glfSites = [];
   static List<Site> lSites = [];
@@ -1392,7 +1619,7 @@ class DbTools {
 
     final List<Map<String, dynamic>> maps = await db.query("Sites", orderBy: "Sites_Nom ASC", where: '"Sites_ClientId" = ?', whereArgs: [gClient.ClientsId]);
 
-    print("getSites Sites.length ${maps.length} ${gClient.ClientsId}");
+
 
     return List.generate(maps.length, (i) {
       return Site(
@@ -1409,11 +1636,12 @@ class DbTools {
       );
     });
   }
+*/
 
   //************************************************
   //******************** Z O N E S *****************
   //************************************************
-
+/*
   static List<Zone> glfZones = [];
   static List<Zone> lZones = [];
 
@@ -1463,12 +1691,13 @@ class DbTools {
         Zones_Mail: maps[i]["Zones_Mail"],
       );
     });
-  }
+  }*/
 
   //************************************************
   //**************** G R O U P E S *****************
   //************************************************
 
+/*
   static List<Groupe> glfGroupes = [];
   static List<Groupe> lGroupes = [];
 
@@ -1519,11 +1748,13 @@ class DbTools {
       );
     });
   }
+*/
 
   //************************************************
   //******************** INTERVETIONS ***************
   //************************************************
 
+/*
   static List<Intervention> glfInterventions = [];
   static List<Intervention> lInterventions = [];
   static Intervention gIntervention = Intervention();
@@ -1565,6 +1796,7 @@ class DbTools {
       );
     });
   }
+*/
 
   //************************************************
   //****************** P A R C S  ENT **************

@@ -12,21 +12,17 @@ class User_Desc {
   bool User_Desc_Sel = false;
 
   static User_DescInit() {
-    return User_Desc(0, 0, 0, false, false, false, 0, "",  false);
+    return User_Desc(0, 0, 0, false, false, false, 0, );
   }
 
   User_Desc(
-    int   User_DescID,
-    int   User_Desc_UserID,
-    int   User_Desc_Param_DescID,
-    bool  User_Desc_MaintPrev,
-    bool  User_Desc_Install,
-    bool  User_Desc_MaintCorrect,
-      int   User_Desc_Ordre,
-    String  Param_Desc_Lib,
-      bool  User_Desc_Sel,
-
-
+    int    User_DescID,
+    int    User_Desc_UserID,
+    int    User_Desc_Param_DescID,
+    bool   User_Desc_MaintPrev,
+    bool   User_Desc_Install,
+    bool   User_Desc_MaintCorrect,
+    int    User_Desc_Ordre,
       ) {
     this.User_DescID  =  User_DescID;
     this.User_Desc_UserID  =  User_Desc_UserID;
@@ -35,9 +31,19 @@ class User_Desc {
     this.User_Desc_Install  =  User_Desc_Install;
     this.User_Desc_MaintCorrect  =  User_Desc_MaintCorrect;
     this.User_Desc_Ordre  =  User_Desc_Ordre;
-    this.Param_Desc_Lib  =  Param_Desc_Lib;
+  }
 
-    this.User_Desc_Sel  =  User_Desc_Sel;
+
+  Map<String, dynamic> toMap() {
+    return {
+      'User_DescID': User_DescID,
+      'User_Desc_UserID': User_Desc_UserID,
+      'User_Desc_Param_DescID': User_Desc_Param_DescID,
+      'User_Desc_MaintPrev': User_Desc_MaintPrev,
+      'User_Desc_Install': User_Desc_Install,
+      'User_Desc_MaintCorrect': User_Desc_MaintCorrect,
+      'User_Desc_Ordre': User_Desc_Ordre,
+    };
   }
 
   factory User_Desc.fromJson(Map<String, dynamic> json) {
@@ -56,8 +62,7 @@ class User_Desc {
       bUser_Desc_Install,
       bUser_Desc_MaintCorrect,
       int.parse(json['User_Desc_Ordre']),
-        json['Param_Saisie_Param_Label'],
-      false
+
 
     );
 

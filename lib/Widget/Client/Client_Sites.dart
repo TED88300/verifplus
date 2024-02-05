@@ -130,8 +130,7 @@ class Client_SitesState extends State<Client_Sites> {
   @override
   Widget build(BuildContext context) {
     double LargeurLabel = 140;
-    DbTools.gSite.Sites_Nom = "";
-    DbTools.gGroupe.Groupes_Nom = "";
+
     return Scaffold(
         resizeToAvoidBottomInset: false,
         backgroundColor: Colors.white,

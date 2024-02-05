@@ -433,7 +433,7 @@ class Srv_DbTools {
     if (ListClient == null) return false;
     //  print("getClientAll ${ListClient.length}");
     if (ListClient.length > 0) {
-      //  print("getClientAll return TRUE");
+
       return true;
     }
     return false;
@@ -2848,10 +2848,14 @@ END
 
     List<User> ListUser = await getUser_API_Post("select", "select * from Users where User_Mail = '$aMail' AND User_PassWord = '$aPW' AND User_Actif = true");
 
+
     if (ListUser == null) return false;
 
     if (ListUser.length == 1) {
       gUserLogin = ListUser[0];
+      await DbTools.inserUsers();
+      List<User> wListUser = await DbTools.getUsers();
+      print("wListUser ${wListUser.length}");
       gLoginID = gUserLogin.UserID;
 
       print("gUserLogin ${gUserLogin.User_Actif}");
@@ -2871,6 +2875,29 @@ END
           height: 100,
         );
       }
+
+      await Srv_DbTools.getUser_Hab(Srv_DbTools.gUserLogin.UserID);
+      print("Import_DataDialog ListUser_Hab ${Srv_DbTools.ListUser_Hab.length}");
+      await DbTools.TrunckUser_Hab();
+      for (int i = 0; i < Srv_DbTools.ListUser_Hab.length; i++) {
+        User_Hab wUser_Hab = Srv_DbTools.ListUser_Hab[i];
+        await DbTools.inserUser_Hab(wUser_Hab);
+      }
+      Srv_DbTools.ListUser_Hab = await  DbTools.getUser_Hab();
+
+
+      await Srv_DbTools.getUser_Desc(Srv_DbTools.gUserLogin.UserID);
+      print("Import_DataDialog ListUser_Desc ${Srv_DbTools.ListUser_Desc.length}");
+      await DbTools.TrunckUser_Desc();
+      for (int i = 0; i < Srv_DbTools.ListUser_Desc.length; i++) {
+        User_Desc wUser_Desc = Srv_DbTools.ListUser_Desc[i];
+        await DbTools.inserUser_Desc(wUser_Desc);
+      }
+      Srv_DbTools.ListUser_Desc = await  DbTools.getUser_Desc();
+
+
+
+
 
       return true;
     }
@@ -3215,10 +3242,10 @@ END
   }
 
   static Future<bool> getParam_SaisieAll() async {
-    await getParam_Saisie_API_Post("select", "select * from Param_Saisie ORDER BY Param_Saisie_Organe, Param_Saisie_Type, Param_Saisie_Ordre,Param_Saisie_ID");
+    ListParam_Saisie = await getParam_Saisie_API_Post("select", "select * from Param_Saisie ORDER BY Param_Saisie_Organe, Param_Saisie_Type, Param_Saisie_Ordre,Param_Saisie_ID");
 
     if (ListParam_Saisie == null) return false;
-//        print("getParam_SaisieAll ${ListParam_Saisie.length}");
+        print("getParam_SaisieAll ${ListParam_Saisie.length}");
     if (ListParam_Saisie.length > 0) {
       return true;
     }
@@ -3266,21 +3293,26 @@ END
   }
 
   static Future<List<Param_Saisie>> getParam_Saisie_API_Post(String aType, String aSQL) async {
+
+
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
     request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${gUserLogin.UserID}"});
 
     http.StreamedResponse response = await request.send();
+    print("response ${response.statusCode}");
 
     if (response.statusCode == 200) {
       var parsedJson = json.decode(await response.stream.bytesToString());
       final items = parsedJson['data'];
+      print("items ${items}");
 
       if (items != null) {
         List<Param_Saisie> Param_SaisieList = await items.map<Param_Saisie>((json) {
           return Param_Saisie.fromJson(json);
         }).toList();
+        print("Param_SaisieList ${Param_SaisieList.length}");
         return Param_SaisieList;
       }
     } else {
@@ -3525,12 +3557,11 @@ END
     ListParam_Saisie_ParamAll = await getParam_Saisie_Param_API_Post("select", "select * from Param_Saisie_Param ORDER BY Param_Saisie_Param_Id,Param_Saisie_Param_Ordre");
 
     if (ListParam_Saisie_ParamAll == null) return false;
-//    print("getParam_Saisie_ParamAll ${ListParam_Saisie_ParamAll.length}");
     if (ListParam_Saisie_ParamAll.length > 0) {
       Srv_DbTools.ListParam_Saisie_ParamAll.forEach((element) async {
-        //print("ListParam_Saisie_ParamAll ----> ${element.Param_Saisie_Param_Label}");
         element.Param_Saisie_Param_Ico = await gObj.getAssetImage("assets/images/Aide_Ico_${element.Param_Saisie_Param_Label}.png");
-      });
+      }
+      );
 
       return true;
     }

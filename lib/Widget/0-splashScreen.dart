@@ -39,32 +39,6 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
 
     await DbTools.initSqlite();
 
-//      await DbTools.LoadParam_Saisie_Param();
-
-    // Gammes
-//    await Srv_DbTools.getParam_GammeAll();
-    // Param_Saisie_Param
-    await Srv_DbTools.getParam_Saisie_ParamAll();
-
-    // Users_Hab de l'utilisateur
-    await Srv_DbTools.getUser_Hab(Srv_DbTools.gUserLogin.UserID);
-    // Users_Desc de l'utilisateur
-    await Srv_DbTools.getUser_Desc(Srv_DbTools.gUserLogin.UserID);
-
-
-
-    // Familles EBP
-    await Srv_DbTools.getArticle_Fam_EbpAll();
-    // Articles EBP
-    await Srv_DbTools.getArticle_EbpAll();
-    // Articles EBP ES (Echange Standard)
-    await Srv_DbTools.getArticle_Ebp_ES();
-    print("SplashScreenState ListArticle_Ebp ${Srv_DbTools.ListArticle_Ebp.length}");
-
-    DbTools.glfNF074_Gammes = await  DbTools.getNF074_Gammes();
-    print("SplashScreenState glfNF074_Gammes ${DbTools.glfNF074_Gammes.length}");
-
-
     Srv_DbTools.gSelGroupe = Srv_DbTools.gSelGroupeBase;
     Srv_DbTools.gSelIntervention = Srv_DbTools.gSelInterventionBase;
 
@@ -89,7 +63,7 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
   }
 
   void initLib() async {
-    await Api_Gouv.inseeToken();
+    DbTools.gOffLine = await Api_Gouv.inseeToken();
   }
 
   @override

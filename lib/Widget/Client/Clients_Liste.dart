@@ -33,13 +33,7 @@ class Liste_ClientsState extends State<Liste_Clients> {
 
   Future Reload() async {
     await Srv_DbTools.getClientAll();
-/*
-    for (int i = 0; i < Srv_DbTools.ListClient.length; i++) {
-      var element = Srv_DbTools.ListClient[i];
-      int wCount = await Srv_DbTools.getCountSitesClient(element.ClientId);
-      element.Client_Count_Sites = wCount;
-    }
-*/
+
 
     CountTot = CountSel = Srv_DbTools.ListClientsearchresult.length;
     Filtre();

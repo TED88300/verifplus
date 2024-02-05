@@ -17,12 +17,6 @@ class P_NotificationsState extends State<P_Notifications> {
   @override
   void initLib() async {
 
-    DbTools.glfClients = await DbTools.getClients();
-
-    print("glfClients liste Nom ${DbTools.glfClients.length}");
-    DbTools.glfClients.forEach((element) async {
-      print("glfClients Nom ${element.Clients_Nom}");
-    });
 
   }
 

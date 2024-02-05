@@ -32,16 +32,16 @@ class Param_Saisie_Param {
   }
 
   Param_Saisie_Param(
-      int    Param_Saisie_ParamId,
-      String Param_Saisie_Param_Id,
-      int    Param_Saisie_Param_Ordre,
-      String Param_Saisie_Param_Label,
-      String Param_Saisie_Param_Abrev,
-      String Param_Saisie_Param_Aide,
-      bool Param_Saisie_Param_Default,
-      bool Param_Saisie_Param_Init,
-      Widget Param_Saisie_Param_Ico,
-      String Param_Saisie_Param_Color,
+      int     Param_Saisie_ParamId,
+      String  Param_Saisie_Param_Id,
+      int     Param_Saisie_Param_Ordre,
+      String  Param_Saisie_Param_Label,
+      String  Param_Saisie_Param_Abrev,
+      String  Param_Saisie_Param_Aide,
+      bool    Param_Saisie_Param_Default,
+      bool    Param_Saisie_Param_Init,
+      Widget  Param_Saisie_Param_Ico,
+      String  Param_Saisie_Param_Color,
       ) {
     this.Param_Saisie_ParamId = Param_Saisie_ParamId;
     this.Param_Saisie_Param_Id = Param_Saisie_Param_Id;
@@ -54,6 +54,23 @@ class Param_Saisie_Param {
     this.Param_Saisie_Param_Ico = Param_Saisie_Param_Ico;
     this.Param_Saisie_Param_Color = Param_Saisie_Param_Color;
   }
+
+
+  Map<String, dynamic> toMap() {
+    return {
+      'Param_Saisie_ParamId': Param_Saisie_ParamId,
+      'Param_Saisie_Param_Id': Param_Saisie_Param_Id,
+      'Param_Saisie_Param_Ordre': Param_Saisie_Param_Ordre,
+      'Param_Saisie_Param_Label': Param_Saisie_Param_Label,
+      'Param_Saisie_Param_Abrev': Param_Saisie_Param_Abrev,
+      'Param_Saisie_Param_Aide': Param_Saisie_Param_Aide,
+      'Param_Saisie_Param_Default': Param_Saisie_Param_Default,
+      'Param_Saisie_Param_Init': Param_Saisie_Param_Init,
+      'Param_Saisie_Param_Color': Param_Saisie_Param_Color,
+    };
+  }
+
+
 
   factory Param_Saisie_Param.fromJson(Map<String, dynamic> json) {
     Param_Saisie_Param wParam_Saisie_Param = Param_Saisie_Param(
