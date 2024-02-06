@@ -1,10 +1,16 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Clients.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_InterMissions.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Interventions.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_NF074.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie_Param.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Sites.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Zones.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_User_Desc.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_User_Hab.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
@@ -76,7 +82,7 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
     Srv_DbTools.ListParam_Saisie = await  DbTools.getParam_Saisie();
     print("Import_DataDialog Srv_DbTools.ListParam_Saisie ${Srv_DbTools.ListParam_Saisie}");
     setState(() {
-      wSt = "► Param_Saisie : ${Srv_DbTools.ListParam_Saisie.length} Param\n";
+      wSt = "► Param_Saisie : ${Srv_DbTools.ListParam_Saisie.length} Params\n";
     });
 
     Srv_DbTools.ListParam_Param_Abrev.clear();
@@ -100,7 +106,7 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
     Srv_DbTools.ListParam_Saisie_ParamAll = await  DbTools.getParam_Saisie_Param();
     print("Import_DataDialog Srv_DbTools.ListParam_Saisie_ParamAll ${Srv_DbTools.ListParam_Saisie_ParamAll}");
     setState(() {
-      wSt += "► Param_Saisie_Param : ${Srv_DbTools.ListParam_Saisie_ParamAll.length} Param\n";
+      wSt += "► Param_Saisie_Param : ${Srv_DbTools.ListParam_Saisie_ParamAll.length} Params\n";
     });
 
     //***********************************
@@ -118,7 +124,7 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
     Srv_DbTools.ListUser_Hab = await  DbTools.getUser_Hab();
     print("Import_DataDialog Srv_DbTools.ListUser_Hab ${Srv_DbTools.ListUser_Hab}");
     setState(() {
-      wSt += "► User_Hab : ${Srv_DbTools.ListUser_Hab.length} Param\n";
+      wSt += "► User_Hab : ${Srv_DbTools.ListUser_Hab.length} Params\n";
     });
 
     await Srv_DbTools.getUser_Desc(Srv_DbTools.gUserLogin.UserID);
@@ -132,7 +138,112 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
     Srv_DbTools.ListUser_Desc = await  DbTools.getUser_Desc();
     print("Import_DataDialog Srv_DbTools.ListUser_Desc ${Srv_DbTools.ListUser_Desc}");
     setState(() {
-      wSt += "► User_Desc : ${Srv_DbTools.ListUser_Desc.length} Param\n";
+      wSt += "► User_Desc : ${Srv_DbTools.ListUser_Desc.length} Params\n";
+    });
+
+
+  
+
+    //**********************************
+    //**********************************
+    //**********************************
+
+    await Srv_DbTools.getClientAll();
+    print("Import_DataDialog ListClient ${Srv_DbTools.ListClient.length}");
+    await DbTools.TrunckClients();
+    for (int i = 0; i < Srv_DbTools.ListClient.length; i++) {
+      Client wClient = Srv_DbTools.ListClient[i];
+      await DbTools.inserClients(wClient);
+    }
+    Srv_DbTools.ListClient = await  DbTools.getClients();
+    print("Import_DataDialog Srv_DbTools.ListClient ${Srv_DbTools.ListClient}");
+    setState(() {
+      wSt += "► Client : ${Srv_DbTools.ListClient.length} Clients\n";
+    });
+
+    //**********************************
+    //**********************************
+    //**********************************
+
+    await Srv_DbTools.getGroupeAll();
+    print("Import_DataDialog ListGroupe ${Srv_DbTools.ListGroupe.length}");
+    await DbTools.TrunckGroupes();
+    for (int i = 0; i < Srv_DbTools.ListGroupe.length; i++) {
+      Groupe wGroupe = Srv_DbTools.ListGroupe[i];
+      await DbTools.inserGroupes(wGroupe);
+    }
+    Srv_DbTools.ListGroupe = await  DbTools.getGroupes();
+    print("Import_DataDialog Srv_DbTools.ListGroupe ${Srv_DbTools.ListGroupe}");
+    setState(() {
+      wSt += "► Groupe : ${Srv_DbTools.ListGroupe.length} Groupes\n";
+    });
+
+    //**********************************
+    //**********************************
+    //**********************************
+
+    await Srv_DbTools.getSiteAll();
+    print("Import_DataDialog ListSite ${Srv_DbTools.ListSite.length}");
+    await DbTools.TrunckSites();
+    for (int i = 0; i < Srv_DbTools.ListSite.length; i++) {
+      Site wSite = Srv_DbTools.ListSite[i];
+      await DbTools.inserSites(wSite);
+    }
+    Srv_DbTools.ListSite = await  DbTools.getSites();
+    print("Import_DataDialog Srv_DbTools.ListSite ${Srv_DbTools.ListSite}");
+    setState(() {
+      wSt += "► Site : ${Srv_DbTools.ListSite.length} Sites\n";
+    });
+
+    //**********************************
+    //**********************************
+    //**********************************
+
+    await Srv_DbTools.getZoneAll();
+    print("Import_DataDialog ListZone ${Srv_DbTools.ListZone.length}");
+    await DbTools.TrunckZones();
+    for (int i = 0; i < Srv_DbTools.ListZone.length; i++) {
+      Zone wZone = Srv_DbTools.ListZone[i];
+      await DbTools.inserZones(wZone);
+    }
+    Srv_DbTools.ListZone = await  DbTools.getZones();
+    print("Import_DataDialog Srv_DbTools.ListZone ${Srv_DbTools.ListZone}");
+    setState(() {
+      wSt += "► Zone : ${Srv_DbTools.ListZone.length} Zones\n";
+    });
+
+    //**********************************
+    //**********************************
+    //**********************************
+
+    await Srv_DbTools.getInterventionAll();
+    print("Import_DataDialog ListIntervention ${Srv_DbTools.ListIntervention.length}");
+    await DbTools.TrunckInterventions();
+    for (int i = 0; i < Srv_DbTools.ListIntervention.length; i++) {
+      Intervention wIntervention = Srv_DbTools.ListIntervention[i];
+      await DbTools.inserInterventions(wIntervention);
+    }
+    Srv_DbTools.ListIntervention = await  DbTools.getInterventions();
+    print("Import_DataDialog Srv_DbTools.ListIntervention ${Srv_DbTools.ListIntervention}");
+    setState(() {
+      wSt += "► Intervention : ${Srv_DbTools.ListIntervention.length} Interventions\n";
+    });
+
+    //**********************************
+    //**********************************
+    //**********************************
+
+    await Srv_DbTools.getInterMissionAll();
+    print("Import_DataDialog ListInterMissions ${Srv_DbTools.ListInterMission.length}");
+    await DbTools.TrunckInterMissions();
+    for (int i = 0; i < Srv_DbTools.ListInterMission.length; i++) {
+      InterMission wInterMissions = Srv_DbTools.ListInterMission[i];
+      await DbTools.inserInterMissions(wInterMissions);
+    }
+    Srv_DbTools.ListInterMission = await  DbTools.getInterMissions();
+    print("Import_DataDialog Srv_DbTools.ListInterMissions ${Srv_DbTools.ListInterMission}");
+    setState(() {
+      wSt += "► InterMission : ${Srv_DbTools.ListInterMission.length} InterMissions\n";
     });
 
 
@@ -245,6 +356,10 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
       wSt += "► NF074 : ${Srv_DbTools.ListArticle_Ebp.length} Articles EBP\n";
     });
 
+
+
+
+
     //**********************************
     //**********************************
     //**********************************
@@ -306,7 +421,7 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
       contentPadding: EdgeInsets.zero,
       content: Container(
           color: gColors.greyLight,
-          height: 500,
+          height: 900,
           width: MediaQuery.of(context).size.width,
 
           child: Column(

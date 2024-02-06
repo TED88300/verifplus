@@ -95,18 +95,18 @@ class Client {
   String Livr   = "";
 
   static ClientInit() {
-    return Client(0, "", false, "", "","", false, false, "", "", "", "", "", "", "", false, "","", "", "", "", "", "", "");
+    return Client(0, "", false, "", "","", false, false, "", "", "", "", "", "", "", false, "","", "", "");
   }
 
   Client(
-      int ClientId,
+      int    ClientId,
       String Client_CodeGC,
-      bool Client_CL_Pr,
+      bool   Client_CL_Pr,
       String Client_Famille,
       String Client_Rglt,
       String Client_Depot,
-      bool Client_PersPhys,
-      bool Client_OK_DataPerso,
+      bool   Client_PersPhys,
+      bool   Client_OK_DataPerso,
       String Client_Civilite,
       String Client_Nom,
       String Client_Siret,
@@ -114,18 +114,17 @@ class Client {
       String Client_TVA,
       String Client_Commercial,
       String Client_Createur,
-
-      bool   Client_Contrat      ,
-      String Client_TypeContrat  ,
-      String Client_Ct_Debut        ,
-      String Client_Ct_Fin        ,
-      String Client_Organes      ,
-
-
+      bool   Client_Contrat,
+      String Client_TypeContrat,
+      String Client_Ct_Debut,
+      String Client_Ct_Fin,
+      String Client_Organes,
+/*
       String Adresse_Adr1,
       String Adresse_CP,
       String Adresse_Ville,
       String Adresse_Pays,
+*/
       ) {
     this.ClientId = ClientId;
     this.Client_CodeGC = Client_CodeGC;
@@ -149,15 +148,55 @@ class Client {
     this.Client_Organes     = Client_Organes    ;
 
 
+/*
     this.Adresse_Adr1      = Adresse_Adr1     ;
     this.Adresse_CP      = Adresse_CP     ;
     this.Adresse_Ville   = Adresse_Ville  ;
     this.Adresse_Pays    = Adresse_Pays   ;
+*/
   }
+
+
+  Map<String, dynamic> toMap() {
+    if (Client_CL_Pr == null) Client_CL_Pr = false;
+    if (Client_CL_Pr == null) Client_CL_Pr = false;
+    return {
+      'ClientId': ClientId,
+      'Client_CodeGC': Client_CodeGC,
+      'Client_CL_Pr': Client_CL_Pr,
+      'Client_Famille': Client_Famille,
+      'Client_Rglt': Client_Rglt,
+      'Client_Depot': Client_Depot,
+      'Client_PersPhys': Client_PersPhys,
+      'Client_OK_DataPerso': Client_OK_DataPerso,
+      'Client_Civilite': Client_Civilite,
+      'Client_Nom': Client_Nom,
+      'Client_Siret': Client_Siret,
+      'Client_NAF': Client_NAF,
+      'Client_TVA': Client_TVA,
+      'Client_Commercial': Client_Commercial,
+      'Client_Createur': Client_Createur,
+      'Client_Contrat': Client_Contrat,
+      'Client_TypeContrat': Client_TypeContrat,
+      'Client_Ct_Debut': Client_Ct_Debut,
+      'Client_Ct_Fin': Client_Ct_Fin,
+      'Client_Organes': Client_Organes,
+      'Livr': Livr,
+/*
+      'Adresse_Adr1': Adresse_Adr1,
+      'Adresse_CP': Adresse_CP,
+      'Adresse_Ville': Adresse_Ville,
+      'Adresse_Pays': Adresse_Pays,
+*/
+    };
+
+
+  }
+
+
 
   factory Client.fromJson(Map<String, dynamic> json) {
 //    print("json $json");
-
     if (json['Adresse_Adr1'] == null) json['Adresse_Adr1'] ="";
     if (json['Adresse_CP'] == null) json['Adresse_CP'] ="";
     if (json['Adresse_Ville'] == null) json['Adresse_Ville'] ="";
@@ -184,12 +223,13 @@ class Client {
       json['Client_Ct_Debut'],
       json['Client_Ct_Fin'],
       json['Client_Organes'],
+/*
       json['Adresse_Adr1'],
       json['Adresse_CP'],
       json['Adresse_Ville'],
       json['Adresse_Pays'],
+*/
     );
-
     return wTmp;
   }
 

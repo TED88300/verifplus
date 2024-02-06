@@ -1,4 +1,5 @@
 class Intervention {
+
   int? InterventionId = 0;
   int? Intervention_ZoneId = 0;
 
@@ -32,8 +33,8 @@ class Intervention {
   }
 
   Intervention(
-    int InterventionId,
-    int Intervention_ZoneId,
+    int    InterventionId,
+    int    Intervention_ZoneId,
     String Intervention_Date,
     String Intervention_Type,
     String Intervention_Parcs_Type,
@@ -82,6 +83,33 @@ class Intervention {
 
     this.Intervention_Remarque = Intervention_Remarque;
     this.Livr = Livr;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'InterventionId': InterventionId,
+      'Intervention_ZoneId': Intervention_ZoneId,
+      'Intervention_Date': Intervention_Date,
+      'Intervention_Type': Intervention_Type,
+      'Intervention_Parcs_Type': Intervention_Parcs_Type,
+      'Intervention_Status': Intervention_Status,
+      'Intervention_Histo_Status': Intervention_Histo_Status,
+      'Intervention_Facturation': Intervention_Facturation,
+      'Intervention_Histo_Facturation': Intervention_Histo_Facturation,
+      'Intervention_Responsable': Intervention_Responsable,
+      'Intervention_Intervenants': Intervention_Intervenants,
+      'Intervention_Reglementation': Intervention_Reglementation,
+      'Intervention_Signataire_Client': Intervention_Signataire_Client,
+      'Intervention_Signataire_Tech': Intervention_Signataire_Tech,
+      'Intervention_Signataire_Date': Intervention_Signataire_Date,
+      'Intervention_Contrat': Intervention_Contrat,
+      'Intervention_TypeContrat': Intervention_TypeContrat,
+      'Intervention_Duree': Intervention_Duree,
+      'Intervention_Organes': Intervention_Organes,
+      'Intervention_RT': Intervention_RT,
+      'Intervention_APSAD': Intervention_APSAD,
+      'Intervention_Remarque': Intervention_Remarque,
+    };
   }
 
   factory Intervention.fromJson(Map<String, dynamic> json) {

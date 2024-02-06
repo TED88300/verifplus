@@ -11,12 +11,12 @@ class InterMission {
   }
 
   InterMission(
-      int InterMissionId,
-      int InterMission_InterventionId,
-      String InterMission_Nom,
-      bool InterMission_Exec,
-      String InterMission_Date,
-      String InterMission_Note,
+      int     InterMissionId,
+      int     InterMission_InterventionId,
+      String  InterMission_Nom,
+      bool    InterMission_Exec,
+      String  InterMission_Date,
+      String  InterMission_Note,
       ) {
     this.InterMissionId = InterMissionId;
     this.InterMission_InterventionId = InterMission_InterventionId;
@@ -25,6 +25,18 @@ class InterMission {
     this.InterMission_Date = InterMission_Date;
     this.InterMission_Note = InterMission_Note;
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'InterMissionId': InterMissionId,
+      'InterMission_InterventionId': InterMission_InterventionId,
+      'InterMission_Nom': InterMission_Nom,
+      'InterMission_Exec': InterMission_Exec,
+      'InterMission_Date': InterMission_Date,
+      'InterMission_Note': InterMission_Note,
+    };
+  }
+
 
   factory InterMission.fromJson(Map<String, dynamic> json) {
     InterMission wInterMission = InterMission(
