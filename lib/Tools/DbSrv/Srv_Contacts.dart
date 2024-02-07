@@ -20,9 +20,9 @@ class Contact {
   }
 
   Contact(
-    int ContactId,
-    int Contact_ClientId,
-      int Contact_AdresseId,
+    int    ContactId,
+    int    Contact_ClientId,
+      int  Contact_AdresseId,
     String Contact_Code,
     String Contact_Type,
     String Contact_Civilite,
@@ -50,6 +50,26 @@ class Contact {
     this.Contact_eMail = Contact_eMail;
     this.Contact_Rem = Contact_Rem;
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'ContactId': ContactId,
+      'Contact_ClientId': Contact_ClientId,
+      'Contact_AdresseId': Contact_AdresseId,
+      'Contact_Code': Contact_Code,
+      'Contact_Type': Contact_Type,
+      'Contact_Civilite': Contact_Civilite,
+      'Contact_Prenom': Contact_Prenom,
+      'Contact_Nom': Contact_Nom,
+      'Contact_Fonction': Contact_Fonction,
+      'Contact_Service': Contact_Service,
+      'Contact_Tel1': Contact_Tel1,
+      'Contact_Tel2': Contact_Tel2,
+      'Contact_eMail': Contact_eMail,
+      'Contact_Rem': Contact_Rem,
+    };
+  }
+
 
   factory Contact.fromJson(Map<String, dynamic> json) {
 //    print("json $json");

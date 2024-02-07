@@ -1,14 +1,18 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Adresses.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Clients.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Contacts.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_InterMissions.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Interventions.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_NF074.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie_Param.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Planning.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Sites.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Zones.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_User_Desc.dart';
@@ -85,6 +89,24 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
       wSt = "► Param_Saisie : ${Srv_DbTools.ListParam_Saisie.length} Params\n";
     });
 
+    //***********************************
+    //***********************************
+    //***********************************
+
+
+    await Srv_DbTools.getParam_ParamAll();
+    print("Import_DataDialog ListParam_ParamAll ${Srv_DbTools.ListParam_ParamAll.length}");
+    await DbTools.TrunckParam_Param();
+    for (int i = 0; i < Srv_DbTools.ListParam_ParamAll.length; i++) {
+      Param_Param wParam_Param = Srv_DbTools.ListParam_ParamAll[i];
+      await DbTools.inserParam_Param(wParam_Param);
+    }
+    Srv_DbTools.ListParam_ParamAll = await  DbTools.getParam_Param();
+    print("Import_DataDialog Srv_DbTools.ListParam_ParamAll ${Srv_DbTools.ListParam_ParamAll}");
+    setState(() {
+      wSt += "► Param_Param : ${Srv_DbTools.ListParam_ParamAll.length} Params\n";
+    });
+
     Srv_DbTools.ListParam_Param_Abrev.clear();
     Srv_DbTools.ListParam_ParamAll.forEach((element) {
       if (element.Param_Param_Type.compareTo("Abrev") == 0) {
@@ -140,10 +162,7 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
     setState(() {
       wSt += "► User_Desc : ${Srv_DbTools.ListUser_Desc.length} Params\n";
     });
-
-
-  
-
+    
     //**********************************
     //**********************************
     //**********************************
@@ -161,6 +180,63 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
       wSt += "► Client : ${Srv_DbTools.ListClient.length} Clients\n";
     });
 
+
+    //**********************************
+    //**********************************
+    //**********************************
+
+    await Srv_DbTools.getAdresseAll();
+    print("Import_DataDialog ListAdresse ${Srv_DbTools.ListAdresse.length}");
+    await DbTools.TrunckAdresse();
+    for (int i = 0; i < Srv_DbTools.ListAdresse.length; i++) {
+      Adresse wAdresse = Srv_DbTools.ListAdresse[i];
+      await DbTools.inserAdresse(wAdresse);
+    }
+    Srv_DbTools.ListAdresse = await  DbTools.getAdresse();
+    print("Import_DataDialog Srv_DbTools.ListAdresse ${Srv_DbTools.ListAdresse}");
+    setState(() {
+      wSt += "► Adresse : ${Srv_DbTools.ListAdresse.length} Adresses\n";
+    });
+
+    //**********************************
+    //**********************************
+    //**********************************
+
+    await Srv_DbTools.getContactAll();
+    print("Import_DataDialog ListContact ${Srv_DbTools.ListContact.length}");
+    await DbTools.TrunckContact();
+    for (int i = 0; i < Srv_DbTools.ListContact.length; i++) {
+      Contact wContact = Srv_DbTools.ListContact[i];
+      await DbTools.inserContact(wContact);
+    }
+    Srv_DbTools.ListContact = await  DbTools.getContact();
+    print("Import_DataDialog Srv_DbTools.ListContact ${Srv_DbTools.ListContact}");
+    setState(() {
+      wSt += "► Contact : ${Srv_DbTools.ListContact.length} Contacts\n";
+    });
+
+    //**********************************
+    //**********************************
+    //**********************************
+
+
+
+
+    await Srv_DbTools.getPlanning_All();
+    print("Import_DataDialog ListPlanning ${Srv_DbTools.ListPlanning.length}");
+    await DbTools.TrunckPlanning();
+    for (int i = 0; i < Srv_DbTools.ListPlanning.length; i++) {
+      Planning wPlanning = Srv_DbTools.ListPlanning[i];
+      await DbTools.inserPlanning(wPlanning);
+    }
+    Srv_DbTools.ListPlanning = await  DbTools.getPlanning();
+    print("Import_DataDialog Srv_DbTools.ListPlanning ${Srv_DbTools.ListPlanning}");
+    setState(() {
+      wSt += "► Planning : ${Srv_DbTools.ListPlanning.length} Plannings\n";
+    });
+    
+    
+    
     //**********************************
     //**********************************
     //**********************************
@@ -368,7 +444,6 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
       acontroller.stop();
       iStrfExp = false;
     });
-
   }
 
   @override
@@ -465,9 +540,17 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
             ],
           )),
       actions: <Widget>[
-        Container(
-          height: 8,
-        ),
+        iStrfExp ? Container() : ElevatedButton(
+          child: Text(
+            "OK",
+            style: TextStyle(
+              fontSize: 22,
+            ),
+          ),
+          onPressed: () async {
+            Navigator.pop(context);
+          },
+        )
       ],
     );
   }

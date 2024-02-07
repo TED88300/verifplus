@@ -1199,8 +1199,8 @@ class Srv_DbTools {
   }
 
 
-  static List<Planning_Srv> ListPlanning = [];
-  static Planning_Srv gPlanning = Planning_Srv.Planning_RdvInit();
+  static List<Planning> ListPlanning = [];
+  static Planning gPlanning = Planning.Planning_RdvInit();
 
   static Future getPlanning_All() async {
     ListPlanning = await getPlanning_API_Post("select", "select * from Planning");
@@ -1229,7 +1229,7 @@ class Srv_DbTools {
     return false;
   }
 
-  static Future<bool> setPlanning(Planning_Srv planning) async {
+  static Future<bool> setPlanning(Planning planning) async {
     String wSlq = "UPDATE Planning SET "
         "Planning_InterventionId = ${planning.Planning_InterventionId}, "
         "Planning_Libelle = '${planning.Planning_Libelle}', "
@@ -1244,7 +1244,7 @@ class Srv_DbTools {
     return ret;
   }
 
-  static Future<bool> addPlanning(Planning_Srv Planning) async {
+  static Future<bool> addPlanning(Planning Planning) async {
     String wValue = "NULL, ${Planning.Planning_InterventionId}, ${Planning.Planning_ResourceId} , '${Planning.Planning_InterventionstartTime}', '${Planning.Planning_InterventionendTime}' , '${Planning.Planning_Libelle}'";
     String wSlq = "INSERT INTO Planning (PlanningId, Planning_InterventionId, Planning_ResourceId, Planning_InterventionstartTime, Planning_InterventionendTime, Planning_Libelle) VALUES ($wValue)";
     print("addPlanning " + wSlq);
@@ -1253,7 +1253,7 @@ class Srv_DbTools {
     return ret;
   }
 
-  static Future<bool> delPlanning(Planning_Srv Planning) async {
+  static Future<bool> delPlanning(Planning Planning) async {
     String aSQL = "DELETE FROM Planning WHERE PlanningId = ${Planning.PlanningId} ";
     print("delPlanning " + aSQL);
     bool ret = await add_API_Post("upddel", aSQL);
@@ -1261,7 +1261,7 @@ class Srv_DbTools {
     return ret;
   }
 
-  static Future<List<Planning_Srv>> getPlanning_API_Post(String aType, String aSQL) async {
+  static Future<List<Planning>> getPlanning_API_Post(String aType, String aSQL) async {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
@@ -1277,8 +1277,8 @@ class Srv_DbTools {
       final items = parsedJson['data'];
 
       if (items != null) {
-        List<Planning_Srv> PlanningList = await items.map<Planning_Srv>((json) {
-          return Planning_Srv.fromJson(json);
+        List<Planning> PlanningList = await items.map<Planning>((json) {
+          return Planning.fromJson(json);
         }).toList();
 
         print("Planning length ${PlanningList.length}");
@@ -3515,6 +3515,10 @@ END
 
   static Future<List<Param_Param>> getParam_Param_API_Post(String aType, String aSQL) async {
     setSrvToken();
+
+    print("getParam_Param_API_Post aSQL " + aSQL);
+
+
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
     request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${gUserLogin.UserID}"});
@@ -3526,7 +3530,9 @@ END
       final items = parsedJson['data'];
 
       if (items != null) {
+
         List<Param_Param> Param_ParamList = await items.map<Param_Param>((json) {
+          print("getParam_Param_API_Post json " + json.toString());
           return Param_Param.fromJson(json);
         }).toList();
         return Param_ParamList;

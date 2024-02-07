@@ -21,8 +21,25 @@ tmpfs                  5.0M   20K  5.0M   1% /run/lock
 /dev/sda1              488M  252M  200M  56% /boot            <<<<<<<< % Boot
 tmpfs                  388M  8.0K  388M   1% /run/user/0
 *************************************************
-******************  B  O  O T  ******************
+******************  OFF Line  ******************
 *************************************************
+
+Login Offline
+
+Load PARAM
+Load NF74
+Load Clients/Sites/.../Intervention
+
+>>>> OK : Load Détail PARCS
+
+Cas 1:
+
+
+
+
+
+
+
 
 6ve8H82N$$
 
@@ -139,4 +156,4 @@ Sem 22/01 : -- + -- + -- + -- + -- = 0J
 Sem 29/01 : -- + -- + -- + -- + -- = 0J
 
 février :
-Sem 05/01 :
+Sem 05/01 : 1j + 1j + 1j

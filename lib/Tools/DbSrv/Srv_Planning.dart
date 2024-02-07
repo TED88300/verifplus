@@ -1,4 +1,6 @@
-class Planning_Srv {
+import 'package:intl/intl.dart';
+
+class Planning {
   int? PlanningId = -1;
   int? Planning_InterventionId = -1;
   int? Planning_ResourceId = -1;
@@ -8,10 +10,17 @@ class Planning_Srv {
   String Planning_Libelle = "";
 
   static Planning_RdvInit() {
-    return Planning_Srv(0, 0, 0, DateTime.now(), DateTime.now(), "");
+    return Planning(0, 0, 0, DateTime.now(), DateTime.now(), "");
   }
 
-  Planning_Srv(int PlanningId, int Planning_InterventionId, int Planning_ResourceId, DateTime Planning_InterventionstartTime, DateTime Planning_InterventionendTime, String Planning_Libelle) {
+  Planning(
+      int       PlanningId,
+      int       Planning_InterventionId,
+      int       Planning_ResourceId,
+      DateTime  Planning_InterventionstartTime,
+      DateTime  Planning_InterventionendTime,
+      String    Planning_Libelle,
+      ) {
     this.PlanningId                     = PlanningId;
     this.Planning_InterventionId        = Planning_InterventionId;
     this.Planning_ResourceId            = Planning_ResourceId;
@@ -20,8 +29,21 @@ class Planning_Srv {
     this.Planning_Libelle   = Planning_Libelle;
   }
 
-  factory Planning_Srv.fromJson(Map<String, dynamic> json) {
-    Planning_Srv wplanningRdv = Planning_Srv(
+  Map<String, dynamic> toMap() {
+
+    return {
+      'PlanningId': PlanningId,
+      'Planning_InterventionId': Planning_InterventionId,
+      'Planning_ResourceId': Planning_ResourceId,
+      'Planning_InterventionstartTime': '${Planning_InterventionstartTime}',
+      'Planning_InterventionendTime': '${Planning_InterventionendTime}',
+      'Planning_Libelle': Planning_Libelle,
+    };
+  }
+
+
+  factory Planning.fromJson(Map<String, dynamic> json) {
+    Planning wplanningRdv = Planning(
       int.parse(json['PlanningId']),
       int.parse(json['Planning_InterventionId']),
       int.parse(json['Planning_ResourceId']),

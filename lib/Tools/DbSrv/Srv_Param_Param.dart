@@ -17,13 +17,13 @@ class Param_Param {
 
 
   Param_Param(
-  int Param_ParamId,
-  String Param_Param_Type ,
-  String Param_Param_ID,
-  String Param_Param_Text,
-  int Param_Param_Int,
-  double Param_Param_Double,
-      int Param_Param_Ordre,
+    int     Param_ParamId,
+    String  Param_Param_Type,
+    String  Param_Param_ID,
+    String  Param_Param_Text,
+    int     Param_Param_Int,
+    double  Param_Param_Double,
+    int     Param_Param_Ordre,
       ) {
     this.Param_ParamId = Param_ParamId;
     this.Param_Param_Type = Param_Param_Type;
@@ -32,6 +32,18 @@ class Param_Param {
     this.Param_Param_Int = Param_Param_Int;
     this.Param_Param_Double = Param_Param_Double;
     this.Param_Param_Ordre = Param_Param_Ordre;
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'Param_ParamId': Param_ParamId,
+      'Param_Param_Type': Param_Param_Type,
+      'Param_Param_ID': Param_Param_ID,
+      'Param_Param_Text': Param_Param_Text,
+      'Param_Param_Int': Param_Param_Int,
+      'Param_Param_Double': Param_Param_Double,
+      'Param_Param_Ordre': Param_Param_Ordre,
+    };
   }
 
   factory Param_Param.fromJson(Map<String, dynamic> json) {

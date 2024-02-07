@@ -492,6 +492,10 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     ListParam_ParamTypeOg.clear();
 
     int i = 0;
+
+    print("element ${Srv_DbTools.ListParam_ParamAll}");
+
+
     Srv_DbTools.ListParam_ParamAll.forEach((element) {
       if (element.Param_Param_Type.compareTo("Type_Organe") == 0) {
         //print("element ${element.Param_Param_ID}  ${element.Param_Param_Text}");

@@ -7,17 +7,21 @@ import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:uuid/uuid.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Adresses.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Clients.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Contacts.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_InterMissions.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Interventions.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_NF074.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie_Param.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Art.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Desc.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Ent.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Planning.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Sites.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_User.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_User_Desc.dart';
@@ -151,13 +155,23 @@ class DbTools {
 
 
     String wCREATE_Clients = "CREATE TABLE Clients (ClientId INTEGER NOT NULL, Client_CodeGC TEXT NOT NULL DEFAULT '', Client_CL_Pr INTEGER NOT NULL, Client_Famille TEXT NOT NULL, Client_Rglt TEXT NOT NULL, Client_Depot TEXT NOT NULL DEFAULT '', Client_PersPhys INTEGER NOT NULL, Client_OK_DataPerso INTEGER NOT NULL, Client_Civilite TEXT NOT NULL DEFAULT '', Client_Nom TEXT NOT NULL DEFAULT '', Client_Siret TEXT NOT NULL DEFAULT '', Client_NAF TEXT NOT NULL DEFAULT '', Client_TVA TEXT NOT NULL DEFAULT '', Client_Commercial TEXT NOT NULL DEFAULT '', Client_Createur TEXT NOT NULL DEFAULT '', Client_Contrat INTEGER NOT NULL, Client_TypeContrat TEXT NOT NULL DEFAULT '', Client_Ct_Debut TEXT NOT NULL, Client_Ct_Fin TEXT NOT NULL, Client_Organes TEXT NOT NULL DEFAULT '', Livr TEXT NOT NULL);";
+    String wCREATE_Adresses = "CREATE TABLE `Adresses` (`AdresseId` int(11) NOT NULL,`Adresse_ClientId` int(11) NOT NULL,`Adresse_Code` varchar(24) NOT NULL DEFAULT '',`Adresse_Type` varchar(24) NOT NULL DEFAULT '',`Adresse_Nom` varchar(64) NOT NULL DEFAULT '',`Adresse_Adr1` varchar(40) NOT NULL DEFAULT '',`Adresse_Adr2` varchar(40) NOT NULL DEFAULT '',`Adresse_Adr3` varchar(40) NOT NULL DEFAULT '',`Adresse_Adr4` varchar(40) NOT NULL,`Adresse_CP` varchar(10) NOT NULL DEFAULT '',`Adresse_Ville` varchar(35) NOT NULL,`Adresse_Pays` varchar(40) NOT NULL DEFAULT '',`Adresse_Acces` varchar(128) NOT NULL,`Adresse_Rem` varchar(1024) NOT NULL DEFAULT '')";
+    String wCREATE_Contacts = "CREATE TABLE `Contacts` (`ContactId` int(11) NOT NULL,`Contact_ClientId` int(11) NOT NULL,`Contact_AdresseId` int(11) NOT NULL,`Contact_Code` varchar(24) NOT NULL DEFAULT '',`Contact_Type` varchar(24) NOT NULL DEFAULT '',`Contact_Civilite` varchar(25) NOT NULL,`Contact_Prenom` varchar(60) NOT NULL,`Contact_Nom` varchar(60) NOT NULL,`Contact_Fonction` varchar(40) NOT NULL,`Contact_Service` varchar(40) NOT NULL,`Contact_Tel1` varchar(20) NOT NULL,`Contact_Tel2` varchar(20) NOT NULL,`Contact_eMail` varchar(100) NOT NULL,`Contact_Rem` varchar(1024) NOT NULL)";
+
+
     String wCREATE_Groupes = "CREATE TABLE `Groupes` (`GroupeId` int(11) NOT NULL,`Groupe_ClientId` int(11) NOT NULL,`Groupe_Code` varchar(24) NOT NULL DEFAULT '',`Groupe_Depot` varchar(128) NOT NULL DEFAULT '',`Groupe_Nom` varchar(64) NOT NULL DEFAULT '',`Groupe_Adr1` varchar(40) NOT NULL DEFAULT '',`Groupe_Adr2` varchar(40) NOT NULL DEFAULT '',`Groupe_Adr3` varchar(40) NOT NULL DEFAULT '',`Groupe_Adr4` varchar(40) NOT NULL,`Groupe_CP` varchar(10) NOT NULL DEFAULT '',`Groupe_Ville` varchar(40) NOT NULL DEFAULT '',`Groupe_Pays` varchar(40) NOT NULL DEFAULT '',`Groupe_Acces` varchar(128) NOT NULL,`Groupe_Rem` varchar(1024) NOT NULL DEFAULT '',`Livr` varchar(8) NOT NULL)";
     String wCREATE_Sites = "CREATE TABLE `Sites` (`SiteId` int(11) NOT NULL,`Site_GroupeId` int(11) NOT NULL,`Site_Code` varchar(24) NOT NULL DEFAULT '',`Site_Depot` varchar(128) NOT NULL DEFAULT '',`Site_Nom` varchar(64) NOT NULL DEFAULT '',`Site_Adr1` varchar(40) NOT NULL DEFAULT '',`Site_Adr2` varchar(40) NOT NULL DEFAULT '',`Site_Adr3` varchar(40) NOT NULL DEFAULT '',`Site_Adr4` varchar(40) NOT NULL,`Site_CP` varchar(10) NOT NULL DEFAULT '',`Site_Ville` varchar(40) NOT NULL DEFAULT '',`Site_Pays` varchar(40) NOT NULL DEFAULT '',`Site_Acces` varchar(128) NOT NULL,`Site_RT` varchar(1024) NOT NULL DEFAULT '',`Site_APSAD` varchar(1024) NOT NULL DEFAULT '',`Site_Rem` varchar(1024) NOT NULL DEFAULT '',`Site_ResourceId` int(11) NOT NULL DEFAULT 0,`Livr` varchar(8) NOT NULL)";
     String wCREATE_Zones = "CREATE TABLE `Zones` (`ZoneId` int(11) NOT NULL,`Zone_SiteId` int(11) NOT NULL,`Zone_Code` varchar(24) NOT NULL DEFAULT '',`Zone_Depot` varchar(128) NOT NULL DEFAULT '',`Zone_Nom` varchar(64) NOT NULL DEFAULT '',`Zone_Adr1` varchar(40) NOT NULL DEFAULT '',`Zone_Adr2` varchar(40) NOT NULL DEFAULT '',`Zone_Adr3` varchar(40) NOT NULL DEFAULT '',`Zone_Adr4` varchar(40) NOT NULL,`Zone_CP` varchar(10) NOT NULL DEFAULT '',`Zone_Ville` varchar(40) NOT NULL DEFAULT '',`Zone_Pays` varchar(40) NOT NULL DEFAULT '',`Zone_Acces` varchar(128) NOT NULL,`Zone_Rem` varchar(1024) NOT NULL DEFAULT '',`Livr` varchar(8) NOT NULL)";
     String wCREATE_Intervention = "CREATE TABLE `Interventions` (`InterventionId` int(11) NOT NULL,`Intervention_ZoneId` int(11) DEFAULT 0,`Intervention_Date` varchar(32) NOT NULL DEFAULT '',`Intervention_Type` varchar(32) NOT NULL DEFAULT '',`Intervention_Parcs_Type` varchar(32) NOT NULL,`Intervention_Status` varchar(32) NOT NULL DEFAULT 'Planifiée',`Intervention_Histo_Status` longtext NOT NULL DEFAULT '',`Intervention_Facturation` varchar(32) NOT NULL DEFAULT 'Détaillée',`Intervention_Histo_Facturation` longtext NOT NULL DEFAULT '',`Intervention_Responsable` varchar(128) NOT NULL DEFAULT '',`Intervention_Intervenants` mediumtext NOT NULL DEFAULT '',`Intervention_Reglementation` mediumtext NOT NULL DEFAULT '',`Intervention_Signataire_Client` varchar(128) NOT NULL,`Intervention_Signataire_Tech` varchar(128) NOT NULL,`Intervention_Signataire_Date` varchar(32) NOT NULL,`Intervention_Remarque` varchar(1024) NOT NULL DEFAULT '',`Livr` varchar(8) NOT NULL DEFAULT '',`Intervention_Contrat` varchar(64) NOT NULL DEFAULT '',`Intervention_TypeContrat` varchar(128) NOT NULL DEFAULT '',`Intervention_Duree` varchar(128) NOT NULL DEFAULT '',`Intervention_Organes` varchar(1024) NOT NULL DEFAULT '',`Intervention_RT` varchar(1024) NOT NULL DEFAULT '',`Intervention_APSAD` varchar(1024) NOT NULL DEFAULT '')";
     String wCREATE_InterMissions = "CREATE TABLE `InterMissions` (`InterMissionId` int(11) NOT NULL,`InterMission_InterventionId` int(11) NOT NULL DEFAULT 0,`InterMission_Nom` varchar(512) NOT NULL,`InterMission_Exec` tinyint(1) NOT NULL,`InterMission_Date` varchar(32) NOT NULL,`InterMission_Note` varchar(4096) NOT NULL)";
 
-
+    String wCREATE_Planning = "CREATE TABLE `Planning` (`PlanningId` int(11) NOT NULL,"
+        "`Planning_InterventionId` int(11) NOT NULL DEFAULT 0,"
+        "`Planning_ResourceId` int(11) NOT NULL DEFAULT 0,`"
+        "Planning_InterventionstartTime` datetime NOT NULL DEFAULT current_timestamp,"
+        "`Planning_InterventionendTime` datetime NOT NULL DEFAULT current_timestamp,"
+        "`Planning_Libelle` varchar(512) NOT NULL DEFAULT '')";
+    
 
 
 
@@ -238,7 +252,7 @@ class DbTools {
 
 
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
-     String wDbPath = "eInterMissionse.db";
+     String wDbPath = "skplannS3cont.db";
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
 
     database = openDatabase(
@@ -255,6 +269,13 @@ class DbTools {
         await db.execute(wCREATE_Param_Saisie_Param);
         await db.execute(wCREATE_Users);
         await db.execute(wCREATE_Clients);
+        await db.execute(wCREATE_Adresses);
+        await db.execute(wCREATE_Contacts);
+
+        await db.execute(wCREATE_Planning);
+        
+
+
         await db.execute(wCREATE_Groupes);
         await db.execute(wCREATE_Sites);
         await db.execute(wCREATE_Zones);
@@ -391,7 +412,41 @@ class DbTools {
   }
 
 
+  //************************************************
+  //***********  P A R A M   P A R A M  ************
+  //************************************************
 
+  static Future<List<Param_Param>> getParam_Param() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query("Param_Param");
+    return List.generate(maps.length, (i) {
+      return Param_Param(
+        maps[i]["Param_ParamId"],
+        maps[i]["Param_Param_Type"],
+        maps[i]["Param_Param_ID"],
+        maps[i]["Param_Param_Text"],
+        maps[i]["Param_Param_Int"],
+        maps[i]["Param_Param_Double"],
+        maps[i]["Param_Param_Ordre"],
+      );
+    });
+  }
+
+  static Future<void> inserParam_Param(Param_Param wParam_Param) async {
+    final db = await DbTools.database;
+    int? repid = await db.insert("Param_Param", wParam_Param.toMap());
+    gLastID = repid!;
+  }
+
+
+  static Future<void> TrunckParam_Param() async {
+    final db = await DbTools.database;
+    int? repid = await db.delete("Param_Param");
+  }
+
+
+  
+  
   //************************************************
   //*********** P A R A M   S A I S I E ************
   //************************************************
@@ -1600,6 +1655,130 @@ class DbTools {
     int? repid = await db.delete("Clients");
   }
 
+
+
+  //************************************************
+  //****************** A D R E S S E S *************
+  //************************************************
+
+  static Future<List<Adresse>> getAdresse() async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> maps = await db.query("Adresses", orderBy: "AdresseId ASC");
+
+    return List.generate(maps.length, (i) {
+      return Adresse(
+        maps[i]["AdresseId"],
+        maps[i]["Adresse_ClientId"],
+        maps[i]["Adresse_Code"],
+        maps[i]["Adresse_Type"],
+        maps[i]["Adresse_Nom"],
+        maps[i]["Adresse_Adr1"],
+        maps[i]["Adresse_Adr2"],
+        maps[i]["Adresse_Adr3"],
+        maps[i]["Adresse_Adr4"],
+        maps[i]["Adresse_CP"],
+        maps[i]["Adresse_Ville"],
+        maps[i]["Adresse_Pays"],
+        maps[i]["Adresse_Acces"],
+
+
+        maps[i]["Adresse_Rem"],
+      );
+    });
+  }
+
+  static Future<void> inserAdresse(Adresse wAdresse) async {
+    final db = await DbTools.database;
+    int? repid = await db.insert("Adresses", wAdresse.toMap());
+    gLastID = repid!;
+  }
+
+
+  static Future<void> TrunckAdresse() async {
+    final db = await DbTools.database;
+    int? repid = await db.delete("Adresses");
+  }
+
+  //************************************************
+  //****************** C O N T A C T S *************
+  //************************************************
+
+  static Future<List<Contact>> getContact() async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> maps = await db.query("Contacts", orderBy: "Contact_Nom ASC");
+
+    return List.generate(maps.length, (i) {
+      return Contact(
+          maps[i]["ContactId"],
+          maps[i]["Contact_ClientId"],
+          maps[i]["Contact_AdresseId"],
+          maps[i]["Contact_Code"],
+          maps[i]["Contact_Type"],
+          maps[i]["Contact_Civilite"],
+          maps[i]["Contact_Prenom"],
+          maps[i]["Contact_Nom"],
+          maps[i]["Contact_Fonction"],
+          maps[i]["Contact_Service"],
+          maps[i]["Contact_Tel1"],
+          maps[i]["Contact_Tel2"],
+          maps[i]["Contact_eMail"],
+          maps[i]["Contact_Rem"],
+      );
+    });
+  }
+
+  static Future<void> inserContact(Contact wContact) async {
+    final db = await DbTools.database;
+    int? repid = await db.insert("Contacts", wContact.toMap());
+    gLastID = repid!;
+  }
+
+
+  static Future<void> TrunckContact() async {
+    final db = await DbTools.database;
+    int? repid = await db.delete("Contacts");
+  }
+
+
+
+  //************************************************
+  //****************** P L A N N I N G *************
+  //************************************************
+
+  static Future<List<Planning>> getPlanning() async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> maps = await db.query("Planning", orderBy: "PlanningId ASC");
+
+    return List.generate(maps.length, (i) {
+      return Planning(
+        maps[i]["PlanningId"],
+        maps[i]["Planning_InterventionId"],
+        maps[i]["Planning_ResourceId"],
+        DateTime.parse(maps[i]["Planning_InterventionstartTime"]),
+      DateTime.parse(maps[i]["Planning_InterventionendTime"]),
+        maps[i]["Planning_Libelle"],
+
+      );
+    });
+  }
+
+  static Future<void> inserPlanning(Planning wPlanning) async {
+    final db = await DbTools.database;
+    print("wPlanning.toMap() ${wPlanning.toMap()}");
+    int? repid = await db.insert("Planning", wPlanning.toMap());
+    gLastID = repid!;
+  }
+
+
+  static Future<void> TrunckPlanning() async {
+    final db = await DbTools.database;
+    int? repid = await db.delete("Planning");
+  }
+
+
   //************************************************
   //******************** G R O U P E S *************
   //************************************************
@@ -1686,7 +1865,6 @@ class DbTools {
 
   static Future<void> inserSites(Site wSite) async {
     final db = await DbTools.database;
-    print("wSite.toMap() ${wSite.toMap()}");
     int? repid = await db.insert("Sites", wSite.toMap());
     gLastID = repid!;
   }

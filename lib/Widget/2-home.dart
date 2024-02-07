@@ -1,6 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/shared_pref.dart';
@@ -14,6 +18,9 @@ import 'package:verifplus/Widget/Planning/Planning.dart';
 import 'package:verifplus/Widget/Widget_Tools/bottom_navigation_bar.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 
+
+
+
 class Home extends StatefulWidget {
   @override
   _HomeState createState() => _HomeState();
@@ -26,6 +33,10 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   String notificationBody = 'No Body';
   String notificationData = 'No Data';
   late BuildContext ctx;
+
+  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
   List<String> P_itemsTitre = <String>[
     "",
@@ -48,8 +59,27 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     await reload();
   }
 
+  bool hasConnection = false;
+  Future<bool> checkConnection() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        hasConnection = true;
+      } else {
+        hasConnection = false;
+      }
+    } on SocketException catch (_) {
+      hasConnection = false;
+    }
+
+    return hasConnection;
+  }
+
+
+
   @override
   Future reload() async {
+    await checkConnection();
     setState(() {});
   }
 
@@ -61,16 +91,36 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-    //  WidgetsBinding.instance!.removeObserver(this);
+
     super.dispose();
   }
 
   @override
   void initState() {
     FlutterAppBadger.removeBadge();
-
     super.initState();
+    initConnectivity();
+
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     initLib();
+  }
+
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      return;
+    }
+    if (!mounted) {
+      return Future.value(null);
+    }
+    return reload();
+  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    await checkConnection();
+    setState(() {});
   }
 
   @override
@@ -87,6 +137,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   Widget Block_MenuApp(BuildContext context) {
     String title_string = P_itemsTitre[DbTools.gCurrentIndex];
     Widget wchildren = P_children[DbTools.gCurrentIndex];
+
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -121,10 +172,12 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
           child: Image.asset("assets/images/IcoW.png"),
         ),
         actions: <Widget>[
+
+
           IconButton(
-            icon: const Icon(
-              Icons.cloud_download_outlined,
-              color: Colors.green,
+            icon:  Icon(
+              hasConnection ?  Icons.cloud_download : Icons.cloud_off,
+             color:  hasConnection ? Colors.green : Colors.red,
             ),
             onPressed: () async {
               await Import_Data_Dialog.Dialogs_Saisie(context, onSaisie);
@@ -176,7 +229,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   void onBottomIconPressed(int index) {
     DbTools.gCurrentIndex = index;
-    setState(() {});
+    reload();
   }
 
   void AffMessage(String title, String body) {
