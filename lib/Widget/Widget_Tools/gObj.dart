@@ -1,12 +1,11 @@
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:easy_table/easy_table.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:marquee/marquee.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:http/http.dart' as http;
+import 'package:davi/davi.dart';
 
 
 class Certif {
@@ -187,6 +186,7 @@ class gObj {
 //    print(' text width: ${tp.width} ${tp2.width}');
 
     return Material(
+      color: gColors.LinearGradient2,
       elevation: 4,
       child: Container(
         height: 57,
@@ -894,7 +894,7 @@ class gObj {
   }
 
   static Widget AffCertif() {
-    EasyTableModel<Certif>? _model;
+    DaviModel<Certif>? _model;
 
     List<Certif> rows = [
       Certif('Oui', "N4", "01/01/2018", "Non", ""),
@@ -903,41 +903,41 @@ class gObj {
       Certif('Oui', "Q4", "01/01/2021", "Oui", ""),
     ];
 
-    _model = EasyTableModel<Certif>(rows: rows, columns: [
-      EasyTableColumn(
+    _model = DaviModel<Certif>(rows: rows, columns: [
+      DaviColumn(
         name: 'O/N',
         width: 45,
         stringValue: (row) => row.ON,
         headerAlignment: Alignment.center,
         cellAlignment: Alignment.center,
       ),
-      EasyTableColumn(
+      DaviColumn(
         name: 'Type',
         width: 50,
         stringValue: (row) => row.Type,
         headerAlignment: Alignment.center,
         cellAlignment: Alignment.center,
       ),
-      EasyTableColumn(
+      DaviColumn(
         name: 'Délivrance',
         width: 90,
         stringValue: (row) => row.Delivrance,
         headerAlignment: Alignment.center,
         cellAlignment: Alignment.center,
       ),
-      EasyTableColumn(
+      DaviColumn(
         name: 'Réserve(s)',
         width: 90,
         stringValue: (row) => row.Reserve,
         headerAlignment: Alignment.center,
         cellAlignment: Alignment.center,
       ),
-      EasyTableColumn(
+      DaviColumn(
           name: 'Dossier PDF',
           width: 100,
           headerAlignment: Alignment.center,
           cellAlignment: Alignment.center,
-          cellBuilder: (BuildContext context, RowData<Certif> data) {
+          cellBuilder: (BuildContext context, DaviRow<Certif> data) {
             return Icon(
               Icons.file_download,
             );
@@ -968,12 +968,12 @@ class gObj {
               ),
               Container(
                 width: 382,
-                child: EasyTableTheme(
-                  child: EasyTable<Certif>(
+                child: DaviTheme(
+                  child: Davi<Certif>(
                     _model,
                     visibleRowsCount: 4,
                   ),
-                  data: EasyTableThemeData(
+                  data: DaviThemeData(
                     header: HeaderThemeData(
                       color: gColors.LinearGradient3,
                     ),

@@ -246,7 +246,7 @@ class Client_Groupe_Parc_Inter_AuditState extends State<Client_Groupe_Parc_Inter
     return new Container(
       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
       width: LargeurCol2,
-      height: 27,
+      height: 31,
       child: Card(
         color: gColors.transparent,
         elevation: 0,

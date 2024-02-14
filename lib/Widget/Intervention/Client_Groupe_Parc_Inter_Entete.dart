@@ -140,14 +140,23 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
     super.initState();
   }
 
-  String DescAff = "N° 11 : Eau + Additif 6l PA portatif 2018";
-  String DescAff2 = "RDC - Bâtiment A1 - Bureau";
+  String DescAff = "";
+  String DescAff2 = "";
   String DescAff3 = "";
 
   Future AffDesc() async {
     DbTools.glfParcs_Desc = await DbTools.getParcs_Desc(DbTools.gParc_Ent.ParcsId!);
+//    Parc_Desc wParc_Desc = await DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, param_Saisie.Param_Saisie_ID);
 
-    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ENTETE AffDesc");
+    print("&&&&&&&&&&&&&&&&&& ENTETE AffDesc ${DbTools.glfParcs_Desc.length}");
+    print("&&&&&&&&&&&&&&&&&& ENTETE AffDesc ${DbTools.glfParcs_Desc.length}");
+    print("&&&&&&&&&&&&&&&&&& ENTETE AffDesc ${DbTools.glfParcs_Desc.length}");
+    print("&&&&&&&&&&&&&&&&&& ENTETE AffDesc ${DbTools.glfParcs_Desc.length}");
+    print("&&&&&&&&&&&&&&&&&& ENTETE AffDesc ${DbTools.glfParcs_Desc.length}");
+
+
+
+
     for (int i = 0; i < Srv_DbTools.ListParam_Saisie.length; i++) {
       Param_Saisie element = Srv_DbTools.ListParam_Saisie[i];
       await DbTools.getParcs_Desc_Id_Type_Add(DbTools.gParc_Ent.ParcsId!, element.Param_Saisie_ID);
@@ -219,7 +228,11 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
         } else {
           DbTools.glfParcs_Desc.forEach((element2) async {
             if (element.Param_Saisie_ID == element2.ParcsDesc_Type) {
-              DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, element.Param_Saisie_ID)}";
+//              print(">>>>>>>>>>>>>>>>>>>>>>>> element2 ${element2.ParcsDesc_ParcsId} ${element2.ParcsDesc_Type} ${element2.ParcsDesc_Lib}");
+
+                            DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, element.Param_Saisie_ID)}";
+              //DescAff = "${DescAff} ${element2.ParcsDesc_ParcsId}";
+
             }
           });
         }
@@ -274,6 +287,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
       //    endDrawer: DbTools.gIsMedecinLogin! ? C_SideDrawer() : I_SideDrawer(),
 
       backgroundColor: Colors.white,
+
       appBar: AppBar(
         title: InkWell(
           onTap: () async {
@@ -281,7 +295,6 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
             await Client_Dialog.Dialogs_Client(context);
           },
           child:
-// Titre 1
           AutoSizeText(
             "${subTitle.length == 0 ? DbTools.OrgLib : subTitle}",
             style: gColors.bodyTitle1_B_G_20,
@@ -322,7 +335,11 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
         ],
         backgroundColor: gColors.white,
       ),
-      body: SafeArea(
+
+
+
+      body:
+      SafeArea(
         child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
@@ -331,14 +348,15 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                 child: Column(
                   children: [
                     Client_Groupe_Parc_Inter_Entete_affAll ? Container() : gObj.InfoWidget(context, false),
-                    Container(
-                      height: 8,
-                    ),
+
                     Material(
+                      color: Colors.white,
+
                       elevation: 10,
                       child: Container(
                         padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
-                        child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                        child:
+                        Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.center, children: [
                           Container(
                             width: 60,
                             child: GestureDetector(
@@ -373,15 +391,13 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                         ]),
                       ),
                     ),
-                    Container(
-                      height: 10,
-                    ),
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         IconButton(
-                          padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                           icon: DbTools.gParc_Ent.Parcs_QRCode!.isEmpty ? Image.asset("assets/images/QrCode.png") : Image.asset("assets/images/QrCodeok.png"),
                           onPressed: () async {
                             gDialogs.Dialog_QrCode(context);
@@ -394,7 +410,9 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                             Client_Groupe_Parc_Inter_Entete_Dialog.DescAff2 = DescAff2;
                             await Client_Groupe_Parc_Inter_Entete_Dialog.Dialogs_Entete(context, onMaj);
                           },
-                          child: Container(
+                          child:
+                          Expanded(child:
+                          Container(
 //                            width: 600,
                             padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                             child: Column(
@@ -431,9 +449,9 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                               ],
                             ),
                           ),
-                        ),
+                        ),),
                         IconButton(
-                          padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                           icon: isImage ? imgList[0] : Image.asset("assets/images/Icon_Photo.png"),
                           onPressed: () async {
                             print("on Photo");

@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Articles_Link_Verif_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_NF074.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
@@ -142,11 +141,18 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
 
 
     DbTools.glfParcs_Desc = await DbTools.getParcs_Desc(DbTools.gParc_Ent.ParcsId!);
+      print("   getParcs_Desc ${DbTools.gParc_Ent.ParcsId!}");
+    print("   getParcs_Desc ${DbTools.gParc_Ent.ParcsId!}");
+    print("   getParcs_Desc ${DbTools.gParc_Ent.ParcsId!}");
+    print("   getParcs_Desc ${DbTools.gParc_Ent.ParcsId!}");
+    print("   getParcs_Desc ${DbTools.gParc_Ent.ParcsId!}");
+
+
+
     for (int i = 0; i < Srv_DbTools.ListParam_Saisie.length; i++) {
       Param_Saisie param_Saisie = Srv_DbTools.ListParam_Saisie[i];
       Parc_Desc wParc_Desc = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, param_Saisie.Param_Saisie_ID);
 
-      //      print("   wParc_Desc.ParcsDesc_Lib! ${wParc_Desc.ParcsDesc_Type!} ${wParc_Desc.ParcsDesc_Lib!}");
 
 
       bool MajAuto = false;
@@ -253,7 +259,7 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
 
     return Scaffold(
       body: Container(
-          padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -571,9 +577,7 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
         child: InkWell(
           onTap: () async {
             await HapticFeedback.vibrate();
-
             print("RowSaisie CALL Client_Groupe_Parc_Inter_Equip_Saisie_Dialog ${wParc_Desc.toString()}");
-
             await Client_Groupe_Parc_Inter_Equip_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, param_Saisie, wParc_Desc);
 
 
@@ -616,7 +620,7 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
             print("RowSaisie Retour ${wParc_Desc.toString()}");
             print("RowSaisie Retour DbTools.gParc_Ent ${DbTools.gParc_Ent.toString()}");
 
-            print(" updateParc_Ent H");
+
             DbTools.updateParc_Ent(DbTools.gParc_Ent);
             onSaisie();
 
@@ -742,7 +746,7 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
     Parc_Desc wParc_Desc = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, param_Saisie.Param_Saisie_ID);
     double IcoWidth = 30;
 
-    print(">>>>>>>>>>>>>>>>>>>>>>>> ParcsDesc_Lib ${wParc_Desc.ParcsDesc_Type} ${wParc_Desc.ParcsDesc_Lib}");
+//    print(">>>>>>>>>>>>>>>>>>>>>>>> ParcsDesc_Lib ${param_Saisie.Param_Saisie_ID} ${wParc_Desc.ParcsDesc_ParcsId} ${wParc_Desc.ParcsDesc_Type} ${wParc_Desc.ParcsDesc_Lib}");
 
 
 
@@ -852,7 +856,7 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
     return new Container(
       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
       width: LargeurCol2,
-      height: 27,
+      height: 31,
       child: Card(
         color: gColors.transparent,
         elevation: 0,

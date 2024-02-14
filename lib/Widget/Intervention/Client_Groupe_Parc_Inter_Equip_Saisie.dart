@@ -167,6 +167,10 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState extends State<Client_Grou
   @override
   Widget build(BuildContext context) {
 
+
+
+
+
     Widget Ctrl = Container();
 
     double wDialogHeight = 250;
@@ -259,6 +263,7 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState extends State<Client_Grou
 
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      surfaceTintColor: Colors.white,
       backgroundColor: gColors.white,
       title: Container(
           color: gColors.white,
@@ -1587,7 +1592,6 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState extends State<Client_Grou
     print("scrollController.position.maxScrollExtent ${scrollController.position.maxScrollExtent}");
     if (scrollController.hasClients) {
       double ii = 27.0 * (index);
-
       scrollController.animateTo(ii, //scrollController.position.maxScrollExtent,
           duration: Duration(milliseconds: 300),
           curve: Curves.elasticOut);

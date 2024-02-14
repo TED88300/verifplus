@@ -106,8 +106,6 @@ class _Client_Groupe_Parc_Inter_EnteteDialogState extends State<Client_Groupe_Pa
     ListParam_Saisie_Tmp.sort(Srv_DbTools.affL1SortComparison);
     ListParam_Saisie_Tmp.forEach((element) async {
       if (element.Param_Saisie_Affichage_L1) {
-//        print(">>>>>>>>>>>>>>>> element.Param_Saisie_ID ${element.Param_Saisie_ID}");
-
         if (element.Param_Saisie_ID.compareTo("FREQ") == 0) {
           DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FREQ_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("ANN") == 0) {
@@ -157,9 +155,7 @@ class _Client_Groupe_Parc_Inter_EnteteDialogState extends State<Client_Groupe_Pa
           DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_SERIE_Label!, element.Param_Saisie_ID)}";
         } else {
           DbTools.glfParcs_Desc.forEach((element2) async {
-
             if (element.Param_Saisie_ID == element2.ParcsDesc_Type) {
-
               DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, element.Param_Saisie_ID)}";
             }
           });
@@ -187,6 +183,7 @@ class _Client_Groupe_Parc_Inter_EnteteDialogState extends State<Client_Groupe_Pa
       shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(24.0))),
       backgroundColor: gColors.white,
+      surfaceTintColor: Colors.white,
       title: Container(
         color: gColors.white,
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
@@ -567,7 +564,7 @@ class _Client_Groupe_Parc_Inter_EnteteDialogState extends State<Client_Groupe_Pa
     return new Container(
       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
       width: LargeurCol2,
-      height: 27,
+      height: 31,
       child: Card(
         color: gColors.greyLight,
         elevation: 0,

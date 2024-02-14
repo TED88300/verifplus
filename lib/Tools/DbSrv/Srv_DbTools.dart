@@ -309,9 +309,7 @@ class Srv_DbTools {
   static Future<bool> Import_Srv_NF074_Pieces_Actions() async {
     ListNF074_Pieces_Actions = await getNF074_Pieces_Actions_API_Post("select", "select * from NF074_Pieces_Actions ORDER BY NF074_Pieces_ActionsId");
     if (ListNF074_Pieces_Actions == null) return false;
-    //print("getNF074_Pieces_ActionsAll ${ListNF074_Pieces_Actions.length}");
     if (ListNF074_Pieces_Actions.length > 0) {
-      //print("getNF074_Pieces_ActionsAll return TRUE");
       return true;
     }
     return false;

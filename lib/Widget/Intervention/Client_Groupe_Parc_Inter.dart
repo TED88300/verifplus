@@ -121,8 +121,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     Srv_DbTools.ListParam_Interv_Base.clear();
     Srv_DbTools.ListParam_Interv_Base.addAll(Srv_DbTools.ListParam_Saisie_Base);
 
-
-
     await Srv_DbTools.getParam_Saisie_Base("Desc");
     DbTools.glfParcs_Ent = await DbTools.getParcs_Ent(Srv_DbTools.gIntervention.InterventionId!);
     for (int i = 0; i < DbTools.gRowSels.length; i++) {
@@ -135,7 +133,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     }
 
     DbTools.glfParcs_Desc = await DbTools.getParcs_DescInter(Srv_DbTools.gIntervention.InterventionId!);
-    print("****** getParcs_DescInter lenght ${DbTools.glfParcs_Desc.length}\n******************");
+    print(" getParcs_DescInter lenght ${DbTools.glfParcs_Desc.length}");
     String DescAff = "";
 
     Srv_DbTools.ListParam_Saisie.sort(Srv_DbTools.affSort2Comparison);
@@ -498,7 +496,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
     Srv_DbTools.ListParam_ParamAll.forEach((element) {
       if (element.Param_Param_Type.compareTo("Type_Organe") == 0) {
-        //print("element ${element.Param_Param_ID}  ${element.Param_Param_Text}");
+        print("element ${element.Param_Param_ID}  ${element.Param_Param_Text}");
         if (element.Param_Param_ID.compareTo("Base") != 0) {
           lGrdBtn.add(GrdBtn(GrdBtnId: i++, GrdBtn_GroupeId: 4, GrdBtn_Label: element.Param_Param_ID));
           subTitleArray.add(element.Param_Param_ID);

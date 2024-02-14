@@ -179,6 +179,7 @@ class PlanningState extends State<Planning> {
   @override
   Widget Entete_Btn_Search() {
     return Container(
+
         height: 57,
         child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
           Container(

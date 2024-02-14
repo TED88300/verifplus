@@ -98,7 +98,7 @@ class gColors {
   static Widget wBoxDecoration(BuildContext context)
   {
     return  Container(
-      width: 200,
+      width: 40,
       height: 200,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(13)),

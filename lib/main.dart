@@ -25,6 +25,10 @@ void main() async {
         debugShowCheckedModeBanner: false,
         title: 'App',
         theme: ThemeData(
+          cardTheme: CardTheme(
+            surfaceTintColor: Colors.white,
+          ),
+          scaffoldBackgroundColor: const Color(0xFFf6f6f6),
           primarySwatch: MaterialColor(
             gColors.primary.value,
             gColors.getSwatch(gColors.primary),

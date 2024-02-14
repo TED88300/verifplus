@@ -358,6 +358,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
 
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      surfaceTintColor: Colors.white,
       backgroundColor: gColors.white,
       title: Container(
           color: gColors.white,

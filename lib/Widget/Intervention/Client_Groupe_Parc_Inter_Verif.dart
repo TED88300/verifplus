@@ -378,7 +378,7 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                 print("InkWell Saisie B");
                 await HapticFeedback.vibrate();
                 await Client_Groupe_Parc_Inter_Article_Dialog.Dialogs_Saisie(context, onSaisie, "ES");
-              } else if (!wParc_Desc.ParcsDesc_Lib!.contains("---")) {
+              } else if (!wParc_Desc.ParcsDesc_Lib!.contains(">")) {
                 print("InkWell Saisie C");
                 await Client_Groupe_Parc_Inter_Verif_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, param_Saisie, wParc_Desc);
               }
@@ -523,7 +523,7 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                         setState(() {});
                       }
 
-                      print("GENERATION DES ARTICLES ASSOCIES");
+                      print(" GENERATION DES ARTICLES ASSOCIES ");
                       await Client_Groupe_Parc_Tools.Gen_Articles();
 
                       // Proposition Auto si Reformé

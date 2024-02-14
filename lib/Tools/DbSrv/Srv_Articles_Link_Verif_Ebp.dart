@@ -34,6 +34,7 @@ class Result_Article_Link_Verif {
   static Result_Article_Link_VerifInit() {
     return Result_Article_Link_Verif("", "", "", 0);
   }
+
   Result_Article_Link_Verif(String ParentID, String TypeChildID, String ChildID, double Qte) {
     this.ParentID = ParentID;
     this.TypeChildID = TypeChildID;

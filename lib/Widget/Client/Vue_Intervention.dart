@@ -317,7 +317,7 @@ class Intervention_VueState extends State<Intervention_Vue> {
     return new Container(
       padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
       width: LargeurCol2,
-      height: 27,
+      height: 31,
       child: Card(
         color: gColors.transparent,
         elevation: 0,

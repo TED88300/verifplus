@@ -74,7 +74,7 @@ class DbTools {
 
   static bool gOffLine = false;
 
-  static int gCurrentIndex = 0;
+  static int gCurrentIndex = 3;
   static int gCurrentIndex2 = 0;
   static int gCurrentIndex3 = 0;
 
@@ -252,7 +252,7 @@ class DbTools {
 
 
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
-     String wDbPath = "skplannS3cont.db";
+     String wDbPath = "skpl27893cont.db";
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
 
     database = openDatabase(
@@ -1102,10 +1102,34 @@ class DbTools {
   static Future<List<NF074_Pieces_Det_Inc>> getNF074_Pieces_Det_Inc_In(String wType) async {
     final db = await database;
 
+    String wPOIDS_Lib = Srv_DbTools.POIDS_Lib;
+    String wUNIT = "";
+    if (wPOIDS_Lib.contains("Kilos"))
+    {
+      wUNIT = "Kg";
+      wPOIDS_Lib = wPOIDS_Lib.replaceAll("Kilos", "");
+      print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib KG ${wPOIDS_Lib}");
+    }
+    if (wPOIDS_Lib.contains("Litres"))
+    {
+      wUNIT = "L";
+      wPOIDS_Lib = wPOIDS_Lib.replaceAll("Litres", "");
+      print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib L ${wPOIDS_Lib}");
+    }
+    wPOIDS_Lib.replaceAll(" ", "");
+
+    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib ${wPOIDS_Lib}");
+
+    int wPOIDS = int.tryParse(wPOIDS_Lib) ?? 0;
+
+
+
+
     String selBase = "SELECT * FROM NF074_Pieces_Det_Inc WHERE ";
-    String selDESCTous = "NF074_Pieces_Det_Inc_DESC = 'Tous' ";
+    String selDESCTous = "NF074_Pieces_Det_Inc_DESC = '' ";
     String selDESCPRS = "NF074_Pieces_Det_Inc_DESC LIKE '%${Srv_DbTools.DESC_Lib}%' AND NF074_Pieces_Det_Inc_PRS LIKE '%${Srv_DbTools.PRS_Lib}%'  AND NF074_Pieces_Det_Inc_CLF LIKE '%${Srv_DbTools.CLF_Lib}%' ";
-    String selMOBPDT = "(NF074_Pieces_Det_Inc_MOB LIKE '%${Srv_DbTools.MOB_Lib}%' OR NF074_Pieces_Det_Inc_MOB  = 'Tous') AND (NF074_Pieces_Det_Inc_PDT LIKE '%${Srv_DbTools.PDT_Lib}%' OR NF074_Pieces_Det_Inc_PDT  = 'Tous')  AND (NF074_Pieces_Det_Inc_POIDS LIKE '%${Srv_DbTools.POIDS_Lib}%' OR NF074_Pieces_Det_Inc_POIDS  = 'Tous')";
+    String selMOBPDT = " ((NF074_Pieces_Det_Inc_POIDS LIKE '%${wPOIDS}/%' AND NF074_Pieces_Det_Inc_POIDS LIKE '%${wUNIT}%') OR NF074_Pieces_Det_Inc_POIDS  = '') AND (NF074_Pieces_Det_Inc_MOB LIKE '%${Srv_DbTools.MOB_Lib}%' OR NF074_Pieces_Det_Inc_MOB  = '') AND (NF074_Pieces_Det_Inc_PDT LIKE '%${Srv_DbTools.PDT_Lib}%' OR NF074_Pieces_Det_Inc_PDT  = '')  ";
+
 
     String selTypeVerif = "";
     if (wType.contains("Inst")) {
@@ -1138,14 +1162,15 @@ class DbTools {
     }
 
 
+
     String selSQL = "";
     if (selTypeVerif.isEmpty)
       return [];
     else
       selSQL = "$selBase ($selTypeVerif)  AND  $selDESCTous or ($selDESCPRS AND $selDESCPRS AND $selMOBPDT)";
 
+    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_Inc_In selSQL ${selSQL}");
 
-    //print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_Inc_In selSQL ${selSQL}");
 
     final List<Map<String, dynamic>> maps = await db.rawQuery(selSQL);
 
@@ -1184,9 +1209,9 @@ class DbTools {
     final db = await database;
 
     String selBase = "SELECT * FROM NF074_Pieces_Det_Inc WHERE ";
-    String selDESCTous = "NF074_Pieces_Det_Inc_DESC = 'Tous' ";
+    String selDESCTous = "NF074_Pieces_Det_Inc_DESC = '' ";
     String selDESCPRS = "NF074_Pieces_Det_Inc_DESC LIKE '%${Srv_DbTools.DESC_Lib}%' AND NF074_Pieces_Det_Inc_PRS LIKE '%${Srv_DbTools.PRS_Lib}%'  AND NF074_Pieces_Det_Inc_CLF LIKE '%${Srv_DbTools.CLF_Lib}%' ";
-    String selMOBPDT = "(NF074_Pieces_Det_Inc_MOB LIKE '%${Srv_DbTools.MOB_Lib}%' OR NF074_Pieces_Det_Inc_MOB  = 'Tous') AND (NF074_Pieces_Det_Inc_PDT LIKE '%${Srv_DbTools.PDT_Lib}%' OR NF074_Pieces_Det_Inc_PDT  = 'Tous')  AND (NF074_Pieces_Det_Inc_POIDS LIKE '%${Srv_DbTools.POIDS_Lib}%' OR NF074_Pieces_Det_Inc_POIDS  = 'Tous')";
+    String selMOBPDT = "(NF074_Pieces_Det_Inc_MOB LIKE '%${Srv_DbTools.MOB_Lib}%' OR NF074_Pieces_Det_Inc_MOB  = '') AND (NF074_Pieces_Det_Inc_PDT LIKE '%${Srv_DbTools.PDT_Lib}%' OR NF074_Pieces_Det_Inc_PDT  = '')  AND (NF074_Pieces_Det_Inc_POIDS LIKE '%${Srv_DbTools.POIDS_Lib}%' OR NF074_Pieces_Det_Inc_POIDS  = '')";
 
     String selTypeVerif = "";
     selTypeVerif += "NF074_Pieces_Det_Inst  = 0 AND ";
@@ -1294,9 +1319,31 @@ class DbTools {
   static Future<List<NF074_Mixte_Produit>> getNF074_Mixte_Produit_In(String wType) async {
     final db = await database;
 
-    String selBase = "SELECT * FROM NF074_Mixte_Produit WHERE ";
-    String selDESC = "NF074_Mixte_Produit_DESC LIKE '%${Srv_DbTools.DESC_Lib}%' ";
-    String selMOBPDT = " (NF074_Mixte_Produit_POIDS LIKE '%${Srv_DbTools.POIDS_Lib}%' OR NF074_Mixte_Produit_POIDS  = '') AND (NF074_Mixte_Produit_CLF LIKE '%${Srv_DbTools.CLF_Lib}%' OR NF074_Mixte_Produit_CLF  = '') ";
+    String wPOIDS_Lib = Srv_DbTools.POIDS_Lib;
+    String wUNIT = "";
+    if (wPOIDS_Lib.contains("Kilos"))
+    {
+      wUNIT = "Kg";
+      wPOIDS_Lib = wPOIDS_Lib.replaceAll("Kilos", "");
+      print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib KG ${wPOIDS_Lib}");
+    }
+    if (wPOIDS_Lib.contains("Litres"))
+    {
+      wUNIT = "L";
+      wPOIDS_Lib = wPOIDS_Lib.replaceAll("Litres", "");
+      print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib L ${wPOIDS_Lib}");
+    }
+    wPOIDS_Lib.replaceAll(" ", "");
+
+    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib ${wPOIDS_Lib}");
+
+    int wPOIDS = int.tryParse(wPOIDS_Lib) ?? 0;
+
+
+
+    String selBase = "SELECT * FROM NF074_Mixte_Produit WHERE NF074_Mixte_Produit_Suggestion = 'VF' AND";
+    String selDESC = "(NF074_Mixte_Produit_DESC LIKE '%${Srv_DbTools.DESC_Lib}%' OR NF074_Mixte_Produit_DESC  = '') ";
+    String selMOBPDT = " ((NF074_Mixte_Produit_POIDS LIKE '%${wPOIDS}/%' AND NF074_Mixte_Produit_POIDS LIKE '%${wUNIT}%') OR NF074_Mixte_Produit_POIDS  = '') AND (NF074_Mixte_Produit_CLF LIKE '%${Srv_DbTools.CLF_Lib}%' OR NF074_Mixte_Produit_CLF  = '') ";
     String selEMPZNE = " (NF074_Mixte_Produit_EMP LIKE '%${DbTools.gParc_Ent.Parcs_EMP_Label}%' OR NF074_Mixte_Produit_EMP  = '') AND (NF074_Mixte_Produit_ZNE LIKE '%${DbTools.gParc_Ent.Parcs_ZNE_Label}%' OR NF074_Mixte_Produit_ZNE  = '') ";
 
     String selTypeVerif = "";
@@ -1478,19 +1525,11 @@ class DbTools {
   static Future<List<NF074_Pieces_Actions>> getNF074_Pieces_Actions_In(String wType) async {
     final db = await database;
 
-    //    SELECT * FROM `NF074_Pieces_Actions` WHERE
-//    (  NF074_Pieces_Actions_VerifAnn  = 1 OR NF074_Pieces_Actions_Rech  = 1 )
-//    AND (
-//    NF074_Pieces_Actions_DESC LIKE '%Extincteur Portatif%'
-//    OR (
-//    NF074_Pieces_Actions_PDT = 'Poudre ABC' AND NF074_Pieces_Actions_POIDS = '6 Kilos' AND NF074_Pieces_Actions_PRS = 'PA'
-//    ) OR
-//    (NF074_Pieces_Actions_POIDS LIKE '%A :%' AND 10 <=2) OR (NF074_Pieces_Actions_POIDS LIKE '%B :%'  AND 10 > 2 AND 10 < 20) OR (NF074_Pieces_Actions_POIDS LIKE '%C :%' AND 10 >= 20)
-//    );
+
 
     String selBase = "SELECT * FROM `NF074_Pieces_Actions` WHERE ";
     String selDESC = "NF074_Pieces_Actions_DESC LIKE '%${Srv_DbTools.DESC_Lib}%'";
-    String selPDT_POIDS_PRS = "(NF074_Pieces_Actions_PDT = '${Srv_DbTools.PDT_Lib}' AND NF074_Pieces_Actions_POIDS = '${Srv_DbTools.POIDS_Lib}' AND NF074_Pieces_Actions_PRS = '${Srv_DbTools.PRS_Lib}')";
+    String selPDT_POIDS_PRS = "(NF074_Pieces_Actions_PDT = '${Srv_DbTools.PDT_Lib}' AND NF074_Pieces_Actions_POIDS = '${Srv_DbTools.POIDS_Lib}' )";
 
     String iPOIDS_Lib = Srv_DbTools.POIDS_Lib.replaceAll(RegExp(r'[^0-9]'), '');
     String selPOIDS = "";
@@ -1534,7 +1573,7 @@ class DbTools {
       selSQL = "$selBase ($selTypeVerif)  AND ( $selDESC OR $selPDT_POIDS_PRS $selPOIDS)  ";
 
     final List<Map<String, dynamic>> maps = await db.rawQuery(selSQL);
-//    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Actions_In ${maps.length} ${selSQL}");
+    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Actions_In ${maps.length} ${selSQL}");
 
     return List.generate(maps.length, (i) {
       return NF074_Pieces_Actions(
@@ -2104,10 +2143,11 @@ class DbTools {
   static Future<List<Parc_Ent>> getParcs_Ent_Upd(int Parcs_InterventionId) async {
     final db = await database;
 //    final List<Map<String, dynamic>> maps = await db.query("Parcs_Ent", where: '"Parcs_InterventionId" = ${Parcs_InterventionId} AND Parcs_Update = 1', whereArgs: []);
-//    final List<Map<String, dynamic>> maps = await db.query("Parcs_Ent", where: '"Parcs_InterventionId" = ${Parcs_InterventionId} AND Parcs_Update >= 0', whereArgs: []);
-    final List<Map<String, dynamic>> maps = await db.query("Parcs_Ent", where: '"Parcs_InterventionId" = ${Parcs_InterventionId} ', whereArgs: []);
+    final List<Map<String, dynamic>> maps = await db.query("Parcs_Ent", where: '"Parcs_InterventionId" = ${Parcs_InterventionId} AND Parcs_Update > 0', whereArgs: []);
+//    final List<Map<String, dynamic>> maps = await db.query("Parcs_Ent", where: '"Parcs_InterventionId" = ${Parcs_InterventionId} ', whereArgs: []);
     print("getParcs_Ent Parcs_Ent.length ${maps.length} ${Parcs_InterventionId}");
     return List.generate(maps.length, (i) {
+      print("getParcs Parcs ${maps[i]}");
       return Parc_Ent.fromMap(maps[i]);
     });
   }
@@ -2366,46 +2406,50 @@ class DbTools {
   static Future<void> updateParc_Ent(Parc_Ent parc) async {
     parc.Devis = "";
     final db = await database;
-    String wSlq = "UPDATE Parcs_Ent SET "
-            "Parcs_order = ${parc.Parcs_order}, " +
-        "Parcs_InterventionId = ${parc.Parcs_InterventionId}, " +
-        "Parcs_Type = '${parc.Parcs_Type}', " +
-        "Parcs_Date_Rev = '${parc.Parcs_Date_Rev}', " +
-        "Parcs_QRCode = '${parc.Parcs_QRCode}', " +
-        "Parcs_FREQ_Id = '${parc.Parcs_FREQ_Id}', " +
-        "Parcs_FREQ_Label = '${parc.Parcs_FREQ_Label}', " +
-        "Parcs_ANN_Id = '${parc.Parcs_ANN_Id}', " +
-        "Parcs_ANN_Label = '${parc.Parcs_ANN_Label}', " +
-        "Parcs_FAB_Id = '${parc.Parcs_FAB_Id}', " +
-        "Parcs_FAB_Label = '${parc.Parcs_FAB_Label}', " +
-        "Parcs_NIV_Id = '${parc.Parcs_NIV_Id}', " +
-        "Parcs_NIV_Label = '${parc.Parcs_NIV_Label}', " +
-        "Parcs_ZNE_Id = '${parc.Parcs_ZNE_Id}', " +
-        "Parcs_ZNE_Label = '${parc.Parcs_ZNE_Label}', " +
-        "Parcs_EMP_Id = '${parc.Parcs_EMP_Id}', " +
-        "Parcs_EMP_Label = '${parc.Parcs_EMP_Label}', " +
-        "Parcs_LOT_Id = '${parc.Parcs_LOT_Id}', " +
-        "Parcs_LOT_Label = '${parc.Parcs_LOT_Label}', " +
-        "Parcs_SERIE_Id = '${parc.Parcs_SERIE_Id}', " +
-        "Parcs_SERIE_Label = '${parc.Parcs_SERIE_Label}', " +
-        "Parcs_Intervention_Timer = ${parc.Parcs_Intervention_Timer}, " +
-        "Parcs_Update = 1, " +
-        "Parcs_UUID = '${parc.Parcs_UUID}', " +
-        "Parcs_UUID_Parent = '${parc.Parcs_UUID_Parent}', " +
-        "Parcs_CodeArticle = '${parc.Parcs_CodeArticle}', " +
-        "Parcs_CODF = '${parc.Parcs_CODF}', " +
-        "Parcs_NCERT = '${parc.Parcs_NCERT}', " +
-        "Parcs_Audit_Note = '${parc.Parcs_Audit_Note}', " +
-        "Livr = '${parc.Livr}', " +
-        "Devis = '${parc.Devis}', " +
-        "Action = '${parc.Action}', " +
-        "Parcs_Verif_Note = '${parc.Parcs_Verif_Note}'" +
-        " WHERE ParcsId = ${parc.ParcsId}";
+    String wSlq = 'UPDATE Parcs_Ent SET '
+        'Parcs_order = ${parc.Parcs_order}, ' +
+        'Parcs_InterventionId = ${parc.Parcs_InterventionId}, ' +
+        'Parcs_Type = "${parc.Parcs_Type}", ' +
+        'Parcs_Date_Rev = "${parc.Parcs_Date_Rev}", ' +
+        'Parcs_QRCode = "${parc.Parcs_QRCode}", ' +
+        'Parcs_FREQ_Id = "${parc.Parcs_FREQ_Id}", ' +
+        'Parcs_FREQ_Label = "${parc.Parcs_FREQ_Label}", ' +
+        'Parcs_ANN_Id = "${parc.Parcs_ANN_Id}", ' +
+        'Parcs_ANN_Label = "${parc.Parcs_ANN_Label}", ' +
+        'Parcs_FAB_Id = "${parc.Parcs_FAB_Id}", ' +
+        'Parcs_FAB_Label = "${parc.Parcs_FAB_Label}", ' +
+        'Parcs_NIV_Id = "${parc.Parcs_NIV_Id}", ' +
+        'Parcs_NIV_Label = "${parc.Parcs_NIV_Label}", ' +
+        'Parcs_ZNE_Id = "${parc.Parcs_ZNE_Id}", ' +
+        'Parcs_ZNE_Label = "${parc.Parcs_ZNE_Label}", ' +
+        'Parcs_EMP_Id = "${parc.Parcs_EMP_Id}", ' +
+        'Parcs_EMP_Label = "${parc.Parcs_EMP_Label}", ' +
+        'Parcs_LOT_Id = "${parc.Parcs_LOT_Id}", ' +
+        'Parcs_LOT_Label = "${parc.Parcs_LOT_Label}", ' +
+        'Parcs_SERIE_Id = "${parc.Parcs_SERIE_Id}", ' +
+        'Parcs_SERIE_Label = "${parc.Parcs_SERIE_Label}", ' +
+        'Parcs_Intervention_Timer = ${parc.Parcs_Intervention_Timer}, ' +
+        'Parcs_Update = 1, ' +
+        'Parcs_UUID = "${parc.Parcs_UUID}", ' +
+        'Parcs_UUID_Parent = "${parc.Parcs_UUID_Parent}", ' +
+        'Parcs_CodeArticle = "${parc.Parcs_CodeArticle}", ' +
+        'Parcs_CODF = "${parc.Parcs_CODF}", ' +
+        'Parcs_NCERT = "${parc.Parcs_NCERT}", ' +
+        'Parcs_Audit_Note = "${parc.Parcs_Audit_Note}", ' +
+        'Livr = "${parc.Livr}", ' +
+        'Devis = "${parc.Devis}", ' +
+        'Action = "${parc.Action}", ' +
+        'Parcs_Verif_Note = "${parc.Parcs_Verif_Note}"' +
+        ' WHERE ParcsId = ${parc.ParcsId}';
+
+
 
     print("updateParc_Ent_Update A ${wSlq}");
 
     await db.execute(wSlq);
   }
+
+
 
   static Future<void> updateParc_Ent_Timer(int ParcsId, int Parcs_Intervention_Timer) async {
 //    print("updateParc_Ent_Update");
@@ -2579,6 +2623,8 @@ class DbTools {
 
   static Future<List<Parc_Desc>> getParcs_Desc(int ParcsDesc_ParcsId) async {
     final db = await database;
+    String wSql = "SELECT Parcs_Desc.* FROM Parcs_Desc  WHERE ParcsDesc_ParcsId = ${ParcsDesc_ParcsId} ";
+    print("getParcs_Desc ${wSql}");
     final List<Map<String, dynamic>> maps = await db.rawQuery('SELECT Parcs_Desc.* FROM Parcs_Desc  WHERE ParcsDesc_ParcsId = ? ', [ParcsDesc_ParcsId]);
     return await List.generate(maps.length, (i) {
       return Parc_Desc.fromMap(maps[i]);
@@ -2722,7 +2768,7 @@ class DbTools {
       where: "ParcsDescId = ?",
       whereArgs: [Parc_Desc.ParcsDescId],
     );
-    print(">>>> updateParc_Desc_NoRaz  db.update $repid ${Parc_Desc.ParcsDescId} ${Parc_Desc.ParcsDesc_Id} ${Parc_Desc.ParcsDesc_Lib} ");
+//    print(">>>> updateParc_Desc_NoRaz  db.update $repid ${Parc_Desc.ParcsDescId} ${Parc_Desc.ParcsDesc_Id} ${Parc_Desc.ParcsDesc_Lib} ");
   }
 
   static Future<void> insertParc_Desc(Parc_Desc parc_Desc) async {
