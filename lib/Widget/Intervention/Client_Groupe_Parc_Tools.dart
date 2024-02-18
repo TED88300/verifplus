@@ -44,7 +44,6 @@ class Client_Groupe_Parc_Tools {
   }
 
   static Future<List<Result_Article_Link_Verif>> getVerifLink() async {
-
     bool wDbg = true;
     bool wDbg2 = true;
 
@@ -62,12 +61,10 @@ class Client_Groupe_Parc_Tools {
 
     String wRef = wRefBase;
 //    print(">>>>>>>>>>>>>>>>>>>>>>>>>> getVerifLink wRefBase ${wRefBase}");
-    if (DbTools.gParc_Ent.Parcs_UUID_Parent!.isNotEmpty)
-      {
-        wRef = wRefInst;
- //       print(">>>>>>>>>>>>>>>>>>>>>>>>>> getVerifLink wRefInst ${wRefInst}");
-      }
-    else {
+    if (DbTools.gParc_Ent.Parcs_UUID_Parent!.isNotEmpty) {
+      wRef = wRefInst;
+      //       print(">>>>>>>>>>>>>>>>>>>>>>>>>> getVerifLink wRefInst ${wRefInst}");
+    } else {
       for (int i = 0; i < DbTools.glfParcs_Desc.length; i++) {
         Parc_Desc wParc_Desc = DbTools.glfParcs_Desc[i];
         if (!wParc_Desc.ParcsDesc_Lib!.contains("---")) {
@@ -79,11 +76,6 @@ class Client_Groupe_Parc_Tools {
       }
     }
 //    print(">>>>>>>>>>>>>>>>>>>>>>>>>> getVerifLink wRef ${wRef}");
-
-
-
-
-
 
     List<String> wVerif = [];
     for (int i = 0; i < DbTools.glfParcs_Desc.length; i++) {
@@ -119,23 +111,18 @@ class Client_Groupe_Parc_Tools {
     // <<
 
     print(" ERASE ");
-
-
     Srv_DbTools.ListResult_Article_Link_Verif.clear();
     Srv_DbTools.ListResult_Article_Link_Verif_PROP.clear();
     Srv_DbTools.ListResult_Article_Link_Verif_PROP_Mixte.clear();
 
-
-    if (Srv_DbTools.GAM_Lib.compareTo("---") == 0)
-      return wVerifLink;
+    if (Srv_DbTools.GAM_Lib.compareTo("---") == 0) return wVerifLink;
 
     print(" PIECE ACTION ");
-
     DbTools.glfNF074_Pieces_Actions_In = await DbTools.getNF074_Pieces_Actions_In(sVerif);
     for (int i = 0; i < DbTools.glfNF074_Pieces_Actions_In.length; i++) {
       NF074_Pieces_Actions wNF074_Pieces_Actions_In = DbTools.glfNF074_Pieces_Actions_In[i];
       if (wDbg) print(">>>>>>>>>>> Pieces_Actions ADD  ${wNF074_Pieces_Actions_In.NF074_Pieces_Actions_CodeArticlePD1}  ${wNF074_Pieces_Actions_In.NF074_Pieces_Actions_DescriptionPD1}  ${wNF074_Pieces_Actions_In.NF074_Pieces_Actions_QtePD1}");
-      Srv_DbTools.ListResult_Article_Link_Verif.add(Result_Article_Link_Verif("${Srv_DbTools.REF_Lib}", "V", "${wNF074_Pieces_Actions_In.NF074_Pieces_Actions_CodeArticlePD1}", wNF074_Pieces_Actions_In.NF074_Pieces_Actions_QtePD1 +  0.0 ));
+      Srv_DbTools.ListResult_Article_Link_Verif.add(Result_Article_Link_Verif("${Srv_DbTools.REF_Lib}", "V", "${wNF074_Pieces_Actions_In.NF074_Pieces_Actions_CodeArticlePD1}", wNF074_Pieces_Actions_In.NF074_Pieces_Actions_QtePD1 + 0.0));
     }
 
     // PIECE DET
@@ -143,164 +130,150 @@ class Client_Groupe_Parc_Tools {
 
     print(">>>>>>>>>>>>>>>>>>>>>>>>>> Is_Piece_Det $Is_Piece_Det ${Srv_DbTools.REF_Lib}");
 
-    if (Is_Piece_Det)
-      {
-        DbTools.glfNF074_Pieces_Det_In = await DbTools.getNF074_Pieces_Det_In(sVerif);
-        for (int i = 0; i < DbTools.glfNF074_Pieces_Det_In.length; i++) {
-          NF074_Pieces_Det wNF074_Pieces_Det_In = DbTools.glfNF074_Pieces_Det_In[i];
-          if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det P  ${wNF074_Pieces_Det_In.NF074_Pieces_Det_CodeArticlePD1}  ${wNF074_Pieces_Det_In.NF074_Pieces_Det_DescriptionPD1}  1");
-          Srv_DbTools.ListResult_Article_Link_Verif.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "P", "${wNF074_Pieces_Det_In.NF074_Pieces_Det_CodeArticlePD1}", 1.0 ));
-        }
+    if (Is_Piece_Det) {
+      print(" PIECE DET ");
 
-        for (int i = 0; i < DbTools.glfNF074_Pieces_Det_In.length; i++) {
-          NF074_Pieces_Det wNF074_Pieces_Det_In = DbTools.glfNF074_Pieces_Det_In[i];
-          if (wNF074_Pieces_Det_In.NF074_Pieces_Det_CodeArticlePD2.isNotEmpty )
-          {
+      DbTools.glfNF074_Pieces_Det_In = await DbTools.getNF074_Pieces_Det_In(sVerif);
+      for (int i = 0; i < DbTools.glfNF074_Pieces_Det_In.length; i++) {
+        NF074_Pieces_Det wNF074_Pieces_Det_In = DbTools.glfNF074_Pieces_Det_In[i];
+        if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det P  ${wNF074_Pieces_Det_In.NF074_Pieces_Det_CodeArticlePD1}  ${wNF074_Pieces_Det_In.NF074_Pieces_Det_DescriptionPD1}  1");
+        Srv_DbTools.ListResult_Article_Link_Verif.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "P", "${wNF074_Pieces_Det_In.NF074_Pieces_Det_CodeArticlePD1}", 1.0));
+      }
+
+ /*     for (int i = 0; i < DbTools.glfNF074_Pieces_Det_In.length; i++) {
+        NF074_Pieces_Det wNF074_Pieces_Det_In = DbTools.glfNF074_Pieces_Det_In[i];
+        if (wNF074_Pieces_Det_In.NF074_Pieces_Det_CodeArticlePD2.isNotEmpty) {
 //            if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det Mo ${wNF074_Pieces_Det_In.NF074_Pieces_Det_CodeArticlePD2}  ${wNF074_Pieces_Det_In.NF074_Pieces_Det_DescriptionPD2}  1");
-            Srv_DbTools.ListResult_Article_Link_Verif.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "Mo", "${wNF074_Pieces_Det_In.NF074_Pieces_Det_CodeArticlePD2}", 1.0 ));
-          }
+          Srv_DbTools.ListResult_Article_Link_Verif.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "Mo", "${wNF074_Pieces_Det_In.NF074_Pieces_Det_CodeArticlePD2}", 1.0));
         }
+      }
 
-        for (int i = 0; i < DbTools.glfNF074_Pieces_Det_In.length; i++) {
-          NF074_Pieces_Det wNF074_Pieces_Det_In = DbTools.glfNF074_Pieces_Det_In[i];
-          if (wNF074_Pieces_Det_In.NF074_Pieces_Det_CodeArticlePD3.isNotEmpty )
-          {
+      for (int i = 0; i < DbTools.glfNF074_Pieces_Det_In.length; i++) {
+        NF074_Pieces_Det wNF074_Pieces_Det_In = DbTools.glfNF074_Pieces_Det_In[i];
+        if (wNF074_Pieces_Det_In.NF074_Pieces_Det_CodeArticlePD3.isNotEmpty) {
 //            if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det Dn ${wNF074_Pieces_Det_In.NF074_Pieces_Det_CodeArticlePD3}  ${wNF074_Pieces_Det_In.NF074_Pieces_Det_DescriptionPD3}  1");
-            Srv_DbTools.ListResult_Article_Link_Verif.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "Dn", "${wNF074_Pieces_Det_In.NF074_Pieces_Det_CodeArticlePD3}", 1.0 ));
-          }
+          Srv_DbTools.ListResult_Article_Link_Verif.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "Dn", "${wNF074_Pieces_Det_In.NF074_Pieces_Det_CodeArticlePD3}", 1.0));
         }
+      }
+*/
+      if (wDbg) print("\n\n");
 
-        if (wDbg) print("\n\n");
+      if (!sVerif.contains("RES")) {
         DbTools.glfNF074_Pieces_Det_Prop = await DbTools.getNF074_Pieces_Det_PROP();
         for (int i = 0; i < DbTools.glfNF074_Pieces_Det_Prop.length; i++) {
           NF074_Pieces_Det wNF074_Pieces_Det_Prop = DbTools.glfNF074_Pieces_Det_Prop[i];
           if (wDbg2) print(">>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det_Prop P ${wNF074_Pieces_Det_Prop.NF074_Pieces_Det_CodeArticlePD1}  ${wNF074_Pieces_Det_Prop.NF074_Pieces_Det_DescriptionPD1}  1");
-          Srv_DbTools.ListResult_Article_Link_Verif_PROP.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "P", "${wNF074_Pieces_Det_Prop.NF074_Pieces_Det_CodeArticlePD1}", 1.0 ));
+          Srv_DbTools.ListResult_Article_Link_Verif_PROP.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "P", "${wNF074_Pieces_Det_Prop.NF074_Pieces_Det_CodeArticlePD1}", 1.0));
         }
+/*
 
         for (int i = 0; i < DbTools.glfNF074_Pieces_Det_Prop.length; i++) {
           NF074_Pieces_Det wNF074_Pieces_Det_Prop = DbTools.glfNF074_Pieces_Det_Prop[i];
-          if (wNF074_Pieces_Det_Prop.NF074_Pieces_Det_CodeArticlePD2.isNotEmpty )
-          {
+          if (wNF074_Pieces_Det_Prop.NF074_Pieces_Det_CodeArticlePD2.isNotEmpty) {
 //            if (wDbg2) print(">>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det_Prop Mo ${wNF074_Pieces_Det_Prop.NF074_Pieces_Det_CodeArticlePD2}  ${wNF074_Pieces_Det_Prop.NF074_Pieces_Det_DescriptionPD2}  1");
-            Srv_DbTools.ListResult_Article_Link_Verif_PROP.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "Mo", "${wNF074_Pieces_Det_Prop.NF074_Pieces_Det_CodeArticlePD2}", 1.0 ));
+            Srv_DbTools.ListResult_Article_Link_Verif_PROP.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "Mo", "${wNF074_Pieces_Det_Prop.NF074_Pieces_Det_CodeArticlePD2}", 1.0));
           }
         }
 
         for (int i = 0; i < DbTools.glfNF074_Pieces_Det_Prop.length; i++) {
           NF074_Pieces_Det wNF074_Pieces_Det_Prop = DbTools.glfNF074_Pieces_Det_Prop[i];
-          if (wNF074_Pieces_Det_Prop.NF074_Pieces_Det_CodeArticlePD3.isNotEmpty )
-          {
+          if (wNF074_Pieces_Det_Prop.NF074_Pieces_Det_CodeArticlePD3.isNotEmpty) {
 //            if (wDbg2) print(">>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det_Prop Dn ${wNF074_Pieces_Det_Prop.NF074_Pieces_Det_CodeArticlePD3}  ${wNF074_Pieces_Det_Prop.NF074_Pieces_Det_DescriptionPD3}  1");
-            Srv_DbTools.ListResult_Article_Link_Verif_PROP.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "Dn", "${wNF074_Pieces_Det_Prop.NF074_Pieces_Det_CodeArticlePD3}", 1.0 ));
+            Srv_DbTools.ListResult_Article_Link_Verif_PROP.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "Dn", "${wNF074_Pieces_Det_Prop.NF074_Pieces_Det_CodeArticlePD3}", 1.0));
           }
         }
+*/
+
         if (wDbg) print("\n\n");
-
       }
-    else{
-
+    } else {
       print(" PIECE DET INCONNU ");
-
 
       DbTools.glfNF074_Pieces_Det_Inc_In = await DbTools.getNF074_Pieces_Det_Inc_In(sVerif);
       for (int i = 0; i < DbTools.glfNF074_Pieces_Det_Inc_In.length; i++) {
         NF074_Pieces_Det_Inc wNF074_Pieces_Det_Inc = DbTools.glfNF074_Pieces_Det_Inc_In[i];
-        if (wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_CodeArticlePD1.isNotEmpty )
-          {
-            if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det_Inc P ${wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_CodeArticlePD1}  ${wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_DescriptionPD1}  1");
-            Srv_DbTools.ListResult_Article_Link_Verif.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "P", "${wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_CodeArticlePD1}", 1.0 ));
+        if (wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_CodeArticlePD1.isNotEmpty) {
+          if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det_Inc P ${wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_CodeArticlePD1}  ${wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_DescriptionPD1}  1");
+          Srv_DbTools.ListResult_Article_Link_Verif.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "P", "${wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_CodeArticlePD1}", 1.0));
+        }
+      }
 
+/*      for (int i = 0; i < DbTools.glfNF074_Pieces_Det_Inc_In.length; i++) {
+        NF074_Pieces_Det_Inc wNF074_Pieces_Det_In = DbTools.glfNF074_Pieces_Det_Inc_In[i];
+        //print(">>>>>>>>>>> NF074_Pieces_Det_Inc_In MO ${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD2}  ${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_DescriptionPD2}  1");
+        if (wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD2.isNotEmpty) {
+          // if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det_Inc Mo ${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD2}  ${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_DescriptionPD2}  1");
+          Srv_DbTools.ListResult_Article_Link_Verif.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "Mo", "${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD2}", 1.0));
+        }
+      }
+
+      for (int i = 0; i < DbTools.glfNF074_Pieces_Det_Inc_In.length; i++) {
+        NF074_Pieces_Det_Inc wNF074_Pieces_Det_In = DbTools.glfNF074_Pieces_Det_Inc_In[i];
+        if (wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD3.isNotEmpty) {
+          // if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det_Inc Dn ${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD3}  ${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_DescriptionPD3}  1");
+          Srv_DbTools.ListResult_Article_Link_Verif.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "Dn", "${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD3}", 1.0));
+        }
+      }*/
+
+      if (!sVerif.contains("RES")) {
+        DbTools.glfNF074_Pieces_Det_Prop = await DbTools.getNF074_Pieces_Det_PROP();
+        for (int i = 0; i < DbTools.glfNF074_Pieces_Det_Inc_In.length; i++) {
+          NF074_Pieces_Det_Inc wNF074_Pieces_Det_Inc = DbTools.glfNF074_Pieces_Det_Inc_In[i];
+          if (wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_CodeArticlePD1.isNotEmpty) {
+            if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det_Inc PROP P ${wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_CodeArticlePD1}  ${wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_DescriptionPD1}  1");
+            Srv_DbTools.ListResult_Article_Link_Verif_PROP.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "P", "${wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_CodeArticlePD1}", 1.0));
           }
         }
 
-      for (int i = 0; i < DbTools.glfNF074_Pieces_Det_Inc_In.length; i++) {
-        NF074_Pieces_Det_Inc wNF074_Pieces_Det_In = DbTools.glfNF074_Pieces_Det_Inc_In[i];
-        //print(">>>>>>>>>>> NF074_Pieces_Det_Inc_In MO ${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD2}  ${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_DescriptionPD2}  1");
-        if (wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD2.isNotEmpty )
-        {
-         // if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det_Inc Mo ${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD2}  ${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_DescriptionPD2}  1");
-          Srv_DbTools.ListResult_Article_Link_Verif.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "Mo", "${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD2}", 1.0 ));
+  /*      for (int i = 0; i < DbTools.glfNF074_Pieces_Det_Inc_In.length; i++) {
+          NF074_Pieces_Det_Inc wNF074_Pieces_Det_In = DbTools.glfNF074_Pieces_Det_Inc_In[i];
+          if (wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD2.isNotEmpty) {
+            // if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det_Inc PROP Mo ${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD2}  ${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_DescriptionPD2}  1");
+            Srv_DbTools.ListResult_Article_Link_Verif_PROP.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "Mo", "${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD2}", 1.0));
+          }
         }
-      }
 
-      for (int i = 0; i < DbTools.glfNF074_Pieces_Det_Inc_In.length; i++) {
-        NF074_Pieces_Det_Inc wNF074_Pieces_Det_In = DbTools.glfNF074_Pieces_Det_Inc_In[i];
-        if (wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD3.isNotEmpty) {
-         // if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det_Inc Dn ${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD3}  ${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_DescriptionPD3}  1");
-          Srv_DbTools.ListResult_Article_Link_Verif.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "Dn", "${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD3}", 1.0));
-        }
-      }
-        DbTools.glfNF074_Pieces_Det_Prop = await DbTools.getNF074_Pieces_Det_PROP();
-      for (int i = 0; i < DbTools.glfNF074_Pieces_Det_Inc_In.length; i++) {
-        NF074_Pieces_Det_Inc wNF074_Pieces_Det_Inc = DbTools.glfNF074_Pieces_Det_Inc_In[i];
-        if (wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_CodeArticlePD1.isNotEmpty )
-        {
-          if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det_Inc PROP P ${wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_CodeArticlePD1}  ${wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_DescriptionPD1}  1");
-          Srv_DbTools.ListResult_Article_Link_Verif_PROP.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "P", "${wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_CodeArticlePD1}", 1.0 ));
+        for (int i = 0; i < DbTools.glfNF074_Pieces_Det_Inc_In.length; i++) {
+          NF074_Pieces_Det_Inc wNF074_Pieces_Det_In = DbTools.glfNF074_Pieces_Det_Inc_In[i];
+          if (wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD3.isNotEmpty) {
+            // if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det_Inc PROP Dn ${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD3}  ${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_DescriptionPD3}  1");
+            Srv_DbTools.ListResult_Article_Link_Verif_PROP.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "Dn", "${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD3}", 1.0));
+          }
+        }*/
 
-        }
-      }
-      for (int i = 0; i < DbTools.glfNF074_Pieces_Det_Inc_In.length; i++) {
-        NF074_Pieces_Det_Inc wNF074_Pieces_Det_In = DbTools.glfNF074_Pieces_Det_Inc_In[i];
-        if (wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD2.isNotEmpty )
-        {
-         // if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det_Inc PROP Mo ${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD2}  ${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_DescriptionPD2}  1");
-          Srv_DbTools.ListResult_Article_Link_Verif_PROP.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "Mo", "${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD2}", 1.0 ));
-        }
-      }
-
-      for (int i = 0; i < DbTools.glfNF074_Pieces_Det_Inc_In.length; i++) {
-        NF074_Pieces_Det_Inc wNF074_Pieces_Det_In = DbTools.glfNF074_Pieces_Det_Inc_In[i];
-        if (wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD3.isNotEmpty) {
-         // if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det_Inc PROP Dn ${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD3}  ${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_DescriptionPD3}  1");
-          Srv_DbTools.ListResult_Article_Link_Verif_PROP.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "Dn", "${wNF074_Pieces_Det_In.NF074_Pieces_Det_Inc_CodeArticlePD3}", 1.0));
-        }
       }
     }
+
+    print(" MIXTE PRODUIT ");
 
     DbTools.glfNF074_Mixte_Produit_In = await DbTools.getNF074_Mixte_Produit_In(sVerif);
     for (int i = 0; i < DbTools.glfNF074_Mixte_Produit_In.length; i++) {
       NF074_Mixte_Produit wNF074_Mixte_Produit = DbTools.glfNF074_Mixte_Produit_In[i];
       if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>> Mixte_Produit S ${wNF074_Mixte_Produit.NF074_Mixte_Produit_CodeArticlePD1}  ${wNF074_Mixte_Produit.NF074_Mixte_Produit_DescriptionPD1}  1");
-        Srv_DbTools.ListResult_Article_Link_Verif.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "S", "${wNF074_Mixte_Produit.NF074_Mixte_Produit_CodeArticlePD1}", 1.0 ));
+      Srv_DbTools.ListResult_Article_Link_Verif.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "S", "${wNF074_Mixte_Produit.NF074_Mixte_Produit_CodeArticlePD1}", 1.0));
     }
     if (wDbg) print("\n\n");
 
-    DbTools.glfNF074_Mixte_Produit_In = await DbTools.getNF074_Mixte_Produit_In_Prop(sVerif);
-    for (int i = 0; i < DbTools.glfNF074_Mixte_Produit_In.length; i++) {
-      NF074_Mixte_Produit wNF074_Mixte_Produit = DbTools.glfNF074_Mixte_Produit_In[i];
-      if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>> Mixte_Produit PROP ${wNF074_Mixte_Produit.NF074_Mixte_Produit_CodeArticlePD1}  ${wNF074_Mixte_Produit.NF074_Mixte_Produit_DescriptionPD1}  1");
-      Srv_DbTools.ListResult_Article_Link_Verif_PROP_Mixte.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "S", "${wNF074_Mixte_Produit.NF074_Mixte_Produit_CodeArticlePD1}", 1.0 ));
+    if (!sVerif.contains("RES")) {
+      DbTools.glfNF074_Mixte_Produit_In = await DbTools.getNF074_Mixte_Produit_In_Prop(sVerif);
+      for (int i = 0; i < DbTools.glfNF074_Mixte_Produit_In.length; i++) {
+        NF074_Mixte_Produit wNF074_Mixte_Produit = DbTools.glfNF074_Mixte_Produit_In[i];
+        if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>> Mixte_Produit PROP ${wNF074_Mixte_Produit.NF074_Mixte_Produit_CodeArticlePD1}  ${wNF074_Mixte_Produit.NF074_Mixte_Produit_DescriptionPD1}  1");
+        Srv_DbTools.ListResult_Article_Link_Verif_PROP_Mixte.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "S", "${wNF074_Mixte_Produit.NF074_Mixte_Produit_CodeArticlePD1}", 1.0));
+      }
+      if (wDbg) print("\n\n");
     }
-    if (wDbg) print("\n\n");
-
-/*
-    for (int i = 0; i < Srv_DbTools.ListResult_Article_Link_Verif.length; i++) {
-      Result_Article_Link_Verif wResult_Article_Link_Verif = Srv_DbTools.ListResult_Article_Link_Verif[i];
-      if (wDbg) print(" ListResult_Article_Link_Verif  ${wResult_Article_Link_Verif.Desc()}");
-    }
-
-    for (int i = 0; i < Srv_DbTools.ListResult_Article_Link_Verif_PROP.length; i++) {
-      Result_Article_Link_Verif wResult_Article_Link_Verif = Srv_DbTools.ListResult_Article_Link_Verif_PROP[i];
-      if (wDbg) print(" ListResult_Article_Link_Verif_PROP  ${wResult_Article_Link_Verif.Desc()}");
-    }
-*/
-
-
 
     if (Srv_DbTools.ListResult_Article_Link_Verif.length > 0) wVerifLink.addAll(Srv_DbTools.ListResult_Article_Link_Verif);
 
-
     return wVerifLink;
   }
-
 
   static Future Del_All_Art() async {
     wlParcs_Art = await DbTools.getParcs_ArtAll(DbTools.gParc_Ent.ParcsId!);
     for (var i = 0; i < wlParcs_Art.length; i++) {
       var element = wlParcs_Art[i];
-        await DbTools.deleteParc_Art(element.ParcsArtId!);
+      await DbTools.deleteParc_Art(element.ParcsArtId!);
     }
   }
 
@@ -434,7 +407,6 @@ class Client_Groupe_Parc_Tools {
 //        print(">>>>>>>>>>> insertParc_Art ${wParc_Art.toString()}");
         await DbTools.insertParc_Art(wParc_Art);
       }
-
     }
   }
 
@@ -448,17 +420,16 @@ class Client_Groupe_Parc_Tools {
       for (var i = 0; i < wlParcs_Art.length; i++) {
         var element = wlParcs_Art[i];
         if (element.ParcsArt_Id!.compareTo(verifDeb.ChildID) == 0) {
-                  print(">>>>>>>>>>> deleteParc_Art ${element.toString()}");
+          print(">>>>>>>>>>> deleteParc_Art ${element.toString()}");
           await DbTools.deleteParc_Art(element.ParcsArtId!);
           break;
         }
       }
     }
   }
+
   static Future Gen_Articlesvp() async {
-
     print("≈≈≈> Gen_Articles >> listResult_Article_Link_Verif_Deb ${listResult_Article_Link_Verif_Deb.length}");
-
 
     print("≈≈≈> Gen_Articles >> Call getVerifLink");
     listResult_Article_Link_Verif_Fin = await getVerifLink();
@@ -487,7 +458,6 @@ class Client_Groupe_Parc_Tools {
       bool trv = false;
 //      print("> verifFin.ChildID  F>> ${verifFin.ChildID} trv $trv");
       listResult_Article_Link_Verif_Deb.forEach((verifDeb) {
-
         if (verifDeb.ChildID.compareTo(verifFin.ChildID) == 0) {
           //        print("             > verifDeb.ChildID D>> ${verifDeb.ChildID} R ${(verifDeb.ChildID.compareTo(verifFin.ChildID) == 0)}");
           trv = true;
@@ -501,9 +471,6 @@ class Client_Groupe_Parc_Tools {
     });
     print("≈≈≈> Gen_Articles >> AddArt ${wVerifAdd.length}");
 
-
-
-
 /*
     if (wVerifAdd.length == 0 && wVerifSupp.length == 0)
       {
@@ -512,9 +479,8 @@ class Client_Groupe_Parc_Tools {
       }
 */
 
-    if (wVerifAdd.length > 0 ) await AddArt(wVerifAdd);
-    if (wVerifSupp.length > 0 ) await SuppArt(wVerifSupp);
-
+    if (wVerifAdd.length > 0) await AddArt(wVerifAdd);
+    if (wVerifSupp.length > 0) await SuppArt(wVerifSupp);
 
     for (int i = 0; i < Srv_DbTools.ListResult_Article_Link_Verif.length; i++) {
       Result_Article_Link_Verif wResult_Article_Link_Verif = Srv_DbTools.ListResult_Article_Link_Verif[i];
@@ -525,19 +491,16 @@ class Client_Groupe_Parc_Tools {
       //print(" ListResult_Article_Link_Verif_PROP  ${wResult_Article_Link_Verif.Desc()}");
     }
 
-
     DbTools.lParcs_Art = await DbTools.getParcs_Art_AllType(DbTools.gParc_Ent.ParcsId!);
     for (int i = 0; i < DbTools.lParcs_Art.length; i++) {
       Parc_Art element = DbTools.lParcs_Art[i];
       print("getParcs_Art_AllType ${element.toString()}");
-
     }
 
     listResult_Article_Link_Verif_Deb = listResult_Article_Link_Verif_Fin;
   }
 
   static Future Gen_Articles() async {
-
     print("≈≈≈> Gen_Articles >> listResult_Article_Link_Verif_Deb ${listResult_Article_Link_Verif_Deb.length}");
     print("≈≈≈> Gen_Articles >> Call getVerifLink");
     listResult_Article_Link_Verif_Fin = await getVerifLink();
@@ -545,7 +508,7 @@ class Client_Groupe_Parc_Tools {
 
     for (int i = 0; i < Srv_DbTools.ListResult_Article_Link_Verif.length; i++) {
       Result_Article_Link_Verif wResult_Article_Link_Verif = Srv_DbTools.ListResult_Article_Link_Verif[i];
-     // print(" ListResult_Article_Link_Verif  ${wResult_Article_Link_Verif.Desc()}");
+      // print(" ListResult_Article_Link_Verif  ${wResult_Article_Link_Verif.Desc()}");
     }
     for (int i = 0; i < Srv_DbTools.ListResult_Article_Link_Verif_PROP.length; i++) {
       Result_Article_Link_Verif wResult_Article_Link_Verif = Srv_DbTools.ListResult_Article_Link_Verif_PROP[i];
@@ -555,18 +518,13 @@ class Client_Groupe_Parc_Tools {
     await DbTools.deleteParc_Art_ParcsArt_ParcsId(DbTools.gParc_Ent.ParcsId!);
     await AddArt(listResult_Article_Link_Verif_Fin);
 
-
-
     DbTools.lParcs_Art = await DbTools.getParcs_Art_AllType(DbTools.gParc_Ent.ParcsId!);
 
     for (int i = 0; i < DbTools.lParcs_Art.length; i++) {
       Parc_Art element = DbTools.lParcs_Art[i];
 //      print("¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶ getParcs_Art_AllType ${element.Desc()}");
-
     }
-
 
     listResult_Article_Link_Verif_Deb = listResult_Article_Link_Verif_Fin;
   }
-
 }

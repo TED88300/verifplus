@@ -1018,6 +1018,7 @@ class gObj {
         context: context,
         barrierDismissible: false,
         builder: (_) => new AlertDialog(
+          surfaceTintColor: Colors.white,
               backgroundColor: Colors.white,
               insetPadding: EdgeInsets.zero,
               contentPadding: EdgeInsets.zero,
@@ -1282,6 +1283,7 @@ class Titre_PopupState extends State<Titre_Popup> {
 
     return AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+        surfaceTintColor: Colors.white,
         backgroundColor: gColors.white,
         title: Container(
             color: gColors.white,

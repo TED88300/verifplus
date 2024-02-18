@@ -106,6 +106,7 @@ class _MissionsState extends State<Missions> {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
       backgroundColor: gColors.white,
+      surfaceTintColor: Colors.white,
 
 
       contentPadding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 20),

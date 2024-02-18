@@ -259,6 +259,7 @@ class _Client_InterventionsAddState extends State<Client_InterventionsAdd> {
 
     return AlertDialog(
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      surfaceTintColor: Colors.white,
       backgroundColor: gColors.white,
       title: Container(
         color: gColors.white,

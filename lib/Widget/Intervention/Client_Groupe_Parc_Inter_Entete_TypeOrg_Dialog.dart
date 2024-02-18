@@ -70,6 +70,7 @@ class _Client_Groupe_Parc_Inter_Entete_TypeOrgDialogState extends State<Client_G
 
     return AlertDialog(
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      surfaceTintColor: Colors.white,
       backgroundColor: gColors.white,
       title: Container(
         color: gColors.white,

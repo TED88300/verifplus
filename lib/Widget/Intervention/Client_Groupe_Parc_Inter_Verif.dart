@@ -484,13 +484,15 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                         Param_Saisie_Param wParam_Saisie_Param = Srv_DbTools.getParam_Saisie_ParamMem_Lib0(Param_Saisie_ID);
                         wParc_Desc.ParcsDesc_Id = wParam_Saisie_Param.Param_Saisie_Param_Id;
                         wParc_Desc.ParcsDesc_Lib = wParam_Saisie_Param.Param_Saisie_Param_Label;
-                        print(" SELECTION SELECT SET AUTO ${param_Saisie.DescAuto()} ${wParam_Saisie_Param.Desc()} ${wParc_Desc.toMap()}");
+                        print(" SELECTION SELECT SET param_Saisie ${param_Saisie.DescAuto()}}");
+                        print(" SELECTION SELECT SET wParam_Saisie_Param ${wParam_Saisie_Param.Desc()}");
+                        print(" SELECTION SELECT SET wParc_Desc ${wParc_Desc.toMap()}");
 
 
                         // TRIGER : Ex Recharge => Verif Annuel
                         await DbTools.updateParc_Desc_NoRaz(wParc_Desc, "");
                         var lTriger = param_Saisie.Param_Saisie_Triger.split(",");
-                        print("lTriger $lTriger");
+                        print("lTriger ${param_Saisie.Param_Saisie_Triger}");
                         lTriger.forEach((triger) async {
                           print("triger ${triger.trim()}");
                           Parc_Desc wParc_DescAuto = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, triger.trim());

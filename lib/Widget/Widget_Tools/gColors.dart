@@ -630,6 +630,7 @@ class gColors {
     return showDialog(
         context: context,
         builder: (_) => new AlertDialog(
+          surfaceTintColor: Colors.white,
               title: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
                 gObj.wImage,
                 SizedBox(height: 8.0),

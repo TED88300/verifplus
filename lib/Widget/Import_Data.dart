@@ -477,6 +477,7 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      surfaceTintColor: Colors.white,
       backgroundColor: gColors.white,
       title: Container(
           color: gColors.white,

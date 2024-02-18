@@ -278,7 +278,7 @@ class Client_Groupe_Parc_Inter_PieceState extends State<Client_Groupe_Parc_Inter
                   height: 20,
                   padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
                   child: Text(
-                    "[${parc_Art.ParcsArt_Livr!.substring(0,1)}] ${parc_Art.ParcsArt_Lib}",
+                    "${parc_Art.ParcsArt_Type}[${parc_Art.ParcsArt_Livr!.substring(0,1)}] ${parc_Art.ParcsArt_Lib}",
                     style: parc_Art.ParcsArt_Livr!.substring(0,1).compareTo("R")==0 ? gColors.bodySaisie_B_O : gColors.bodySaisie_B_G,
                   ),
                 ),

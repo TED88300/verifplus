@@ -56,6 +56,7 @@ class _Client_GroupeDialogState extends State<Client_GroupeDialog> {
   Widget build(BuildContext context) {
     return AlertDialog(
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      surfaceTintColor: Colors.white,
       backgroundColor: gColors.white,
       title: Container(
         color: gColors.white,

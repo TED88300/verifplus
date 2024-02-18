@@ -894,7 +894,7 @@ class DbTools {
     String selDESC = "NF074_Pieces_Det_CODF = '${Srv_DbTools.REF_Lib}'";
 
     String selTypeVerif = "";
-    if (wType.contains("Inst")) {
+    if (wType.contains("Inst") && !wType.contains("RES")) {
       if (selTypeVerif.length > 0) selTypeVerif += " OR ";
       selTypeVerif += "NF074_Pieces_Det_Inst  = 1 ";
     }
@@ -1127,8 +1127,8 @@ class DbTools {
 
     String selBase = "SELECT * FROM NF074_Pieces_Det_Inc WHERE ";
     String selDESCTous = "NF074_Pieces_Det_Inc_DESC = '' ";
-    String selDESCPRS = "NF074_Pieces_Det_Inc_DESC LIKE '%${Srv_DbTools.DESC_Lib}%' AND NF074_Pieces_Det_Inc_PRS LIKE '%${Srv_DbTools.PRS_Lib}%'  AND NF074_Pieces_Det_Inc_CLF LIKE '%${Srv_DbTools.CLF_Lib}%' ";
-    String selMOBPDT = " ((NF074_Pieces_Det_Inc_POIDS LIKE '%${wPOIDS}/%' AND NF074_Pieces_Det_Inc_POIDS LIKE '%${wUNIT}%') OR NF074_Pieces_Det_Inc_POIDS  = '') AND (NF074_Pieces_Det_Inc_MOB LIKE '%${Srv_DbTools.MOB_Lib}%' OR NF074_Pieces_Det_Inc_MOB  = '') AND (NF074_Pieces_Det_Inc_PDT LIKE '%${Srv_DbTools.PDT_Lib}%' OR NF074_Pieces_Det_Inc_PDT  = '')  ";
+    String selDESCPRS = "NF074_Pieces_Det_Inc_DESC LIKE '%${Srv_DbTools.DESC_Lib}%' AND NF074_Pieces_Det_Inc_PRS LIKE '%${Srv_DbTools.PRS_Lib}%'  AND NF074_Pieces_Det_Inc_CLF LIKE '%/${Srv_DbTools.CLF_Lib}/%' ";
+    String selMOBPDT = " ((NF074_Pieces_Det_Inc_POIDS LIKE '%/${wPOIDS}/%' AND NF074_Pieces_Det_Inc_POIDS LIKE '%${wUNIT}%') OR NF074_Pieces_Det_Inc_POIDS  = '') AND (NF074_Pieces_Det_Inc_MOB LIKE '%/${Srv_DbTools.MOB_Lib}/%' OR NF074_Pieces_Det_Inc_MOB  = '') AND (NF074_Pieces_Det_Inc_PDT LIKE '%/${Srv_DbTools.PDT_Lib}/%' OR NF074_Pieces_Det_Inc_PDT  = '')  ";
 
 
     String selTypeVerif = "";
@@ -1206,12 +1206,34 @@ class DbTools {
   }
 
   static Future<List<NF074_Pieces_Det_Inc>> getNF074_Pieces_Det_Inc_Prop(String wType) async {
+
+    String wPOIDS_Lib = Srv_DbTools.POIDS_Lib;
+    String wUNIT = "";
+    if (wPOIDS_Lib.contains("Kilos"))
+    {
+      wUNIT = "Kg";
+      wPOIDS_Lib = wPOIDS_Lib.replaceAll("Kilos", "");
+      print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib KG ${wPOIDS_Lib}");
+    }
+    if (wPOIDS_Lib.contains("Litres"))
+    {
+      wUNIT = "L";
+      wPOIDS_Lib = wPOIDS_Lib.replaceAll("Litres", "");
+      print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib L ${wPOIDS_Lib}");
+    }
+    wPOIDS_Lib.replaceAll(" ", "");
+
+    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib ${wPOIDS_Lib}");
+
+    int wPOIDS = int.tryParse(wPOIDS_Lib) ?? 0;
+
+
     final db = await database;
 
     String selBase = "SELECT * FROM NF074_Pieces_Det_Inc WHERE ";
     String selDESCTous = "NF074_Pieces_Det_Inc_DESC = '' ";
-    String selDESCPRS = "NF074_Pieces_Det_Inc_DESC LIKE '%${Srv_DbTools.DESC_Lib}%' AND NF074_Pieces_Det_Inc_PRS LIKE '%${Srv_DbTools.PRS_Lib}%'  AND NF074_Pieces_Det_Inc_CLF LIKE '%${Srv_DbTools.CLF_Lib}%' ";
-    String selMOBPDT = "(NF074_Pieces_Det_Inc_MOB LIKE '%${Srv_DbTools.MOB_Lib}%' OR NF074_Pieces_Det_Inc_MOB  = '') AND (NF074_Pieces_Det_Inc_PDT LIKE '%${Srv_DbTools.PDT_Lib}%' OR NF074_Pieces_Det_Inc_PDT  = '')  AND (NF074_Pieces_Det_Inc_POIDS LIKE '%${Srv_DbTools.POIDS_Lib}%' OR NF074_Pieces_Det_Inc_POIDS  = '')";
+    String selDESCPRS = "NF074_Pieces_Det_Inc_DESC LIKE '%${Srv_DbTools.DESC_Lib}%' AND NF074_Pieces_Det_Inc_PRS LIKE '%${Srv_DbTools.PRS_Lib}%'  AND NF074_Pieces_Det_Inc_CLF LIKE '%/${Srv_DbTools.CLF_Lib}/%' ";
+    String selMOBPDT = " ((NF074_Pieces_Det_Inc_POIDS LIKE '%/${wPOIDS}/%' AND NF074_Pieces_Det_Inc_POIDS LIKE '%${wUNIT}%') OR NF074_Pieces_Det_Inc_POIDS  = '') AND (NF074_Pieces_Det_Inc_MOB LIKE '%/${Srv_DbTools.MOB_Lib}/%' OR NF074_Pieces_Det_Inc_MOB  = '') AND (NF074_Pieces_Det_Inc_PDT LIKE '%/${Srv_DbTools.PDT_Lib}/%' OR NF074_Pieces_Det_Inc_PDT  = '')  ";
 
     String selTypeVerif = "";
     selTypeVerif += "NF074_Pieces_Det_Inst  = 0 AND ";
@@ -1343,7 +1365,8 @@ class DbTools {
 
     String selBase = "SELECT * FROM NF074_Mixte_Produit WHERE NF074_Mixte_Produit_Suggestion = 'VF' AND";
     String selDESC = "(NF074_Mixte_Produit_DESC LIKE '%${Srv_DbTools.DESC_Lib}%' OR NF074_Mixte_Produit_DESC  = '') ";
-    String selMOBPDT = " ((NF074_Mixte_Produit_POIDS LIKE '%${wPOIDS}/%' AND NF074_Mixte_Produit_POIDS LIKE '%${wUNIT}%') OR NF074_Mixte_Produit_POIDS  = '') AND (NF074_Mixte_Produit_CLF LIKE '%${Srv_DbTools.CLF_Lib}%' OR NF074_Mixte_Produit_CLF  = '') ";
+    String selPOIDS = "((NF074_Mixte_Produit_POIDS LIKE '%/${wPOIDS}/%'  AND NF074_Mixte_Produit_POIDS LIKE '%${wUNIT}%') OR NF074_Mixte_Produit_POIDS  = '') ";
+    String selMOBPDT = "(NF074_Mixte_Produit_CLF LIKE '%/${Srv_DbTools.CLF_Lib}/%' OR NF074_Mixte_Produit_CLF  = '') AND (NF074_Mixte_Produit_PDT LIKE '%/${Srv_DbTools.PDT_Lib}/%' OR NF074_Mixte_Produit_PDT  = '')";
     String selEMPZNE = " (NF074_Mixte_Produit_EMP LIKE '%${DbTools.gParc_Ent.Parcs_EMP_Label}%' OR NF074_Mixte_Produit_EMP  = '') AND (NF074_Mixte_Produit_ZNE LIKE '%${DbTools.gParc_Ent.Parcs_ZNE_Label}%' OR NF074_Mixte_Produit_ZNE  = '') ";
 
     String selTypeVerif = "";
@@ -1380,11 +1403,9 @@ class DbTools {
     if (selTypeVerif.isEmpty)
       return [];
     else
-      selSQL = "$selBase ($selTypeVerif)  AND  $selDESC AND $selMOBPDT AND $selEMPZNE";
+      selSQL = "$selBase ($selTypeVerif)  AND $selPOIDS AND $selDESC AND $selMOBPDT AND $selEMPZNE";
 
-
-    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Mixte_Produit_In selSQL ${selSQL}");
-
+    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Mixte_Produit_In S selSQL ${selSQL}");
     final List<Map<String, dynamic>> maps = await db.rawQuery(selSQL);
 
     return List.generate(maps.length, (i) {
@@ -1419,14 +1440,37 @@ class DbTools {
   }
 
   static Future<List<NF074_Mixte_Produit>> getNF074_Mixte_Produit_In_Prop(String wType) async {
+
+    String wPOIDS_Lib = Srv_DbTools.POIDS_Lib;
+    String wUNIT = "";
+    if (wPOIDS_Lib.contains("Kilos"))
+    {
+      wUNIT = "Kg";
+      wPOIDS_Lib = wPOIDS_Lib.replaceAll("Kilos", "");
+      print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib KG ${wPOIDS_Lib}");
+    }
+    if (wPOIDS_Lib.contains("Litres"))
+    {
+      wUNIT = "L";
+      wPOIDS_Lib = wPOIDS_Lib.replaceAll("Litres", "");
+      print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib L ${wPOIDS_Lib}");
+    }
+    wPOIDS_Lib.replaceAll(" ", "");
+
+    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib ${wPOIDS_Lib}");
+
+    int wPOIDS = int.tryParse(wPOIDS_Lib) ?? 0;
+
+
     final db = await database;
 
-    String selBase = "SELECT * FROM NF074_Mixte_Produit WHERE ";
+    String selBase = "SELECT * FROM NF074_Mixte_Produit WHERE NF074_Mixte_Produit_Suggestion = 'VF' AND";
     String selDESC = "NF074_Mixte_Produit_DESC LIKE '%${Srv_DbTools.DESC_Lib}%' ";
-    String selMOBPDT = " (NF074_Mixte_Produit_POIDS LIKE '%${Srv_DbTools.POIDS_Lib}%' OR NF074_Mixte_Produit_POIDS  = '') AND (NF074_Mixte_Produit_CLF LIKE '%${Srv_DbTools.CLF_Lib}%' OR NF074_Mixte_Produit_CLF  = '') ";
+    String selPOIDS = "((NF074_Mixte_Produit_POIDS LIKE '%/${wPOIDS}/%'  AND NF074_Mixte_Produit_POIDS LIKE '%${wUNIT}%') OR NF074_Mixte_Produit_POIDS  = '') ";
+    String selMOBPDT = "(NF074_Mixte_Produit_CLF LIKE '%/${Srv_DbTools.CLF_Lib}/%' OR NF074_Mixte_Produit_CLF  = '') AND (NF074_Mixte_Produit_PDT LIKE '%/${Srv_DbTools.PDT_Lib}/%' OR NF074_Mixte_Produit_PDT  = '')";
     String selEMPZNE = " (NF074_Mixte_Produit_EMP LIKE '%${DbTools.gParc_Ent.Parcs_EMP_Label}%' OR NF074_Mixte_Produit_EMP  = '') AND (NF074_Mixte_Produit_ZNE LIKE '%${DbTools.gParc_Ent.Parcs_ZNE_Label}%' OR NF074_Mixte_Produit_ZNE  = '') ";
 
-    String selTypeVerif = "";
+    String selTypeVerif = "( ";
     selTypeVerif += "NF074_Mixte_Produit_Inst  = 0 AND ";
     selTypeVerif += "NF074_Mixte_Produit_VerifAnn  = 0 AND ";
     selTypeVerif += "NF074_Mixte_Produit_Rech  = 0 AND ";
@@ -1434,9 +1478,10 @@ class DbTools {
     selTypeVerif += "NF074_Mixte_Produit_Charge  = 0 AND ";
     selTypeVerif += "NF074_Mixte_Produit_RA  = 0 AND ";
     selTypeVerif += "NF074_Mixte_Produit_RES  = 0 ";
+    selTypeVerif += " )";
 
-    String selSQL = "$selBase $selTypeVerif  AND  $selDESC AND $selMOBPDT AND $selEMPZNE";
-    //print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Mixte_Produit_In selSQL ${selSQL}");
+    String selSQL = "$selBase $selTypeVerif  AND $selPOIDS AND $selDESC AND $selMOBPDT AND $selEMPZNE";
+    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Mixte_Produit_In PROP selSQL ${selSQL}");
     final List<Map<String, dynamic>> maps = await db.rawQuery(selSQL);
     return List.generate(maps.length, (i) {
       return NF074_Mixte_Produit(

@@ -135,6 +135,7 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
 
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      surfaceTintColor: Colors.white,
       backgroundColor: gColors.white,
       title: Container(
           color: gColors.white,

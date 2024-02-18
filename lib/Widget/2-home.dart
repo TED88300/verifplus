@@ -238,7 +238,9 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     showDialog(
         context: context,
         builder: (_) => new AlertDialog(
-              title: Column(
+          surfaceTintColor: Colors.white,
+
+          title: Column(
                   //Slide3
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [

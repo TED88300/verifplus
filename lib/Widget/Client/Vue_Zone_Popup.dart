@@ -161,6 +161,7 @@ print("wZone_Nom $wZone_Nom" "${widget.wChamps}");
 
     return AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+        surfaceTintColor: Colors.white,
         backgroundColor: gColors.white,
         title: Container(
             color: gColors.white,

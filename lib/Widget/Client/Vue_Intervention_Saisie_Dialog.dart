@@ -193,6 +193,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
 
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      surfaceTintColor: Colors.white,
       backgroundColor: gColors.white,
       title: Container(
           color: gColors.white,

@@ -161,6 +161,7 @@ class _Groupe_Vue_PopupState extends State<Groupe_Vue_Popup> {
 
     return AlertDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+        surfaceTintColor: Colors.white,
         backgroundColor: gColors.white,
         title: Container(
             color: gColors.white,
