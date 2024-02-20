@@ -59,7 +59,7 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
     if (DbTools.gIsRememberLogin) DbTools.gIsRememberLogin = await Srv_DbTools.getUserLogin(DbTools.gUsername, DbTools.gPassword);
 
     if (DbTools.gIsRememberLogin) {
-      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home()));
+//      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home()));
       if (DbTools.gTED)
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Home()));
 //          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => Client_Groupe_Parc_Inter()));

@@ -3,17 +3,17 @@ import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/shared_pref.dart';
-import 'package:verifplus/Tools/text_scroll.dart';
 import 'package:verifplus/Widget/1-login.dart';
 import 'package:verifplus/Widget/Catalogue_Grig/Catalogue_Grid.dart';
 import 'package:verifplus/Widget/Client/Clients_Liste.dart';
-import 'package:verifplus/Widget/Import_Data.dart';
+import 'package:verifplus/Widget/Import_Menu.dart';
 import 'package:verifplus/Widget/P_Notifications.dart';
+import 'package:verifplus/Widget/P_Synthese.dart';
 import 'package:verifplus/Widget/Planning/Planning.dart';
 import 'package:verifplus/Widget/Widget_Tools/bottom_navigation_bar.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
@@ -48,7 +48,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   List<Widget> P_children = [
     Liste_Clients(),
-    Liste_Clients(),
+    P_Synthese(),
     Catalogue_Grid(),
     Planning(),
     P_Notifications(),
@@ -97,6 +97,10 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   @override
   void initState() {
+
+    print("HOME initState");
+
+
     FlutterAppBadger.removeBadge();
     super.initState();
     initConnectivity();
@@ -138,7 +142,6 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     String title_string = P_itemsTitre[DbTools.gCurrentIndex];
     Widget wchildren = P_children[DbTools.gCurrentIndex];
 
-
     return Scaffold(
       resizeToAvoidBottomInset: false,
       //    endDrawer: DbTools.gIsMedecinLogin! ? C_SideDrawer() : I_SideDrawer(),
@@ -173,14 +176,13 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         ),
         actions: <Widget>[
 
-
           IconButton(
             icon:  Icon(
               hasConnection ?  Icons.cloud_download : Icons.cloud_off,
              color:  hasConnection ? Colors.green : Colors.red,
             ),
             onPressed: () async {
-              await Import_Data_Dialog.Dialogs_Saisie(context, onSaisie);
+              await Import_Menu_Dialog.Dialogs_Saisie(context, onSaisie);
             },
           ),
           IconButton(
@@ -227,8 +229,14 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     );
   }
 
-  void onBottomIconPressed(int index) {
-    DbTools.gCurrentIndex = index;
+  void onBottomIconPressed(int index) async {
+
+    if (DbTools.gCurrentIndex != index)
+      {
+        DbTools.gCurrentIndex = index;
+        if (DbTools.gCurrentIndex == 1)
+            await Srv_ImportExport.ImportClient();
+      }
     reload();
   }
 

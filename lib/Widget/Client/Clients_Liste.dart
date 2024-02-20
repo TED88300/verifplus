@@ -6,6 +6,8 @@ import 'package:flutter/services.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Clients.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
+import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Client/Client_Groupes.dart';
 import 'package:verifplus/Widget/Client/Client_Sites.dart';
 import 'package:verifplus/Widget/Client/Vue_Client.dart';
@@ -31,10 +33,12 @@ class Liste_ClientsState extends State<Liste_Clients> {
   TextEditingController ctrlFilter = new TextEditingController();
   String filterText = '';
 
+
+
   Future Reload() async {
-    await Srv_DbTools.getClientAll();
 
-
+    print("Liste_Clients Reload");
+    await Srv_ImportExport.ImportClient();
     CountTot = CountSel = Srv_DbTools.ListClientsearchresult.length;
     Filtre();
   }
@@ -65,10 +69,12 @@ class Liste_ClientsState extends State<Liste_Clients> {
 
   @override
   void initLib() async {
+    print("Liste_Clients initLib");
     Reload();
   }
 
   void initState() {
+    print("Liste_Clients initState");
     initLib();
     super.initState();
   }
@@ -158,9 +164,7 @@ class Liste_ClientsState extends State<Liste_Clients> {
 
   @override
   Widget build(BuildContext context) {
-
-    gObj.LargeurScreen = MediaQuery.of(context).size.width;
-    print('Screen : ${gObj.LargeurScreen}');
+    print('Liste_Clients build');
 
     return Scaffold(
         body: Column(

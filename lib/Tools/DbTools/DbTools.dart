@@ -74,7 +74,10 @@ class DbTools {
 
   static bool gOffLine = false;
 
-  static int gCurrentIndex = 3;
+  static bool gChangeIndex = true;
+
+
+  static int gCurrentIndex = 0;
   static int gCurrentIndex2 = 0;
   static int gCurrentIndex3 = 0;
 

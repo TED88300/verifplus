@@ -27,11 +27,13 @@ class Import_Data_Dialog {
   static Future<void> Dialogs_Saisie(
     BuildContext context,
     VoidCallback onSaisie,
+    String ImportType,
   ) async {
     await showDialog(
       context: context,
       builder: (BuildContext context) => Import_DataDialog(
         onSaisie: onSaisie,
+        ImportType: ImportType,
       ),
     );
   }
@@ -43,10 +45,12 @@ class Import_Data_Dialog {
 
 class Import_DataDialog extends StatefulWidget {
   final VoidCallback onSaisie;
+  final String ImportType;
 
   const Import_DataDialog({
     Key? key,
     required this.onSaisie,
+    required this.ImportType,
   }) : super(key: key);
 
   @override
@@ -58,7 +62,9 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
   bool iStrfExp = false;
 
   String wSt = "début";
-  Future Reload() async {
+
+
+  Future Reload_Listing() async {
 
     //**********************************
     //**********************************
@@ -68,101 +74,12 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
       acontroller.forward();
       acontroller.repeat(reverse: true);
       iStrfExp = true;
-      wSt = "► NF074\n";
+      wSt = "◉◉◉ ${widget.ImportType}\n";
     });
 
 
-    //***********************************
-    //***********************************
-    //***********************************
 
 
-    await Srv_DbTools.getParam_SaisieAll();
-    print("Import_DataDialog ListParam_Saisie ${Srv_DbTools.ListParam_Saisie.length}");
-    await DbTools.TrunckParam_Saisie();
-    for (int i = 0; i < Srv_DbTools.ListParam_Saisie.length; i++) {
-      Param_Saisie wParam_Saisie = Srv_DbTools.ListParam_Saisie[i];
-      await DbTools.inserParam_Saisie(wParam_Saisie);
-    }
-    Srv_DbTools.ListParam_Saisie = await  DbTools.getParam_Saisie();
-    print("Import_DataDialog Srv_DbTools.ListParam_Saisie ${Srv_DbTools.ListParam_Saisie}");
-    setState(() {
-      wSt = "► Param_Saisie : ${Srv_DbTools.ListParam_Saisie.length} Params\n";
-    });
-
-    //***********************************
-    //***********************************
-    //***********************************
-
-
-    await Srv_DbTools.getParam_ParamAll();
-    print("Import_DataDialog ListParam_ParamAll ${Srv_DbTools.ListParam_ParamAll.length}");
-    await DbTools.TrunckParam_Param();
-    for (int i = 0; i < Srv_DbTools.ListParam_ParamAll.length; i++) {
-      Param_Param wParam_Param = Srv_DbTools.ListParam_ParamAll[i];
-      await DbTools.inserParam_Param(wParam_Param);
-    }
-    Srv_DbTools.ListParam_ParamAll = await  DbTools.getParam_Param();
-    print("Import_DataDialog Srv_DbTools.ListParam_ParamAll ${Srv_DbTools.ListParam_ParamAll}");
-    setState(() {
-      wSt += "► Param_Param : ${Srv_DbTools.ListParam_ParamAll.length} Params\n";
-    });
-
-    Srv_DbTools.ListParam_Param_Abrev.clear();
-    Srv_DbTools.ListParam_ParamAll.forEach((element) {
-      if (element.Param_Param_Type.compareTo("Abrev") == 0) {
-        Srv_DbTools.ListParam_Param_Abrev.add(element);
-      }
-    });
-
-    //***********************************
-    //***********************************
-    //***********************************
-
-    await Srv_DbTools.getParam_Saisie_ParamAll();
-    print("Import_DataDialog ListParam_Saisie_ParamAll ${Srv_DbTools.ListParam_Saisie_ParamAll.length}");
-    await DbTools.TrunckParam_Saisie_Param();
-    for (int i = 0; i < Srv_DbTools.ListParam_Saisie_ParamAll.length; i++) {
-      Param_Saisie_Param wParam_Saisie_Param = Srv_DbTools.ListParam_Saisie_ParamAll[i];
-      await DbTools.inserParam_Saisie_Param(wParam_Saisie_Param);
-    }
-    Srv_DbTools.ListParam_Saisie_ParamAll = await  DbTools.getParam_Saisie_Param();
-    print("Import_DataDialog Srv_DbTools.ListParam_Saisie_ParamAll ${Srv_DbTools.ListParam_Saisie_ParamAll}");
-    setState(() {
-      wSt += "► Param_Saisie_Param : ${Srv_DbTools.ListParam_Saisie_ParamAll.length} Params\n";
-    });
-
-    //***********************************
-    //***********************************
-    //***********************************
-
-    await Srv_DbTools.getUser_Hab(Srv_DbTools.gUserLogin.UserID);
-    print("Import_DataDialog ListUser_Hab ${Srv_DbTools.ListUser_Hab.length}");
-
-    await DbTools.TrunckUser_Hab();
-    for (int i = 0; i < Srv_DbTools.ListUser_Hab.length; i++) {
-      User_Hab wUser_Hab = Srv_DbTools.ListUser_Hab[i];
-      await DbTools.inserUser_Hab(wUser_Hab);
-    }
-    Srv_DbTools.ListUser_Hab = await  DbTools.getUser_Hab();
-    print("Import_DataDialog Srv_DbTools.ListUser_Hab ${Srv_DbTools.ListUser_Hab}");
-    setState(() {
-      wSt += "► User_Hab : ${Srv_DbTools.ListUser_Hab.length} Params\n";
-    });
-
-    await Srv_DbTools.getUser_Desc(Srv_DbTools.gUserLogin.UserID);
-    print("Import_DataDialog ListUser_Desc ${Srv_DbTools.ListUser_Desc.length}");
-
-    await DbTools.TrunckUser_Desc();
-    for (int i = 0; i < Srv_DbTools.ListUser_Desc.length; i++) {
-      User_Desc wUser_Desc = Srv_DbTools.ListUser_Desc[i];
-      await DbTools.inserUser_Desc(wUser_Desc);
-    }
-    Srv_DbTools.ListUser_Desc = await  DbTools.getUser_Desc();
-    print("Import_DataDialog Srv_DbTools.ListUser_Desc ${Srv_DbTools.ListUser_Desc}");
-    setState(() {
-      wSt += "► User_Desc : ${Srv_DbTools.ListUser_Desc.length} Params\n";
-    });
     
     //**********************************
     //**********************************
@@ -325,6 +242,149 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
 
 
 
+
+    //**********************************
+    //**********************************
+    //**********************************
+
+    setState(() {
+      acontroller.stop();
+      iStrfExp = false;
+    });
+  }
+
+  Future Reload_Param() async {
+
+    //**********************************
+    //**********************************
+    //**********************************
+
+    setState(() {
+      acontroller.forward();
+      acontroller.repeat(reverse: true);
+      iStrfExp = true;
+      wSt = "◉◉◉ ${widget.ImportType}\n";
+    });
+
+
+    //***********************************
+    //***********************************
+    //***********************************
+
+
+    await Srv_DbTools.getParam_SaisieAll();
+    print("Import_DataDialog ListParam_Saisie ${Srv_DbTools.ListParam_Saisie.length}");
+    await DbTools.TrunckParam_Saisie();
+    for (int i = 0; i < Srv_DbTools.ListParam_Saisie.length; i++) {
+      Param_Saisie wParam_Saisie = Srv_DbTools.ListParam_Saisie[i];
+      await DbTools.inserParam_Saisie(wParam_Saisie);
+    }
+    Srv_DbTools.ListParam_Saisie = await  DbTools.getParam_Saisie();
+    print("Import_DataDialog Srv_DbTools.ListParam_Saisie ${Srv_DbTools.ListParam_Saisie}");
+    setState(() {
+      wSt += "► Param_Saisie : ${Srv_DbTools.ListParam_Saisie.length} Params\n";
+    });
+
+    //***********************************
+    //***********************************
+    //***********************************
+
+
+    await Srv_DbTools.getParam_ParamAll();
+    print("Import_DataDialog ListParam_ParamAll ${Srv_DbTools.ListParam_ParamAll.length}");
+    await DbTools.TrunckParam_Param();
+    for (int i = 0; i < Srv_DbTools.ListParam_ParamAll.length; i++) {
+      Param_Param wParam_Param = Srv_DbTools.ListParam_ParamAll[i];
+      await DbTools.inserParam_Param(wParam_Param);
+    }
+    Srv_DbTools.ListParam_ParamAll = await  DbTools.getParam_Param();
+    print("Import_DataDialog Srv_DbTools.ListParam_ParamAll ${Srv_DbTools.ListParam_ParamAll}");
+    setState(() {
+      wSt += "► Param_Param : ${Srv_DbTools.ListParam_ParamAll.length} Params\n";
+    });
+
+    Srv_DbTools.ListParam_Param_Abrev.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Abrev") == 0) {
+        Srv_DbTools.ListParam_Param_Abrev.add(element);
+      }
+    });
+
+    //***********************************
+    //***********************************
+    //***********************************
+
+    await Srv_DbTools.getParam_Saisie_ParamAll();
+    print("Import_DataDialog ListParam_Saisie_ParamAll ${Srv_DbTools.ListParam_Saisie_ParamAll.length}");
+    await DbTools.TrunckParam_Saisie_Param();
+    for (int i = 0; i < Srv_DbTools.ListParam_Saisie_ParamAll.length; i++) {
+      Param_Saisie_Param wParam_Saisie_Param = Srv_DbTools.ListParam_Saisie_ParamAll[i];
+      await DbTools.inserParam_Saisie_Param(wParam_Saisie_Param);
+    }
+    Srv_DbTools.ListParam_Saisie_ParamAll = await  DbTools.getParam_Saisie_Param();
+    print("Import_DataDialog Srv_DbTools.ListParam_Saisie_ParamAll ${Srv_DbTools.ListParam_Saisie_ParamAll}");
+    setState(() {
+      wSt += "► Param_Saisie_Param : ${Srv_DbTools.ListParam_Saisie_ParamAll.length} Params\n";
+    });
+
+    //***********************************
+    //***********************************
+    //***********************************
+
+    await Srv_DbTools.getUser_Hab(Srv_DbTools.gUserLogin.UserID);
+    print("Import_DataDialog ListUser_Hab ${Srv_DbTools.ListUser_Hab.length}");
+
+    await DbTools.TrunckUser_Hab();
+    for (int i = 0; i < Srv_DbTools.ListUser_Hab.length; i++) {
+      User_Hab wUser_Hab = Srv_DbTools.ListUser_Hab[i];
+      await DbTools.inserUser_Hab(wUser_Hab);
+    }
+    Srv_DbTools.ListUser_Hab = await  DbTools.getUser_Hab();
+    print("Import_DataDialog Srv_DbTools.ListUser_Hab ${Srv_DbTools.ListUser_Hab}");
+    setState(() {
+      wSt += "► User_Hab : ${Srv_DbTools.ListUser_Hab.length} Params\n";
+    });
+
+    await Srv_DbTools.getUser_Desc(Srv_DbTools.gUserLogin.UserID);
+    print("Import_DataDialog ListUser_Desc ${Srv_DbTools.ListUser_Desc.length}");
+
+    await DbTools.TrunckUser_Desc();
+    for (int i = 0; i < Srv_DbTools.ListUser_Desc.length; i++) {
+      User_Desc wUser_Desc = Srv_DbTools.ListUser_Desc[i];
+      await DbTools.inserUser_Desc(wUser_Desc);
+    }
+    Srv_DbTools.ListUser_Desc = await  DbTools.getUser_Desc();
+    print("Import_DataDialog Srv_DbTools.ListUser_Desc ${Srv_DbTools.ListUser_Desc}");
+    setState(() {
+      wSt += "► User_Desc : ${Srv_DbTools.ListUser_Desc.length} Params\n";
+    });
+
+
+    //**********************************
+    //**********************************
+    //**********************************
+
+    setState(() {
+      acontroller.stop();
+      iStrfExp = false;
+    });
+  }
+
+  Future Reload_NF74() async {
+
+    //**********************************
+    //**********************************
+    //**********************************
+
+    setState(() {
+      acontroller.forward();
+      acontroller.repeat(reverse: true);
+      iStrfExp = true;
+      wSt = "◉◉◉ ${widget.ImportType}\n";
+    });
+
+
+
     //***********************************
     //***********************************
     //***********************************
@@ -339,7 +399,7 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
     DbTools.glfNF074_Gammes = await  DbTools.getNF074_Gammes();
     print("Import_DataDialog glfNF074_Gammes ${DbTools.glfNF074_Gammes.length}");
     setState(() {
-      wSt += "\n► NF074 : ${DbTools.glfNF074_Gammes.length} Gammes\n";
+      wSt += "► NF074 : ${DbTools.glfNF074_Gammes.length} Gammes\n";
     });
 
 
@@ -454,7 +514,15 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
 
   @override
   void initLib() async {
-    await Reload();
+    if (widget.ImportType == "Listing")
+      await Reload_Listing();
+    else if (widget.ImportType == "Param")
+      await Reload_Param();
+    else if (widget.ImportType == "NF74")
+      await Reload_NF74();
+
+
+
     return;
   }
 

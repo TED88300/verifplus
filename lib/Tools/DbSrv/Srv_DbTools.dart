@@ -426,14 +426,20 @@ class Srv_DbTools {
   static Future<bool> getClientAll() async {
     String wSlq = "SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays FROM Clients LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = 'FACT' ORDER BY Client_Nom;";
 //    print("getClientAll wSlq ${wSlq}");
-    ListClient = await getClient_API_Post("select", wSlq);
 
-    if (ListClient == null) return false;
-    //  print("getClientAll ${ListClient.length}");
-    if (ListClient.length > 0) {
+    try {
+      ListClient = await getClient_API_Post("select", wSlq);
+      if (ListClient == null) return false;
+      if (ListClient.length > 0) {
+        return true;
+      }
+      return false;
 
-      return true;
+    } catch (e) {
+    return false;
     }
+
+
     return false;
   }
 
@@ -3530,7 +3536,7 @@ END
       if (items != null) {
 
         List<Param_Param> Param_ParamList = await items.map<Param_Param>((json) {
-          print("getParam_Param_API_Post json " + json.toString());
+          //print("getParam_Param_API_Post json " + json.toString());
           return Param_Param.fromJson(json);
         }).toList();
         return Param_ParamList;
