@@ -1209,7 +1209,6 @@ class NF074_Pieces_Actions {
       'NF074_Pieces_Actions_CodeArticlePD3': NF074_Pieces_Actions_CodeArticlePD3,
       'NF074_Pieces_Actions_DescriptionPD3': NF074_Pieces_Actions_DescriptionPD3,
       'NF074_Pieces_Actions_QtePD3': NF074_Pieces_Actions_QtePD3,
-
     };
   }
 

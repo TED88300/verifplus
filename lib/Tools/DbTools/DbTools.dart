@@ -249,10 +249,34 @@ class DbTools {
     String wCREATE_NF074_Pieces_Det_Inc =
         "CREATE TABLE NF074_Pieces_Det_Inc (NF074_Pieces_Det_IncId int(11) NOT NULL,NF074_Pieces_Det_Inc_DESC varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_FAB varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_PRS varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_CLF varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_MOB varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_PDT varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_POIDS varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_GAM varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_CODF varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_Inst int(11) NOT NULL DEFAULT 0,NF074_Pieces_Det_Inc_VerifAnn int(11) NOT NULL DEFAULT 0,NF074_Pieces_Det_Inc_Rech int(11) NOT NULL DEFAULT 0,NF074_Pieces_Det_Inc_MAA int(11) NOT NULL DEFAULT 0,NF074_Pieces_Det_Inc_Charge int(11) NOT NULL DEFAULT 0,NF074_Pieces_Det_Inc_RA int(11) NOT NULL DEFAULT 0,NF074_Pieces_Det_Inc_RES int(11) NOT NULL DEFAULT 0,NF074_Pieces_Det_Inc_CodearticlePD1 varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_DescriptionPD1 varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_QtePD1 int(11) NOT NULL,NF074_Pieces_Det_Inc_CodearticlePD2 varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_DescriptionPD2 varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_QtePD2 int(11) NOT NULL,NF074_Pieces_Det_Inc_CodearticlePD3 varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_DescriptionPD3 varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_QtePD3 int(11) NOT NULL);";
 
+    String wCREATE_Articles_Ebp = "CREATE TABLE Articles_Ebp ("
+        " ArticleID INTEGER PRIMARY KEY AUTOINCREMENT "
+        ", Article_codeArticle varchar(128) NOT NULL DEFAULT ''"
+        ", Article_descriptionCommerciale varchar(128) NOT NULL DEFAULT ''"
+        ", Article_descriptionCommercialeEnClair varchar(128) NOT NULL DEFAULT ''"
+        ", Article_codeFamilleArticles varchar(128) NOT NULL DEFAULT ''"
+        ", Article_LibelleFamilleArticle varchar(128) NOT NULL DEFAULT ''"
+        ", Article_CodeSousFamilleArticle varchar(128) NOT NULL DEFAULT ''"
+        ", Article_LibelleSousFamilleArticle varchar(128) NOT NULL DEFAULT ''"
+        ", Article_PVHT REAL"
+        ", Article_tauxTVA REAL"
+        ", Article_codeTVA varchar(128) NOT NULL DEFAULT ''"
+        ", Article_PVTTC REAL"
+        ", Article_stockReel REAL"
+        ", Article_stockVirtuel REAL"
+        ", Article_Notes varchar(128) NOT NULL DEFAULT ''"
+        ", Article_Pousse  INTEGER"
+        ", Article_Promo_PVHT REAL"
+        ", Article_Libelle     varchar(128) NOT NULL DEFAULT ''"
+        ", Article_Groupe      varchar(128) NOT NULL DEFAULT ''"
+        ", Article_Fam         varchar(128) NOT NULL DEFAULT ''"
+        ", Article_Sous_Fam    varchar(128) NOT NULL DEFAULT ''"
+        ", Article_codeArticle_Parent varchar(128) NOT NULL DEFAULT ''"
+        ")";
 
 
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
-     String wDbPath = "skpl27893cont.db";
+     String wDbPath = "skpl2Habdeco.db";
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
 
     database = openDatabase(
@@ -282,16 +306,11 @@ class DbTools {
 
         await db.execute(wCREATE_Intervention);
         await db.execute(wCREATE_InterMissions);
-
-
-
-
         await db.execute(wCREATE_Parcimgs);
         await db.execute(wCREATE_Parcs_Ent);
         await db.execute(wCREATE_Parcs_Desc);
         await db.execute(wCREATE_Parcs_Desc_Index);
         await db.execute(wCREATE_Parcs_Art);
-
         await db.execute(wCREATE_NF074_Avertissements);
         await db.execute(wCREATE_NF074_Gammes);
         await db.execute(wCREATE_NF074_Histo_Normes);
@@ -299,6 +318,7 @@ class DbTools {
         await db.execute(wCREATE_NF074_Pieces_Actions);
         await db.execute(wCREATE_NF074_Pieces_Det);
         await db.execute(wCREATE_NF074_Pieces_Det_Inc);
+        await db.execute(wCREATE_Articles_Ebp);
       },
       onUpgrade: (db, oldVersion, newVersion) {
         print(">>>>>>>>>>>>>>>>>>>>>>>>>>> onUpgrade $oldVersion $newVersion");
@@ -894,11 +914,11 @@ class DbTools {
     String selDESC = "NF074_Pieces_Det_CODF = '${Srv_DbTools.REF_Lib}'";
 
     String selTypeVerif = "";
-    if (wType.contains("Inst") && !wType.contains("RES")) {
+    if (wType.contains("Inst") ) {
       if (selTypeVerif.length > 0) selTypeVerif += " OR ";
       selTypeVerif += "NF074_Pieces_Det_Inst  = 1 ";
     }
-    if (wType.contains("VerifAnn")) {
+    if (wType.contains("VerifAnn") && !wType.contains("RES")) {
       if (selTypeVerif.length > 0) selTypeVerif += " OR ";
       selTypeVerif += "NF074_Pieces_Det_VerifAnn  = 1 ";
     }
@@ -923,12 +943,15 @@ class DbTools {
       selTypeVerif += "NF074_Pieces_Det_RES  = 1 ";
     }
 
+    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_In selTypeVerif ${wType}");
+
 
     String selSQL = "";
     if (selTypeVerif.isEmpty)
       return [];
     else
       selSQL = "$selBase ($selTypeVerif)  AND  $selDESC ";
+
      print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_In selSQL ${selSQL}");
 
     final List<Map<String, dynamic>> maps = await db.rawQuery(selSQL);

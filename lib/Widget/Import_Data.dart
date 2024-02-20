@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Adresses.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Articles_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Clients.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Contacts.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
@@ -417,24 +418,29 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
       wSt += "► NF074 : ${DbTools.glfNF074_Pieces_Actions.length} Pièces / Actions\n";
     });
 
-
-
-
     // Familles EBP
     await Srv_DbTools.getArticle_Fam_EbpAll();
     // Articles EBP
     await Srv_DbTools.getArticle_EbpAll();
+
+    await Article_Ebp.TrunckArticle_Ebp();
+    for (int i = 0; i < Srv_DbTools.ListArticle_Ebp.length; i++) {
+      Article_Ebp article_Ebp = Srv_DbTools.ListArticle_Ebp[i];
+      Article_Ebp.insertArticle_Ebp(article_Ebp);
+    }
+
+    Srv_DbTools.ListArticle_Ebp = await Article_Ebp.getArticle_Ebp();
+    print("getArticle_Ebp ${Srv_DbTools.ListArticle_Ebp.length}");
+
+
+
     // Articles EBP ES (Echange Standard)
     await Srv_DbTools.getArticle_Ebp_ES();
     print("Import_DataDialog ListArticle_Ebp ${Srv_DbTools.ListArticle_Ebp.length}");
 
     setState(() {
-      wSt += "► NF074 : ${Srv_DbTools.ListArticle_Ebp.length} Articles EBP\n";
+      wSt += "► ${Srv_DbTools.ListArticle_Ebp.length} Articles EBP\n";
     });
-
-
-
-
 
     //**********************************
     //**********************************

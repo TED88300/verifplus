@@ -14,7 +14,7 @@ class Client_Groupe_Parc_Tools {
   static List<Result_Article_Link_Verif> listResult_Article_Mo = [];
   static List<Result_Article_Link_Verif> listResult_Article_Dn = [];
 
-  static String wRefBase = "VerifAnn, Rech, MAA, Charge, RA, ";
+  static String wRefBase = "Inst,VerifAnn, Rech, MAA, Charge, RA, ";
   static String wRefRES = "RES";
   static String wRefInst = "Inst";
 
@@ -60,30 +60,36 @@ class Client_Groupe_Parc_Tools {
     // ==
 
     String wRef = wRefBase;
-//    print(">>>>>>>>>>>>>>>>>>>>>>>>>> getVerifLink wRefBase ${wRefBase}");
+    print("πππππ getVerifLink wRefBase ${wRef}");
+    print("πππππ DbTools.gParc_Ent.Parcs_UUID_Parent ${DbTools.gParc_Ent.Parcs_UUID_Parent}");
     if (DbTools.gParc_Ent.Parcs_UUID_Parent!.isNotEmpty) {
       wRef = wRefInst;
-      //       print(">>>>>>>>>>>>>>>>>>>>>>>>>> getVerifLink wRefInst ${wRefInst}");
+       print("πππππ getVerifLink wRefInst ${wRefInst}");
     } else {
       for (int i = 0; i < DbTools.glfParcs_Desc.length; i++) {
         Parc_Desc wParc_Desc = DbTools.glfParcs_Desc[i];
         if (!wParc_Desc.ParcsDesc_Lib!.contains("---")) {
           if (wParc_Desc.ParcsDesc_Type!.compareTo("RES") == 0) {
             wRef = wRefRES;
-//            print(">>>>>>>>>>>>>>>>>>>>>>>>>> getVerifLink wRefRES ${wRefRES}");
+            print("πππππ getVerifLink wRefRES ${wRefRES}");
           }
         }
       }
     }
-//    print(">>>>>>>>>>>>>>>>>>>>>>>>>> getVerifLink wRef ${wRef}");
+    print("πππππ getVerifLink wRef ${wRef}");
+
+
+
 
     List<String> wVerif = [];
     for (int i = 0; i < DbTools.glfParcs_Desc.length; i++) {
       Parc_Desc wParc_Desc = DbTools.glfParcs_Desc[i];
       if (!wParc_Desc.ParcsDesc_Lib!.contains("---")) {
+        if (wDbg) print("> wParc_Desc.ParcsDesc_Type ${wParc_Desc.ParcsDesc_Type}");
         if (wRef.contains(wParc_Desc.ParcsDesc_Type!)) {
           for (int i = 0; i < Srv_DbTools.ListParam_Verif_Base.length; i++) {
             Param_Saisie wParam_Saisie = Srv_DbTools.ListParam_Verif_Base[i];
+            if (wDbg) print("> wParam_Saisie.Param_Saisie_ID ${wParam_Saisie.Param_Saisie_ID}");
             if (wParc_Desc.ParcsDesc_Type!.compareTo(wParam_Saisie.Param_Saisie_ID) == 0) {
               {
                 wVerif.add(wParc_Desc.ParcsDesc_Type!);
@@ -104,6 +110,7 @@ class Client_Groupe_Parc_Tools {
 
     if (DbTools.gParc_Ent.Parcs_UUID_Parent!.isNotEmpty) sVerif = "'Inst'";
 
+    if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>> getVerifLink tableau wVerif ${wVerif}");
     if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>> getVerifLink tableau sVerif ${sVerif}");
 
     // <<

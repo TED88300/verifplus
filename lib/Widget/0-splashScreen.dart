@@ -12,6 +12,8 @@ import 'package:verifplus/Widget/1-login.dart';
 import 'package:verifplus/Widget/2-home.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 
+import '../Tools/DbSrv/Srv_Articles_Ebp.dart';
+
 class SplashScreen extends StatefulWidget {
   @override
   SplashScreenState createState() => new SplashScreenState();
@@ -38,6 +40,9 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
     });
 
     await DbTools.initSqlite();
+
+    Srv_DbTools.ListArticle_Ebp = await Article_Ebp.getArticle_Ebp();
+    print("getArticle_Ebp ${Srv_DbTools.ListArticle_Ebp.length}");
 
     Srv_DbTools.gSelGroupe = Srv_DbTools.gSelGroupeBase;
     Srv_DbTools.gSelIntervention = Srv_DbTools.gSelInterventionBase;

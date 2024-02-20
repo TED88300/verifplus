@@ -2494,7 +2494,7 @@ class Srv_DbTools {
     ListArticle_Ebp = await getArticle_Ebp_API_Post("select", "select * from Articles_Ebp ORDER BY Article_codeArticle");
 
     if (ListArticle_Ebp == null) return false;
-//    print("getArticle_EbpAll ${ListArticle_Ebp.length}");
+    print("getArticle_EbpAll ${ListArticle_Ebp.length}");
     if (ListArticle_Ebp.length > 0) {
       //    print("getArticle_EbpAll return TRUE");
       return true;
