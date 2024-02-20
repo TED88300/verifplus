@@ -65,6 +65,8 @@ END
 */
 
 
+import 'package:path/path.dart';
+
 class Client {
   int ClientId = -1;
   String Client_CodeGC = "";
@@ -93,6 +95,9 @@ class Client {
   String Adresse_Ville  = "";
   String Adresse_Pays   = "";
   String Livr   = "";
+
+  bool Client_isUpdate = true;
+
 
   static ClientInit() {
     return Client(0, "", false, "", "","", false, false, "", "", "", "", "", "", "", false, "","", "", "");

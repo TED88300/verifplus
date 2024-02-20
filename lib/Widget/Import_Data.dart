@@ -7,6 +7,7 @@ import 'package:verifplus/Tools/DbSrv/Srv_Clients.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Contacts.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_InterMissions.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Interventions.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_NF074.dart';
@@ -85,33 +86,15 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
     //**********************************
     //**********************************
 
-    await Srv_DbTools.getClientAll();
-    print("Import_DataDialog ListClient ${Srv_DbTools.ListClient.length}");
-    await DbTools.TrunckClients();
-    for (int i = 0; i < Srv_DbTools.ListClient.length; i++) {
-      Client wClient = Srv_DbTools.ListClient[i];
-      await DbTools.inserClients(wClient);
-    }
-    Srv_DbTools.ListClient = await  DbTools.getClients();
-    print("Import_DataDialog Srv_DbTools.ListClient ${Srv_DbTools.ListClient}");
+    await Srv_ImportExport.ImportClient();
     setState(() {
       wSt += "► Client : ${Srv_DbTools.ListClient.length} Clients\n";
     });
 
-
     //**********************************
     //**********************************
     //**********************************
-
-    await Srv_DbTools.getAdresseAll();
-    print("Import_DataDialog ListAdresse ${Srv_DbTools.ListAdresse.length}");
-    await DbTools.TrunckAdresse();
-    for (int i = 0; i < Srv_DbTools.ListAdresse.length; i++) {
-      Adresse wAdresse = Srv_DbTools.ListAdresse[i];
-      await DbTools.inserAdresse(wAdresse);
-    }
-    Srv_DbTools.ListAdresse = await  DbTools.getAdresse();
-    print("Import_DataDialog Srv_DbTools.ListAdresse ${Srv_DbTools.ListAdresse}");
+    await Srv_ImportExport.ImportAdresse();
     setState(() {
       wSt += "► Adresse : ${Srv_DbTools.ListAdresse.length} Adresses\n";
     });
@@ -120,15 +103,7 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
     //**********************************
     //**********************************
 
-    await Srv_DbTools.getContactAll();
-    print("Import_DataDialog ListContact ${Srv_DbTools.ListContact.length}");
-    await DbTools.TrunckContact();
-    for (int i = 0; i < Srv_DbTools.ListContact.length; i++) {
-      Contact wContact = Srv_DbTools.ListContact[i];
-      await DbTools.inserContact(wContact);
-    }
-    Srv_DbTools.ListContact = await  DbTools.getContact();
-    print("Import_DataDialog Srv_DbTools.ListContact ${Srv_DbTools.ListContact}");
+    await Srv_ImportExport.ImportContact();
     setState(() {
       wSt += "► Contact : ${Srv_DbTools.ListContact.length} Contacts\n";
     });

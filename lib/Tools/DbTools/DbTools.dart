@@ -1759,6 +1759,17 @@ class DbTools {
     gLastID = repid!;
   }
 
+  static Future<void> updateClients(Client wClient) async {
+    final db = await DbTools.database;
+    int? repid = await db.update(
+      "Clients",
+      wClient.toMap(),
+      where: "ClientId = ?",
+      whereArgs: [wClient.ClientId],
+    );
+  }
+
+
 
   static Future<void> TrunckClients() async {
     final db = await DbTools.database;
@@ -1773,9 +1784,7 @@ class DbTools {
 
   static Future<List<Adresse>> getAdresse() async {
     final db = await database;
-
     final List<Map<String, dynamic>> maps = await db.query("Adresses", orderBy: "AdresseId ASC");
-
     return List.generate(maps.length, (i) {
       return Adresse(
         maps[i]["AdresseId"],
@@ -1791,12 +1800,51 @@ class DbTools {
         maps[i]["Adresse_Ville"],
         maps[i]["Adresse_Pays"],
         maps[i]["Adresse_Acces"],
-
-
         maps[i]["Adresse_Rem"],
       );
     });
   }
+
+
+
+
+  static Future<bool> getAdresseClientType(int ClientID, String Type) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query("Adresses", orderBy: "AdresseId ASC", where: "Adresse_ClientId = ${ClientID} AND Adresse_Type = '$Type' ");
+    Srv_DbTools.ListAdressesearchresult = List.generate(maps.length, (i) {
+      return Adresse(
+        maps[i]["AdresseId"],
+        maps[i]["Adresse_ClientId"],
+        maps[i]["Adresse_Code"],
+        maps[i]["Adresse_Type"],
+        maps[i]["Adresse_Nom"],
+        maps[i]["Adresse_Adr1"],
+        maps[i]["Adresse_Adr2"],
+        maps[i]["Adresse_Adr3"],
+        maps[i]["Adresse_Adr4"],
+        maps[i]["Adresse_CP"],
+        maps[i]["Adresse_Ville"],
+        maps[i]["Adresse_Pays"],
+        maps[i]["Adresse_Acces"],
+        maps[i]["Adresse_Rem"],
+      );
+    });
+
+    if (Srv_DbTools.ListAdressesearchresult.length > 0) {
+      Srv_DbTools.gAdresse = Srv_DbTools.ListAdressesearchresult[0];
+      print("getAdresseClientType return TRUE");
+      return true;
+    } else {
+      Srv_DbTools.addAdresse(ClientID, Type);
+      getAdresseClientType(ClientID, Type);
+    }
+    return false;
+
+
+    return true;
+  }
+
+
 
   static Future<void> inserAdresse(Adresse wAdresse) async {
     final db = await DbTools.database;
@@ -1816,9 +1864,7 @@ class DbTools {
 
   static Future<List<Contact>> getContact() async {
     final db = await database;
-
     final List<Map<String, dynamic>> maps = await db.query("Contacts", orderBy: "Contact_Nom ASC");
-
     return List.generate(maps.length, (i) {
       return Contact(
           maps[i]["ContactId"],
@@ -1838,6 +1884,44 @@ class DbTools {
       );
     });
   }
+
+  static Future<bool> getContactClientAdrType(int ClientID, int AdresseId, String Type) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query("Contacts", orderBy: "Contact_Nom ASC", where :"Contact_ClientId = $ClientID AND Contact_AdresseId = $AdresseId AND Contact_Type = '$Type'");
+    Srv_DbTools.ListContact =  List.generate(maps.length, (i) {
+      return Contact(
+        maps[i]["ContactId"],
+        maps[i]["Contact_ClientId"],
+        maps[i]["Contact_AdresseId"],
+        maps[i]["Contact_Code"],
+        maps[i]["Contact_Type"],
+        maps[i]["Contact_Civilite"],
+        maps[i]["Contact_Prenom"],
+        maps[i]["Contact_Nom"],
+        maps[i]["Contact_Fonction"],
+        maps[i]["Contact_Service"],
+        maps[i]["Contact_Tel1"],
+        maps[i]["Contact_Tel2"],
+        maps[i]["Contact_eMail"],
+        maps[i]["Contact_Rem"],
+      );
+    });
+
+
+    if (Srv_DbTools.ListContact == null) return false;
+    print("getContactClientType ${Srv_DbTools.ListContact.length}");
+    if (Srv_DbTools.ListContact.length > 0) {
+      Srv_DbTools.gContact = Srv_DbTools.ListContact[0];
+      print("getContactClientType return TRUE ${Srv_DbTools.gContact.ContactId} ${Srv_DbTools.gContact.Contact_Nom}");
+      return true;
+    } else {
+      await Srv_DbTools.addContactAdrType(ClientID, AdresseId, Type);
+      await getContactClientAdrType(ClientID, AdresseId, Type);
+    }
+    return false;
+  }
+
+
 
   static Future<void> inserContact(Contact wContact) async {
     final db = await DbTools.database;

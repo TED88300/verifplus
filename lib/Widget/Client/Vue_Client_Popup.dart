@@ -5,6 +5,7 @@ import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'package:verifplus/Tools/Api_Gouv.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
+import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
@@ -527,13 +528,16 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
               Srv_DbTools.gClient.Client_Depot = wClient_Depot;
               Srv_DbTools.gClient.Client_Rglt = wClient_Rglt;
               Srv_DbTools.gClient.Client_OK_DataPerso = wClient_OK_DataPerso;
-
               Srv_DbTools.gClient.Client_Siret = wClient_Siret;
               Srv_DbTools.gClient.Client_NAF = wClient_NAF;
               Srv_DbTools.gClient.Client_TVA = wClient_TVA;
               Srv_DbTools.gClient.Client_Commercial = wClient_Commercial;
-
+              await DbTools.updateClients(Srv_DbTools.gClient);
               await Srv_DbTools.setClient(Srv_DbTools.gClient);
+
+
+
+
 
               Srv_DbTools.gAdresse.Adresse_Adr1 = wAdresse_Adr1;
               Srv_DbTools.gAdresse.Adresse_Adr2 = wAdresse_Adr2;

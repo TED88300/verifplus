@@ -425,8 +425,6 @@ class Srv_DbTools {
 
   static Future<bool> getClientAll() async {
     String wSlq = "SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays FROM Clients LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = 'FACT' ORDER BY Client_Nom;";
-//    print("getClientAll wSlq ${wSlq}");
-
     try {
       ListClient = await getClient_API_Post("select", wSlq);
       if (ListClient == null) return false;
@@ -438,9 +436,6 @@ class Srv_DbTools {
     } catch (e) {
     return false;
     }
-
-
-    return false;
   }
 
 
@@ -480,9 +475,19 @@ class Srv_DbTools {
         "Client_Commercial = \"${Client.Client_Commercial}\" " +
         "WHERE ClientId = ${Client.ClientId.toString()}";
     gColors.printWrapped("setClient " + wSlq);
-    bool ret = await add_API_Post("upddel", wSlq);
-    print("setClient ret " + ret.toString());
-    return ret;
+
+
+    try {
+      bool ret = await add_API_Post("upddel", wSlq);
+      print("setClient ret " + ret.toString());
+        return true;
+
+
+    } catch (e) {
+      print("setClient ERROR " + e.toString());
+      return false;
+    }
+
   }
 
   static Future<bool> addClient(Client Client) async {
@@ -533,17 +538,21 @@ class Srv_DbTools {
   static Adresse gAdresseLivr = Adresse.AdresseInit();
 
   static Future<bool> getAdresseAll() async {
-    ListAdresse = await getAdresse_API_Post("select", "select * from Adresses ORDER BY Adresse_Type");
 
-    if (ListAdresse == null) return false;
-    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> getAdresseAll ${ListAdresse.length}");
-
-    if (ListAdresse.length > 0) {
-      print("getAdresseAll return TRUE");
-      return true;
+    try {
+      ListAdresse = await getAdresse_API_Post("select", "select * from Adresses ORDER BY Adresse_Type");
+      if (ListAdresse == null) return false;
+      if (ListAdresse.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
+
+
+
 
   static Future<int> getCountSitesClient(int ID) async {
     ListAdressesearchresult = await getAdresse_API_Post("select", "select * from Adresses WHERE Adresse_Type = 'SITE' AND Adresse_ClientId = ${ID}");
@@ -2200,15 +2209,16 @@ class Srv_DbTools {
   static Contact gContactLivr = Contact.ContactInit();
 
   static Future<bool> getContactAll() async {
-    ListContact = await getContact_API_Post("select", "select * from Contacts ORDER BY Contact_Type");
-
-    if (ListContact == null) return false;
-    print("getContactAll ${ListContact.length}");
-    if (ListContact.length > 0) {
-      print("getContactAll return TRUE");
-      return true;
+    try {
+      ListContact = await getContact_API_Post("select", "select * from Contacts ORDER BY Contact_Type");
+      if (ListContact == null) return false;
+      if (ListContact.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
   static Future<bool> getContactClientAdrType(int ClientID, int AdresseId, String Type) async {

@@ -33,12 +33,13 @@ class Liste_ClientsState extends State<Liste_Clients> {
   TextEditingController ctrlFilter = new TextEditingController();
   String filterText = '';
 
-
-
   Future Reload() async {
 
     print("Liste_Clients Reload");
     await Srv_ImportExport.ImportClient();
+    await Srv_ImportExport.ImportAdresse();
+    await Srv_ImportExport.ImportContact();
+
     CountTot = CountSel = Srv_DbTools.ListClientsearchresult.length;
     Filtre();
   }
@@ -216,6 +217,8 @@ class Liste_ClientsState extends State<Liste_Clients> {
   }
 
   void OpenGroupe() async {
+    return;
+
     await Srv_DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
     await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gAdresse.AdresseId, "LIVR");
     await Srv_DbTools.getGroupesClient(Srv_DbTools.gClient.ClientId);

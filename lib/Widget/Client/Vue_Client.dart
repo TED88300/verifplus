@@ -7,6 +7,7 @@ import 'package:verifplus/Tools/DbSrv/Srv_Adresses.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Contacts.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
+import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Client/Vue_Client_Popup.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 
@@ -27,13 +28,16 @@ class _Client_VueState extends State<Client_Vue> {
   bool AddVis = false;
 
   void Reload() async {
-    await Srv_DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
-    await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gAdresse.AdresseId, "LIVR");
+
+    await DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
+    await DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gAdresse.AdresseId, "LIVR");
     Srv_DbTools.gAdresseLivr = Srv_DbTools.gAdresse;
     Srv_DbTools.gContactLivr = Srv_DbTools.gContact;
-    await Srv_DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "FACT");
-    await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gAdresse.AdresseId, "FACT");
-    await Srv_DbTools.getGroupesClient(Srv_DbTools.gClient.ClientId);
+
+    await DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "FACT");
+    await DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gAdresse.AdresseId, "FACT");
+
+//    await Srv_DbTools.getGroupesClient(Srv_DbTools.gClient.ClientId);
     AddVis = Srv_DbTools.ListGroupe.length <= 1;
 
     setState(() {});
