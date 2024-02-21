@@ -1,8 +1,6 @@
-import 'package:davi/davi.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_broadcasts/flutter_broadcasts.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Clients.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
@@ -15,11 +13,16 @@ import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
 class Liste_Clients extends StatefulWidget {
+  final VoidCallback onSaisie;
+  const Liste_Clients({Key? key, required this.onSaisie}) : super(key: key);
+
+
   @override
   Liste_ClientsState createState() => Liste_ClientsState();
 }
 
 class Liste_ClientsState extends State<Liste_Clients> {
+
   double textSize = 14.0;
   int SelCol = -1;
   int SelID = -1;
@@ -78,7 +81,22 @@ class Liste_ClientsState extends State<Liste_Clients> {
     print("Liste_Clients initState");
     initLib();
     super.initState();
+    DbTools.receiver.start();
+    DbTools.receiver.messages.listen(
+            (value) {
+              print('value ${value}');
+              Reload();
+             },
+    );
+
   }
+
+  @override
+  void dispose() {
+    DbTools.receiver.stop();
+    super.dispose();
+  }
+
 
   @override
   Widget Entete_Btn_Search() {
@@ -98,7 +116,9 @@ class Liste_ClientsState extends State<Liste_Clients> {
               ]),
               onTap: () async {
                 await HapticFeedback.vibrate();
-                setState(() {});
+                setState(() {
+
+                });
               }),
           Container(
             width: 8,
@@ -357,12 +377,14 @@ class Liste_ClientsState extends State<Liste_Clients> {
                       await HapticFeedback.vibrate();
                       Srv_DbTools.gClient = client;
                       await OpenClient();
+                      widget.onSaisie();
                     },
 
                     onTap: () async {
                       await HapticFeedback.vibrate();
                       Srv_DbTools.gClient = client;
                       OpenGroupe();
+                      widget.onSaisie();
                     },
                     child: Container(
                       height: 57,
@@ -375,7 +397,8 @@ class Liste_ClientsState extends State<Liste_Clients> {
                                 padding: EdgeInsets.only(left: 10, top: mTop),
                                 height: rowh,
                                 child: Text(
-                                  "${client.Client_Nom}",
+                                  client.Client_isUpdate ? "${client.Client_Nom}" :
+                                  "◉ ${client.Client_Nom}",
                                   maxLines: 1,
                                   style: gColors.bodySaisie_B_B,
                                 ),

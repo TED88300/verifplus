@@ -14,6 +14,8 @@ class Contact {
   String Contact_eMail = "";
   String Contact_Rem = "";
   String Contact_Type_Lib = "";
+  bool Contact_isUpdate = true;
+
 
   static ContactInit() {
     return Contact(0, 0, 0,"", "", "", "", "", "", "", "", "", "", "");

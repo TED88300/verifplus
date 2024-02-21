@@ -100,7 +100,7 @@ class Client {
 
 
   static ClientInit() {
-    return Client(0, "", false, "", "","", false, false, "", "", "", "", "", "", "", false, "","", "", "");
+    return Client(0, "", false, "", "","", false, false, "", "", "", "", "", "", "", false, "","", "", "", false);
   }
 
   Client(
@@ -124,6 +124,7 @@ class Client {
       String Client_Ct_Debut,
       String Client_Ct_Fin,
       String Client_Organes,
+      bool Client_isUpdate,
 /*
       String Adresse_Adr1,
       String Adresse_CP,
@@ -151,6 +152,7 @@ class Client {
     this.Client_Ct_Debut       = Client_Ct_Debut      ;
     this.Client_Ct_Fin       = Client_Ct_Fin      ;
     this.Client_Organes     = Client_Organes    ;
+    this.Client_isUpdate     = Client_isUpdate    ;
 
 
 /*
@@ -187,6 +189,10 @@ class Client {
       'Client_Ct_Fin': Client_Ct_Fin,
       'Client_Organes': Client_Organes,
       'Livr': Livr,
+      'Client_isUpdate': Client_isUpdate,
+
+
+
 /*
       'Adresse_Adr1': Adresse_Adr1,
       'Adresse_CP': Adresse_CP,
@@ -206,6 +212,7 @@ class Client {
     if (json['Adresse_CP'] == null) json['Adresse_CP'] ="";
     if (json['Adresse_Ville'] == null) json['Adresse_Ville'] ="";
     if (json['Adresse_Pays'] == null) json['Adresse_Pays'] ="";
+
 
     Client wTmp = Client(
       int.parse(json['ClientId']),
@@ -228,6 +235,8 @@ class Client {
       json['Client_Ct_Debut'],
       json['Client_Ct_Fin'],
       json['Client_Organes'],
+      true,
+
 /*
       json['Adresse_Adr1'],
       json['Adresse_CP'],

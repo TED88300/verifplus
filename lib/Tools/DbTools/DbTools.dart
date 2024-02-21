@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_broadcasts/flutter_broadcasts.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -65,16 +66,13 @@ class SelLig {
 class DbTools {
   DbTools();
 
+  static BroadcastReceiver receiver = BroadcastReceiver(names: <String>["VerifPlus",],);
 
   static File gImageEdtFile = File("");
-
   static List<GrdBtnGrp> lGrdBtnGrp = [];
-
   static bool gTED = false;
-
   static bool gOffLine = false;
-
-  static bool gChangeIndex = true;
+  static bool gErrorSync = false;
 
 
   static int gCurrentIndex = 0;
@@ -157,10 +155,9 @@ class DbTools {
     "User_TypeUserID INTEGER NOT NULL);";
 
 
-    String wCREATE_Clients = "CREATE TABLE Clients (ClientId INTEGER NOT NULL, Client_CodeGC TEXT NOT NULL DEFAULT '', Client_CL_Pr INTEGER NOT NULL, Client_Famille TEXT NOT NULL, Client_Rglt TEXT NOT NULL, Client_Depot TEXT NOT NULL DEFAULT '', Client_PersPhys INTEGER NOT NULL, Client_OK_DataPerso INTEGER NOT NULL, Client_Civilite TEXT NOT NULL DEFAULT '', Client_Nom TEXT NOT NULL DEFAULT '', Client_Siret TEXT NOT NULL DEFAULT '', Client_NAF TEXT NOT NULL DEFAULT '', Client_TVA TEXT NOT NULL DEFAULT '', Client_Commercial TEXT NOT NULL DEFAULT '', Client_Createur TEXT NOT NULL DEFAULT '', Client_Contrat INTEGER NOT NULL, Client_TypeContrat TEXT NOT NULL DEFAULT '', Client_Ct_Debut TEXT NOT NULL, Client_Ct_Fin TEXT NOT NULL, Client_Organes TEXT NOT NULL DEFAULT '', Livr TEXT NOT NULL);";
-    String wCREATE_Adresses = "CREATE TABLE `Adresses` (`AdresseId` int(11) NOT NULL,`Adresse_ClientId` int(11) NOT NULL,`Adresse_Code` varchar(24) NOT NULL DEFAULT '',`Adresse_Type` varchar(24) NOT NULL DEFAULT '',`Adresse_Nom` varchar(64) NOT NULL DEFAULT '',`Adresse_Adr1` varchar(40) NOT NULL DEFAULT '',`Adresse_Adr2` varchar(40) NOT NULL DEFAULT '',`Adresse_Adr3` varchar(40) NOT NULL DEFAULT '',`Adresse_Adr4` varchar(40) NOT NULL,`Adresse_CP` varchar(10) NOT NULL DEFAULT '',`Adresse_Ville` varchar(35) NOT NULL,`Adresse_Pays` varchar(40) NOT NULL DEFAULT '',`Adresse_Acces` varchar(128) NOT NULL,`Adresse_Rem` varchar(1024) NOT NULL DEFAULT '')";
-    String wCREATE_Contacts = "CREATE TABLE `Contacts` (`ContactId` int(11) NOT NULL,`Contact_ClientId` int(11) NOT NULL,`Contact_AdresseId` int(11) NOT NULL,`Contact_Code` varchar(24) NOT NULL DEFAULT '',`Contact_Type` varchar(24) NOT NULL DEFAULT '',`Contact_Civilite` varchar(25) NOT NULL,`Contact_Prenom` varchar(60) NOT NULL,`Contact_Nom` varchar(60) NOT NULL,`Contact_Fonction` varchar(40) NOT NULL,`Contact_Service` varchar(40) NOT NULL,`Contact_Tel1` varchar(20) NOT NULL,`Contact_Tel2` varchar(20) NOT NULL,`Contact_eMail` varchar(100) NOT NULL,`Contact_Rem` varchar(1024) NOT NULL)";
-
+    String wCREATE_Clients = "CREATE TABLE Clients (ClientId INTEGER NOT NULL, Client_CodeGC TEXT NOT NULL DEFAULT '', Client_CL_Pr INTEGER NOT NULL, Client_Famille TEXT NOT NULL, Client_Rglt TEXT NOT NULL, Client_Depot TEXT NOT NULL DEFAULT '', Client_PersPhys INTEGER NOT NULL, Client_OK_DataPerso INTEGER NOT NULL, Client_Civilite TEXT NOT NULL DEFAULT '', Client_Nom TEXT NOT NULL DEFAULT '', Client_Siret TEXT NOT NULL DEFAULT '', Client_NAF TEXT NOT NULL DEFAULT '', Client_TVA TEXT NOT NULL DEFAULT '', Client_Commercial TEXT NOT NULL DEFAULT '', Client_Createur TEXT NOT NULL DEFAULT '', Client_Contrat INTEGER NOT NULL, Client_TypeContrat TEXT NOT NULL DEFAULT '', Client_Ct_Debut TEXT NOT NULL, Client_Ct_Fin TEXT NOT NULL, Client_Organes TEXT NOT NULL DEFAULT '', Livr TEXT NOT NULL,Client_isUpdate INTEGER NOT NULL DEFAULT 0 DEFAULT 0);";
+    String wCREATE_Adresses = "CREATE TABLE `Adresses` (`AdresseId` int(11) NOT NULL,`Adresse_ClientId` int(11) NOT NULL,`Adresse_Code` varchar(24) NOT NULL DEFAULT '',`Adresse_Type` varchar(24) NOT NULL DEFAULT '',`Adresse_Nom` varchar(64) NOT NULL DEFAULT '',`Adresse_Adr1` varchar(40) NOT NULL DEFAULT '',`Adresse_Adr2` varchar(40) NOT NULL DEFAULT '',`Adresse_Adr3` varchar(40) NOT NULL DEFAULT '',`Adresse_Adr4` varchar(40) NOT NULL,`Adresse_CP` varchar(10) NOT NULL DEFAULT '',`Adresse_Ville` varchar(35) NOT NULL,`Adresse_Pays` varchar(40) NOT NULL DEFAULT '',`Adresse_Acces` varchar(128) NOT NULL,`Adresse_Rem` varchar(1024) NOT NULL DEFAULT '', Adresse_isUpdate INTEGER NOT NULL DEFAULT 0)";
+    String wCREATE_Contacts = "CREATE TABLE `Contacts` (`ContactId` int(11) NOT NULL,`Contact_ClientId` int(11) NOT NULL,`Contact_AdresseId` int(11) NOT NULL,`Contact_Code` varchar(24) NOT NULL DEFAULT '',`Contact_Type` varchar(24) NOT NULL DEFAULT '',`Contact_Civilite` varchar(25) NOT NULL,`Contact_Prenom` varchar(60) NOT NULL,`Contact_Nom` varchar(60) NOT NULL,`Contact_Fonction` varchar(40) NOT NULL,`Contact_Service` varchar(40) NOT NULL,`Contact_Tel1` varchar(20) NOT NULL,`Contact_Tel2` varchar(20) NOT NULL,`Contact_eMail` varchar(100) NOT NULL,`Contact_Rem` varchar(1024) NOT NULL, Contact_isUpdate INTEGER NOT NULL DEFAULT 0)";
 
     String wCREATE_Groupes = "CREATE TABLE `Groupes` (`GroupeId` int(11) NOT NULL,`Groupe_ClientId` int(11) NOT NULL,`Groupe_Code` varchar(24) NOT NULL DEFAULT '',`Groupe_Depot` varchar(128) NOT NULL DEFAULT '',`Groupe_Nom` varchar(64) NOT NULL DEFAULT '',`Groupe_Adr1` varchar(40) NOT NULL DEFAULT '',`Groupe_Adr2` varchar(40) NOT NULL DEFAULT '',`Groupe_Adr3` varchar(40) NOT NULL DEFAULT '',`Groupe_Adr4` varchar(40) NOT NULL,`Groupe_CP` varchar(10) NOT NULL DEFAULT '',`Groupe_Ville` varchar(40) NOT NULL DEFAULT '',`Groupe_Pays` varchar(40) NOT NULL DEFAULT '',`Groupe_Acces` varchar(128) NOT NULL,`Groupe_Rem` varchar(1024) NOT NULL DEFAULT '',`Livr` varchar(8) NOT NULL)";
     String wCREATE_Sites = "CREATE TABLE `Sites` (`SiteId` int(11) NOT NULL,`Site_GroupeId` int(11) NOT NULL,`Site_Code` varchar(24) NOT NULL DEFAULT '',`Site_Depot` varchar(128) NOT NULL DEFAULT '',`Site_Nom` varchar(64) NOT NULL DEFAULT '',`Site_Adr1` varchar(40) NOT NULL DEFAULT '',`Site_Adr2` varchar(40) NOT NULL DEFAULT '',`Site_Adr3` varchar(40) NOT NULL DEFAULT '',`Site_Adr4` varchar(40) NOT NULL,`Site_CP` varchar(10) NOT NULL DEFAULT '',`Site_Ville` varchar(40) NOT NULL DEFAULT '',`Site_Pays` varchar(40) NOT NULL DEFAULT '',`Site_Acces` varchar(128) NOT NULL,`Site_RT` varchar(1024) NOT NULL DEFAULT '',`Site_APSAD` varchar(1024) NOT NULL DEFAULT '',`Site_Rem` varchar(1024) NOT NULL DEFAULT '',`Site_ResourceId` int(11) NOT NULL DEFAULT 0,`Livr` varchar(8) NOT NULL)";
@@ -279,7 +276,7 @@ class DbTools {
 
 
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
-     String wDbPath = "skpl2Habdeco.db";
+     String wDbPath = "skpl2abdeo.db";
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
 
     database = openDatabase(
@@ -1725,6 +1722,8 @@ class DbTools {
     final List<Map<String, dynamic>> maps = await db.query("Clients", orderBy: "Client_Nom ASC");
 
     return List.generate(maps.length, (i) {
+
+      print("getClients ${ maps[i]["Client_isUpdate"]}");
       return Client(
           maps[i]["ClientId"],
           maps[i]["Client_CodeGC"],
@@ -1746,6 +1745,7 @@ class DbTools {
            maps[i]["Client_Ct_Debut"],
            maps[i]["Client_Ct_Fin"],
            maps[i]["Client_Organes"],
+           maps[i]["Client_isUpdate"] == 1,
 
 
 
@@ -1852,6 +1852,17 @@ class DbTools {
     gLastID = repid!;
   }
 
+  static Future<void> updateAdresse(Adresse wAdresse) async {
+    final db = await DbTools.database;
+    int? repid = await db.update("Adresses", wAdresse.toMap(),
+      where: "AdresseId = ?",
+      whereArgs: [wAdresse.AdresseId],);
+    gLastID = repid!;
+  }
+
+
+
+
 
   static Future<void> TrunckAdresse() async {
     final db = await DbTools.database;
@@ -1928,6 +1939,14 @@ class DbTools {
     int? repid = await db.insert("Contacts", wContact.toMap());
     gLastID = repid!;
   }
+
+  static Future<void> updateContact(Contact wContact) async {
+    final db = await DbTools.database;
+    int? repid = await db.update("Contacts", wContact.toMap(),
+      where: "ContactId = ?",
+      whereArgs: [wContact.ContactId],);
+  }
+
 
 
   static Future<void> TrunckContact() async {

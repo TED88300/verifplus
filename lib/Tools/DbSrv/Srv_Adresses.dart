@@ -15,6 +15,9 @@ class Adresse {
 
   String Adresse_Rem = "";
 
+  bool Adresse_isUpdate = true;
+
+
   static AdresseInit() {
     return Adresse(0, 0, "", "", "", "", "", "", "", "", "", "","","");
   }

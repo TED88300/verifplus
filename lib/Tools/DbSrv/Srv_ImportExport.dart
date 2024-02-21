@@ -7,6 +7,25 @@ import 'package:verifplus/Tools/DbTools/DbTools.dart';
 class Srv_ImportExport {
   Srv_ImportExport();
 
+  static Future ExportALL() async {
+    DbTools.gErrorSync = false;
+    Srv_DbTools.ListClient = await DbTools.getClients();
+    for (int i = 0; i < Srv_DbTools.ListClient.length; i++) {
+      Client wClient = Srv_DbTools.ListClient[i];
+      if (!wClient.Client_isUpdate) {
+        print("Client à remonter ${wClient.Client_Nom}");
+        bool wRes = await Srv_DbTools.setClient(wClient);
+        wClient.Client_isUpdate = wRes;
+        if (!wRes) DbTools.gErrorSync = true;
+        Srv_DbTools.gAdresse.Adresse_isUpdate = wRes;
+        await DbTools.updateClients(wClient);
+        print("Client à remonter Client wRes ${wRes}");
+      }
+    }
+    Srv_DbTools.ListClient = await DbTools.getClients();
+
+  }
+
   static Future<bool> ImportClient() async {
     bool wResult = await Srv_DbTools.getClientAll();
     print("ImportClient wResult ${wResult}");
@@ -26,7 +45,6 @@ class Srv_ImportExport {
   }
 
   static Future<bool> ImportAdresse() async {
-
     bool wResult = await Srv_DbTools.getAdresseAll();
     print("ImportAdresse wResult ${wResult}");
     if (wResult) {
@@ -35,19 +53,16 @@ class Srv_ImportExport {
         Adresse wAdresse = Srv_DbTools.ListAdresse[i];
         await DbTools.inserAdresse(wAdresse);
       }
-      Srv_DbTools.ListAdresse = await  DbTools.getAdresse();
+      Srv_DbTools.ListAdresse = await DbTools.getAdresse();
       print("Import_DataDialog Srv_DbTools.ListAdresse ${Srv_DbTools.ListAdresse}");
       return true;
     }
-    Srv_DbTools.ListAdresse = await  DbTools.getAdresse();
+    Srv_DbTools.ListAdresse = await DbTools.getAdresse();
     print("Import_DataDialog Srv_DbTools.ListAdresse ${Srv_DbTools.ListAdresse}");
     return false;
-
-
   }
 
   static Future<bool> ImportContact() async {
-
     bool wResult = await Srv_DbTools.getContactAll();
     print("ImportContact wResult ${wResult}");
     if (wResult) {
@@ -56,18 +71,12 @@ class Srv_ImportExport {
         Contact wContact = Srv_DbTools.ListContact[i];
         await DbTools.inserContact(wContact);
       }
-      Srv_DbTools.ListContact = await  DbTools.getContact();
+      Srv_DbTools.ListContact = await DbTools.getContact();
       print("Import_DataDialog Srv_DbTools.ListContact ${Srv_DbTools.ListContact}");
       return true;
     }
-    Srv_DbTools.ListContact = await  DbTools.getContact();
+    Srv_DbTools.ListContact = await DbTools.getContact();
     print("Import_DataDialog Srv_DbTools.ListContact ${Srv_DbTools.ListContact}");
     return false;
-
-
   }
-
-
-
-
 }

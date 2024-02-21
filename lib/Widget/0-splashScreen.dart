@@ -5,6 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:verifplus/Tools/Api_Gouv.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_NF074.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/shared_pref.dart';
@@ -40,6 +41,10 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
     });
 
     await DbTools.initSqlite();
+
+    await Srv_ImportExport.ExportALL();
+
+
 
     Srv_DbTools.ListArticle_Ebp = await Article_Ebp.getArticle_Ebp();
     print("getArticle_Ebp ${Srv_DbTools.ListArticle_Ebp.length}");

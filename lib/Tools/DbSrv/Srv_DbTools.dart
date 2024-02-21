@@ -481,8 +481,6 @@ class Srv_DbTools {
       bool ret = await add_API_Post("upddel", wSlq);
       print("setClient ret " + ret.toString());
         return true;
-
-
     } catch (e) {
       print("setClient ERROR " + e.toString());
       return false;
@@ -638,10 +636,19 @@ class Srv_DbTools {
         "Adresse_Pays      = \"${Adresse.Adresse_Pays}\", " +
         "Adresse_Rem       = \"${Adresse.Adresse_Rem}\" " +
         "WHERE AdresseId      = ${Adresse.AdresseId.toString()}";
-    gColors.printWrapped("setAdresse " + wSlq);
-    bool ret = await add_API_Post("upddel", wSlq);
-    print("setAdresse ret " + ret.toString());
-    return ret;
+
+    try {
+      bool ret = await add_API_Post("upddel", wSlq);
+      print("setAdresse ret " + ret.toString());
+      return true;
+    } catch (e) {
+      print("setAdresse ERROR " + e.toString());
+      return false;
+    }
+
+
+
+
   }
 
   static Future<bool> addAdresse(int Adresse_ClientId, String Type) async {
@@ -2281,10 +2288,17 @@ class Srv_DbTools {
         "Contact_eMail            = \"${Contact.Contact_eMail}\", " +
         "Contact_Rem              = \"${Contact.Contact_Rem}\" " +
         "WHERE ContactId      = ${Contact.ContactId.toString()}";
-    gColors.printWrapped("setContact " + wSlq);
-    bool ret = await add_API_Post("upddel", wSlq);
-    print("setContact ret " + ret.toString());
-    return ret;
+
+    try {
+      bool ret = await add_API_Post("upddel", wSlq);
+      print("setContact ret " + ret.toString());
+      return true;
+    } catch (e) {
+      print("setContact ERROR " + e.toString());
+      return false;
+    }
+
+
   }
 
   static Future<bool> addContactAdrType(int Contact_ClientId, int Contact_AdresseId, String Type) async {

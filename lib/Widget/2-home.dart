@@ -5,6 +5,7 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
+import 'package:flutter_broadcasts/flutter_broadcasts.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/shared_pref.dart';
@@ -15,11 +16,9 @@ import 'package:verifplus/Widget/Import_Menu.dart';
 import 'package:verifplus/Widget/P_Notifications.dart';
 import 'package:verifplus/Widget/P_Synthese.dart';
 import 'package:verifplus/Widget/Planning/Planning.dart';
+import 'package:verifplus/Widget/Widget_Tools/P_FlutterWifiIoT.dart';
 import 'package:verifplus/Widget/Widget_Tools/bottom_navigation_bar.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
-
-
-
 
 class Home extends StatefulWidget {
   @override
@@ -28,6 +27,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> with WidgetsBindingObserver {
   bool isChecked = false;
+
 
   String notificationTitle = 'No Title';
   String notificationBody = 'No Body';
@@ -46,13 +46,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     "NOTIFICATIONS",
   ];
 
-  List<Widget> P_children = [
-    Liste_Clients(),
-    P_Synthese(),
-    Catalogue_Grid(),
-    Planning(),
-    P_Notifications(),
-  ];
+  List<Widget> P_children = [];
 
   @override
   void initLib() async {
@@ -75,8 +69,6 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     return hasConnection;
   }
 
-
-
   @override
   Future reload() async {
     await checkConnection();
@@ -91,20 +83,23 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   @override
   void dispose() {
-
     super.dispose();
   }
 
   @override
   void initState() {
+    P_children = [
+      Liste_Clients(onSaisie: onSaisie),
+      P_Synthese(),
+      Catalogue_Grid(),
+      Planning(),
+      P_Notifications(),
+    ];
 
     print("HOME initState");
-
-
     FlutterAppBadger.removeBadge();
     super.initState();
     initConnectivity();
-
     _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     initLib();
   }
@@ -123,6 +118,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   }
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    print("HOME _updateConnectionStatus");
     await checkConnection();
     setState(() {});
   }
@@ -141,6 +137,9 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   Widget Block_MenuApp(BuildContext context) {
     String title_string = P_itemsTitre[DbTools.gCurrentIndex];
     Widget wchildren = P_children[DbTools.gCurrentIndex];
+
+
+    print("Block_MenuApp");
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -170,16 +169,33 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                   ),
                 ],
               ),
-        leading: Padding(
-          padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
-          child: Image.asset("assets/images/IcoW.png"),
+        leading: IconButton(
+          icon: Padding(
+            padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
+            child: DbTools.gErrorSync
+                ? Image.asset(
+                    "assets/images/IcoWErr.png",
+                  )
+                : Image.asset("assets/images/IcoW.png"),
+          ),
+          onPressed: () async {
+            await Srv_ImportExport.ExportALL();
+            await sendBroadcast(
+              BroadcastMessage(
+                name: "VerifPlus",
+                data :  {
+                  'msg': 'data',},
+              ),
+            );
+            setState(() {});
+          },
+          tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
         ),
         actions: <Widget>[
-
           IconButton(
-            icon:  Icon(
-              hasConnection ?  Icons.cloud_download : Icons.cloud_off,
-             color:  hasConnection ? Colors.green : Colors.red,
+            icon: Icon(
+              hasConnection ? Icons.cloud_download : Icons.cloud_off,
+              color: hasConnection ? Colors.green : Colors.red,
             ),
             onPressed: () async {
               await Import_Menu_Dialog.Dialogs_Saisie(context, onSaisie);
@@ -230,13 +246,10 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   }
 
   void onBottomIconPressed(int index) async {
-
-    if (DbTools.gCurrentIndex != index)
-      {
-        DbTools.gCurrentIndex = index;
-        if (DbTools.gCurrentIndex == 1)
-            await Srv_ImportExport.ImportClient();
-      }
+    if (DbTools.gCurrentIndex != index) {
+      DbTools.gCurrentIndex = index;
+      if (DbTools.gCurrentIndex == 1) await Srv_ImportExport.ImportClient();
+    }
     reload();
   }
 
@@ -246,9 +259,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     showDialog(
         context: context,
         builder: (_) => new AlertDialog(
-          surfaceTintColor: Colors.white,
-
-          title: Column(
+              surfaceTintColor: Colors.white,
+              title: Column(
                   //Slide3
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
@@ -280,7 +292,6 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                   ),
                   onPressed: () async {
                     await reload();
-
                     Navigator.pop(context);
                   },
                 )
