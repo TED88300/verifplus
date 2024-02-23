@@ -189,7 +189,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
         case "GAM":
           Srv_DbTools.GAM_Lib = param_Saisie.ParcsDesc_Lib.toString();
           Srv_DbTools.getParam_Saisie_ParamMem_REF();
-          Srv_DbTools.gArticle_EbpEnt = Srv_DbTools.getArticle_Ebp(Srv_DbTools.REF_Lib);
+          Srv_DbTools.gArticle_EbpEnt = Srv_DbTools.IMPORT_Article_Ebp(Srv_DbTools.REF_Lib);
           DescAff3 = "${Srv_DbTools.REF_Lib} ${Srv_DbTools.gArticle_EbpEnt.Article_descriptionCommercialeEnClair}";
 
           break;

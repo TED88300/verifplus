@@ -22,9 +22,11 @@ void main() async {
 
   runApp(
       MaterialApp(
+
         debugShowCheckedModeBanner: false,
         title: 'App',
         theme: ThemeData(
+          useMaterial3: false,
           cardTheme: CardTheme(
             surfaceTintColor: Colors.white,
           ),

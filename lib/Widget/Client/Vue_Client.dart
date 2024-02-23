@@ -29,13 +29,28 @@ class _Client_VueState extends State<Client_Vue> {
 
   void Reload() async {
 
+    print("Client_Vue Reload ${Srv_DbTools.gClient.ClientId}");
+
     await DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
     await DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gAdresse.AdresseId, "LIVR");
+
+
     Srv_DbTools.gAdresseLivr = Srv_DbTools.gAdresse;
     Srv_DbTools.gContactLivr = Srv_DbTools.gContact;
 
+    print("Client_Vue Reload Srv_DbTools.gContactLivr ${Srv_DbTools.gContactLivr.Desc()}");
+
+
+
     await DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "FACT");
     await DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gAdresse.AdresseId, "FACT");
+
+
+    print("Client_Vue Reload Srv_DbTools.gContact ${Srv_DbTools.gContact.Desc()}");
+
+
+
+
 
 //    await Srv_DbTools.getGroupesClient(Srv_DbTools.gClient.ClientId);
     AddVis = Srv_DbTools.ListGroupe.length <= 1;
@@ -65,6 +80,16 @@ class _Client_VueState extends State<Client_Vue> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+              Srv_DbTools.gClient.Client_isUpdate ? Container() :
+              Container(
+                padding: EdgeInsets.only(right: 5, bottom: 6),
+                child: Text(
+                   "◉",
+                  maxLines: 1,
+                  style: gColors.bodyTitle1_B_R32,
+                ),
+              ),
+
               Text(
                 "CLIENT",
                 maxLines: 1,
@@ -79,7 +104,11 @@ class _Client_VueState extends State<Client_Vue> {
             },
             child: Padding(
               padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
-              child: Image.asset("assets/images/IcoW.png"),
+              child: DbTools.gErrorSync
+                  ? Image.asset(
+                "assets/images/IcoWErr.png",
+              )
+                  : Image.asset("assets/images/IcoW.png"),
             ),
           ),
           actions: <Widget>[

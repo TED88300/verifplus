@@ -19,7 +19,7 @@ class Adresse {
 
 
   static AdresseInit() {
-    return Adresse(0, 0, "", "", "", "", "", "", "", "", "", "","","");
+    return Adresse(0, 0, "", "", "", "", "", "", "", "", "", "","","", false);
   }
 
   Adresse(
@@ -37,6 +37,7 @@ class Adresse {
     String Adresse_Pays,
       String Adresse_Acces,
     String Adresse_Rem,
+      bool Adresse_isUpdate,
   ) {
     this.AdresseId = AdresseId;
     this.Adresse_ClientId = Adresse_ClientId;
@@ -52,6 +53,7 @@ class Adresse {
     this.Adresse_Pays = Adresse_Pays;
     this.Adresse_Acces = Adresse_Acces;
     this.Adresse_Rem = Adresse_Rem;
+    this.Adresse_isUpdate = Adresse_isUpdate;
   }
 
   Map<String, dynamic> toMap() {
@@ -71,6 +73,7 @@ class Adresse {
       'Adresse_Pays': Adresse_Pays,
       'Adresse_Acces': Adresse_Acces,
       'Adresse_Rem': Adresse_Rem,
+      'Adresse_isUpdate': Adresse_isUpdate,
     };
   }
 
@@ -90,7 +93,9 @@ class Adresse {
         json['Adresse_Ville'],
         json['Adresse_Pays'],
         json['Adresse_Acces'],
-        json['Adresse_Rem']);
+        json['Adresse_Rem'],
+        true,
+    );
     return wUser;
   }
 
@@ -108,6 +113,6 @@ class Adresse {
         '$Adresse_Ville    '
         '$Adresse_Pays     '
         '$Adresse_Acces     '
-        '$Adresse_Rem      ';
+        '$Adresse_isUpdate      ';
   }
 }

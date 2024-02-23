@@ -42,24 +42,25 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
 
     await DbTools.initSqlite();
 
-    await Srv_ImportExport.ExportALL();
-
-
-
-    Srv_DbTools.ListArticle_Ebp = await Article_Ebp.getArticle_Ebp();
-    print("getArticle_Ebp ${Srv_DbTools.ListArticle_Ebp.length}");
+//    await Srv_ImportExport.ExportNotSync();
+//    Srv_DbTools.ListArticle_Ebp = await Article_Ebp.getArticle_Ebp();
+//    Srv_DbTools.getParam_ParamAll();
 
     Srv_DbTools.gSelGroupe = Srv_DbTools.gSelGroupeBase;
     Srv_DbTools.gSelIntervention = Srv_DbTools.gSelInterventionBase;
 
     DbTools.gIsRememberLogin = await SharedPref.getBoolKey("IsRememberLogin", false);
+
+    int timestampLogin = await SharedPref.getIntKey("timestampLogin", 0);
+    DateTime dttimestampLogin = DateTime.fromMillisecondsSinceEpoch(timestampLogin);
+    Duration wDT = dttimestampLogin.difference(DateTime.now());
+    if (wDT.inDays < -10) DbTools.gIsRememberLogin = false;
+
     DbTools.gUsername = await SharedPref.getStrKey("username", "");
     DbTools.gPassword = await SharedPref.getStrKey("password", "");
     DbTools.packageInfo = await PackageInfo.fromPlatform();
     DbTools.gVersion = "V${DbTools.packageInfo.version} b${DbTools.packageInfo.buildNumber}";
     print("DbTools.gVersion ${DbTools.gVersion}");
-
-    Srv_DbTools.getParam_ParamAll();
 
     if (DbTools.gIsRememberLogin) DbTools.gIsRememberLogin = await Srv_DbTools.getUserLogin(DbTools.gUsername, DbTools.gPassword);
 

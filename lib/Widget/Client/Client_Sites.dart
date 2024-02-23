@@ -179,7 +179,7 @@ class Client_SitesState extends State<Client_Sites> {
             child: new Icon(Icons.add),
             backgroundColor: gColors.secondary,
             onPressed: () async {
-              await Srv_DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
+              await DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
               await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gAdresse.AdresseId, "LIVR");
               await Srv_DbTools.addSite(Srv_DbTools.gClient.ClientId);
 

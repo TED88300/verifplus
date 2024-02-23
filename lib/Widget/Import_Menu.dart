@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
+import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Import_Data.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 
@@ -124,6 +125,7 @@ class Import_MenuDialogState extends State<Import_MenuDialog> with TickerProvide
 
               new ElevatedButton(
                 onPressed: () async {
+                  DbTools.gErrorSync = false;
                   await Import_Data_Dialog.Dialogs_Saisie(context, widget.onSaisie, "Listing");
                 },
                 style: ElevatedButton.styleFrom(
@@ -145,6 +147,7 @@ class Import_MenuDialogState extends State<Import_MenuDialog> with TickerProvide
 
               new ElevatedButton(
                 onPressed: () async {
+                  DbTools.gErrorSync = false;
                   await Import_Data_Dialog.Dialogs_Saisie(context, widget.onSaisie, "Param");
                 },
                 style: ElevatedButton.styleFrom(
@@ -166,6 +169,7 @@ class Import_MenuDialogState extends State<Import_MenuDialog> with TickerProvide
 
               new ElevatedButton(
                 onPressed: () async {
+                  DbTools.gErrorSync = false;
                   await Import_Data_Dialog.Dialogs_Saisie(context, widget.onSaisie, "NF74");
                 },
                 style: ElevatedButton.styleFrom(

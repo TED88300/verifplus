@@ -240,7 +240,7 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
       }
 
       bool Indispo = false;
-      for (int i = 0; i < Srv_DbTools.ListResult_Article_Link_Verif_Indisp.length; i++) {
+      /*for (int i = 0; i < Srv_DbTools.ListResult_Article_Link_Verif_Indisp.length; i++) {
         Result_Article_Link_Verif_Indisp wResult_Article_Link_Verif_Indisp = Srv_DbTools.ListResult_Article_Link_Verif_Indisp[i];
         if (element.Param_Saisie_ID.compareTo(wResult_Article_Link_Verif_Indisp.Articles_Link_Verif_TypeVerif) == 0) {
           element.Param_Saisie_Label = "${element.Param_Saisie_Label} ***Indsiponible***";
@@ -248,7 +248,7 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
           Indispo = true;
           break;
         }
-      }
+      }*/
 
       if (Indispo) {
         RowSaisies.add(RowSaisie(element, LargeurCol, LargeurCol2, H2, Indispo: true));

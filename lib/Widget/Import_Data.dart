@@ -99,6 +99,7 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
       wSt += "► Adresse : ${Srv_DbTools.ListAdresse.length} Adresses\n";
     });
 
+
     //**********************************
     //**********************************
     //**********************************
@@ -364,15 +365,15 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
     //***********************************
     //***********************************
 
-    await Srv_DbTools.Import_Srv_NF074_Gammes();
-    print("Import_DataDialog ListNF074_Gammes ${Srv_DbTools.ListNF074_Gammes.length}");
+    await Srv_DbTools.IMPORT_Srv_NF074_Gammes();
+    print("IMPORT_DataDialog ListNF074_Gammes ${Srv_DbTools.ListNF074_Gammes.length}");
     DbTools.TrunckNF074_Gammes();
     for (int i = 0; i < Srv_DbTools.ListNF074_Gammes.length; i++) {
       NF074_Gammes nF074_Gammes = Srv_DbTools.ListNF074_Gammes[i];
       DbTools.insertNF074_Gammes(nF074_Gammes);
     }
     DbTools.glfNF074_Gammes = await  DbTools.getNF074_Gammes();
-    print("Import_DataDialog glfNF074_Gammes ${DbTools.glfNF074_Gammes.length}");
+    print("IMPORT_DataDialog glfNF074_Gammes ${DbTools.glfNF074_Gammes.length}");
     setState(() {
       wSt += "► NF074 : ${DbTools.glfNF074_Gammes.length} Gammes\n";
     });
@@ -380,83 +381,83 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
 
     //**********************************
 
-    await Srv_DbTools.Import_Srv_NF074_Histo_Normes();
-    print("Import_DataDialog ListNF074_Histo_Normes ${Srv_DbTools.ListNF074_Histo_Normes.length}");
+    await Srv_DbTools.IMPORT_Srv_NF074_Histo_Normes();
+    print("IMPORT_DataDialog ListNF074_Histo_Normes ${Srv_DbTools.ListNF074_Histo_Normes.length}");
     DbTools.TrunckNF074_Histo_Normes();
     for (int i = 0; i < Srv_DbTools.ListNF074_Histo_Normes.length; i++) {
       NF074_Histo_Normes nF074_Histo_Normes = Srv_DbTools.ListNF074_Histo_Normes[i];
       DbTools.insertNF074_Histo_Normes(nF074_Histo_Normes);
     }
     DbTools.glfNF074_Histo_Normes = await  DbTools.getNF074_Histo_Normes();
-    print("Import_DataDialog glfNF074_Histo_Normes ${DbTools.glfNF074_Histo_Normes.length}");
+    print("IMPORT_DataDialog glfNF074_Histo_Normes ${DbTools.glfNF074_Histo_Normes.length}");
     setState(() {
       wSt += "► NF074 : ${DbTools.glfNF074_Histo_Normes.length} Normes\n";
     });
 
     //**********************************
 
-    await Srv_DbTools.Import_Srv_NF074_Pieces_Det();
-    print("Import_DataDialog ListNF074_Pieces_Det ${Srv_DbTools.ListNF074_Pieces_Det.length}");
+    await Srv_DbTools.IMPORT_Srv_NF074_Pieces_Det();
+    print("IMPORT_DataDialog ListNF074_Pieces_Det ${Srv_DbTools.ListNF074_Pieces_Det.length}");
     DbTools.TrunckNF074_Pieces_Det();
     for (int i = 0; i < Srv_DbTools.ListNF074_Pieces_Det.length; i++) {
       NF074_Pieces_Det nF074_Pieces_Det = Srv_DbTools.ListNF074_Pieces_Det[i];
       DbTools.insertNF074_Pieces_Det(nF074_Pieces_Det);
     }
     DbTools.glfNF074_Pieces_Det = await  DbTools.getNF074_Pieces_Det();
-    print("Import_DataDialog glfNF074_Pieces_Det ${DbTools.glfNF074_Pieces_Det.length}");
+    print("IMPORT_DataDialog glfNF074_Pieces_Det ${DbTools.glfNF074_Pieces_Det.length}");
     setState(() {
       wSt += "► NF074 : ${DbTools.glfNF074_Pieces_Det.length} Pièces détachées\n";
     });
 
     //**********************************
 
-    await Srv_DbTools.Import_Srv_NF074_Pieces_Det_Inc();
-    print("Import_DataDialog ListNF074_Pieces_Det_Inc ${Srv_DbTools.ListNF074_Pieces_Det_Inc.length}");
+    await Srv_DbTools.IMPORT_Srv_NF074_Pieces_Det_Inc();
+    print("IMPORT_DataDialog ListNF074_Pieces_Det_Inc ${Srv_DbTools.ListNF074_Pieces_Det_Inc.length}");
     DbTools.TrunckNF074_Pieces_Det_Inc();
     for (int i = 0; i < Srv_DbTools.ListNF074_Pieces_Det_Inc.length; i++) {
       NF074_Pieces_Det_Inc nF074_Pieces_Det_Inc = Srv_DbTools.ListNF074_Pieces_Det_Inc[i];
       DbTools.insertNF074_Pieces_Det_Inc(nF074_Pieces_Det_Inc);
     }
     DbTools.glfNF074_Pieces_Det_Inc = await  DbTools.getNF074_Pieces_Det_Inc();
-    print("Import_DataDialog glfNF074_Pieces_Det_Inc ${DbTools.glfNF074_Pieces_Det_Inc.length}");
+    print("IMPORT_DataDialog glfNF074_Pieces_Det_Inc ${DbTools.glfNF074_Pieces_Det_Inc.length}");
     setState(() {
       wSt += "► NF074 : ${DbTools.glfNF074_Pieces_Det_Inc.length} Pièces Articles inconnus\n";
     });
 
     //**********************************
 
-    await Srv_DbTools.Import_Srv_NF074_Mixte_Produit();
-    print("Import_DataDialog ListNF074_Mixte_Produit ${Srv_DbTools.ListNF074_Mixte_Produit.length}");
+    await Srv_DbTools.IMPORT_Srv_NF074_Mixte_Produit();
+    print("IMPORT_DataDialog ListNF074_Mixte_Produit ${Srv_DbTools.ListNF074_Mixte_Produit.length}");
     DbTools.TrunckNF074_Mixte_Produit();
     for (int i = 0; i < Srv_DbTools.ListNF074_Mixte_Produit.length; i++) {
       NF074_Mixte_Produit nF074_Mixte_Produit = Srv_DbTools.ListNF074_Mixte_Produit[i];
       DbTools.insertNF074_Mixte_Produit(nF074_Mixte_Produit);
     }
     DbTools.glfNF074_Mixte_Produit = await  DbTools.getNF074_Mixte_Produit();
-    print("Import_DataDialog glfNF074_Mixte_Produit ${DbTools.glfNF074_Mixte_Produit.length}");
+    print("IMPORT_DataDialog glfNF074_Mixte_Produit ${DbTools.glfNF074_Mixte_Produit.length}");
     setState(() {
       wSt += "► NF074 : ${DbTools.glfNF074_Mixte_Produit.length} Mixte produits\n";
     });
 
     //**********************************
 
-    await Srv_DbTools.Import_Srv_NF074_Pieces_Actions();
-    print("Import_DataDialog ListNF074_Pieces_Actions ${Srv_DbTools.ListNF074_Pieces_Actions.length}");
+    await Srv_DbTools.IMPORT_Srv_NF074_Pieces_Actions();
+    print("IMPORT_DataDialog ListNF074_Pieces_Actions ${Srv_DbTools.ListNF074_Pieces_Actions.length}");
     DbTools.TrunckNF074_Pieces_Actions();
     for (int i = 0; i < Srv_DbTools.ListNF074_Pieces_Actions.length; i++) {
       NF074_Pieces_Actions nF074_Pieces_Actions = Srv_DbTools.ListNF074_Pieces_Actions[i];
       DbTools.insertNF074_Pieces_Actions(nF074_Pieces_Actions);
     }
     DbTools.glfNF074_Pieces_Actions = await  DbTools.getNF074_Pieces_Actions();
-    print("Import_DataDialog glfNF074_Pieces_Actions ${DbTools.glfNF074_Pieces_Actions.length}");
+    print("IMPORT_DataDialog glfNF074_Pieces_Actions ${DbTools.glfNF074_Pieces_Actions.length}");
     setState(() {
       wSt += "► NF074 : ${DbTools.glfNF074_Pieces_Actions.length} Pièces / Actions\n";
     });
 
     // Familles EBP
-    await Srv_DbTools.getArticle_Fam_EbpAll();
+    await Srv_DbTools.IMPORT_Article_Fam_EbpAll();
     // Articles EBP
-    await Srv_DbTools.getArticle_EbpAll();
+    await Srv_DbTools.IMPORT_Article_EbpAll();
 
     await Article_Ebp.TrunckArticle_Ebp();
     for (int i = 0; i < Srv_DbTools.ListArticle_Ebp.length; i++) {
@@ -470,7 +471,7 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
 
 
     // Articles EBP ES (Echange Standard)
-    await Srv_DbTools.getArticle_Ebp_ES();
+    await Srv_DbTools.IMPORT_Article_Ebp_ES();
     print("Import_DataDialog ListArticle_Ebp ${Srv_DbTools.ListArticle_Ebp.length}");
 
     setState(() {

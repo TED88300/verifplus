@@ -18,7 +18,7 @@ class Contact {
 
 
   static ContactInit() {
-    return Contact(0, 0, 0,"", "", "", "", "", "", "", "", "", "", "");
+    return Contact(0, 0, 0,"", "", "", "", "", "", "", "", "", "", "", false);
   }
 
   Contact(
@@ -36,6 +36,7 @@ class Contact {
     String Contact_Tel2,
     String Contact_eMail,
     String Contact_Rem,
+      bool Contact_isUpdate,
   ) {
     this.ContactId = ContactId;
     this.Contact_ClientId = Contact_ClientId;
@@ -51,6 +52,7 @@ class Contact {
     this.Contact_Tel2 = Contact_Tel2;
     this.Contact_eMail = Contact_eMail;
     this.Contact_Rem = Contact_Rem;
+    this.Contact_isUpdate = Contact_isUpdate;
   }
 
   Map<String, dynamic> toMap() {
@@ -69,6 +71,7 @@ class Contact {
       'Contact_Tel2': Contact_Tel2,
       'Contact_eMail': Contact_eMail,
       'Contact_Rem': Contact_Rem,
+      'Contact_isUpdate': Contact_isUpdate,
     };
   }
 
@@ -90,6 +93,7 @@ class Contact {
       json['Contact_Tel2'],
       json['Contact_eMail'],
       json['Contact_Rem'],
+      true,
     );
     return wUser;
   }
@@ -108,7 +112,8 @@ class Contact {
         '$Contact_Tel1         '
         '$Contact_Tel2         '
         '$Contact_eMail         '
-        '$Contact_Rem         ';
+        '$Contact_Rem         '
+      '$Contact_isUpdate         ';
   }
 }
 

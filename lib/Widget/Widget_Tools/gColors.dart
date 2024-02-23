@@ -154,6 +154,15 @@ class gColors {
     fontSize: 32,
     fontWeight: FontWeight.bold,
   );
+
+  static TextStyle get bodyTitle1_B_R32 => TextStyle(
+    color: Colors.redAccent,
+    fontSize: 32,
+    fontWeight: FontWeight.bold,
+  );
+
+
+
   static TextStyle get bodyTitle1_B_W32 => TextStyle(
     color: white,
     fontSize: 32,

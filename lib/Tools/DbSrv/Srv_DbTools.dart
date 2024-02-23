@@ -17,7 +17,6 @@ import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_InterMissions.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Interventions.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_NF074.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Param_Gamme.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie_Param.dart';
@@ -36,8 +35,10 @@ import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Ent.dart';
+import 'package:verifplus/Tools/shared_pref.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
+
 import 'Srv_Clients.dart';
 
 class Notif with ChangeNotifier {
@@ -47,8 +48,6 @@ class Notif with ChangeNotifier {
     notifyListeners();
   }
 }
-
-
 
 class Srv_DbTools {
   Srv_DbTools();
@@ -72,7 +71,6 @@ class Srv_DbTools {
 
   static String simCountryCode = "";
 
-
   //******************************************
   //************   NF074_Gammes   ************
   //******************************************
@@ -81,16 +79,18 @@ class Srv_DbTools {
   static List<NF074_Gammes> ListNF074_Gammessearchresult = [];
   static NF074_Gammes gNF074_Gammes = NF074_Gammes.NF074_GammesInit();
 
-  static Future<bool> Import_Srv_NF074_Gammes() async {
-    ListNF074_Gammes = await getNF074_Gammes_API_Post("select", "select * from NF074_Gammes ORDER BY NF074_GammesId");
-
-    if (ListNF074_Gammes == null) return false;
-    //print("getNF074_GammesAll ${ListNF074_Gammes.length}");
-    if (ListNF074_Gammes.length > 0) {
-      //print("getNF074_GammesAll return TRUE");
-      return true;
+  static Future<bool> IMPORT_Srv_NF074_Gammes() async {
+    String wSlq = "select * from NF074_Gammes ORDER BY NF074_GammesId";
+    try {
+      ListNF074_Gammes = await getNF074_Gammes_API_Post("select", wSlq);
+      if (ListNF074_Gammes == null) return false;
+      if (ListNF074_Gammes.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
   static Future<List<NF074_Gammes>> getNF074_Gammes_API_Post(String aType, String aSQL) async {
@@ -120,7 +120,6 @@ class Srv_DbTools {
     return [];
   }
 
-
   //******************************************
   //************   NF074_Histo_Normes   ************
   //******************************************
@@ -129,16 +128,18 @@ class Srv_DbTools {
   static List<NF074_Histo_Normes> ListNF074_Histo_Normessearchresult = [];
   static NF074_Histo_Normes gNF074_Histo_Normes = NF074_Histo_Normes.NF074_Histo_NormesInit();
 
-  static Future<bool> Import_Srv_NF074_Histo_Normes() async {
-    ListNF074_Histo_Normes = await getNF074_Histo_Normes_API_Post("select", "select * from NF074_Histo_Normes ORDER BY NF074_Histo_NormesId");
-
-    if (ListNF074_Histo_Normes == null) return false;
-    //print("getNF074_Histo_NormesAll ${ListNF074_Histo_Normes.length}");
-    if (ListNF074_Histo_Normes.length > 0) {
-      //print("getNF074_Histo_NormesAll return TRUE");
-      return true;
+  static Future<bool> IMPORT_Srv_NF074_Histo_Normes() async {
+    String wSlq = "select * from NF074_Histo_Normes ORDER BY NF074_Histo_NormesId";
+    try {
+      ListNF074_Histo_Normes = await getNF074_Histo_Normes_API_Post("select", wSlq);
+      if (ListNF074_Histo_Normes == null) return false;
+      if (ListNF074_Histo_Normes.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
   static Future<List<NF074_Histo_Normes>> getNF074_Histo_Normes_API_Post(String aType, String aSQL) async {
@@ -168,7 +169,6 @@ class Srv_DbTools {
     return [];
   }
 
-
   //******************************************
   //************   NF074_Pieces_Det   ********
   //******************************************
@@ -177,15 +177,19 @@ class Srv_DbTools {
   static List<NF074_Pieces_Det> ListNF074_Pieces_Detsearchresult = [];
   static NF074_Pieces_Det gNF074_Pieces_Det = NF074_Pieces_Det.NF074_Pieces_DetInit();
 
-  static Future<bool> Import_Srv_NF074_Pieces_Det() async {
-    ListNF074_Pieces_Det = await getNF074_Pieces_Det_API_Post("select", "select * from NF074_Pieces_Det ORDER BY NF074_Pieces_DetId");
-    if (ListNF074_Pieces_Det == null) return false;
-    //print("getNF074_Pieces_DetAll ${ListNF074_Pieces_Det.length}");
-    if (ListNF074_Pieces_Det.length > 0) {
-      //print("getNF074_Pieces_DetAll return TRUE");
-      return true;
+  static Future<bool> IMPORT_Srv_NF074_Pieces_Det() async {
+
+    String wSlq = "select * from NF074_Pieces_Det ORDER BY NF074_Pieces_DetId";
+    try {
+      ListNF074_Pieces_Det = await getNF074_Pieces_Det_API_Post("select", wSlq);
+      if (ListNF074_Pieces_Det == null) return false;
+      if (ListNF074_Pieces_Det.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
   static Future<List<NF074_Pieces_Det>> getNF074_Pieces_Det_API_Post(String aType, String aSQL) async {
@@ -220,15 +224,19 @@ class Srv_DbTools {
   static List<NF074_Pieces_Det_Inc> ListNF074_Pieces_Det_Incsearchresult = [];
   static NF074_Pieces_Det_Inc gNF074_Pieces_Det_Inc = NF074_Pieces_Det_Inc.NF074_Pieces_Det_IncInit();
 
-  static Future<bool> Import_Srv_NF074_Pieces_Det_Inc() async {
-    ListNF074_Pieces_Det_Inc = await getNF074_Pieces_Det_Inc_API_Post("select", "select * from NF074_Pieces_Det_Inc ORDER BY NF074_Pieces_Det_IncId");
-    if (ListNF074_Pieces_Det_Inc == null) return false;
-    //print("getNF074_Pieces_Det_IncAll ${ListNF074_Pieces_Det_Inc.length}");
-    if (ListNF074_Pieces_Det_Inc.length > 0) {
-      //print("getNF074_Pieces_Det_IncAll return TRUE");
-      return true;
+  static Future<bool> IMPORT_Srv_NF074_Pieces_Det_Inc() async {
+
+    String wSlq = "select * from NF074_Pieces_Det_Inc ORDER BY NF074_Pieces_Det_IncId";
+    try {
+      ListNF074_Pieces_Det_Inc = await getNF074_Pieces_Det_Inc_API_Post("select", wSlq);
+      if (ListNF074_Pieces_Det_Inc == null) return false;
+      if (ListNF074_Pieces_Det_Inc.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
   static Future<List<NF074_Pieces_Det_Inc>> getNF074_Pieces_Det_Inc_API_Post(String aType, String aSQL) async {
@@ -263,15 +271,19 @@ class Srv_DbTools {
   static List<NF074_Mixte_Produit> ListNF074_Mixte_Produitsearchresult = [];
   static NF074_Mixte_Produit gNF074_Mixte_Produit = NF074_Mixte_Produit.NF074_Mixte_ProduitInit();
 
-  static Future<bool> Import_Srv_NF074_Mixte_Produit() async {
-    ListNF074_Mixte_Produit = await getNF074_Mixte_Produit_API_Post("select", "select * from NF074_Mixte_Produit ORDER BY NF074_Mixte_ProduitId");
-    if (ListNF074_Mixte_Produit == null) return false;
-    //print("getNF074_Mixte_ProduitAll ${ListNF074_Mixte_Produit.length}");
-    if (ListNF074_Mixte_Produit.length > 0) {
-      //print("getNF074_Mixte_ProduitAll return TRUE");
-      return true;
+  static Future<bool> IMPORT_Srv_NF074_Mixte_Produit() async {
+
+    String wSlq = "select * from NF074_Mixte_Produit ORDER BY NF074_Mixte_ProduitId";
+    try {
+      ListNF074_Mixte_Produit = await getNF074_Mixte_Produit_API_Post("select", wSlq);
+      if (ListNF074_Mixte_Produit == null) return false;
+      if (ListNF074_Mixte_Produit.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
   static Future<List<NF074_Mixte_Produit>> getNF074_Mixte_Produit_API_Post(String aType, String aSQL) async {
@@ -306,13 +318,19 @@ class Srv_DbTools {
   static List<NF074_Pieces_Actions> ListNF074_Pieces_Actionssearchresult = [];
   static NF074_Pieces_Actions gNF074_Pieces_Actions = NF074_Pieces_Actions.NF074_Pieces_ActionsInit();
 
-  static Future<bool> Import_Srv_NF074_Pieces_Actions() async {
-    ListNF074_Pieces_Actions = await getNF074_Pieces_Actions_API_Post("select", "select * from NF074_Pieces_Actions ORDER BY NF074_Pieces_ActionsId");
-    if (ListNF074_Pieces_Actions == null) return false;
-    if (ListNF074_Pieces_Actions.length > 0) {
-      return true;
+  static Future<bool> IMPORT_Srv_NF074_Pieces_Actions() async {
+
+    String wSlq = "select * from NF074_Pieces_Actions ORDER BY NF074_Pieces_ActionsId";
+    try {
+      ListNF074_Pieces_Actions = await getNF074_Pieces_Actions_API_Post("select", wSlq);
+      if (ListNF074_Pieces_Actions == null) return false;
+      if (ListNF074_Pieces_Actions.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
   static Future<List<NF074_Pieces_Actions>> getNF074_Pieces_Actions_API_Post(String aType, String aSQL) async {
@@ -339,6 +357,344 @@ class Srv_DbTools {
     return [];
   }
 
+  //*****************************
+  //*****************************
+  //*****************************
+
+  static List<Article_Ebp> ListArticle_Ebp = [];
+  static List<Article_Ebp> ListArticle_Ebp_ES = [];
+  static List<Article_Ebp> ListArticle_Ebpsearchresult = [];
+  static Article_Ebp gArticle_Ebp = Article_Ebp.Article_EbpInit();
+
+  static Article_Ebp gArticle_EbpEnt = Article_Ebp.Article_EbpInit();
+  static Article_Ebp gArticle_EbpSelRef = Article_Ebp.Article_EbpInit();
+
+  static Article_Ebp IMPORT_Article_Ebp(String Article_codeArticle) {
+    Article_Ebp wArticle_Ebp = Article_Ebp.Article_EbpInit();
+    Srv_DbTools.ListArticle_Ebp.forEach((zArticle_Ebp) {
+      if (zArticle_Ebp.Article_codeArticle.compareTo(Article_codeArticle) == 0) {
+        wArticle_Ebp = zArticle_Ebp;
+        return;
+      }
+    });
+    return wArticle_Ebp;
+  }
+
+  static Future<bool> IMPORT_Article_EbpAll() async {
+
+    String wSlq = "select * from Articles_Ebp ORDER BY Article_codeArticle";
+    try {
+      ListArticle_Ebp = await getArticle_Ebp_API_Post("select", wSlq);
+      if (ListArticle_Ebp == null) return false;
+      if (ListArticle_Ebp.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<bool> IMPORT_Article_Ebp_ES() async {
+    String wSlq = "SELECT Articles_Ebp.* FROM Articles_Ebp, Articles_Fam_Grp_Ebp where Articles_Fam_Grp_Code_Fam = Article_codeFamilleArticles AND Articles_Fam_Grp_Grp = '01 - EXTINCTION' ORDER BY Article_codeArticle";
+    try {
+      ListArticle_Ebp_ES = await getArticle_Ebp_API_Post("select", wSlq);
+      if (ListArticle_Ebp_ES == null) return false;
+      if (ListArticle_Ebp_ES.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<List<Article_Ebp>> getArticle_Ebp_API_Post(String aType, String aSQL) async {
+    setSrvToken();
+    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
+    var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      var parsedJson = json.decode(await response.stream.bytesToString());
+      final items = parsedJson['data'];
+
+      if (items != null) {
+        List<Article_Ebp> Article_EbpList = await items.map<Article_Ebp>((json) {
+          return Article_Ebp.fromJson(json);
+        }).toList();
+        return Article_EbpList;
+      }
+    } else {
+      print(response.reasonPhrase);
+    }
+    return [];
+  }
+
+  //*****************************
+  //*****************************
+  //*****************************
+
+  static List<Article_Fam_Ebp> ListArticle_Fam_Ebp = [];
+
+  static List<Article_Fam_Ebp> ListArticle_Fam_Ebp_Fam = [];
+
+  static List<Article_Fam_Ebp> ListArticle_Fam_Ebpsearchresult = [];
+  static Article_Fam_Ebp gArticle_Fam_Ebp = Article_Fam_Ebp.Article_Fam_EbpInit();
+
+  static Future<bool> IMPORT_Article_Fam_EbpAll() async {
+
+    String wSlq = "select * from Articles_Fam_Ebp ORDER BY Article_Fam_Libelle";
+    try {
+      ListArticle_Fam_Ebp = await getArticle_Fam_Ebp_API_Post("select", wSlq);
+      if (ListArticle_Fam_Ebp == null) return false;
+      if (ListArticle_Fam_Ebp.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+
+  static Future<List<Article_Fam_Ebp>> getArticle_Fam_Ebp_API_Post(String aType, String aSQL) async {
+    setSrvToken();
+    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
+    var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      var parsedJson = json.decode(await response.stream.bytesToString());
+      final items = parsedJson['data'];
+
+      if (items != null) {
+        List<Article_Fam_Ebp> Article_Fam_EbpList = await items.map<Article_Fam_Ebp>((json) {
+          return Article_Fam_Ebp.fromJson(json);
+        }).toList();
+        return Article_Fam_EbpList;
+      }
+    } else {
+      print(response.reasonPhrase);
+    }
+    return [];
+  }
+
+  //*****************************
+  //*****************************
+  //*****************************
+
+/*
+  static List<Article_Link_Ebp> ListArticle_Link_Ebp = [];
+  static List<Article_Link_Ebp> ListArticle_Link_Ebpsearchresult = [];
+  //static Article_Link_Ebp gArticle_Link_Ebp = Article_Link_Ebp.Article_Link_EbpInit();
+
+  static Future<bool> getArticle_Link_EbpParent(String wParent, String wType) async {
+    String wTmp = "select * from Articles_Link_Ebp WHERE Articles_Link_ParentID = '$wParent' AND Articles_Link_TypeChildID = '$wType' ORDER BY Articles_Link_ChildID";
+
+    print("getArticle_Link_EbpParent $wTmp");
+
+    ListArticle_Link_Ebp = await getArticle_Link_Ebp_API_Post("select", wTmp);
+    if (ListArticle_Link_Ebp == null) return false;
+    if (ListArticle_Link_Ebp.length > 0) {
+      return true;
+    }
+    return false;
+  }
+
+  static Future<bool> getArticle_Link_EbpParentAll(String wParent) async {
+    String wTmp = "select * from Articles_Link_Ebp WHERE Articles_Link_ParentID = '$wParent' ORDER BY Articles_Link_ChildID";
+
+    print("getArticle_Link_EbpParent $wTmp");
+
+    ListArticle_Link_Ebp = await getArticle_Link_Ebp_API_Post("select", wTmp);
+    if (ListArticle_Link_Ebp == null) return false;
+    if (ListArticle_Link_Ebp.length > 0) {
+      for (var i = 0; i < Srv_DbTools.ListArticle_Link_Ebp.length; i++) {
+        var Article_Link_Ebp = Srv_DbTools.ListArticle_Link_Ebp[i];
+      }
+
+      return true;
+    }
+    return false;
+  }
+
+  static Future<List<Article_Link_Ebp>> getArticle_Link_Ebp_API_Post(String aType, String aSQL) async {
+    setSrvToken();
+    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
+    var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      var parsedJson = json.decode(await response.stream.bytesToString());
+      final items = parsedJson['data'];
+
+      if (items != null) {
+        List<Article_Link_Ebp> Article_Link_EbpList = await items.map<Article_Link_Ebp>((json) {
+          return Article_Link_Ebp.fromJson(json);
+        }).toList();
+        return Article_Link_EbpList;
+      }
+    } else {
+      print(response.reasonPhrase);
+    }
+    return [];
+  }
+*/
+
+  //*****************************
+  //*****************************
+  //*****************************
+
+/*
+  static List<Article_Link_Verif_Ebp> ListArticle_Link_Verif_Ebp = [];
+  static List<Article_Link_Verif_Ebp> ListArticle_Link_Verif_Ebpsearchresult = [];
+  static Article_Link_Verif_Ebp gArticle_Link_Verif_Ebp = Article_Link_Verif_Ebp.Article_Link_Verif_EbpInit();
+*/
+/*
+
+  static Future<bool> getArticle_Link_Verif_EbpParent(String wParent, String wType) async {
+    String wTmp = "select * from Articles_Link_Verif_Ebp WHERE Articles_Link_Verif_ParentID = '$wParent' AND Articles_Link_Verif_TypeVerif = '$wType' ORDER BY Articles_Link_ChildID";
+    print("getArticle_Link_Verif_EbpParent $wTmp");
+    ListArticle_Link_Verif_Ebp = await getArticle_Link_Verif_Ebp_API_Post("select", wTmp);
+    if (ListArticle_Link_Verif_Ebp == null) return false;
+    if (ListArticle_Link_Verif_Ebp.length > 0) {
+      return true;
+    }
+    return false;
+  }
+
+*/
+/*
+
+  static Future<List<Article_Link_Verif_Ebp>> getArticle_Link_Verif_Ebp_API_Post(String aType, String aSQL) async {
+    setSrvToken();
+    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
+    var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      var parsedJson = json.decode(await response.stream.bytesToString());
+      final items = parsedJson['data'];
+
+      if (items != null) {
+        List<Article_Link_Verif_Ebp> Article_Link_Verif_EbpList = await items.map<Article_Link_Verif_Ebp>((json) {
+          return Article_Link_Verif_Ebp.fromJson(json);
+        }).toList();
+        return Article_Link_Verif_EbpList;
+      }
+    } else {
+      print(response.reasonPhrase);
+    }
+    return [];
+  }
+*/
+  static List<Result_Article_Link_Verif> ListResult_Article_Link_Verif = [];
+  static List<Result_Article_Link_Verif> ListResult_Article_Link_Verif_PROP = [];
+  static List<Result_Article_Link_Verif> ListResult_Article_Link_Verif_PROP_Mixte = [];
+
+/*
+  static List<Result_Article_Link_Verif_Indisp> ListResult_Article_Link_Verif_Indisp = [];
+  static Future<bool> getArticle_Link_Verif_Indisp(String wParent) async {
+    String wTmp = "select Articles_Link_Verif_TypeVerif from Articles_Link_Verif_Ebp WHERE Articles_Link_Verif_ParentID = '$wParent'  AND Articles_Link_Verif_Indisponible != ''";
+    ListResult_Article_Link_Verif_Indisp = await getArticle_Link_Verif_Indisp_API_Post("select", wTmp);
+    if (ListResult_Article_Link_Verif_Indisp == null) return false;
+    if (ListResult_Article_Link_Verif_Indisp.length > 0) {
+      return true;
+    }
+    return false;
+  }
+
+  static Future<List<Result_Article_Link_Verif_Indisp>> getArticle_Link_Verif_Indisp_API_Post(String aType, String aSQL) async {
+    setSrvToken();
+    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
+    var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      var parsedJson = json.decode(await response.stream.bytesToString());
+      final items = parsedJson['data'];
+      if (items != null) {
+        List<Result_Article_Link_Verif_Indisp> wResult_Article_Link_Verif_Indisp = await items.map<Result_Article_Link_Verif_Indisp>((json) {
+          return Result_Article_Link_Verif_Indisp.fromJson(json);
+        }).toList();
+        return wResult_Article_Link_Verif_Indisp;
+      }
+    } else {
+      print(response.reasonPhrase);
+    }
+    return [];
+  }
+
+  static Future<bool> getArticle_Link_Verif_All(String wParent) async {
+    String wTmp = "select Articles_Link_Verif_ParentID ParentID, Articles_Link_Verif_TypeChildID TypeChildID,Articles_Link_Verif_ChildID ChildID, MAX(Articles_Link_Verif_Qte) Qte from Articles_Link_Verif_Ebp WHERE Articles_Link_Verif_ParentID = '$wParent' GROUP BY Articles_Link_Verif_ChildID;";
+    //  print ("getArticle_Link_Verif_EbpParent $wTmp");
+    ListResult_Article_Link_Verif = await getArticle_Link_Verif_In_API_Post("select", wTmp);
+    if (ListResult_Article_Link_Verif == null) return false;
+    if (ListResult_Article_Link_Verif.length > 0) {
+      for (int i = 0; i < ListResult_Article_Link_Verif.length; i++) {
+        Result_Article_Link_Verif wResult_Article_Link_Verif = ListResult_Article_Link_Verif[i];
+        //    print("> ${wResult_Article_Link_Verif.Desc()}");
+      }
+      return true;
+    }
+    return false;
+  }
+
+  static Future<bool> getArticle_Link_Verif_In(String wParent, String wType) async {
+    String wTmp = "select Articles_Link_Verif_ParentID ParentID,Articles_Link_Verif_TypeChildID TypeChildID, Articles_Link_Verif_ChildID ChildID, SUM(Articles_Link_Verif_Qte) Qte from Articles_Link_Verif_Ebp WHERE Articles_Link_Verif_ParentID = '$wParent' AND Articles_Link_Verif_TypeVerif IN ($wType)  GROUP BY Articles_Link_Verif_ChildID;";
+    print("getArticle_Link_Verif_In SQL ${wTmp}");
+
+    ListResult_Article_Link_Verif = await getArticle_Link_Verif_In_API_Post("select", wTmp);
+    if (ListResult_Article_Link_Verif == null) return false;
+    if (ListResult_Article_Link_Verif.length > 0) {
+      print("ListResult_Article_Link_Verif length ${ListResult_Article_Link_Verif.length}");
+      return true;
+    }
+    return false;
+  }
+
+  static Future<List<Result_Article_Link_Verif>> getArticle_Link_Verif_In_API_Post(String aType, String aSQL) async {
+    setSrvToken();
+    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
+    var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      var parsedJson = json.decode(await response.stream.bytesToString());
+      final items = parsedJson['data'];
+
+      if (items != null) {
+        List<Result_Article_Link_Verif> Result_Article_Link_VerifList = await items.map<Result_Article_Link_Verif>((json) {
+          return Result_Article_Link_Verif.fromJson(json);
+        }).toList();
+        return Result_Article_Link_VerifList;
+      }
+    } else {
+      print(response.reasonPhrase);
+    }
+    return [];
+  }
+
+
+*/
+
+  //
+  //
+  //
+  //
+  //
+
 
 
   //******************************************
@@ -348,45 +704,81 @@ class Srv_DbTools {
   static List<Client> ListClient = [];
   static List<Client> ListClientsearchresult = [];
   static Client gClient = Client.ClientInit();
-
+/*
 
   static Future<bool> Add_Hierarchie(int clientId) async {
+
+
     String wSlq = "INSERT INTO Groupes (Groupe_ClientId, Groupe_Depot,Groupe_Code, Groupe_Nom,  Groupe_Adr1, Groupe_Adr2, Groupe_Adr3, Groupe_Adr4, Groupe_CP, Groupe_Ville, Groupe_Pays, Groupe_Acces, Groupe_Rem)     SELECT Adresse_ClientId,Client_Depot,Adresse_Code,Client_Nom,Adresse_Adr1,Adresse_Adr2,Adresse_Adr3,Adresse_Adr4,Adresse_CP,Adresse_Ville,Adresse_Pays,Adresse_Acces,Adresse_Rem FROM Adresses , Clients WHERE Adresse_Type = 'LIVR' AND Adresse_ClientId = ClientId AND Adresse_ClientId = $clientId";
-    print("Add_Hierarchie " + wSlq);
-    bool ret = await add_API_Post("insert", wSlq);
-    print("Add_Hierarchie ret " + ret.toString());
+    print("Add_Hierarchie Groupes " + wSlq);
+    try {
+      bool ret = await add_API_Post("insert", wSlq);
+      print("Add_Hierarchie Groupes ret " + ret.toString());
+    } catch (e) {
+      print("Add_Hierarchie Groupes ERROR " + e.toString());
+      return false;
+    }
+
 
     wSlq = "INSERT INTO Sites (Site_GroupeId, Site_Depot,Site_Code, Site_Nom,  Site_Adr1, Site_Adr2, Site_Adr3, Site_Adr4, Site_CP, Site_Ville, Site_Pays, Site_Acces, Site_Rem)     SELECT $gLastID,Client_Depot,Adresse_Code,Client_Nom,Adresse_Adr1,Adresse_Adr2,Adresse_Adr3,Adresse_Adr4,Adresse_CP,Adresse_Ville,Adresse_Pays,Adresse_Acces,Adresse_Rem FROM Adresses , Clients WHERE Adresse_Type = 'LIVR' AND Adresse_ClientId = ClientId AND Adresse_ClientId = $clientId";
-    print("Add_Hierarchie " + wSlq);
-    ret = await add_API_Post("insert", wSlq);
-    print("Add_Hierarchie ret " + ret.toString());
+    print("Add_Hierarchie Sites " + wSlq);
+    try {
+      bool ret = await add_API_Post("insert", wSlq);
+      print("Add_Hierarchie Sites ret " + ret.toString());
+    } catch (e) {
+      print("Add_Hierarchie Sites ERROR " + e.toString());
+      return false;
+    }
 
     wSlq = "INSERT INTO Zones (Zone_SiteId, Zone_Depot,Zone_Code, Zone_Nom,  Zone_Adr1, Zone_Adr2, Zone_Adr3, Zone_Adr4, Zone_CP, Zone_Ville, Zone_Pays, Zone_Acces, Zone_Rem)     SELECT $gLastID,Client_Depot,Adresse_Code,Client_Nom,Adresse_Adr1,Adresse_Adr2,Adresse_Adr3,Adresse_Adr4,Adresse_CP,Adresse_Ville,Adresse_Pays,Adresse_Acces,Adresse_Rem FROM Adresses , Clients WHERE Adresse_Type = 'LIVR' AND Adresse_ClientId = ClientId AND Adresse_ClientId = $clientId";
-    print("Add_Hierarchie " + wSlq);
-    ret = await add_API_Post("insert", wSlq);
-    print("Add_Hierarchie ret " + ret.toString());
-    return ret;
+    print("Add_Hierarchie Zones " + wSlq);
+    try {
+      bool ret = await add_API_Post("insert", wSlq);
+      print("Add_Hierarchie Zones ret " + ret.toString());
+    } catch (e) {
+      print("Add_Hierarchie Zones ERROR " + e.toString());
+      return false;
+    }
+
+    return true;
   }
 
-
   static Future<bool> Count_Hierarchie(int clientId) async {
+    int wCount_Groupes = 0;
+    int wCount_Sites = 0;
+    int wCount_Zones = 0;
+
     String wSlq = "SELECT count(*) as count FROM Groupes where Groupe_ClientId = $clientId";
     print("Count Group wSlq ${wSlq}");
-    int wCount_Groupes  = await getCount_API_Post("select", wSlq);
-    print("Count wCount_Groupes ${wCount_Groupes}");
+    try {
+      wCount_Groupes = await getCount_API_Post("select", wSlq);
+      print("Count wCount_Groupes ${wCount_Groupes}");
+    } catch (e) {
+      print("Count wCount_Groupes ERROR " + e.toString());
+      return false;
+    }
 
     wSlq = "SELECT count(Sites.SiteId) as count FROM Groupes , Sites where Site_GroupeId = GroupeId AND Groupe_ClientId = $clientId";
     print("Count Sites wSlq ${wSlq}");
-    int wCount_Sites  = await getCount_API_Post("select", wSlq);
-    print("Count wCount_Sites ${wCount_Sites}");
+    try {
+      wCount_Sites = await getCount_API_Post("select", wSlq);
+      print("Count wCount_Sites ${wCount_Sites}");
+    } catch (e) {
+      print("Count wCount_Sites ERROR " + e.toString());
+      return false;
+    }
 
     wSlq = "SELECT count(Zones.ZoneId) as count FROM Groupes , Sites, Zones where Site_GroupeId = GroupeId AND Zone_SiteId = SiteId AND Groupe_ClientId = $clientId";
     print("Count Zones wSlq ${wSlq}");
-    int wCount_Zones  = await getCount_API_Post("select", wSlq);
-    print("Count wCount_Zones ${wCount_Zones}");
+    try {
+      wCount_Zones = await getCount_API_Post("select", wSlq);
+      print("Count wCount_Zones ${wCount_Zones}");
+    } catch (e) {
+      print("Count wCount_Zones ERROR " + e.toString());
+      return false;
+    }
 
-    if (wCount_Groupes + wCount_Sites + wCount_Zones > 0)
-      return true;
+    if (wCount_Groupes + wCount_Sites + wCount_Zones > 0) return true;
     return false;
   }
 
@@ -415,15 +807,13 @@ class Srv_DbTools {
     }
     return -1;
   }
-
+*/
 
   //*****************************
   //*****************************
   //*****************************
 
-
-
-  static Future<bool> getClientAll() async {
+  static Future<bool> IMPORT_ClientAll() async {
     String wSlq = "SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays FROM Clients LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = 'FACT' ORDER BY Client_Nom;";
     try {
       ListClient = await getClient_API_Post("select", wSlq);
@@ -432,14 +822,10 @@ class Srv_DbTools {
         return true;
       }
       return false;
-
     } catch (e) {
-    return false;
+      return false;
     }
   }
-
-
-
 
   static Future<bool> getClient(int Id) async {
 //    String wSlq = "SELECT * FROM Clients Where ClientId = '${Id}'";
@@ -476,25 +862,30 @@ class Srv_DbTools {
         "WHERE ClientId = ${Client.ClientId.toString()}";
     gColors.printWrapped("setClient " + wSlq);
 
-
     try {
       bool ret = await add_API_Post("upddel", wSlq);
       print("setClient ret " + ret.toString());
-        return true;
+      return true;
     } catch (e) {
       print("setClient ERROR " + e.toString());
       return false;
     }
-
   }
 
   static Future<bool> addClient(Client Client) async {
     String wValue = "NULL,'???'";
     String wSlq = "INSERT INTO Clients (ClientId, Client_Nom) VALUES ($wValue)";
     print("addClient " + wSlq);
-    bool ret = await add_API_Post("insert", wSlq);
-    print("addClient ret " + ret.toString());
-    return ret;
+
+    try {
+      bool ret = await add_API_Post("insert", wSlq);
+      print("addClient ret " + ret.toString());
+      return true;
+    } catch (e) {
+      print("addClient ERROR " + e.toString());
+      return false;
+    }
+
   }
 
   static Future<bool> delClient(Client Client) async {
@@ -535,8 +926,7 @@ class Srv_DbTools {
   static Adresse gAdresse = Adresse.AdresseInit();
   static Adresse gAdresseLivr = Adresse.AdresseInit();
 
-  static Future<bool> getAdresseAll() async {
-
+  static Future<bool> IMPORT_AdresseAll() async {
     try {
       ListAdresse = await getAdresse_API_Post("select", "select * from Adresses ORDER BY Adresse_Type");
       if (ListAdresse == null) return false;
@@ -549,22 +939,6 @@ class Srv_DbTools {
     }
   }
 
-
-
-
-  static Future<int> getCountSitesClient(int ID) async {
-    ListAdressesearchresult = await getAdresse_API_Post("select", "select * from Adresses WHERE Adresse_Type = 'SITE' AND Adresse_ClientId = ${ID}");
-    if (ListAdressesearchresult == null) return 0;
-
-//    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> getCountSitesClient ${ListAdresse.length}");
-
-    if (ListAdressesearchresult.length > 0) {
-      //    print("getAdresseAll return TRUE");
-      return ListAdressesearchresult.length;
-    }
-    return 0;
-  }
-
   static Future getAdresseID(int ID) async {
     ListAdresse.forEach((element) {
       if (element.AdresseId == ID) {
@@ -574,6 +948,7 @@ class Srv_DbTools {
     });
   }
 
+/*
   static Future<bool> getAdresseClientType(int ClientID, String Type) async {
     String wSlq = "select * from Adresses  where Adresse_ClientId = $ClientID AND Adresse_Type = '$Type' ORDER BY Adresse_Type";
     print("getAdresseClientType SQL ${wSlq}");
@@ -604,7 +979,8 @@ class Srv_DbTools {
     } else {
       return 0;
     }
-  }
+  }*/
+/*
 
   static Future<bool> getSitesClient(int ClientID) async {
     String wSlq = "select * from Adresses  where Adresse_ClientId = $ClientID AND Adresse_Type = 'SITE' ORDER BY Adresse_Nom";
@@ -621,6 +997,7 @@ class Srv_DbTools {
     } else {}
     return false;
   }
+*/
 
   static Future<bool> setAdresse(Adresse Adresse) async {
     String wSlq = "UPDATE Adresses SET "
@@ -637,6 +1014,8 @@ class Srv_DbTools {
         "Adresse_Rem       = \"${Adresse.Adresse_Rem}\" " +
         "WHERE AdresseId      = ${Adresse.AdresseId.toString()}";
 
+    gColors.printWrapped("setAdresse sql " + wSlq);
+
     try {
       bool ret = await add_API_Post("upddel", wSlq);
       print("setAdresse ret " + ret.toString());
@@ -645,20 +1024,25 @@ class Srv_DbTools {
       print("setAdresse ERROR " + e.toString());
       return false;
     }
-
-
-
-
   }
 
   static Future<bool> addAdresse(int Adresse_ClientId, String Type) async {
+
     String wValue = "NULL, $Adresse_ClientId, '$Type'";
     String wSlq = "INSERT INTO Adresses (AdresseId, Adresse_ClientId, Adresse_Type) VALUES ($wValue)";
     print("addAdresse " + wSlq);
-    bool ret = await add_API_Post("insert", wSlq);
-    print("addAdresse ret " + ret.toString());
-    return ret;
+
+    try {
+      bool ret = await add_API_Post("insert", wSlq);
+      print("addAdresse ret " + ret.toString());
+      return true;
+    } catch (e) {
+      print("addAdresse ERROR " + e.toString());
+      return false;
+    }
+
   }
+/*
 
   static Future<bool> delAdresse(Adresse Adresse) async {
     String aSQL = "DELETE FROM Adresses WHERE AdresseId = ${Adresse.AdresseId} ";
@@ -667,6 +1051,7 @@ class Srv_DbTools {
     print("delAdresse ret " + ret.toString());
     return ret;
   }
+*/
 
   static Future<List<Adresse>> getAdresse_API_Post(String aType, String aSQL) async {
     setSrvToken();
@@ -760,7 +1145,7 @@ class Srv_DbTools {
     String wSlq = "INSERT INTO Groupes (GroupeId, Groupe_ClientId) VALUES ($wValue)";
     print("addGroupe " + wSlq);
     bool ret = await add_API_Post("insert", wSlq);
-    print("addGroupe ret ${ret.toString()} ${gLastID}" );
+    print("addGroupe ret ${ret.toString()} ${gLastID}");
     return ret;
   }
 
@@ -842,9 +1227,9 @@ class Srv_DbTools {
     ListSite = await getSite_API_Post("select", wTmp);
 
     if (ListSite == null) return false;
-      print("getSitesSite ${ListSite.length}");
+    print("getSitesSite ${ListSite.length}");
     if (ListSite.length > 0) {
-            print("getSitesSite return TRUE");
+      print("getSitesSite return TRUE");
       return true;
     }
     return false;
@@ -985,7 +1370,7 @@ class Srv_DbTools {
 
   static Future<bool> setZone(Zone Zone) async {
     String wSlq = "UPDATE Zones SET "
-        "Zone_SiteId     =   ${Zone.Zone_SiteId}, " +
+            "Zone_SiteId     =   ${Zone.Zone_SiteId}, " +
         "Zone_Code      = \"${Zone.Zone_Code}\", " +
         "Zone_Nom      = \"${Zone.Zone_Nom}\", " +
         "Zone_Adr1      = \"${Zone.Zone_Adr1}\", " +
@@ -1008,7 +1393,7 @@ class Srv_DbTools {
     String wSlq = "INSERT INTO Zones (ZoneId, Zone_SiteId) VALUES ($wValue)";
     print("addZone " + wSlq);
     bool ret = await add_API_Post("insert", wSlq);
-    print("addZone ret ${ret.toString()} ${ret.toString()}" );
+    print("addZone ret ${ret.toString()} ${ret.toString()}");
     return ret;
   }
 
@@ -1115,7 +1500,6 @@ class Srv_DbTools {
   static Future<bool> getInterventionsID_Srv(int ID) async {
     String wTmp = "select * from Interventions WHERE InterventionId = ${ID}";
 
-
     ListIntervention = await getIntervention_API_Post("select", wTmp);
 
     if (ListIntervention == null) return false;
@@ -1128,8 +1512,6 @@ class Srv_DbTools {
     }
     return false;
   }
-
-
 
   static Future getInterventionID(int ID) async {
     ListIntervention.forEach((element) {
@@ -1201,15 +1583,12 @@ class Srv_DbTools {
     return [];
   }
 
-
-
-
   //*************************************
   //************   PLANNING   ***********
   //*************************************
   static List<UserH> ListUserH = [];
 
-    static Future getPlanning_InterventionIdRes(int InterventionId) async {
+  static Future getPlanning_InterventionIdRes(int InterventionId) async {
     ListUserH = await getPlanningH_API_Post("select", "SELECT Users.User_Nom , Users.User_Prenom, SUM(TIMEDIFF( Planning.Planning_InterventionendTime,Planning.Planning_InterventionstartTime) / 10000) as H FROM Planning , Users where `Planning_ResourceId` = Users.UserID AND   Planning_InterventionId = $InterventionId GROUP BY Planning.Planning_ResourceId ORDER BY H DESC;");
     if (ListUserH == null) return false;
     if (ListUserH.length > 0) {
@@ -1217,7 +1596,6 @@ class Srv_DbTools {
     }
     return false;
   }
-
 
   static List<Planning> ListPlanning = [];
   static Planning gPlanning = Planning.Planning_RdvInit();
@@ -1311,7 +1689,6 @@ class Srv_DbTools {
     return [];
   }
 
-
   static Future<List<UserH>> getPlanningH_API_Post(String aType, String aSQL) async {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
@@ -1363,11 +1740,9 @@ class Srv_DbTools {
   static Planning_Intervention gPlanning_Intervention = Planning_Intervention.Planning_InterventionInit();
 
   static Future getPlanning_InterventionRes(int ResourceId) async {
-    String wTmp = "  SELECT PlanningId, Planning_InterventionId, Planning_ResourceId,Planning_InterventionstartTime, Planning_InterventionendTime, Planning_Libelle, InterventionId,Intervention_Type,Intervention_Parcs_Type,Intervention_Status, ZoneId, Zone_Nom, SiteId, Site_Nom, GroupeId, Groupe_Nom, ClientId, Client_Nom FROM Planning, Interventions, Zones, Sites, Groupes, Clients WHERE Planning_InterventionId = InterventionId AND Intervention_ZoneId = ZoneId AND Zone_SiteId = SiteId AND Site_GroupeId = GroupeId AND Groupe_ClientId = ClientId AND Planning_ResourceId = $ResourceId ORDER BY Planning_InterventionstartTime";
+    String wTmp =
+        "  SELECT PlanningId, Planning_InterventionId, Planning_ResourceId,Planning_InterventionstartTime, Planning_InterventionendTime, Planning_Libelle, InterventionId,Intervention_Type,Intervention_Parcs_Type,Intervention_Status, ZoneId, Zone_Nom, SiteId, Site_Nom, GroupeId, Groupe_Nom, ClientId, Client_Nom FROM Planning, Interventions, Zones, Sites, Groupes, Clients WHERE Planning_InterventionId = InterventionId AND Intervention_ZoneId = ZoneId AND Zone_SiteId = SiteId AND Site_GroupeId = GroupeId AND Groupe_ClientId = ClientId AND Planning_ResourceId = $ResourceId ORDER BY Planning_InterventionstartTime";
     print("getPlanning_InterventionRes $wTmp");
-
-
-
 
     ListPlanning_Intervention = await getPlanning_Intervention_API_Post("select", wTmp);
 
@@ -1408,7 +1783,6 @@ class Srv_DbTools {
     return [];
   }
 
-
   //***************************************************
   //************   PLANNING INTERVENTIONS   ***********
   //***************************************************
@@ -1426,13 +1800,6 @@ class Srv_DbTools {
   AND InterventionId = 20
 
 */
-
-
-
-
-
-
-
 
   static Future getPlanning_IntervAll() async {
     String wTmp = "SELECT InterventionId,Intervention_Type,Intervention_Parcs_Type,Intervention_Status, ZoneId, Zone_Nom, SiteId, Site_Nom, GroupeId, Groupe_Nom, ClientId, Client_Nom FROM Interventions, Zones, Sites, Groupes, Clients WHERE Intervention_ZoneId = ZoneId AND Zone_SiteId = SiteId AND Site_GroupeId = GroupeId AND Groupe_ClientId = ClientId ORDER BY InterventionId DESC";
@@ -1524,8 +1891,6 @@ class Srv_DbTools {
     }
   }
 
-
-
   static Future<bool> getInterMissionAll() async {
     ListInterMission = await getInterMission_API_Post("select", "select * from InterMissions ORDER BY InterMission_Nom");
     if (ListInterMission == null) return false;
@@ -1563,7 +1928,7 @@ class Srv_DbTools {
 
   static Future<bool> setInterMission(InterMission InterMission) async {
     String wSlq = "UPDATE InterMissions SET "
-        "InterMissionId     =   ${InterMission.InterMissionId}, " +
+            "InterMissionId     =   ${InterMission.InterMissionId}, " +
         "InterMission_InterventionId      = \"${InterMission.InterMission_InterventionId}\", " +
         "InterMission_Nom      = \"${InterMission.InterMission_Nom}\", " +
         "InterMission_Exec      = ${InterMission.InterMission_Exec}, " +
@@ -1618,10 +1983,6 @@ class Srv_DbTools {
     }
     return [];
   }
-
-
-
-
 
   //******************************************
   //************   Parc_Ents   ***************
@@ -1727,13 +2088,11 @@ class Srv_DbTools {
   }
 
   static Future<bool> InsertUpdateParc_Ent_Srv(Parc_Ent aParc_Ent) async {
-
     if (aParc_Ent.Parcs_NCERT == null) aParc_Ent.Parcs_NCERT = "";
     if (aParc_Ent.Parcs_CodeArticle == null) aParc_Ent.Parcs_CodeArticle = "";
     if (aParc_Ent.Parcs_CODF == null) aParc_Ent.Parcs_CODF = "";
 
-
-      String wSql = "INSERT INTO Parcs_Ent(ParcsId, Parcs_order, Parcs_InterventionId, "
+    String wSql = "INSERT INTO Parcs_Ent(ParcsId, Parcs_order, Parcs_InterventionId, "
         "Parcs_Type, "
         "Parcs_Date_Rev, "
         "Parcs_QRCode, "
@@ -1750,7 +2109,7 @@ class Srv_DbTools {
         "Parcs_UUID_Parent, "
         "Parcs_NCERT, "
         "Parcs_CodeArticle, "
-          "Parcs_CODF, "
+        "Parcs_CODF, "
         "Livr, Devis, Action, "
         "Parcs_Intervention_Timer) VALUES ("
         "NULL , ${aParc_Ent.Parcs_order}, ${aParc_Ent.Parcs_InterventionId},"
@@ -1779,7 +2138,7 @@ class Srv_DbTools {
         "'${aParc_Ent.Parcs_UUID_Parent!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Parcs_NCERT!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Parcs_CodeArticle!.replaceAll("'", "‘")}',"
-          "'${aParc_Ent.Parcs_CODF!.replaceAll("'", "‘")}',"
+        "'${aParc_Ent.Parcs_CODF!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Livr!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Devis!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Action!.replaceAll("'", "‘")}',"
@@ -2046,7 +2405,7 @@ class Srv_DbTools {
 
   static List<Parc_Art_Srv> ListParc_Art = [];
   static List<Parc_Art_Srv> ListParc_Artsearchresult = [];
-  static Parc_Art_Srv gParc_Art = Parc_Art_Srv(0, 0, "", "", "","", "", "", 0);
+  static Parc_Art_Srv gParc_Art = Parc_Art_Srv(0, 0, "", "", "", "", "", "", 0);
 
   static Future<bool> getParc_ArtAll() async {
     ListParc_Art = await getParc_Art_API_Post("select", "select * from Parcs_Art ORDER BY Parcs_Type");
@@ -2145,7 +2504,6 @@ class Srv_DbTools {
         "ParcsArt_Id, "
         "ParcsArt_Type, "
         "ParcsArt_lnk, "
-
         "ParcsArt_Fact, "
         "ParcsArt_Livr, "
         "ParcsArt_Lib, "
@@ -2155,7 +2513,7 @@ class Srv_DbTools {
         "${aParc_Art.ParcsArt_ParcsId},"
         "'${aParc_Art.ParcsArt_Id!.replaceAll("'", "‘")}',"
         "'${aParc_Art.ParcsArt_Type!.replaceAll("'", "‘")}',"
-            "'${aParc_Art.ParcsArt_lnk!.replaceAll("'", "‘")}',"
+        "'${aParc_Art.ParcsArt_lnk!.replaceAll("'", "‘")}',"
         "'${aParc_Art.ParcsArt_Fact!.replaceAll("'", "‘")}',"
         "'${aParc_Art.ParcsArt_Livr!.replaceAll("'", "‘")}',"
         "'${aParc_Art.ParcsArt_Lib!.replaceAll("'", "‘")}',"
@@ -2289,6 +2647,8 @@ class Srv_DbTools {
         "Contact_Rem              = \"${Contact.Contact_Rem}\" " +
         "WHERE ContactId      = ${Contact.ContactId.toString()}";
 
+    gColors.printWrapped("setContact sql " + wSlq);
+
     try {
       bool ret = await add_API_Post("upddel", wSlq);
       print("setContact ret " + ret.toString());
@@ -2297,17 +2657,24 @@ class Srv_DbTools {
       print("setContact ERROR " + e.toString());
       return false;
     }
-
-
   }
 
   static Future<bool> addContactAdrType(int Contact_ClientId, int Contact_AdresseId, String Type) async {
+
     String wValue = "NULL, $Contact_ClientId, $Contact_AdresseId, '$Type'";
     String wSlq = "INSERT INTO Contacts (ContactId, Contact_ClientId, Contact_AdresseId, Contact_Type) VALUES ($wValue)";
     print("addContact " + wSlq);
-    bool ret = await add_API_Post("insert", wSlq);
-    print("addContact ret " + ret.toString());
-    return ret;
+
+    try {
+      bool ret = await add_API_Post("insert", wSlq);
+      print("addContact ret " + ret.toString());
+      return true;
+    } catch (e) {
+      print("addContact ERROR " + e.toString());
+      return false;
+    }
+
+
   }
 
   static Future<bool> addContact(int Contact_ClientId) async {
@@ -2318,7 +2685,6 @@ class Srv_DbTools {
     print("addContact ret " + ret.toString());
     return ret;
   }
-
 
   static Future<bool> getContactGrp(int contactClientid, int contactAdresseid) async {
     String wSlq = "select * from Contacts  where Contact_ClientId = $contactClientid AND Contact_AdresseId = $contactAdresseid AND Contact_Type = 'GRP' ORDER BY Contact_Type";
@@ -2334,8 +2700,6 @@ class Srv_DbTools {
     } else {}
     return false;
   }
-
-
 
   static Future<bool> delContact(Contact Contact) async {
     String aSQL = "DELETE FROM Contacts WHERE ContactId = ${Contact.ContactId} ";
@@ -2497,367 +2861,6 @@ class Srv_DbTools {
     return [];
   }
 
-  //*****************************
-  //*****************************
-  //*****************************
-
-  static List<Article_Ebp> ListArticle_Ebp = [];
-  static List<Article_Ebp> ListArticle_Ebp_ES = [];
-  static List<Article_Ebp> ListArticle_Ebpsearchresult = [];
-  static Article_Ebp gArticle_Ebp = Article_Ebp.Article_EbpInit();
-
-  static Article_Ebp gArticle_EbpEnt = Article_Ebp.Article_EbpInit();
-  static Article_Ebp gArticle_EbpSelRef = Article_Ebp.Article_EbpInit();
-
-  static Article_Ebp getArticle_Ebp(String Article_codeArticle) {
-    Article_Ebp wArticle_Ebp = Article_Ebp.Article_EbpInit();
-    Srv_DbTools.ListArticle_Ebp.forEach((zArticle_Ebp) {
-      if (zArticle_Ebp.Article_codeArticle.compareTo(Article_codeArticle) == 0) {
-        wArticle_Ebp = zArticle_Ebp;
-        return;
-      }
-    });
-    return wArticle_Ebp;
-  }
-
-  static Future<bool> getArticle_EbpAll() async {
-    ListArticle_Ebp = await getArticle_Ebp_API_Post("select", "select * from Articles_Ebp ORDER BY Article_codeArticle");
-
-    if (ListArticle_Ebp == null) return false;
-    print("getArticle_EbpAll ${ListArticle_Ebp.length}");
-    if (ListArticle_Ebp.length > 0) {
-      //    print("getArticle_EbpAll return TRUE");
-      return true;
-    }
-    return false;
-  }
-
-  static Future<bool> getArticle_Ebp_ES() async {
-    ListArticle_Ebp_ES = await getArticle_Ebp_API_Post("select", "SELECT Articles_Ebp.* FROM Articles_Ebp, Articles_Fam_Grp_Ebp where Articles_Fam_Grp_Code_Fam = Article_codeFamilleArticles AND Articles_Fam_Grp_Grp = '01 - EXTINCTION' ORDER BY Article_codeArticle");
-
-    if (ListArticle_Ebp_ES == null) return false;
-//    print("getArticle_EbpAll ${ListArticle_Ebp_ES.length}");
-    if (ListArticle_Ebp_ES.length > 0) {
-      //    print("getArticle_EbpAll return TRUE");
-      return true;
-    }
-    return false;
-  }
-
-  static Future<bool> getArticle_EbpFam(String wFam) async {
-    ListArticle_Ebp = await getArticle_Ebp_API_Post("select", "select * from Articles_Ebp WHERE Article_Fam_Code = $wFam ORDER BY Article_descriptionCommercialeEnClair");
-
-    if (ListArticle_Ebp == null) return false;
-//    print("getArticle_EbpAll ${ListArticle_Ebp.length}");
-    if (ListArticle_Ebp.length > 0) {
-      //    print("getArticle_EbpAll return TRUE");
-      return true;
-    }
-    return false;
-  }
-
-  static Future<List<Article_Ebp>> getArticle_Ebp_API_Post(String aType, String aSQL) async {
-    setSrvToken();
-    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
-    var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      var parsedJson = json.decode(await response.stream.bytesToString());
-      final items = parsedJson['data'];
-
-      if (items != null) {
-        List<Article_Ebp> Article_EbpList = await items.map<Article_Ebp>((json) {
-          return Article_Ebp.fromJson(json);
-        }).toList();
-        return Article_EbpList;
-      }
-    } else {
-      print(response.reasonPhrase);
-    }
-    return [];
-  }
-
-  //*****************************
-  //*****************************
-  //*****************************
-  /*
-BEGIN
-  INSERT  IGNORE INTO Articles_Fam_Ebp( Article_Fam_Code, Article_Fam_Code_Parent, Article_Fam_Description)
-  SELECT Article_codeFamilleArticles, '', Article_LibelleFamilleArticle FROM Articles_Ebp GROUP BY Articles_Ebp.Article_LibelleFamilleArticle;
-
-  INSERT IGNORE INTO Articles_Fam_Ebp( Article_Fam_Code, Article_Fam_Code_Parent, Article_Fam_Description)
-  SELECT Article_CodeSousFamilleArticle, Article_codeFamilleArticles, Article_LibelleSousFamilleArticle FROM Articles_Ebp GROUP BY Articles_Ebp.Article_LibelleSousFamilleArticle;
-END
-  */
-  static List<Article_Fam_Ebp> ListArticle_Fam_Ebp = [];
-
-  static List<Article_Fam_Ebp> ListArticle_Fam_Ebp_Fam = [];
-
-  static List<Article_Fam_Ebp> ListArticle_Fam_Ebpsearchresult = [];
-  static Article_Fam_Ebp gArticle_Fam_Ebp = Article_Fam_Ebp.Article_Fam_EbpInit();
-
-  static Future<bool> getArticle_Fam_EbpAll() async {
-    ListArticle_Fam_Ebp = await getArticle_Fam_Ebp_API_Post("select", "select * from Articles_Fam_Ebp ORDER BY Article_Fam_Libelle");
-    if (ListArticle_Fam_Ebp == null) return false;
-//    print("getArticle_Fam_EbpAll ${ListArticle_Fam_Ebp.length}");
-    if (ListArticle_Fam_Ebp.length > 0) {
-      return true;
-    }
-    return false;
-  }
-
-  static Future<bool> setArticle_Fam_UUID(Article_Fam_Ebp wArticle_Fam_Ebp) async {
-    String wSlq = "UPDATE Articles_Fam_Ebp SET "
-            "Article_Fam_UUID = '${wArticle_Fam_Ebp.Article_Fam_UUID.replaceAll("'", "\'")}' " +
-        "WHERE Article_FamId = ${wArticle_Fam_Ebp.Article_FamId}";
-    bool ret = await add_API_Post("upddel", wSlq);
-    return ret;
-  }
-
-  static Future<bool> setArticle_Fam(Article_Fam_Ebp wArticle_Fam_Ebp) async {
-    print("wSlq: ${wArticle_Fam_Ebp.Article_Fam_Description}");
-    print("wSlq: ${wArticle_Fam_Ebp.Article_Fam_Description.replaceAll("'", "\'")}");
-    print("wSlq: ${wArticle_Fam_Ebp.Article_Fam_Description.replaceAll("'", "''")}");
-
-    String wSlq = "UPDATE Articles_Fam_Ebp SET "
-            "Article_Fam_Description = '${wArticle_Fam_Ebp.Article_Fam_Description.replaceAll("'", "''")}', " +
-        "Article_Fam_Libelle = '${wArticle_Fam_Ebp.Article_Fam_Libelle.replaceAll("'", "''")}' " +
-        "WHERE Article_FamId = ${wArticle_Fam_Ebp.Article_FamId}";
-    print("wSlq: " + wSlq);
-    bool ret = await add_API_Post("upddel", wSlq);
-    return ret;
-  }
-
-  static Future<List<Article_Fam_Ebp>> getArticle_Fam_Ebp_API_Post(String aType, String aSQL) async {
-    setSrvToken();
-    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
-    var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      var parsedJson = json.decode(await response.stream.bytesToString());
-      final items = parsedJson['data'];
-
-      if (items != null) {
-        List<Article_Fam_Ebp> Article_Fam_EbpList = await items.map<Article_Fam_Ebp>((json) {
-          return Article_Fam_Ebp.fromJson(json);
-        }).toList();
-        return Article_Fam_EbpList;
-      }
-    } else {
-      print(response.reasonPhrase);
-    }
-    return [];
-  }
-
-  //*****************************
-  //*****************************
-  //*****************************
-
-  static List<Article_Link_Ebp> ListArticle_Link_Ebp = [];
-  static List<Article_Link_Ebp> ListArticle_Link_Ebpsearchresult = [];
-  static Article_Link_Ebp gArticle_Link_Ebp = Article_Link_Ebp.Article_Link_EbpInit();
-
-  static Future<bool> getArticle_Link_EbpParent(String wParent, String wType) async {
-    String wTmp = "select * from Articles_Link_Ebp WHERE Articles_Link_ParentID = '$wParent' AND Articles_Link_TypeChildID = '$wType' ORDER BY Articles_Link_ChildID";
-
-    print("getArticle_Link_EbpParent $wTmp");
-
-    ListArticle_Link_Ebp = await getArticle_Link_Ebp_API_Post("select", wTmp);
-    if (ListArticle_Link_Ebp == null) return false;
-    if (ListArticle_Link_Ebp.length > 0) {
-      return true;
-    }
-    return false;
-  }
-
-  static Future<bool> getArticle_Link_EbpParentAll(String wParent) async {
-    String wTmp = "select * from Articles_Link_Ebp WHERE Articles_Link_ParentID = '$wParent' ORDER BY Articles_Link_ChildID";
-
-    print("getArticle_Link_EbpParent $wTmp");
-
-    ListArticle_Link_Ebp = await getArticle_Link_Ebp_API_Post("select", wTmp);
-    if (ListArticle_Link_Ebp == null) return false;
-    if (ListArticle_Link_Ebp.length > 0) {
-
-      for (var i = 0; i < Srv_DbTools.ListArticle_Link_Ebp.length; i++) {
-        var Article_Link_Ebp = Srv_DbTools.ListArticle_Link_Ebp[i];
-      }
-
-
-      return true;
-    }
-    return false;
-  }
-
-  static Future<List<Article_Link_Ebp>> getArticle_Link_Ebp_API_Post(String aType, String aSQL) async {
-    setSrvToken();
-    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
-    var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      var parsedJson = json.decode(await response.stream.bytesToString());
-      final items = parsedJson['data'];
-
-      if (items != null) {
-        List<Article_Link_Ebp> Article_Link_EbpList = await items.map<Article_Link_Ebp>((json) {
-          return Article_Link_Ebp.fromJson(json);
-        }).toList();
-        return Article_Link_EbpList;
-      }
-    } else {
-      print(response.reasonPhrase);
-    }
-    return [];
-  }
-
-  //*****************************
-  //*****************************
-  //*****************************
-
-  static List<Article_Link_Verif_Ebp> ListArticle_Link_Verif_Ebp = [];
-  static List<Article_Link_Verif_Ebp> ListArticle_Link_Verif_Ebpsearchresult = [];
-  static Article_Link_Verif_Ebp gArticle_Link_Verif_Ebp = Article_Link_Verif_Ebp.Article_Link_Verif_EbpInit();
-/*
-
-  static Future<bool> getArticle_Link_Verif_EbpParent(String wParent, String wType) async {
-    String wTmp = "select * from Articles_Link_Verif_Ebp WHERE Articles_Link_Verif_ParentID = '$wParent' AND Articles_Link_Verif_TypeVerif = '$wType' ORDER BY Articles_Link_ChildID";
-    print("getArticle_Link_Verif_EbpParent $wTmp");
-    ListArticle_Link_Verif_Ebp = await getArticle_Link_Verif_Ebp_API_Post("select", wTmp);
-    if (ListArticle_Link_Verif_Ebp == null) return false;
-    if (ListArticle_Link_Verif_Ebp.length > 0) {
-      return true;
-    }
-    return false;
-  }
-
-*/
-
-  static Future<List<Article_Link_Verif_Ebp>> getArticle_Link_Verif_Ebp_API_Post(String aType, String aSQL) async {
-    setSrvToken();
-    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
-    var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      var parsedJson = json.decode(await response.stream.bytesToString());
-      final items = parsedJson['data'];
-
-      if (items != null) {
-        List<Article_Link_Verif_Ebp> Article_Link_Verif_EbpList = await items.map<Article_Link_Verif_Ebp>((json) {
-          return Article_Link_Verif_Ebp.fromJson(json);
-        }).toList();
-        return Article_Link_Verif_EbpList;
-      }
-    } else {
-      print(response.reasonPhrase);
-    }
-    return [];
-  }
-
-  static List<Result_Article_Link_Verif> ListResult_Article_Link_Verif = [];
-  static List<Result_Article_Link_Verif> ListResult_Article_Link_Verif_PROP = [];
-  static List<Result_Article_Link_Verif> ListResult_Article_Link_Verif_PROP_Mixte = [];
-
-
-
-  static List<Result_Article_Link_Verif_Indisp> ListResult_Article_Link_Verif_Indisp = [];
-
-  static Future<bool> getArticle_Link_Verif_Indisp(String wParent) async {
-    String wTmp = "select Articles_Link_Verif_TypeVerif from Articles_Link_Verif_Ebp WHERE Articles_Link_Verif_ParentID = '$wParent'  AND Articles_Link_Verif_Indisponible != ''";
-    ListResult_Article_Link_Verif_Indisp = await getArticle_Link_Verif_Indisp_API_Post("select", wTmp);
-    if (ListResult_Article_Link_Verif_Indisp == null) return false;
-    if (ListResult_Article_Link_Verif_Indisp.length > 0) {
-
-      return true;
-    }
-    return false;
-  }
-
-  static Future<List<Result_Article_Link_Verif_Indisp>> getArticle_Link_Verif_Indisp_API_Post(String aType, String aSQL) async {
-
-      setSrvToken();
-      String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
-      var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-      request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
-      http.StreamedResponse response = await request.send();
-      if (response.statusCode == 200) {
-        var parsedJson = json.decode(await response.stream.bytesToString());
-        final items = parsedJson['data'];
-        if (items != null) {
-          List<Result_Article_Link_Verif_Indisp> wResult_Article_Link_Verif_Indisp = await items.map<Result_Article_Link_Verif_Indisp>((json) {
-            return Result_Article_Link_Verif_Indisp.fromJson(json);
-          }).toList();
-          return wResult_Article_Link_Verif_Indisp;
-        }
-      } else {
-        print(response.reasonPhrase);
-      }
-      return [];
-    }
-
-
-    static Future<bool> getArticle_Link_Verif_All(String wParent) async {
-    String wTmp = "select Articles_Link_Verif_ParentID ParentID, Articles_Link_Verif_TypeChildID TypeChildID,Articles_Link_Verif_ChildID ChildID, MAX(Articles_Link_Verif_Qte) Qte from Articles_Link_Verif_Ebp WHERE Articles_Link_Verif_ParentID = '$wParent' GROUP BY Articles_Link_Verif_ChildID;";
-    //  print ("getArticle_Link_Verif_EbpParent $wTmp");
-    ListResult_Article_Link_Verif = await getArticle_Link_Verif_In_API_Post("select", wTmp);
-    if (ListResult_Article_Link_Verif == null) return false;
-    if (ListResult_Article_Link_Verif.length > 0) {
-      for (int i = 0; i < ListResult_Article_Link_Verif.length; i++) {
-        Result_Article_Link_Verif wResult_Article_Link_Verif = ListResult_Article_Link_Verif[i];
-        //    print("> ${wResult_Article_Link_Verif.Desc()}");
-      }
-      return true;
-    }
-    return false;
-  }
-
-  static Future<bool> getArticle_Link_Verif_In(String wParent, String wType) async {
-    String wTmp = "select Articles_Link_Verif_ParentID ParentID,Articles_Link_Verif_TypeChildID TypeChildID, Articles_Link_Verif_ChildID ChildID, SUM(Articles_Link_Verif_Qte) Qte from Articles_Link_Verif_Ebp WHERE Articles_Link_Verif_ParentID = '$wParent' AND Articles_Link_Verif_TypeVerif IN ($wType)  GROUP BY Articles_Link_Verif_ChildID;";
-    print("getArticle_Link_Verif_In SQL ${wTmp}");
-
-    ListResult_Article_Link_Verif = await getArticle_Link_Verif_In_API_Post("select", wTmp);
-    if (ListResult_Article_Link_Verif == null) return false;
-    if (ListResult_Article_Link_Verif.length > 0) {
-      print("ListResult_Article_Link_Verif length ${ListResult_Article_Link_Verif.length}");
-      return true;
-    }
-    return false;
-  }
-
-  static Future<List<Result_Article_Link_Verif>> getArticle_Link_Verif_In_API_Post(String aType, String aSQL) async {
-    setSrvToken();
-    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
-    var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      var parsedJson = json.decode(await response.stream.bytesToString());
-      final items = parsedJson['data'];
-
-      if (items != null) {
-        List<Result_Article_Link_Verif> Result_Article_Link_VerifList = await items.map<Result_Article_Link_Verif>((json) {
-          return Result_Article_Link_Verif.fromJson(json);
-        }).toList();
-        return Result_Article_Link_VerifList;
-      }
-    } else {
-      print(response.reasonPhrase);
-    }
-    return [];
-  }
 
   //****************************************************
   //************************  USERS  *******************
@@ -2879,10 +2882,40 @@ END
       height: 100,
     );
 
-    List<User> ListUser = await getUser_API_Post("select", "select * from Users where User_Mail = '$aMail' AND User_PassWord = '$aPW' AND User_Actif = true");
+    print("getUserLogin A");
 
+    List<User> ListUser = [];
+    try {
+      String wSql = "select * from Users where User_Mail = '$aMail' AND User_PassWord = '$aPW' AND User_Actif = true";
+      print("getUserLogin B ${wSql}");
+      ListUser = await getUser_API_Post("select", wSql);
+      print("getUserLogin C");
+      if (ListUser == null) return false;
+      print("getUserLogin D");
+    } catch (e) {
+      List<User> wListUser = await DbTools.getUsers();
+      if (wListUser.length == 0)  return false;
+      gUserLogin = wListUser[0];
+      gLoginID = gUserLogin.UserID;
+      Srv_DbTools.ListUser_Hab = await DbTools.getUser_Hab();
+      Srv_DbTools.ListUser_Desc = await DbTools.getUser_Desc();
+      String wPicUser = await SharedPref.getStrKey("picUser", "");
+      gObj.picUser = base64Decode(wPicUser);
 
-    if (ListUser == null) return false;
+      if (gObj.pic.length > 0) {
+        gObj.wImage = Image.memory(
+          gObj.picUser,
+          fit: BoxFit.scaleDown,
+          width: 100,
+          height: 100,
+        );
+      }
+
+      return true;
+
+    }
+
+    print("getUserLogin E ${ListUser.length}");
 
     if (ListUser.length == 1) {
       gUserLogin = ListUser[0];
@@ -2897,6 +2930,11 @@ END
 
       print("wImgPath ${wImgPath}");
       gObj.picUser = await gObj.networkImageToByte(wImgPath);
+      await SharedPref.setStrKey("picUser", base64Encode(gObj.picUser));
+      int timestamp = DateTime.now().millisecondsSinceEpoch;
+      await SharedPref.setIntKey("timestampLogin", timestamp);
+
+
 
       print("gObj.picUser ${gObj.picUser.length}");
 
@@ -2916,8 +2954,7 @@ END
         User_Hab wUser_Hab = Srv_DbTools.ListUser_Hab[i];
         await DbTools.inserUser_Hab(wUser_Hab);
       }
-      Srv_DbTools.ListUser_Hab = await  DbTools.getUser_Hab();
-
+      Srv_DbTools.ListUser_Hab = await DbTools.getUser_Hab();
 
       await Srv_DbTools.getUser_Desc(Srv_DbTools.gUserLogin.UserID);
       print("Import_DataDialog ListUser_Desc ${Srv_DbTools.ListUser_Desc.length}");
@@ -2926,11 +2963,7 @@ END
         User_Desc wUser_Desc = Srv_DbTools.ListUser_Desc[i];
         await DbTools.inserUser_Desc(wUser_Desc);
       }
-      Srv_DbTools.ListUser_Desc = await  DbTools.getUser_Desc();
-
-
-
-
+      Srv_DbTools.ListUser_Desc = await DbTools.getUser_Desc();
 
       return true;
     }
@@ -3221,10 +3254,7 @@ END
   static List<Param_Saisie> ListParam_Audit_Base = [];
   static List<Param_Saisie> ListParam_Verif_Base = [];
 
-
   static List<Param_Saisie> ListParam_Interv_Base = [];
-
-
 
   static int affSortComparison(Param_Saisie a, Param_Saisie b) {
     final Param_Saisie_Ordre_AffichageA = a.Param_Saisie_Ordre;
@@ -3278,7 +3308,7 @@ END
     ListParam_Saisie = await getParam_Saisie_API_Post("select", "select * from Param_Saisie ORDER BY Param_Saisie_Organe, Param_Saisie_Type, Param_Saisie_Ordre,Param_Saisie_ID");
 
     if (ListParam_Saisie == null) return false;
-        print("getParam_SaisieAll ${ListParam_Saisie.length}");
+    print("getParam_SaisieAll ${ListParam_Saisie.length}");
     if (ListParam_Saisie.length > 0) {
       return true;
     }
@@ -3326,8 +3356,6 @@ END
   }
 
   static Future<List<Param_Saisie>> getParam_Saisie_API_Post(String aType, String aSQL) async {
-
-
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
@@ -3446,8 +3474,6 @@ END
     return true;
   }
 
-
-
   static Future<bool> getParam_Param(String Param_Param_Type) async {
     ListParam_Param = await getParam_Param_API_Post("select", "select * from Param_Param WHERE Param_Param_Type = '${Param_Param_Type}' ORDER BY Param_Param_Ordre,Param_Param_ID");
 
@@ -3546,7 +3572,6 @@ END
 
     print("getParam_Param_API_Post aSQL " + aSQL);
 
-
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
     request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${gUserLogin.UserID}"});
@@ -3558,7 +3583,6 @@ END
       final items = parsedJson['data'];
 
       if (items != null) {
-
         List<Param_Param> Param_ParamList = await items.map<Param_Param>((json) {
           //print("getParam_Param_API_Post json " + json.toString());
           return Param_Param.fromJson(json);
@@ -3599,8 +3623,7 @@ END
     if (ListParam_Saisie_ParamAll.length > 0) {
       Srv_DbTools.ListParam_Saisie_ParamAll.forEach((element) async {
         element.Param_Saisie_Param_Ico = await gObj.getAssetImage("assets/images/Aide_Ico_${element.Param_Saisie_Param_Label}.png");
-      }
-      );
+      });
 
       return true;
     }
@@ -3899,8 +3922,6 @@ END
     REF_Lib = DbTools.gParc_Ent.Parcs_CodeArticle!;
     REF_Lib = DbTools.gParc_Ent.Parcs_CODF!;
 
-
-
     return true;
   }
 
@@ -3984,7 +4005,7 @@ END
 //    print("add_API_Post " + response.statusCode.toString());
     if (response.statusCode == 200) {
       String wRep = await response.stream.bytesToString();
-  //    print("add_API_Post wRep " + wRep);
+      //    print("add_API_Post wRep " + wRep);
       var parsedJson = json.decode(wRep);
 
       var success = parsedJson['success'];
@@ -3992,8 +4013,7 @@ END
       if (success == 1) {
         gLastID = int.tryParse("${parsedJson['last_id']}") ?? 0;
 
-    //    print("add_API_Post ${Srv_DbTools.gLastID}");
-
+        //    print("add_API_Post ${Srv_DbTools.gLastID}");
       }
       return true;
     } else {

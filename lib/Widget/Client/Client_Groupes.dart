@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
+import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Client/Client_Sites.dart';
 import 'package:verifplus/Widget/Client/Vue_Groupe.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
@@ -192,7 +193,7 @@ class Client_GroupesState extends State<Client_Groupes> {
             backgroundColor: gColors.secondary,
             onPressed: () async {
 
-              await Srv_DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
+              await DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
               await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gAdresse.AdresseId, "LIVR");
               await Srv_DbTools.addGroupe(Srv_DbTools.gClient.ClientId);
 

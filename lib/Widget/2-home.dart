@@ -28,7 +28,6 @@ class Home extends StatefulWidget {
 class _HomeState extends State<Home> with WidgetsBindingObserver {
   bool isChecked = false;
 
-
   String notificationTitle = 'No Title';
   String notificationBody = 'No Body';
   String notificationData = 'No Data';
@@ -138,7 +137,6 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     String title_string = P_itemsTitre[DbTools.gCurrentIndex];
     Widget wchildren = P_children[DbTools.gCurrentIndex];
 
-
     print("Block_MenuApp");
 
     return Scaffold(
@@ -146,10 +144,11 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       //    endDrawer: DbTools.gIsMedecinLogin! ? C_SideDrawer() : I_SideDrawer(),
       backgroundColor: Colors.transparent,
       appBar: AppBar(
+        centerTitle: true,
         title: (title_string.isEmpty)
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     "LISTING CLIENTS",
@@ -160,7 +159,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
               )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
                     title_string,
@@ -169,27 +168,30 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                   ),
                 ],
               ),
-        leading: IconButton(
-          icon: Padding(
-            padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
-            child: DbTools.gErrorSync
+        leading: Padding(
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+          child: IconButton(
+            icon: DbTools.gErrorSync
                 ? Image.asset(
                     "assets/images/IcoWErr.png",
                   )
                 : Image.asset("assets/images/IcoW.png"),
+            onPressed: () async {
+              await Srv_ImportExport.ExportNotSync();
+/*
+              await sendBroadcast(
+                BroadcastMessage(
+                  name: "VerifPlus",
+                  data: {
+                    'msg': 'data',
+                  },
+                ),
+              );
+*/
+              setState(() {});
+            },
+            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
           ),
-          onPressed: () async {
-            await Srv_ImportExport.ExportALL();
-            await sendBroadcast(
-              BroadcastMessage(
-                name: "VerifPlus",
-                data :  {
-                  'msg': 'data',},
-              ),
-            );
-            setState(() {});
-          },
-          tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
         ),
         actions: <Widget>[
           IconButton(
@@ -199,6 +201,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
             ),
             onPressed: () async {
               await Import_Menu_Dialog.Dialogs_Saisie(context, onSaisie);
+              reload();
             },
           ),
           IconButton(

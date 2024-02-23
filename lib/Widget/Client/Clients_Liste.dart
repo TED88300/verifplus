@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_broadcasts/flutter_broadcasts.dart';
+import 'package:uuid/uuid.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Clients.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
@@ -81,7 +82,10 @@ class Liste_ClientsState extends State<Liste_Clients> {
     print("Liste_Clients initState");
     initLib();
     super.initState();
+    DbTools.receiver.stop();
     DbTools.receiver.start();
+    print(' Liste_Clients initState');
+
     DbTools.receiver.messages.listen(
             (value) {
               print('value ${value}');
@@ -227,19 +231,25 @@ class Liste_ClientsState extends State<Liste_Clients> {
     print("ToolsBarAdd");
 
     Client wClient = await Client.ClientInit();
-    await Srv_DbTools.addClient(wClient);
+    bool wRet = await Srv_DbTools.addClient(wClient);
+
+    wClient.Client_isUpdate = wRet;
+    if (!wRet) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
     wClient.ClientId = Srv_DbTools.gLastID;
     wClient.Client_Nom = "???";
+    await DbTools.inserClients(wClient);
+
+    Srv_DbTools.gClient = wClient;
+    print("Client_Vue Reload ${Srv_DbTools.gClient.ClientId}");
 
     await HapticFeedback.vibrate();
-    Srv_DbTools.gClient = wClient;
     OpenClient();
   }
 
   void OpenGroupe() async {
     return;
 
-    await Srv_DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
+    await DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
     await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gAdresse.AdresseId, "LIVR");
     await Srv_DbTools.getGroupesClient(Srv_DbTools.gClient.ClientId);
     if (Srv_DbTools.ListGroupe.isEmpty) {
@@ -391,14 +401,21 @@ class Liste_ClientsState extends State<Liste_Clients> {
                     color : Colors.white,
                       child: Row(
                         children: <Widget>[
+                              Container(
+                                padding: EdgeInsets.only(left: 5, bottom: 2),
+                                child: Text(
+                                  client.Client_isUpdate ? " " : "◉",
+                                  maxLines: 1,
+                                  style: gColors.bodyTitle1_B_R32,
+                                ),
+                              ),
                           Expanded(
                               flex: 25,
                               child: Container(
-                                padding: EdgeInsets.only(left: 10, top: mTop),
+                                padding: EdgeInsets.only(left: 5, top: mTop),
                                 height: rowh,
                                 child: Text(
-                                  client.Client_isUpdate ? "${client.Client_Nom}" :
-                                  "◉ ${client.Client_Nom}",
+                                  "${client.Client_Nom}" ,
                                   maxLines: 1,
                                   style: gColors.bodySaisie_B_B,
                                 ),
