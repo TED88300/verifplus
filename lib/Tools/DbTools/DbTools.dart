@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:csv/csv.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_broadcasts/flutter_broadcasts.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
@@ -65,11 +64,7 @@ class SelLig {
 class DbTools {
   DbTools();
 
-  static BroadcastReceiver receiver = BroadcastReceiver(
-    names: <String>[
-      "VerifPlus",
-    ],
-  );
+
 
   static File gImageEdtFile = File("");
   static List<GrdBtnGrp> lGrdBtnGrp = [];
@@ -161,9 +156,10 @@ class DbTools {
         "CREATE TABLE `Adresses` (`AdresseId` int(11) NOT NULL,`Adresse_ClientId` int(11) NOT NULL,`Adresse_Code` varchar(24) NOT NULL DEFAULT '',`Adresse_Type` varchar(24) NOT NULL DEFAULT '',`Adresse_Nom` varchar(64) NOT NULL DEFAULT '',`Adresse_Adr1` varchar(40) NOT NULL DEFAULT '',`Adresse_Adr2` varchar(40) NOT NULL DEFAULT '',`Adresse_Adr3` varchar(40) NOT NULL DEFAULT '',`Adresse_Adr4` varchar(40) NOT NULL,`Adresse_CP` varchar(10) NOT NULL DEFAULT '',`Adresse_Ville` varchar(35) NOT NULL,`Adresse_Pays` varchar(40) NOT NULL DEFAULT '',`Adresse_Acces` varchar(128) NOT NULL,`Adresse_Rem` varchar(1024) NOT NULL DEFAULT '', Adresse_isUpdate INTEGER NOT NULL DEFAULT 0)";
     String wCREATE_Contacts =
         "CREATE TABLE `Contacts` (`ContactId` int(11) NOT NULL,`Contact_ClientId` int(11) NOT NULL,`Contact_AdresseId` int(11) NOT NULL,`Contact_Code` varchar(24) NOT NULL DEFAULT '',`Contact_Type` varchar(24) NOT NULL DEFAULT '',`Contact_Civilite` varchar(25) NOT NULL,`Contact_Prenom` varchar(60) NOT NULL,`Contact_Nom` varchar(60) NOT NULL,`Contact_Fonction` varchar(40) NOT NULL,`Contact_Service` varchar(40) NOT NULL,`Contact_Tel1` varchar(20) NOT NULL,`Contact_Tel2` varchar(20) NOT NULL,`Contact_eMail` varchar(100) NOT NULL,`Contact_Rem` varchar(1024) NOT NULL, Contact_isUpdate INTEGER NOT NULL DEFAULT 0)";
-
     String wCREATE_Groupes =
-        "CREATE TABLE `Groupes` (`GroupeId` int(11) NOT NULL,`Groupe_ClientId` int(11) NOT NULL,`Groupe_Code` varchar(24) NOT NULL DEFAULT '',`Groupe_Depot` varchar(128) NOT NULL DEFAULT '',`Groupe_Nom` varchar(64) NOT NULL DEFAULT '',`Groupe_Adr1` varchar(40) NOT NULL DEFAULT '',`Groupe_Adr2` varchar(40) NOT NULL DEFAULT '',`Groupe_Adr3` varchar(40) NOT NULL DEFAULT '',`Groupe_Adr4` varchar(40) NOT NULL,`Groupe_CP` varchar(10) NOT NULL DEFAULT '',`Groupe_Ville` varchar(40) NOT NULL DEFAULT '',`Groupe_Pays` varchar(40) NOT NULL DEFAULT '',`Groupe_Acces` varchar(128) NOT NULL,`Groupe_Rem` varchar(1024) NOT NULL DEFAULT '',`Livr` varchar(8) NOT NULL)";
+        "CREATE TABLE `Groupes` (`GroupeId` int(11) NOT NULL,`Groupe_ClientId` int(11) NOT NULL,`Groupe_Code` varchar(24) NOT NULL DEFAULT '',`Groupe_Depot` varchar(128) NOT NULL DEFAULT '',`Groupe_Nom` varchar(64) NOT NULL DEFAULT '',`Groupe_Adr1` varchar(40) NOT NULL DEFAULT '',`Groupe_Adr2` varchar(40) NOT NULL DEFAULT '',`Groupe_Adr3` varchar(40) NOT NULL DEFAULT '',`Groupe_Adr4` varchar(40) NOT NULL,`Groupe_CP` varchar(10) NOT NULL DEFAULT '',`Groupe_Ville` varchar(40) NOT NULL DEFAULT '',`Groupe_Pays` varchar(40) NOT NULL DEFAULT '',`Groupe_Acces` varchar(128) NOT NULL,`Groupe_Rem` varchar(1024) NOT NULL DEFAULT '',`Livr` varchar(8) NOT NULL, Groupe_isUpdate INTEGER NOT NULL DEFAULT 0)";
+
+
     String wCREATE_Sites =
         "CREATE TABLE `Sites` (`SiteId` int(11) NOT NULL,`Site_GroupeId` int(11) NOT NULL,`Site_Code` varchar(24) NOT NULL DEFAULT '',`Site_Depot` varchar(128) NOT NULL DEFAULT '',`Site_Nom` varchar(64) NOT NULL DEFAULT '',`Site_Adr1` varchar(40) NOT NULL DEFAULT '',`Site_Adr2` varchar(40) NOT NULL DEFAULT '',`Site_Adr3` varchar(40) NOT NULL DEFAULT '',`Site_Adr4` varchar(40) NOT NULL,`Site_CP` varchar(10) NOT NULL DEFAULT '',`Site_Ville` varchar(40) NOT NULL DEFAULT '',`Site_Pays` varchar(40) NOT NULL DEFAULT '',`Site_Acces` varchar(128) NOT NULL,`Site_RT` varchar(1024) NOT NULL DEFAULT '',`Site_APSAD` varchar(1024) NOT NULL DEFAULT '',`Site_Rem` varchar(1024) NOT NULL DEFAULT '',`Site_ResourceId` int(11) NOT NULL DEFAULT 0,`Livr` varchar(8) NOT NULL)";
     String wCREATE_Zones =
@@ -279,7 +275,7 @@ class DbTools {
         ")";
 
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
-    String wDbPath = "skpl2abdeo.db";
+    String wDbPath = "saigle2obao.db";
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
 
     database = openDatabase(
@@ -1808,10 +1804,10 @@ class DbTools {
 
   static Future<void> inserAdresse(Adresse wAdresse) async {
     final db = await DbTools.database;
-    print("inserAdresse ${wAdresse.toMap()}");
+//    print("inserAdresse ${wAdresse.toMap()}");
 
     int? repid = await db.insert("Adresses", wAdresse.toMap());
-    print("inserAdresse ${repid}");
+  //  print("inserAdresse ${repid}");
     gLastID = repid!;
   }
 
@@ -1912,10 +1908,10 @@ class DbTools {
 
   static Future<void> inserContact(Contact wContact) async {
     final db = await DbTools.database;
-    print("inserContact ${wContact.toMap()}");
+//    print("inserContact ${wContact.toMap()}");
     int? repid = await db.insert("Contacts", wContact.toMap());
 
-    print("inserContact ${repid}");
+  //  print("inserContact ${repid}");
 
     gLastID = repid!;
   }
@@ -1997,6 +1993,7 @@ class DbTools {
         maps[i]["Groupe_Acces"],
         maps[i]["Groupe_Rem"],
         maps[i]["Livr"],
+        maps[i]["Groupe_isUpdate"] == 1,
       );
     });
   }
@@ -2048,6 +2045,7 @@ class DbTools {
         maps[i]["Site_Rem"],
         maps[i]["Site_ResourceId"],
         maps[i]["Livr"],
+        "", //maps[i]["Groupe_Nom"],
       );
     });
   }

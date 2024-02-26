@@ -1,7 +1,6 @@
+import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_broadcasts/flutter_broadcasts.dart';
-import 'package:uuid/uuid.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Clients.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
@@ -17,13 +16,11 @@ class Liste_Clients extends StatefulWidget {
   final VoidCallback onSaisie;
   const Liste_Clients({Key? key, required this.onSaisie}) : super(key: key);
 
-
   @override
   Liste_ClientsState createState() => Liste_ClientsState();
 }
 
 class Liste_ClientsState extends State<Liste_Clients> {
-
   double textSize = 14.0;
   int SelCol = -1;
   int SelID = -1;
@@ -38,7 +35,6 @@ class Liste_ClientsState extends State<Liste_Clients> {
   String filterText = '';
 
   Future Reload() async {
-
     print("Liste_Clients Reload");
     await Srv_ImportExport.ImportClient();
     await Srv_ImportExport.ImportAdresse();
@@ -82,25 +78,19 @@ class Liste_ClientsState extends State<Liste_Clients> {
     print("Liste_Clients initState");
     initLib();
     super.initState();
-    DbTools.receiver.stop();
-    DbTools.receiver.start();
-    print(' Liste_Clients initState');
 
-    DbTools.receiver.messages.listen(
-            (value) {
-              print('value ${value}');
-              Reload();
-             },
-    );
-
+    FBroadcast.instance().register("MAJCLIENT", (value, callback) {
+      print(" MAJCLIENT MAJCLIENT MAJCLIENT ");
+      Reload();
+    });
   }
+
+
 
   @override
   void dispose() {
-    DbTools.receiver.stop();
     super.dispose();
   }
-
 
   @override
   Widget Entete_Btn_Search() {
@@ -120,9 +110,7 @@ class Liste_ClientsState extends State<Liste_Clients> {
               ]),
               onTap: () async {
                 await HapticFeedback.vibrate();
-                setState(() {
-
-                });
+                setState(() {});
               }),
           Container(
             width: 8,
@@ -210,9 +198,7 @@ class Liste_ClientsState extends State<Liste_Clients> {
                 onPressed: () async {
                   await ToolsBarAdd();
                   setState(() {});
-                })
-        )
-    );
+                })));
   }
 
   late Map<String, double> columnWidths = {
@@ -232,7 +218,6 @@ class Liste_ClientsState extends State<Liste_Clients> {
 
     Client wClient = await Client.ClientInit();
     bool wRet = await Srv_DbTools.addClient(wClient);
-
     wClient.Client_isUpdate = wRet;
     if (!wRet) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
     wClient.ClientId = Srv_DbTools.gLastID;
@@ -247,13 +232,16 @@ class Liste_ClientsState extends State<Liste_Clients> {
   }
 
   void OpenGroupe() async {
-    return;
-
+    print(" OpenGroupe() getAdresseClientType");
     await DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
+    print(" OpenGroupe() getContactClientAdrType");
     await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gAdresse.AdresseId, "LIVR");
+    print(" OpenGroupe() getGroupesClient");
     await Srv_DbTools.getGroupesClient(Srv_DbTools.gClient.ClientId);
+
     if (Srv_DbTools.ListGroupe.isEmpty) {
       Srv_DbTools.gGroupe = Groupe.GroupeInit();
+      bool wRet = await Srv_DbTools.addGroupe(Srv_DbTools.gClient.ClientId);
       Srv_DbTools.gGroupe.GroupeId = Srv_DbTools.gLastID;
       Srv_DbTools.gGroupe.Groupe_ClientId = Srv_DbTools.gClient.ClientId;
       Srv_DbTools.gGroupe.Groupe_Nom = Srv_DbTools.gClient.Client_Nom;
@@ -262,29 +250,35 @@ class Liste_ClientsState extends State<Liste_Clients> {
       Srv_DbTools.gGroupe.Groupe_Adr3 = Srv_DbTools.gAdresse.Adresse_Adr3;
       Srv_DbTools.gGroupe.Groupe_CP = Srv_DbTools.gAdresse.Adresse_CP;
       Srv_DbTools.gGroupe.Groupe_Ville = Srv_DbTools.gAdresse.Adresse_Ville;
+      await Srv_DbTools.setGroupe(Srv_DbTools.gGroupe);
 
       Srv_DbTools.gContactLivr = Srv_DbTools.gContact;
 
       await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gGroupe.GroupeId, "GRP");
-      Srv_DbTools.gContact.Contact_Civilite  = Srv_DbTools.gContactLivr.Contact_Civilite ;
-      Srv_DbTools.gContact.Contact_Prenom    = Srv_DbTools.gContactLivr.Contact_Prenom   ;
-      Srv_DbTools.gContact.Contact_Nom       = Srv_DbTools.gContactLivr.Contact_Nom      ;
-      Srv_DbTools.gContact.Contact_Fonction  = Srv_DbTools.gContactLivr.Contact_Fonction ;
-      Srv_DbTools.gContact.Contact_Service   = Srv_DbTools.gContactLivr.Contact_Service  ;
-      Srv_DbTools.gContact.Contact_Tel1      = Srv_DbTools.gContactLivr.Contact_Tel1     ;
-      Srv_DbTools.gContact.Contact_Tel2      = Srv_DbTools.gContactLivr.Contact_Tel2     ;
-      Srv_DbTools.gContact.Contact_eMail     = Srv_DbTools.gContactLivr.Contact_eMail    ;
-      Srv_DbTools.setContact(Srv_DbTools.gContact);
 
-      await Srv_DbTools.setGroupe(Srv_DbTools.gGroupe);
+      print(" OpenGroupe() Srv_DbTools.gContact.Contact_Nom ${Srv_DbTools.gContact.Contact_Nom}");
+
+      if (Srv_DbTools.gContact.Contact_Nom == Srv_DbTools.gContactLivr.Contact_Nom) {
+        Srv_DbTools.gContact.Contact_Civilite = Srv_DbTools.gContactLivr.Contact_Civilite;
+        Srv_DbTools.gContact.Contact_Prenom = Srv_DbTools.gContactLivr.Contact_Prenom;
+        Srv_DbTools.gContact.Contact_Nom = Srv_DbTools.gContactLivr.Contact_Nom;
+        Srv_DbTools.gContact.Contact_Fonction = Srv_DbTools.gContactLivr.Contact_Fonction;
+        Srv_DbTools.gContact.Contact_Service = Srv_DbTools.gContactLivr.Contact_Service;
+        Srv_DbTools.gContact.Contact_Tel1 = Srv_DbTools.gContactLivr.Contact_Tel1;
+        Srv_DbTools.gContact.Contact_Tel2 = Srv_DbTools.gContactLivr.Contact_Tel2;
+        Srv_DbTools.gContact.Contact_eMail = Srv_DbTools.gContactLivr.Contact_eMail;
+        Srv_DbTools.setContact(Srv_DbTools.gContact);
+      }
+      print(" OpenGroupe() Client_Sites ListGroupe vide");
+
       await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Sites()));
-
     } else if (Srv_DbTools.ListGroupe.length == 1) {
       Srv_DbTools.gGroupe = Srv_DbTools.ListGroupe[0];
       Srv_DbTools.gSelGroupe = Srv_DbTools.ListGroupe[0].Groupe_Nom;
+      print(" OpenGroupe() Client_Sites ListGroupe = 1 ${Srv_DbTools.gSelGroupe}");
       await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Sites()));
-
     } else {
+      print(" OpenGroupe() Client_Sites ListGroupe > 1");
       await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Groupes()));
     }
     setState(() {});
@@ -398,24 +392,24 @@ class Liste_ClientsState extends State<Liste_Clients> {
                     },
                     child: Container(
                       height: 57,
-                    color : Colors.white,
+                      color: Colors.white,
                       child: Row(
                         children: <Widget>[
-                              Container(
-                                padding: EdgeInsets.only(left: 5, bottom: 2),
-                                child: Text(
-                                  client.Client_isUpdate ? " " : "◉",
-                                  maxLines: 1,
-                                  style: gColors.bodyTitle1_B_R32,
-                                ),
-                              ),
+                          Container(
+                            padding: EdgeInsets.only(left: 5, bottom: 2),
+                            child: Text(
+                              client.Client_isUpdate ? " " : "◉",
+                              maxLines: 1,
+                              style: gColors.bodyTitle1_B_R32,
+                            ),
+                          ),
                           Expanded(
                               flex: 25,
                               child: Container(
                                 padding: EdgeInsets.only(left: 5, top: mTop),
                                 height: rowh,
                                 child: Text(
-                                  "${client.Client_Nom}" ,
+                                  "${client.Client_Nom}",
                                   maxLines: 1,
                                   style: gColors.bodySaisie_B_B,
                                 ),

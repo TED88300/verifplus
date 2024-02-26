@@ -36,9 +36,12 @@ class Client_SitesState extends State<Client_Sites> {
   bool isAll = true;
 
   Future Reload() async {
+
+    Srv_DbTools.gSelGroupe = Srv_DbTools.gSelGroupeBase;
+
     await Srv_DbTools.getGroupeSites(Srv_DbTools.gClient.ClientId);
 
-    print("Client_Sites ${Srv_DbTools.ListSite.length} ");
+    print("Client_Sites A ${Srv_DbTools.ListSite.length} ");
 
     if (Srv_DbTools.ListSite.isEmpty) {
       await Srv_DbTools.addSite(Srv_DbTools.gGroupe.GroupeId);
@@ -53,15 +56,24 @@ class Client_SitesState extends State<Client_Sites> {
       Srv_DbTools.gSite.Site_Ville = Srv_DbTools.gAdresse.Adresse_Ville;
       await Srv_DbTools.setSite(Srv_DbTools.gSite);
       Srv_DbTools.ListSite.add(Srv_DbTools.gSite);
+
+      print("Client_Sites B ${Srv_DbTools.ListSite.length} ");
     }
+    print("Client_Sites B2 ${Srv_DbTools.ListSite.length} ");
 
     List<String> lGroupe = [];
     for (int i = 0; i < Srv_DbTools.ListSite.length; i++) {
       Site wSite = Srv_DbTools.ListSite[i];
+      print("Client_Sites C ${wSite.toMap()} ");
       if (lGroupe.indexOf(wSite.Groupe_Nom) == -1) {
+        print("Client_Sites C2 ${wSite.Groupe_Nom} ");
         lGroupe.add(wSite.Groupe_Nom);
       }
     }
+
+    print("Client_Sites D ${lGroupe.length} ");
+
+
     PastilleGroupe = lGroupe.length;
 
     Filtre();
@@ -72,12 +84,21 @@ class Client_SitesState extends State<Client_Sites> {
     List<Site> wListSite = [];
     Srv_DbTools.ListSitesearchresult.clear();
 
+    print("Filtre A ${Srv_DbTools.ListSite.length} ");
+
+    print("Filtre A2 ${Srv_DbTools.gSelGroupe} ${Srv_DbTools.gSelGroupeBase}");
+
+
     if (Srv_DbTools.gSelGroupe.compareTo(Srv_DbTools.gSelGroupeBase) == 0) {
+      print("Filtre B1 ${Srv_DbTools.ListSite.length} ");
       wListSite.addAll(Srv_DbTools.ListSite);
     } else {
+      print("Filtre B2 ${Srv_DbTools.ListSite.length} ${Srv_DbTools.gSelGroupe}");
       isAll = false;
       Srv_DbTools.ListSite.forEach((element) async {
+        print("Filtre B3 ${element.Groupe_Nom} ${Srv_DbTools.gSelGroupe}");
         if (element.Groupe_Nom.compareTo(Srv_DbTools.gSelGroupe) == 0) {
+          print("Filtre B4 ${element.Groupe_Nom} ${Srv_DbTools.gSelGroupe}");
           wListSite.add(element);
         }
       });

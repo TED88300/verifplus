@@ -875,7 +875,7 @@ class Srv_DbTools {
   static Future<bool> addClient(Client Client) async {
     String wValue = "NULL,'???'";
     String wSlq = "INSERT INTO Clients (ClientId, Client_Nom) VALUES ($wValue)";
-    print("addClient " + wSlq);
+    print("addClient wSlq "  + wSlq);
 
     try {
       bool ret = await add_API_Post("insert", wSlq);
@@ -1101,7 +1101,6 @@ class Srv_DbTools {
     String wTmp = "select * from Groupes WHERE Groupe_ClientId = ${ID} ORDER BY Groupe_Nom";
     print("wTmp getGroupesClient ${wTmp}");
     ListGroupe = await getGroupe_API_Post("select", wTmp);
-
     if (ListGroupe == null) return false;
     print("getGroupesClient ${ListGroupe.length}");
     if (ListGroupe.length > 0) {
@@ -1144,9 +1143,14 @@ class Srv_DbTools {
     String wValue = "NULL, $Groupe_ClientId";
     String wSlq = "INSERT INTO Groupes (GroupeId, Groupe_ClientId) VALUES ($wValue)";
     print("addGroupe " + wSlq);
-    bool ret = await add_API_Post("insert", wSlq);
-    print("addGroupe ret ${ret.toString()} ${gLastID}");
-    return ret;
+    try {
+      bool ret = await add_API_Post("insert", wSlq);
+      print("addGroupe ret ${ret.toString()} ${gLastID}");
+      return true;
+    } catch (e) {
+      print("addGroupe ERROR " + e.toString());
+      return false;
+    }
   }
 
   static Future<bool> delGroupe(Groupe Groupe) async {
@@ -2673,8 +2677,6 @@ class Srv_DbTools {
       print("addContact ERROR " + e.toString());
       return false;
     }
-
-
   }
 
   static Future<bool> addContact(int Contact_ClientId) async {
@@ -2700,6 +2702,23 @@ class Srv_DbTools {
     } else {}
     return false;
   }
+
+
+  static Future<bool> getContactSite(int contactClientid, int contactAdresseid) async {
+    String wSlq = "select * from Contacts  where Contact_ClientId = $contactClientid AND Contact_AdresseId = $contactAdresseid AND Contact_Type = 'SITE' ORDER BY Contact_Type";
+
+    ListContact = await getContact_API_Post("select", wSlq);
+
+    if (ListContact == null) return false;
+    //  print("getContactClientType ${ListContact.length}");
+    if (ListContact.length > 0) {
+      gContact = ListContact[0];
+      //  print("getContactClientType return TRUE");
+      return true;
+    } else {}
+    return false;
+  }
+
 
   static Future<bool> delContact(Contact Contact) async {
     String aSQL = "DELETE FROM Contacts WHERE ContactId = ${Contact.ContactId} ";
@@ -3996,16 +4015,21 @@ class Srv_DbTools {
   static Future<bool> add_API_Post(String aType, String aSQL) async {
     setSrvToken();
     gLastID = -1;
-    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
+    print("add_API_Post A $aType $aSQL");
 
+
+    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
     request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL});
 
+    print("add_API_Post B $aType $aSQL");
+
+
     http.StreamedResponse response = await request.send();
-//    print("add_API_Post " + response.statusCode.toString());
+    print("add_API_Post " + response.statusCode.toString());
     if (response.statusCode == 200) {
       String wRep = await response.stream.bytesToString();
-      //    print("add_API_Post wRep " + wRep);
+          print("add_API_Post wRep " + wRep);
       var parsedJson = json.decode(wRep);
 
       var success = parsedJson['success'];
@@ -4013,7 +4037,7 @@ class Srv_DbTools {
       if (success == 1) {
         gLastID = int.tryParse("${parsedJson['last_id']}") ?? 0;
 
-        //    print("add_API_Post ${Srv_DbTools.gLastID}");
+            print("add_API_Post ${Srv_DbTools.gLastID}");
       }
       return true;
     } else {

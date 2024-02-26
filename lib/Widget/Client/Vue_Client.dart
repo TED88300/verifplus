@@ -30,10 +30,8 @@ class _Client_VueState extends State<Client_Vue> {
   void Reload() async {
 
     print("Client_Vue Reload ${Srv_DbTools.gClient.ClientId}");
-
     await DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
     await DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gAdresse.AdresseId, "LIVR");
-
 
     Srv_DbTools.gAdresseLivr = Srv_DbTools.gAdresse;
     Srv_DbTools.gContactLivr = Srv_DbTools.gContact;
@@ -177,6 +175,8 @@ class _Client_VueState extends State<Client_Vue> {
                 )
               ],
             )),
+
+/*
         floatingActionButton: Padding(
             padding: const EdgeInsets.only(bottom: 20.0),
             child:
@@ -187,22 +187,28 @@ class _Client_VueState extends State<Client_Vue> {
                 backgroundColor: gColors.primaryGreen,
                 onPressed: () async {
 
-                  await Srv_DbTools.addGroupe(Srv_DbTools.gClient.ClientId);
+                  Groupe wGroupe = await Groupe.GroupeInit();
+                  bool wRet = await Srv_DbTools.addGroupe(Srv_DbTools.gClient.ClientId);
+                  wGroupe.Groupe_isUpdate = wRet;
+                  if (!wRet) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
+                  wGroupe.GroupeId = Srv_DbTools.gLastID;
+                  wGroupe.Groupe_Nom = "???";
+                  await DbTools.inserGroupes(wGroupe);
 
-                  Srv_DbTools.gGroupe = Groupe.GroupeInit();
-                  Srv_DbTools.gGroupe.GroupeId          = Srv_DbTools.gLastID;
-                  Srv_DbTools.gGroupe.Groupe_ClientId   = Srv_DbTools.gClient.ClientId;
-                  Srv_DbTools.gGroupe.Groupe_Nom        = Srv_DbTools.gClient.Client_Nom + "_2";
-                  Srv_DbTools.gGroupe.Groupe_Adr1       = Srv_DbTools.gAdresse.Adresse_Adr1;
-                  Srv_DbTools.gGroupe.Groupe_Adr2       = Srv_DbTools.gAdresse.Adresse_Adr2;
-                  Srv_DbTools.gGroupe.Groupe_Adr3       = Srv_DbTools.gAdresse.Adresse_Adr3;
-                  Srv_DbTools.gGroupe.Groupe_CP         = Srv_DbTools.gAdresse.Adresse_CP;
-                  Srv_DbTools.gGroupe.Groupe_Ville      = Srv_DbTools.gAdresse.Adresse_Ville;
-                  Srv_DbTools.setGroupe(Srv_DbTools.gGroupe);
+                  Srv_DbTools.gGroupe = wGroupe;
+                  print("Client_Vue Reload ${Srv_DbTools.gClient.ClientId}");
 
+                  wGroupe.GroupeId          = Srv_DbTools.gLastID;
+                  wGroupe.Groupe_ClientId   = Srv_DbTools.gClient.ClientId;
+                  wGroupe.Groupe_Nom        = Srv_DbTools.gClient.Client_Nom + "_2";
+                  wGroupe.Groupe_Adr1       = Srv_DbTools.gAdresse.Adresse_Adr1;
+                  wGroupe.Groupe_Adr2       = Srv_DbTools.gAdresse.Adresse_Adr2;
+                  wGroupe.Groupe_Adr3       = Srv_DbTools.gAdresse.Adresse_Adr3;
+                  wGroupe.Groupe_CP         = Srv_DbTools.gAdresse.Adresse_CP;
+                  wGroupe.Groupe_Ville      = Srv_DbTools.gAdresse.Adresse_Ville;
+                  Srv_DbTools.setGroupe(wGroupe);
 
                   await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gGroupe.GroupeId, "GRP");
-
                   Srv_DbTools.gContact.Contact_Civilite  = Srv_DbTools.gContactLivr.Contact_Civilite ;
                   Srv_DbTools.gContact.Contact_Prenom    = Srv_DbTools.gContactLivr.Contact_Prenom   ;
                   Srv_DbTools.gContact.Contact_Nom       = Srv_DbTools.gContactLivr.Contact_Nom      ;
@@ -218,6 +224,7 @@ class _Client_VueState extends State<Client_Vue> {
 
 
                 ))
+*/
 
 
 

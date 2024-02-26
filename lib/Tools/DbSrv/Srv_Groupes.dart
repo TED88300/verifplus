@@ -13,9 +13,10 @@ class Groupe {
   String  Groupe_Acces        = "";
   String  Groupe_Rem        = "";
   String  Livr        = "";
+  bool    Groupe_isUpdate = true;
 
   static GroupeInit() {
-    return Groupe(0, 0, "", "", "", "", "", "", "", "", "", "", "", "" );
+    return Groupe(0, 0, "", "", "", "", "", "", "", "", "", "", "", "", false );
   }
 
   Groupe(
@@ -33,7 +34,7 @@ class Groupe {
       String  Groupe_Acces       ,
       String  Groupe_Rem       ,
       String  Livr       ,
-
+      bool    Groupe_isUpdate,
 
   ) {
     this.GroupeId        = GroupeId       ;
@@ -50,6 +51,7 @@ class Groupe {
     this.Groupe_Acces      = Groupe_Acces     ;
     this.Groupe_Rem      = Groupe_Rem     ;
     this.Livr      = Livr     ;
+    this.Groupe_isUpdate = Groupe_isUpdate     ;
   }
 
   Map<String, dynamic> toMap() {
@@ -68,6 +70,7 @@ class Groupe {
       'Groupe_Acces': Groupe_Acces,
       'Groupe_Rem': Groupe_Rem,
       'Livr': Livr,
+      'Groupe_isUpdate': Groupe_isUpdate,
     };
   }
 
@@ -88,7 +91,8 @@ class Groupe {
       json['Groupe_Pays'],
       json['Groupe_Acces'],
         json['Groupe_Rem'],
-      json['Livr']
+      json['Livr'],
+      true
     );
     return wUser;
   }

@@ -125,12 +125,7 @@ class Client {
       String Client_Ct_Fin,
       String Client_Organes,
       bool Client_isUpdate,
-/*
-      String Adresse_Adr1,
-      String Adresse_CP,
-      String Adresse_Ville,
-      String Adresse_Pays,
-*/
+
       ) {
     this.ClientId = ClientId;
     this.Client_CodeGC = Client_CodeGC;
@@ -154,13 +149,6 @@ class Client {
     this.Client_Organes     = Client_Organes    ;
     this.Client_isUpdate     = Client_isUpdate    ;
 
-
-/*
-    this.Adresse_Adr1      = Adresse_Adr1     ;
-    this.Adresse_CP      = Adresse_CP     ;
-    this.Adresse_Ville   = Adresse_Ville  ;
-    this.Adresse_Pays    = Adresse_Pays   ;
-*/
   }
 
 
@@ -192,13 +180,6 @@ class Client {
       'Client_isUpdate': Client_isUpdate,
 
 
-
-/*
-      'Adresse_Adr1': Adresse_Adr1,
-      'Adresse_CP': Adresse_CP,
-      'Adresse_Ville': Adresse_Ville,
-      'Adresse_Pays': Adresse_Pays,
-*/
     };
 
 
@@ -237,12 +218,6 @@ class Client {
       json['Client_Organes'],
       true,
 
-/*
-      json['Adresse_Adr1'],
-      json['Adresse_CP'],
-      json['Adresse_Ville'],
-      json['Adresse_Pays'],
-*/
     );
     return wTmp;
   }

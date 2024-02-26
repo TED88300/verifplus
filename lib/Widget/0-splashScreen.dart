@@ -62,6 +62,9 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
     DbTools.gVersion = "V${DbTools.packageInfo.version} b${DbTools.packageInfo.buildNumber}";
     print("DbTools.gVersion ${DbTools.gVersion}");
 
+
+
+
     if (DbTools.gIsRememberLogin) DbTools.gIsRememberLogin = await Srv_DbTools.getUserLogin(DbTools.gUsername, DbTools.gPassword);
 
     if (DbTools.gIsRememberLogin) {

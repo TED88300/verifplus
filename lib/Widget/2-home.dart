@@ -2,21 +2,22 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_app_badger/flutter_app_badger.dart';
-import 'package:flutter_broadcasts/flutter_broadcasts.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/shared_pref.dart';
 import 'package:verifplus/Widget/1-login.dart';
 import 'package:verifplus/Widget/Catalogue_Grig/Catalogue_Grid.dart';
 import 'package:verifplus/Widget/Client/Clients_Liste.dart';
+import 'package:verifplus/Widget/Import_Data.dart';
 import 'package:verifplus/Widget/Import_Menu.dart';
 import 'package:verifplus/Widget/P_Notifications.dart';
 import 'package:verifplus/Widget/P_Synthese.dart';
 import 'package:verifplus/Widget/Planning/Planning.dart';
-import 'package:verifplus/Widget/Widget_Tools/P_FlutterWifiIoT.dart';
 import 'package:verifplus/Widget/Widget_Tools/bottom_navigation_bar.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 
@@ -49,7 +50,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   @override
   void initLib() async {
-    await reload();
+//    await reload();
   }
 
   bool hasConnection = false;
@@ -70,6 +71,29 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   @override
   Future reload() async {
+    Srv_DbTools.ListParam_ParamAll = await  DbTools.getParam_Param();
+    print("   ListParam_ParamAll ${Srv_DbTools.ListParam_ParamAll.length}");
+    if (Srv_DbTools.ListParam_ParamAll.length == 0)
+      {
+      print(" >>>>>  ListParam_ParamAll ${Srv_DbTools.ListParam_ParamAll.length}");
+      await Import_Data_Dialog.Dialogs_Saisie(context, onSaisie, "Param");
+      FBroadcast.instance().broadcast("MAJCLIENT");
+      reload();
+      }
+
+
+    DbTools.glfNF074_Gammes = await  DbTools.getNF074_Gammes();
+    print("    glfNF074_Gammes ${DbTools.glfNF074_Gammes.length}");
+    if (DbTools.glfNF074_Gammes.length == 0)
+    {
+      print(" >>>>>  glfNF074_Gammes ${DbTools.glfNF074_Gammes.length}");
+      await Import_Data_Dialog.Dialogs_Saisie(context, onSaisie, "NF74");
+      FBroadcast.instance().broadcast("MAJCLIENT");
+      reload();
+    }
+
+
+
     await checkConnection();
     setState(() {});
   }
@@ -113,6 +137,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     if (!mounted) {
       return Future.value(null);
     }
+    print(" initConnectivity");
+
     return reload();
   }
 
@@ -178,16 +204,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                 : Image.asset("assets/images/IcoW.png"),
             onPressed: () async {
               await Srv_ImportExport.ExportNotSync();
-/*
-              await sendBroadcast(
-                BroadcastMessage(
-                  name: "VerifPlus",
-                  data: {
-                    'msg': 'data',
-                  },
-                ),
-              );
-*/
+              FBroadcast.instance().broadcast("MAJCLIENT");
               setState(() {});
             },
             tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
@@ -201,6 +218,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
             ),
             onPressed: () async {
               await Import_Menu_Dialog.Dialogs_Saisie(context, onSaisie);
+              FBroadcast.instance().broadcast("MAJCLIENT");
               reload();
             },
           ),

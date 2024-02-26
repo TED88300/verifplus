@@ -20,7 +20,7 @@ class Site {
   String Groupe_Nom = "";
 
   static SiteInit() {
-    return Site(0, 0, "", "", "", "", "", "", "", "", "", "","","","","", 0, "");
+    return Site(0, 0, "", "", "", "", "", "", "", "", "", "","","","","", 0, "", "");
   }
 
   Site(
@@ -42,6 +42,7 @@ class Site {
     String Site_Rem,
     int    Site_ResourceId,
     String Livr,
+      String Groupe_Nom,
 
   ) {
     this.SiteId = SiteId;
@@ -63,6 +64,8 @@ class Site {
     this.Site_Rem = Site_Rem;
     this.Site_ResourceId = Site_ResourceId;
     this.Livr = Livr;
+    this.Groupe_Nom = Groupe_Nom;
+
 
   }
 
@@ -88,30 +91,9 @@ class Site {
       'Livr': Livr,
 
 
+
     };
   }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
   factory Site.fromJson(Map<String, dynamic> json) {
 //    print("json $json");
 
@@ -134,6 +116,7 @@ class Site {
         json['Site_Rem'],
         int.parse(json['Site_ResourceId']),
         json['Livr'],
+      "", //json['Groupe_Nom'],
         );
     return wSite;
   }

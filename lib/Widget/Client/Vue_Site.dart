@@ -261,7 +261,6 @@ class _Site_VueState extends State<Site_Vue> {
                     : InkWell(
                     onTap: () async {
                       await HapticFeedback.vibrate();
-
                       MapsLauncher.launchQuery("${Map}");
                     },
                     child: Container(
@@ -340,7 +339,7 @@ class _Site_VueState extends State<Site_Vue> {
         onPressed: () async {
           print("onPressed AffBtnAdd  ${Srv_DbTools.gClient.ClientId} ${Srv_DbTools.gSite.SiteId}");
           await Srv_DbTools.addContactAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gSite.SiteId, "SITE");
-          await Srv_DbTools.getContactGrp(Srv_DbTools.gClient.ClientId, Srv_DbTools.gSite.SiteId);
+          await Srv_DbTools.getContactSite(Srv_DbTools.gClient.ClientId, Srv_DbTools.gSite.SiteId);
           Srv_DbTools.gContact = Srv_DbTools.ListContact[Srv_DbTools.ListContact.length - 1];
           await showDialog(
               context: context,

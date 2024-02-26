@@ -149,6 +149,7 @@ class _Client_GroupeDialogState extends State<Client_GroupeDialog> {
 
     for (int i = 0; i < Srv_DbTools.ListSite.length; i++) {
       Site wSite = Srv_DbTools.ListSite[i];
+      print("wSite.Groupe_Nom ${wSite.Groupe_Nom} ");
 
       if (lGroupe.indexOf(wSite.Groupe_Nom) == -1) {
         lGroupe.add(wSite.Groupe_Nom);
