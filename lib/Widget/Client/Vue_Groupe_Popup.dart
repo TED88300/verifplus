@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:verifplus/Tools/Api_Gouv.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
+import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
@@ -253,8 +254,12 @@ class _Groupe_Vue_PopupState extends State<Groupe_Vue_Popup> {
               Srv_DbTools.gGroupe.Groupe_CP = wGroupe_CP;
               Srv_DbTools.gGroupe.Groupe_Ville = wGroupe_Ville;
               Srv_DbTools.gGroupe.Groupe_Pays = wGroupe_Pays;
-              await Srv_DbTools.setGroupe(Srv_DbTools.gGroupe);
 
+              await DbTools.updateGroupes(Srv_DbTools.gGroupe);
+              bool wRes = await Srv_DbTools.setGroupe(Srv_DbTools.gGroupe);
+              Srv_DbTools.gGroupe.Groupe_isUpdate = wRes;
+              await DbTools.updateGroupes(Srv_DbTools.gGroupe);
+              print("VALIDER Groupe wRes ${wRes}");
 
               Srv_DbTools.gContact.Contact_Civilite = wContact_Civilite;
               Srv_DbTools.gContact.Contact_Prenom = wContact_Prenom;
@@ -264,8 +269,13 @@ class _Groupe_Vue_PopupState extends State<Groupe_Vue_Popup> {
               Srv_DbTools.gContact.Contact_Tel1 = wContact_Tel1;
               Srv_DbTools.gContact.Contact_Tel2 = wContact_Tel2;
               Srv_DbTools.gContact.Contact_eMail = wContact_eMail;
-              await  Srv_DbTools.setContact(Srv_DbTools.gContact);
 
+              await DbTools.updateContact(Srv_DbTools.gContact);
+              wRes = await  Srv_DbTools.setContact(Srv_DbTools.gContact);
+              Srv_DbTools.gContact.Contact_isUpdate = wRes;
+              if (!wRes) DbTools.gErrorSync = true;
+              await DbTools.updateContact(Srv_DbTools.gContact);
+              print("VALIDER gContact wRes ${wRes}");
 
               Navigator.of(context).pop();
             },

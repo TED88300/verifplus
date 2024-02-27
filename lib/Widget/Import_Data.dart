@@ -98,8 +98,7 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
     setState(() {
       wSt += "► Adresse : ${Srv_DbTools.ListAdresse.length} Adresses\n";
     });
-
-
+    
     //**********************************
     //**********************************
     //**********************************
@@ -142,7 +141,7 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
       Groupe wGroupe = Srv_DbTools.ListGroupe[i];
       await DbTools.inserGroupes(wGroupe);
     }
-    Srv_DbTools.ListGroupe = await  DbTools.getGroupes();
+    Srv_DbTools.ListGroupe = await  DbTools.getGroupesAll();
     print("Import_DataDialog Srv_DbTools.ListGroupe ${Srv_DbTools.ListGroupe}");
     setState(() {
       wSt += "► Groupe : ${Srv_DbTools.ListGroupe.length} Groupes\n";
@@ -159,7 +158,7 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
       Site wSite = Srv_DbTools.ListSite[i];
       await DbTools.inserSites(wSite);
     }
-    Srv_DbTools.ListSite = await  DbTools.getSites();
+    Srv_DbTools.ListSite = await  DbTools.getSitesAll();
     print("Import_DataDialog Srv_DbTools.ListSite ${Srv_DbTools.ListSite}");
     setState(() {
       wSt += "► Site : ${Srv_DbTools.ListSite.length} Sites\n";

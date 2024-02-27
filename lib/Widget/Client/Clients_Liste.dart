@@ -235,13 +235,19 @@ class Liste_ClientsState extends State<Liste_Clients> {
     print(" OpenGroupe() getAdresseClientType");
     await DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
     print(" OpenGroupe() getContactClientAdrType");
-    await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gAdresse.AdresseId, "LIVR");
+    await DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gAdresse.AdresseId, "LIVR");
     print(" OpenGroupe() getGroupesClient");
-    await Srv_DbTools.getGroupesClient(Srv_DbTools.gClient.ClientId);
+
+    await Srv_ImportExport.ImportGroupe(Srv_DbTools.gClient.ClientId);
+
+
+//    await Srv_DbTools.getGroupesClient(Srv_DbTools.gClient.ClientId);
 
     if (Srv_DbTools.ListGroupe.isEmpty) {
       Srv_DbTools.gGroupe = Groupe.GroupeInit();
       bool wRet = await Srv_DbTools.addGroupe(Srv_DbTools.gClient.ClientId);
+      Srv_DbTools.gGroupe.Groupe_isUpdate = wRet;
+      if (!wRet) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
       Srv_DbTools.gGroupe.GroupeId = Srv_DbTools.gLastID;
       Srv_DbTools.gGroupe.Groupe_ClientId = Srv_DbTools.gClient.ClientId;
       Srv_DbTools.gGroupe.Groupe_Nom = Srv_DbTools.gClient.Client_Nom;
@@ -250,10 +256,13 @@ class Liste_ClientsState extends State<Liste_Clients> {
       Srv_DbTools.gGroupe.Groupe_Adr3 = Srv_DbTools.gAdresse.Adresse_Adr3;
       Srv_DbTools.gGroupe.Groupe_CP = Srv_DbTools.gAdresse.Adresse_CP;
       Srv_DbTools.gGroupe.Groupe_Ville = Srv_DbTools.gAdresse.Adresse_Ville;
-      await Srv_DbTools.setGroupe(Srv_DbTools.gGroupe);
+      await DbTools.inserGroupes(Srv_DbTools.gGroupe);
+      if (wRet)  await Srv_DbTools.setGroupe(Srv_DbTools.gGroupe);
+
+
+
 
       Srv_DbTools.gContactLivr = Srv_DbTools.gContact;
-
       await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gGroupe.GroupeId, "GRP");
 
       print(" OpenGroupe() Srv_DbTools.gContact.Contact_Nom ${Srv_DbTools.gContact.Contact_Nom}");

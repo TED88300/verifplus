@@ -161,7 +161,7 @@ class DbTools {
 
 
     String wCREATE_Sites =
-        "CREATE TABLE `Sites` (`SiteId` int(11) NOT NULL,`Site_GroupeId` int(11) NOT NULL,`Site_Code` varchar(24) NOT NULL DEFAULT '',`Site_Depot` varchar(128) NOT NULL DEFAULT '',`Site_Nom` varchar(64) NOT NULL DEFAULT '',`Site_Adr1` varchar(40) NOT NULL DEFAULT '',`Site_Adr2` varchar(40) NOT NULL DEFAULT '',`Site_Adr3` varchar(40) NOT NULL DEFAULT '',`Site_Adr4` varchar(40) NOT NULL,`Site_CP` varchar(10) NOT NULL DEFAULT '',`Site_Ville` varchar(40) NOT NULL DEFAULT '',`Site_Pays` varchar(40) NOT NULL DEFAULT '',`Site_Acces` varchar(128) NOT NULL,`Site_RT` varchar(1024) NOT NULL DEFAULT '',`Site_APSAD` varchar(1024) NOT NULL DEFAULT '',`Site_Rem` varchar(1024) NOT NULL DEFAULT '',`Site_ResourceId` int(11) NOT NULL DEFAULT 0,`Livr` varchar(8) NOT NULL)";
+        "CREATE TABLE `Sites` (`SiteId` int(11) NOT NULL,`Site_GroupeId` int(11) NOT NULL,`Site_Code` varchar(24) NOT NULL DEFAULT '',`Site_Depot` varchar(128) NOT NULL DEFAULT '',`Site_Nom` varchar(64) NOT NULL DEFAULT '',`Site_Adr1` varchar(40) NOT NULL DEFAULT '',`Site_Adr2` varchar(40) NOT NULL DEFAULT '',`Site_Adr3` varchar(40) NOT NULL DEFAULT '',`Site_Adr4` varchar(40) NOT NULL,`Site_CP` varchar(10) NOT NULL DEFAULT '',`Site_Ville` varchar(40) NOT NULL DEFAULT '',`Site_Pays` varchar(40) NOT NULL DEFAULT '',`Site_Acces` varchar(128) NOT NULL,`Site_RT` varchar(1024) NOT NULL DEFAULT '',`Site_APSAD` varchar(1024) NOT NULL DEFAULT '',`Site_Rem` varchar(1024) NOT NULL DEFAULT '',`Site_ResourceId` int(11) NOT NULL DEFAULT 0,`Livr` varchar(8) NOT NULL, Site_isUpdate INTEGER NOT NULL DEFAULT 0)";
     String wCREATE_Zones =
         "CREATE TABLE `Zones` (`ZoneId` int(11) NOT NULL,`Zone_SiteId` int(11) NOT NULL,`Zone_Code` varchar(24) NOT NULL DEFAULT '',`Zone_Depot` varchar(128) NOT NULL DEFAULT '',`Zone_Nom` varchar(64) NOT NULL DEFAULT '',`Zone_Adr1` varchar(40) NOT NULL DEFAULT '',`Zone_Adr2` varchar(40) NOT NULL DEFAULT '',`Zone_Adr3` varchar(40) NOT NULL DEFAULT '',`Zone_Adr4` varchar(40) NOT NULL,`Zone_CP` varchar(10) NOT NULL DEFAULT '',`Zone_Ville` varchar(40) NOT NULL DEFAULT '',`Zone_Pays` varchar(40) NOT NULL DEFAULT '',`Zone_Acces` varchar(128) NOT NULL,`Zone_Rem` varchar(1024) NOT NULL DEFAULT '',`Livr` varchar(8) NOT NULL)";
     String wCREATE_Intervention =
@@ -275,7 +275,7 @@ class DbTools {
         ")";
 
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
-    String wDbPath = "saigle2obao.db";
+    String wDbPath = "sCoke2obao.db";
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
 
     database = openDatabase(
@@ -1886,8 +1886,6 @@ class DbTools {
       print("getContactClientType return TRUE ${Srv_DbTools.gContact.ContactId} ${Srv_DbTools.gContact.Contact_Nom}");
       return true;
     } else
-
-
     {
       Contact wContact = await Contact.ContactInit();
       bool wRet = await Srv_DbTools.addContactAdrType(ClientID, AdresseId, Type);
@@ -1972,10 +1970,36 @@ class DbTools {
   //******************** G R O U P E S *************
   //************************************************
 
-  static Future<List<Groupe>> getGroupes() async {
+  static Future<List<Groupe>> getGroupesAll() async {
     final db = await database;
 
     final List<Map<String, dynamic>> maps = await db.query("Groupes", orderBy: "Groupe_Nom ASC");
+
+    return List.generate(maps.length, (i) {
+      return Groupe(
+        maps[i]["GroupeId"],
+        maps[i]["Groupe_ClientId"],
+        maps[i]["Groupe_Code"],
+        maps[i]["Groupe_Nom"],
+        maps[i]["Groupe_Adr1"],
+        maps[i]["Groupe_Adr2"],
+        maps[i]["Groupe_Adr3"],
+        maps[i]["Groupe_Adr4"],
+        maps[i]["Groupe_CP"],
+        maps[i]["Groupe_Ville"],
+        maps[i]["Groupe_Pays"],
+        maps[i]["Groupe_Acces"],
+        maps[i]["Groupe_Rem"],
+        maps[i]["Livr"],
+        maps[i]["Groupe_isUpdate"] == 1,
+      );
+    });
+  }
+
+  static Future<List<Groupe>> getGroupes(int ClientID) async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> maps = await db.query("Groupes", orderBy: "Groupe_Nom ASC", where: "Groupe_ClientId = $ClientID");
 
     return List.generate(maps.length, (i) {
       return Groupe(
@@ -2004,6 +2028,16 @@ class DbTools {
     gLastID = repid!;
   }
 
+  static Future<void> updateGroupes(Groupe wGroupe) async {
+    final db = await DbTools.database;
+    int? repid = await db.update(
+      "Groupes",
+      wGroupe.toMap(),
+      where: "GroupeId = ?",
+      whereArgs: [wGroupe.GroupeId],
+    );
+  }
+
   static Future<void> TrunckGroupes() async {
     final db = await DbTools.database;
     int? repid = await db.delete("Groupes");
@@ -2013,7 +2047,7 @@ class DbTools {
   //******************** S I T E S *****************
   //************************************************
 
-  static Future<List<Site>> getSites() async {
+  static Future<List<Site>> getSitesAll() async {
     final db = await database;
 
     final List<Map<String, dynamic>> maps = await db.query("Sites", orderBy: "Site_Nom ASC");
@@ -2045,16 +2079,75 @@ class DbTools {
         maps[i]["Site_Rem"],
         maps[i]["Site_ResourceId"],
         maps[i]["Livr"],
-        "", //maps[i]["Groupe_Nom"],
+        "",
+        maps[i]["Site_isUpdate"] == 1,
+//maps[i]["Groupe_Nom"],
       );
     });
   }
+
+
+  static Future<List<Site>> getSiteGroupe(int ID) async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> maps = await db.query("Sites", orderBy: "Site_Nom ASC", where: "Site_GroupeId = $ID");
+
+    return List.generate(maps.length, (i) {
+      String wSite_Code = "";
+
+      try {
+        wSite_Code = maps[i]['Site_Code'];
+      } catch (e) {
+        print(e);
+      }
+      return Site(
+        maps[i]["SiteId"],
+        maps[i]["Site_GroupeId"],
+        wSite_Code,
+        maps[i]["Site_Depot"],
+        maps[i]["Site_Nom"],
+        maps[i]["Site_Adr1"],
+        maps[i]["Site_Adr2"],
+        maps[i]["Site_Adr3"],
+        maps[i]["Site_Adr4"],
+        maps[i]["Site_CP"],
+        maps[i]["Site_Ville"],
+        maps[i]["Site_Pays"],
+        maps[i]["Site_Acces"],
+        maps[i]["Site_RT"],
+        maps[i]["Site_APSAD"],
+        maps[i]["Site_Rem"],
+        maps[i]["Site_ResourceId"],
+        maps[i]["Livr"],
+        "",
+        maps[i]["Site_isUpdate"] == 1,
+//maps[i]["Groupe_Nom"],
+      );
+    });
+  }
+
+
+
 
   static Future<void> inserSites(Site wSite) async {
     final db = await DbTools.database;
     int? repid = await db.insert("Sites", wSite.toMap());
     gLastID = repid!;
   }
+
+
+  static Future<void> updateSites(Site wSite) async {
+    final db = await DbTools.database;
+    int? repid = await db.update(
+      "Sites",
+      wSite.toMap(),
+      where: "SiteId = ?",
+      whereArgs: [wSite.SiteId],
+    );
+  }
+
+
+
 
   static Future<void> TrunckSites() async {
     final db = await DbTools.database;

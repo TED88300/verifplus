@@ -195,10 +195,15 @@ class Client_GroupesState extends State<Client_Groupes> {
 
               await DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
               await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gAdresse.AdresseId, "LIVR");
-              await Srv_DbTools.addGroupe(Srv_DbTools.gClient.ClientId);
+
 
               Srv_DbTools.gGroupe = Groupe.GroupeInit();
+
+              bool wRet = await Srv_DbTools.addGroupe(Srv_DbTools.gClient.ClientId);
+              Srv_DbTools.gGroupe.Groupe_isUpdate = wRet;
+              if (!wRet) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
               Srv_DbTools.gGroupe.GroupeId          = Srv_DbTools.gLastID;
+
               Srv_DbTools.gGroupe.Groupe_ClientId   = Srv_DbTools.gClient.ClientId;
               Srv_DbTools.gGroupe.Groupe_Nom        = Srv_DbTools.gClient.Client_Nom + "_${Srv_DbTools.ListGroupe.length+1}";
               Srv_DbTools.gGroupe.Groupe_Adr1       = Srv_DbTools.gAdresse.Adresse_Adr1;
@@ -206,8 +211,14 @@ class Client_GroupesState extends State<Client_Groupes> {
               Srv_DbTools.gGroupe.Groupe_Adr3       = Srv_DbTools.gAdresse.Adresse_Adr3;
               Srv_DbTools.gGroupe.Groupe_CP         = Srv_DbTools.gAdresse.Adresse_CP;
               Srv_DbTools.gGroupe.Groupe_Ville      = Srv_DbTools.gAdresse.Adresse_Ville;
-              Srv_DbTools.setGroupe(Srv_DbTools.gGroupe);
-              await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gGroupe.GroupeId, "GRP");
+              await DbTools.inserGroupes(Srv_DbTools.gGroupe);
+              if (wRet)  await Srv_DbTools.setGroupe(Srv_DbTools.gGroupe);
+
+
+
+
+
+              await DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gGroupe.GroupeId, "GRP");
               Srv_DbTools.gContact.Contact_Civilite  = Srv_DbTools.gContactLivr.Contact_Civilite ;
               Srv_DbTools.gContact.Contact_Prenom    = Srv_DbTools.gContactLivr.Contact_Prenom   ;
               Srv_DbTools.gContact.Contact_Nom       = Srv_DbTools.gContactLivr.Contact_Nom      ;

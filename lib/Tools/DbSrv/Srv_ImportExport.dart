@@ -2,11 +2,12 @@ import 'package:verifplus/Tools/DbSrv/Srv_Adresses.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Clients.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Contacts.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Sites.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 
 class Srv_ImportExport {
   Srv_ImportExport();
-
 
   // ☀︎☀︎☀︎ CLIENT UPDATE ☀︎☀︎☀︎
   static Future<bool> Client_Export_Update(Client wClient) async {
@@ -35,11 +36,66 @@ class Srv_ImportExport {
     return wRes;
   }
 
+  // ☀︎☀︎☀︎ GROUPE UPDATE ☀︎☀︎☀︎
+  static Future<bool> Groupe_Export_Update(Groupe wGroupe) async {
+    print("Groupe à remonter ${wGroupe.Groupe_Nom} ${wGroupe.GroupeId}");
+    bool wRes = await Srv_DbTools.setGroupe(wGroupe);
+    wGroupe.Groupe_isUpdate = wRes;
+    Srv_DbTools.gAdresse.Adresse_isUpdate = wRes;
+    await DbTools.updateGroupes(wGroupe);
+    print("Groupe à remonter Groupe wRes ${wRes}");
+    return wRes;
+  }
+
+  // ☀︎☀︎☀︎ GROUPE INSERT ☀︎☀︎☀︎
+  static Future<bool> Groupe_Export_Insert(Groupe wGroupe) async {
+    print("Groupe à remonter INSERT  ${wGroupe.Groupe_Nom} ${wGroupe.GroupeId}");
+    bool wRes = await Srv_DbTools.addGroupe(wGroupe.Groupe_ClientId);
+    if (wRes) {
+      wGroupe.GroupeId = Srv_DbTools.gLastID;
+      print("Groupe à remonter INSERT OK ${wGroupe.Groupe_Nom} >>>> ${wGroupe.GroupeId}");
+      wRes = await Srv_DbTools.setGroupe(wGroupe);
+    }
+    wGroupe.Groupe_isUpdate = wRes;
+    if (!wRes) DbTools.gErrorSync = true;
+    Srv_DbTools.gAdresse.Adresse_isUpdate = wRes;
+    await DbTools.updateGroupes(wGroupe);
+    return wRes;
+  }
+
+  // ☀︎☀︎☀︎ SITE UPDATE ☀︎☀︎☀︎
+  static Future<bool> Site_Export_Update(Site wSite) async {
+    print("Site à remonter ${wSite.Site_Nom} ${wSite.SiteId}");
+    bool wRes = await Srv_DbTools.setSite(wSite);
+    wSite.Site_isUpdate = wRes;
+    Srv_DbTools.gAdresse.Adresse_isUpdate = wRes;
+    await DbTools.updateSites(wSite);
+    print("Site à remonter Site wRes ${wRes}");
+    return wRes;
+  }
+
+  // ☀︎☀︎☀︎ SITE INSERT ☀︎☀︎☀︎
+  static Future<bool> Site_Export_Insert(Site wSite) async {
+    print("Site à remonter INSERT  ${wSite.Site_Nom} ${wSite.SiteId}");
+    bool wRes = await Srv_DbTools.addSite(wSite.Site_GroupeId);
+    if (wRes) {
+      wSite.SiteId = Srv_DbTools.gLastID;
+      print("Site à remonter INSERT OK ${wSite.Site_Nom} >>>> ${wSite.SiteId}");
+      wRes = await Srv_DbTools.setSite(wSite);
+    }
+    wSite.Site_isUpdate = wRes;
+    if (!wRes) DbTools.gErrorSync = true;
+    Srv_DbTools.gAdresse.Adresse_isUpdate = wRes;
+    await DbTools.updateSites(wSite);
+    return wRes;
+  }
+
+
   // ☀︎☀︎☀︎ ADRESSE INSERT ☀︎☀︎☀︎
   static Future<bool> Adresse_Export_Insert(Client wClient, int saveClientId, String wType) async {
     await DbTools.getAdresseClientType(saveClientId, wType);
     Adresse wAdresse = Srv_DbTools.gAdresse;
-     saveAdresseId = wAdresse.AdresseId;
+    saveAdresseId = wAdresse.AdresseId;
     print("Adresse à remonter INSERT  ${wAdresse.Adresse_Adr1} ${wAdresse.AdresseId}");
     bool wRes = await Srv_DbTools.addAdresse(saveClientId, wType);
     if (wRes) {
@@ -56,7 +112,7 @@ class Srv_ImportExport {
     return wRes;
   }
 
-  // ☀︎☀︎☀︎ ADRESSE INSERT ☀︎☀︎☀︎
+  // ☀︎☀︎☀︎ CONTACT INSERT ☀︎☀︎☀︎
   static Future<bool> Contact_Export_Insert(Client wClient, int saveClientId, String wType) async {
     await DbTools.getContactClientAdrType(saveClientId, saveAdresseId, wType);
     Contact wContact = Srv_DbTools.gContact;
@@ -76,17 +132,14 @@ class Srv_ImportExport {
 
     return wRes;
   }
-
-
+  
+  
 
   static int saveClientId = 0;
   static int saveAdresseId = 0;
   static int AdresseId = 0;
 
-
-
   static Future ExportNotSync() async {
-
     DbTools.gErrorSync = false;
     Srv_DbTools.ListClient = await DbTools.getClients();
     for (int i = 0; i < Srv_DbTools.ListClient.length; i++) {
@@ -118,7 +171,7 @@ class Srv_ImportExport {
           // ☀︎☀︎☀︎ ADRESSE CLIENT INSERT LIVR ☀︎☀︎☀︎
           // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
 
-           wRes = await Adresse_Export_Insert(wClient, saveClientId, "LIVR");
+          wRes = await Adresse_Export_Insert(wClient, saveClientId, "LIVR");
           // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
           // ☀︎☀︎☀︎ CONTACT CLIENT INSERT FACT ☀︎☀︎☀︎
           // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
@@ -126,52 +179,60 @@ class Srv_ImportExport {
             bool wRes = await Contact_Export_Insert(wClient, saveClientId, "LIVR");
           }
 
-
           if (wRes) {
-
             // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
             // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎ GROUPE ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
             // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
+
+            Srv_DbTools.ListGroupe = await DbTools.getGroupes(saveClientId);
+            for (int i = 0; i < Srv_DbTools.ListGroupe.length; i++) {
+              Groupe wGroupe = Srv_DbTools.ListGroupe[i];
+              if (!wGroupe.Groupe_isUpdate && wGroupe.GroupeId >= 0) {
+                bool wRes = await Groupe_Export_Update(wGroupe);
+              }
+              else
+                {
+                bool wRes = await Groupe_Export_Insert(wGroupe);
+
+                }
+
+              }
 
 
             // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
             // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎ CONTACT GROUPE ☀︎☀︎☀︎☀︎
             // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
 
-
             // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
             // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎ SITE   ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
             // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
 
+            Srv_DbTools.ListSite = await DbTools.getSiteGroupe(saveClientId);
+            for (int i = 0; i < Srv_DbTools.ListSite.length; i++) {
+              Site wSite = Srv_DbTools.ListSite[i];
+              if (!wSite.Site_isUpdate && wSite.SiteId >= 0) {
+                bool wRes = await Site_Export_Update(wSite);
+              }
+              else
+              {
+                bool wRes = await Site_Export_Insert(wSite);
+
+              }
+
+            }
+            
+            
             // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
             // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎ CONTACT SITE   ☀︎☀︎☀︎☀︎
             // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
-
-
-
-
-
           }
-
-
-
-
-
-
-
-
-
-
-
-
         }
       }
     }
     Srv_DbTools.ListClient = await DbTools.getClients();
 
-
     // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
-    // ☀︎☀︎☀︎ ADRESSE INSERT ☀︎☀︎☀︎
+    // ☀︎☀︎☀︎ ADRESSE UPDATE ☀︎☀︎☀︎
     // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
     Srv_DbTools.ListAdresse = await DbTools.getAdresse();
     for (int i = 0; i < Srv_DbTools.ListAdresse.length; i++) {
@@ -188,9 +249,8 @@ class Srv_ImportExport {
     }
     Srv_DbTools.ListAdresse = await DbTools.getAdresse();
 
-
     // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
-    // ☀︎☀︎☀︎ CONTACT INSERT ☀︎☀︎☀︎
+    // ☀︎☀︎☀︎ CONTACT UPDATE ☀︎☀︎☀︎
     // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
 
     Srv_DbTools.ListContact = await DbTools.getContact();
@@ -210,8 +270,37 @@ class Srv_ImportExport {
       }
     }
     Srv_DbTools.ListContact = await DbTools.getContact();
+
+    // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
+    // ☀︎☀︎☀︎ GROUPE UPDATE ☀︎☀︎☀︎
+    // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
+
+
+    Srv_DbTools.ListGroupe = await DbTools.getGroupesAll();
+    for (int i = 0; i < Srv_DbTools.ListGroupe.length; i++) {
+      Groupe wGroupe = Srv_DbTools.ListGroupe[i];
+      if (!wGroupe.Groupe_isUpdate && wGroupe.GroupeId >= 0) {
+        bool wRes = await Groupe_Export_Update(wGroupe);
+      }
+      else
+      {
+        bool wRes = await Groupe_Export_Insert(wGroupe);
+
+      }
+
+    }
+
+
+
+
+
+
   }
 
+  //******************************************************************
+  //******************************************************************
+  //******************************************************************
+  
   static Future<bool> ImportClient() async {
     bool wResult = await Srv_DbTools.IMPORT_ClientAll();
     print("ImportClient wResult ${wResult}");
@@ -263,6 +352,51 @@ class Srv_ImportExport {
     }
     Srv_DbTools.ListContact = await DbTools.getContact();
     print("Import_DataDialog Srv_DbTools.ListContact ${Srv_DbTools.ListContact}");
+    return false;
+  }
+
+  static Future<bool> ImportGSZ(int ID) async {
+    bool wRet = await ImportGroupe(ID);
+     wRet = await ImportSite(ID);
+
+    return false;
+  }
+
+  static Future<bool> ImportGroupe(int ID) async {
+
+
+    bool wResult = await Srv_DbTools.getGroupesClient(ID);
+    print("ImportGroupe Groupe wResult ${wResult}");
+    if (wResult) {
+      await DbTools.TrunckGroupes();
+      for (int i = 0; i < Srv_DbTools.ListGroupe.length; i++) {
+        Groupe wGroupe = Srv_DbTools.ListGroupe[i];
+        await DbTools.inserGroupes(wGroupe);
+      }
+      Srv_DbTools.ListGroupe = await DbTools.getGroupes(ID);
+      print("ImportGroupe Srv_DbTools.ListGroupe ${Srv_DbTools.ListGroupe}");
+      return true;
+    }
+    Srv_DbTools.ListGroupe = await DbTools.getGroupes(ID);
+    print("ImportGroupe Srv_DbTools.ListGroupe ${Srv_DbTools.ListGroupe}");
+    return false;
+  }
+
+  static Future<bool> ImportSite(int ID) async {
+    bool wResult = await Srv_DbTools.getSitesGroupe(ID);
+    print("ImportSite Groupe wResult ${wResult}");
+    if (wResult) {
+      await DbTools.TrunckSites();
+      for (int i = 0; i < Srv_DbTools.ListSite.length; i++) {
+        Site wSite = Srv_DbTools.ListSite[i];
+        await DbTools.inserSites(wSite);
+      }
+      Srv_DbTools.ListSite = await DbTools.getSiteGroupe(ID);
+      print("ImportSite Srv_DbTools.ListSite ${Srv_DbTools.ListSite}");
+      return true;
+    }
+    Srv_DbTools.ListSite = await DbTools.getSiteGroupe(ID);
+    print("ImportSite Srv_DbTools.ListSite ${Srv_DbTools.ListSite}");
     return false;
   }
 

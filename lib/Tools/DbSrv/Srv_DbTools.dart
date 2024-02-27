@@ -1086,28 +1086,37 @@ class Srv_DbTools {
   static Groupe gGroupe = Groupe.GroupeInit();
 
   static Future<bool> getGroupeAll() async {
-    ListGroupe = await getGroupe_API_Post("select", "select * from Groupes ORDER BY Groupe_Nom");
 
-    if (ListGroupe == null) return false;
-    print("getGroupeAll ${ListGroupe.length}");
-    if (ListGroupe.length > 0) {
-      print("getGroupeAll return TRUE");
-      return true;
+    try {
+      ListGroupe = await getGroupe_API_Post("select", "select * from Groupes ORDER BY Groupe_Nom");
+      if (ListGroupe == null) return false;
+      print("getGroupesClient ${ListGroupe.length}");
+      if (ListGroupe.length > 0) {
+        print("getGroupesClient return TRUE");
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
+
   }
 
   static Future<bool> getGroupesClient(int ID) async {
     String wTmp = "select * from Groupes WHERE Groupe_ClientId = ${ID} ORDER BY Groupe_Nom";
     print("wTmp getGroupesClient ${wTmp}");
-    ListGroupe = await getGroupe_API_Post("select", wTmp);
-    if (ListGroupe == null) return false;
-    print("getGroupesClient ${ListGroupe.length}");
-    if (ListGroupe.length > 0) {
-      print("getGroupesClient return TRUE");
-      return true;
+    try {
+      ListGroupe = await getGroupe_API_Post("select", wTmp);
+      if (ListGroupe == null) return false;
+      print("getGroupesClient ${ListGroupe.length}");
+      if (ListGroupe.length > 0) {
+        print("getGroupesClient return TRUE");
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
   static Future getGroupeID(int ID) async {
@@ -1136,7 +1145,19 @@ class Srv_DbTools {
     gColors.printWrapped("setGroupe " + wSlq);
     bool ret = await add_API_Post("upddel", wSlq);
     print("setGroupe ret " + ret.toString());
-    return ret;
+
+    try {
+      gColors.printWrapped("setGroupe " + wSlq);
+      bool ret = await add_API_Post("upddel", wSlq);
+      print("setGroupe ret " + ret.toString());
+      return true;
+    } catch (e) {
+      print("setGroupe ERROR " + e.toString());
+      return false;
+    }
+
+
+
   }
 
   static Future<bool> addGroupe(int Groupe_ClientId) async {
@@ -1211,32 +1232,41 @@ class Srv_DbTools {
 
   static Future<bool> getSitesGroupe(int ID) async {
     String wTmp = "select * from Sites WHERE Site_GroupeId = ${ID} ORDER BY Site_Nom";
-
-//    print("wTmp getSitesSite ${wTmp}");
-    ListSite = await getSite_API_Post("select", wTmp);
-
-    if (ListSite == null) return false;
-    //  print("getSitesSite ${ListSite.length}");
-    if (ListSite.length > 0) {
-      //      print("getSitesSite return TRUE");
-      return true;
+    print("wTmp getSitesGroupe ${wTmp}");
+    try {
+      ListSite = await getSite_API_Post("select", wTmp);
+      if (ListSite == null) return false;
+      print("getSitesGroupe ${ListSite.length}");
+      if (ListSite.length > 0) {
+        print("getSitesGroupe return TRUE");
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
+
+
+
+
+
   }
 
   static Future<bool> getGroupeSites(int ID) async {
     String wTmp = "SELECT Groupe_Nom , Sites.* FROM Sites , Groupes where Site_GroupeId = GroupeId AND Groupe_ClientId = ${ID} ORDER BY Groupe_Nom ASC, Site_Nom ASC;";
-
-    print("getGroupeSites ${wTmp}");
-    ListSite = await getSite_API_Post("select", wTmp);
-
-    if (ListSite == null) return false;
-    print("getSitesSite ${ListSite.length}");
-    if (ListSite.length > 0) {
-      print("getSitesSite return TRUE");
-      return true;
+    print("wTmp getSitesGroupe ${wTmp}");
+    try {
+      ListSite = await getSite_API_Post("select", wTmp);
+      if (ListSite == null) return false;
+      print("getSitesGroupe ${ListSite.length}");
+      if (ListSite.length > 0) {
+        print("getSitesGroupe return TRUE");
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
   static Future getSiteID(int ID) async {
@@ -1264,18 +1294,30 @@ class Srv_DbTools {
         "Site_Rem       = \"${Site.Site_Rem}\" " +
         "WHERE SiteId      = ${Site.SiteId.toString()}";
     gColors.printWrapped("setSite " + wSlq);
-    bool ret = await add_API_Post("upddel", wSlq);
-    print("setSite ret " + ret.toString());
-    return ret;
+
+    try {
+      bool ret = await add_API_Post("upddel", wSlq);
+      print("setSite ret " + ret.toString());
+      return true;
+    } catch (e) {
+      print("setSite ERROR " + e.toString());
+      return false;
+    }
   }
 
   static Future<bool> addSite(int Site_GroupeId) async {
+
     String wValue = "NULL, $Site_GroupeId";
     String wSlq = "INSERT INTO Sites (SiteId, Site_GroupeId) VALUES ($wValue)";
     print("addSite " + wSlq);
-    bool ret = await add_API_Post("insert", wSlq);
-    print("addSite ret " + ret.toString());
-    return ret;
+    try {
+      bool ret = await add_API_Post("insert", wSlq);
+      print("addSite ret " + ret.toString());
+      return true;
+    } catch (e) {
+      print("addSite ERROR " + e.toString());
+      return false;
+    }
   }
 
   static Future<bool> delSite(Site site) async {
@@ -2594,19 +2636,23 @@ class Srv_DbTools {
     String wSlq = "select * from Contacts  where Contact_ClientId = $ClientID AND Contact_AdresseId = $AdresseId AND Contact_Type = '$Type' ORDER BY Contact_Type";
     print("getContactClientType ${wSlq}");
 
-    ListContact = await getContact_API_Post("select", wSlq);
-
-    if (ListContact == null) return false;
-    print("getContactClientType ${ListContact.length}");
-    if (ListContact.length > 0) {
-      gContact = ListContact[0];
-      print("getContactClientType return TRUE ${gContact.ContactId} ${gContact.Contact_Nom}");
-      return true;
-    } else {
-      await addContactAdrType(ClientID, AdresseId, Type);
-      await getContactClientAdrType(ClientID, AdresseId, Type);
+    try {
+      ListContact = await getContact_API_Post("select", wSlq);
+      if (ListContact == null) return false;
+      print("getContactClientType ${ListContact.length}");
+      if (ListContact.length > 0) {
+        gContact = ListContact[0];
+        print("getContactClientType return TRUE ${gContact.ContactId} ${gContact.Contact_Nom}");
+        return true;
+      } else {
+        await addContactAdrType(ClientID, AdresseId, Type);
+        await getContactClientAdrType(ClientID, AdresseId, Type);
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
+
   }
 
   static Future<bool> getContactClient(int ClientID) async {

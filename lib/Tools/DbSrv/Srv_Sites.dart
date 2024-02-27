@@ -18,9 +18,10 @@ class Site {
   int Site_ResourceId = -1;
   String Livr = "";
   String Groupe_Nom = "";
+  bool    Site_isUpdate = true;
 
   static SiteInit() {
-    return Site(0, 0, "", "", "", "", "", "", "", "", "", "","","","","", 0, "", "");
+    return Site(0, 0, "", "", "", "", "", "", "", "", "", "","","","","", 0, "", "", false);
   }
 
   Site(
@@ -42,7 +43,8 @@ class Site {
     String Site_Rem,
     int    Site_ResourceId,
     String Livr,
-      String Groupe_Nom,
+    String Groupe_Nom,
+    bool   Site_isUpdate,
 
   ) {
     this.SiteId = SiteId;
@@ -65,6 +67,7 @@ class Site {
     this.Site_ResourceId = Site_ResourceId;
     this.Livr = Livr;
     this.Groupe_Nom = Groupe_Nom;
+    this.Site_isUpdate = Site_isUpdate;
 
 
   }
@@ -89,6 +92,7 @@ class Site {
       'Site_Rem': Site_Rem,
       'Site_ResourceId': Site_ResourceId,
       'Livr': Livr,
+      'Site_isUpdate': Site_isUpdate,
 
 
 
@@ -116,7 +120,8 @@ class Site {
         json['Site_Rem'],
         int.parse(json['Site_ResourceId']),
         json['Livr'],
-      "", //json['Groupe_Nom'],
+      "",
+        true,//json['Groupe_Nom'],
         );
     return wSite;
   }
