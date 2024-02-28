@@ -18,9 +18,6 @@ class P_SyntheseState extends State<P_Synthese> {
   void initLib() async {
   }
 
-
-
-
   void initState() {
     print("P_Synthese initState");
     initLib();
@@ -36,15 +33,10 @@ class P_SyntheseState extends State<P_Synthese> {
       child:  Column(
         children: <Widget>[
           SizedBox(height: 8.0),
-
-
           Spacer(),
-
-
           SizedBox(height: 8.0),
           Row(
             children: [
-
               Spacer(),
               Text(DbTools.gVersion,
                   textAlign: TextAlign.center,

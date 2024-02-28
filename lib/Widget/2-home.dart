@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +14,7 @@ import 'package:verifplus/Tools/shared_pref.dart';
 import 'package:verifplus/Widget/1-login.dart';
 import 'package:verifplus/Widget/Catalogue_Grig/Catalogue_Grid.dart';
 import 'package:verifplus/Widget/Client/Clients_Liste.dart';
+import 'package:verifplus/Widget/Import_ASync.dart';
 import 'package:verifplus/Widget/Import_Data.dart';
 import 'package:verifplus/Widget/Import_Menu.dart';
 import 'package:verifplus/Widget/P_Notifications.dart';
@@ -71,6 +73,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   @override
   Future reload() async {
+    await checkConnection();
     Srv_DbTools.ListParam_ParamAll = await  DbTools.getParam_Param();
     print("   ListParam_ParamAll ${Srv_DbTools.ListParam_ParamAll.length}");
     if (Srv_DbTools.ListParam_ParamAll.length == 0)
@@ -80,7 +83,6 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       FBroadcast.instance().broadcast("MAJCLIENT");
       reload();
       }
-
 
     DbTools.glfNF074_Gammes = await  DbTools.getNF074_Gammes();
     print("    glfNF074_Gammes ${DbTools.glfNF074_Gammes.length}");
@@ -109,8 +111,18 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     super.dispose();
   }
 
+  Widget wListe_Clients = Container();
+
   @override
   void initState() {
+
+    print(">>>>>>>>>>>>>>>>>> HOME <<<<<<<<<<<<<<<<<<<<<<<<<<<");
+    print(">>>>>>>>>>>>>>>>>> HOME <<<<<<<<<<<<<<<<<<<<<<<<<<<");
+    print(">>>>>>>>>>>>>>>>>> HOME <<<<<<<<<<<<<<<<<<<<<<<<<<<");
+    print(">>>>>>>>>>>>>>>>>> HOME <<<<<<<<<<<<<<<<<<<<<<<<<<<");
+
+
+
     P_children = [
       Liste_Clients(onSaisie: onSaisie),
       P_Synthese(),
@@ -125,6 +137,12 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     initConnectivity();
     _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     initLib();
+
+//    FBroadcast.instance().broadcast("MAJHOME");
+    FBroadcast.instance().register("MAJHOME", (value, callback) {
+      print(" MAJHOME MAJHOME MAJHOME ");
+      setState(() {});
+    });
   }
 
   Future<void> initConnectivity() async {
@@ -158,10 +176,27 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     setState(() {});
   }
 
+  Widget wchildren = Container();
+
+  final pageController = PageController();
+
+
+
+
   @override
   Widget Block_MenuApp(BuildContext context) {
     String title_string = P_itemsTitre[DbTools.gCurrentIndex];
-    Widget wchildren = P_children[DbTools.gCurrentIndex];
+
+
+    if (wchildren.toString() == "Liste_Clients")
+      {
+        print(" wchildren ${wchildren.toString()}");
+      }
+
+
+//    wchildren = P_children[DbTools.gCurrentIndex];
+
+    print(" wchildren ${wchildren.toString()}");
 
     print("Block_MenuApp");
 
@@ -211,6 +246,19 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
           ),
         ),
         actions: <Widget>[
+
+          IconButton(
+            icon: Icon(
+               Icons.sync_problem ,
+              color: Colors.orange,
+            ),
+            onPressed: () async {
+              await Import_ASync_Dialog.Dialogs_ASync(context, onSaisie);
+
+
+            },
+          ),
+
           IconButton(
             icon: Icon(
               hasConnection ? Icons.cloud_download : Icons.cloud_off,
@@ -252,8 +300,13 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
-            wchildren,
-            Positioned(
+
+
+            PageView(
+              children: P_children,
+              controller: pageController,
+              onPageChanged: onBottomIconPressed,
+            ),            Positioned(
               bottom: 0,
               right: 0,
               child: CustomBottomNavigationBar(
@@ -269,8 +322,10 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   void onBottomIconPressed(int index) async {
     if (DbTools.gCurrentIndex != index) {
       DbTools.gCurrentIndex = index;
+      pageController.jumpToPage(index);
       if (DbTools.gCurrentIndex == 1) await Srv_ImportExport.ImportClient();
     }
+
     reload();
   }
 

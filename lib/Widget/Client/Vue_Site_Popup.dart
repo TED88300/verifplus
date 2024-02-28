@@ -277,8 +277,6 @@ class _Site_Vue_PopupState extends State<Site_Vue_Popup> {
               print("VALIDER Site setContact wRes ${wRes}");
 
 
-
-
               Navigator.of(context).pop();
             },
             style: ElevatedButton.styleFrom(

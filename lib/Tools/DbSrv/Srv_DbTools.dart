@@ -1143,8 +1143,7 @@ class Srv_DbTools {
         "Groupe_Rem       = \"${Groupe.Groupe_Rem}\" " +
         "WHERE GroupeId      = ${Groupe.GroupeId.toString()}";
     gColors.printWrapped("setGroupe " + wSlq);
-    bool ret = await add_API_Post("upddel", wSlq);
-    print("setGroupe ret " + ret.toString());
+
 
     try {
       gColors.printWrapped("setGroupe " + wSlq);
@@ -1220,14 +1219,19 @@ class Srv_DbTools {
   static String gSelGroupeBase = "Tous les groupes";
 
   static Future<bool> getSiteAll() async {
-    ListSite = await getSite_API_Post("select", "select * from Sites ORDER BY Site_Nom");
-    if (ListSite == null) return false;
-    print("getSiteAll ${ListSite.length}");
-    if (ListSite.length > 0) {
-      print("getSiteAll return TRUE");
-      return true;
+    try {
+      ListSite = await getSite_API_Post("select", "select * from Sites ORDER BY Site_Nom");
+      if (ListSite == null) return false;
+      print("getSitesGroupe ${ListSite.length}");
+      if (ListSite.length > 0) {
+        print("getSitesGroupe return TRUE");
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
+
   }
 
   static Future<bool> getSitesGroupe(int ID) async {
@@ -1246,15 +1250,11 @@ class Srv_DbTools {
       return false;
     }
 
-
-
-
-
   }
 
   static Future<bool> getGroupeSites(int ID) async {
-    String wTmp = "SELECT Groupe_Nom , Sites.* FROM Sites , Groupes where Site_GroupeId = GroupeId AND Groupe_ClientId = ${ID} ORDER BY Groupe_Nom ASC, Site_Nom ASC;";
-    print("wTmp getSitesGroupe ${wTmp}");
+    String wTmp = "SELECT Groupe_Nom , Sites.* FROM Sites , Groupes where Site_GroupeId = GroupeId AND Site_GroupeId = ${ID} ORDER BY Groupe_Nom ASC, Site_Nom ASC;";
+    print("SRV_DbTools getSitesGroupe ${wTmp}");
     try {
       ListSite = await getSite_API_Post("select", wTmp);
       if (ListSite == null) return false;
@@ -1364,45 +1364,52 @@ class Srv_DbTools {
   static Zone gZone = Zone.ZoneInit();
 
   static Future<bool> getZoneAll() async {
-    ListZone = await getZone_API_Post("select", "select * from Zones ORDER BY Zone_Nom");
-
-    if (ListZone == null) return false;
-    print("getZoneAll ${ListZone.length}");
-    if (ListZone.length > 0) {
-      print("getZoneAll return TRUE");
-      return true;
+    try {
+      ListZone = await getZone_API_Post("select", "select * from Zones ORDER BY Zone_Nom");
+      if (ListZone == null) return false;
+      print("getZoneAll ${ListZone.length}");
+      if (ListZone.length > 0) {
+        print("getZoneAll return TRUE");
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
   static Future<bool> getZonesGroupe(int ID) async {
-    String wTmp = "select * from Zones WHERE Zone_GroupeId = ${ID} ORDER BY Zone_Nom";
-
-//    print("wTmp getZonesZone ${wTmp}");
-    ListZone = await getZone_API_Post("select", wTmp);
-
-    if (ListZone == null) return false;
-    //  print("getZonesZone ${ListZone.length}");
-    if (ListZone.length > 0) {
-      //      print("getZonesZone return TRUE");
-      return true;
+    try {
+      String wTmp = "select * from Zones WHERE Zone_GroupeId = ${ID} ORDER BY Zone_Nom";
+      ListZone = await getZone_API_Post("select", wTmp);
+      if (ListZone == null) return false;
+      print("getZonesGroupe ${ListZone.length}");
+      if (ListZone.length > 0) {
+        print("getZonesGroupe return TRUE");
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
   static Future<bool> getZones(int ID) async {
-    String wTmp = "SELECT Zones.* FROM Zones where Zone_SiteId =  ${ID} ORDER BY Zone_Nom ASC;";
 
-//    print("wTmp getZonesZone ${wTmp}");
-    ListZone = await getZone_API_Post("select", wTmp);
-
-    if (ListZone == null) return false;
-    //  print("getZonesZone ${ListZone.length}");
-    if (ListZone.length > 0) {
-      //      print("getZonesZone return TRUE");
-      return true;
+    try {
+      String wTmp = "SELECT Zones.* FROM Zones where Zone_SiteId =  ${ID} ORDER BY Zone_Nom ASC;";
+      ListZone = await getZone_API_Post("select", wTmp);
+      if (ListZone == null) return false;
+      print("getZones ${ListZone.length}");
+      if (ListZone.length > 0) {
+        print("getZones return TRUE");
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
+
   }
 
   static Future getZoneID(int ID) async {

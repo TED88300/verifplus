@@ -17,9 +17,10 @@ class Zone {
   String Zone_Rem = "";
   String Livr = "";
   String Groupe_Nom = "";
+  bool   Zone_isUpdate = true;
 
   static ZoneInit() {
-    return Zone(0, 0, "", "", "", "", "", "", "", "", "", "", "", "", "");
+    return Zone(0, 0, "", "", "", "", "", "", "", "", "", "", "", "", "",false);
   }
 
   Zone(
@@ -38,7 +39,7 @@ class Zone {
     String  Zone_Acces,
     String  Zone_Rem,
     String  Livr,
-
+    bool   Zone_isUpdate,
   ) {
     this.ZoneId = ZoneId;
     this.Zone_SiteId = Zone_SiteId;
@@ -56,6 +57,7 @@ class Zone {
     this.Zone_Acces = Zone_Acces;
     this.Zone_Rem = Zone_Rem;
     this.Livr = Livr;
+    this.Zone_isUpdate = Zone_isUpdate;
 
   }
 
@@ -76,6 +78,7 @@ class Zone {
       'Zone_Acces': Zone_Acces,
       'Zone_Rem': Zone_Rem,
       'Livr': Livr,
+      'Zone_isUpdate': Zone_isUpdate,
     };
   }
 
@@ -104,7 +107,9 @@ class Zone {
         json['Zone_Pays'],
         json['Zone_Acces'],
         json['Zone_Rem'],
-        json['Livr']);
+        json['Livr'],
+      true,
+    );
     return wZone;
   }
 

@@ -307,9 +307,13 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
             await HapticFeedback.vibrate();
             Navigator.of(context).pop();
           },
-          child: Padding(
+          child:Padding(
             padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
-            child: Image.asset("assets/images/IcoW.png"),
+            child: DbTools.gErrorSync
+                ? Image.asset(
+              "assets/images/IcoWErr.png",
+            )
+                : Image.asset("assets/images/IcoW.png"),
           ),
         ),
         actions: <Widget>[

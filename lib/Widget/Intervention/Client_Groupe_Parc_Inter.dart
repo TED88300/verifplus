@@ -1031,7 +1031,11 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
         },
         child: Padding(
           padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
-          child: Image.asset("assets/images/IcoW.png"),
+          child: DbTools.gErrorSync
+              ? Image.asset(
+            "assets/images/IcoWErr.png",
+          )
+              : Image.asset("assets/images/IcoW.png"),
         ),
       ),
       actions: <Widget>[

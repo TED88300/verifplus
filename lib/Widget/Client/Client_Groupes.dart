@@ -162,7 +162,11 @@ class Client_GroupesState extends State<Client_Groupes> {
             },
             child: Padding(
               padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
-              child: Image.asset("assets/images/IcoW.png"),
+              child: DbTools.gErrorSync
+                  ? Image.asset(
+                "assets/images/IcoWErr.png",
+              )
+                  : Image.asset("assets/images/IcoW.png"),
             ),
           ),
           actions: <Widget>[
@@ -196,14 +200,11 @@ class Client_GroupesState extends State<Client_Groupes> {
               await DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
               await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gAdresse.AdresseId, "LIVR");
 
-
               Srv_DbTools.gGroupe = Groupe.GroupeInit();
-
               bool wRet = await Srv_DbTools.addGroupe(Srv_DbTools.gClient.ClientId);
               Srv_DbTools.gGroupe.Groupe_isUpdate = wRet;
               if (!wRet) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
               Srv_DbTools.gGroupe.GroupeId          = Srv_DbTools.gLastID;
-
               Srv_DbTools.gGroupe.Groupe_ClientId   = Srv_DbTools.gClient.ClientId;
               Srv_DbTools.gGroupe.Groupe_Nom        = Srv_DbTools.gClient.Client_Nom + "_${Srv_DbTools.ListGroupe.length+1}";
               Srv_DbTools.gGroupe.Groupe_Adr1       = Srv_DbTools.gAdresse.Adresse_Adr1;
@@ -213,10 +214,6 @@ class Client_GroupesState extends State<Client_Groupes> {
               Srv_DbTools.gGroupe.Groupe_Ville      = Srv_DbTools.gAdresse.Adresse_Ville;
               await DbTools.inserGroupes(Srv_DbTools.gGroupe);
               if (wRet)  await Srv_DbTools.setGroupe(Srv_DbTools.gGroupe);
-
-
-
-
 
               await DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gGroupe.GroupeId, "GRP");
               Srv_DbTools.gContact.Contact_Civilite  = Srv_DbTools.gContactLivr.Contact_Civilite ;
@@ -337,6 +334,15 @@ class Client_GroupesState extends State<Client_Groupes> {
                       color : Colors.white,
                       child: Row(
                         children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.only(left: 5, bottom: 2),
+                            child: Text(
+                              groupe.Groupe_isUpdate ? " " : "◉",
+                              maxLines: 1,
+                              style: gColors.bodyTitle1_B_R32,
+                            ),
+                          ),
+
                           Expanded(
                               flex: 25,
                               child: Container(

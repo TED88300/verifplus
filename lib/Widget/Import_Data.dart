@@ -175,7 +175,7 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
       Zone wZone = Srv_DbTools.ListZone[i];
       await DbTools.inserZones(wZone);
     }
-    Srv_DbTools.ListZone = await  DbTools.getZones();
+    Srv_DbTools.ListZone = await  DbTools.getZonesAll();
     print("Import_DataDialog Srv_DbTools.ListZone ${Srv_DbTools.ListZone}");
     setState(() {
       wSt += "► Zone : ${Srv_DbTools.ListZone.length} Zones\n";

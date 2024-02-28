@@ -33,7 +33,9 @@ class Client_ZonesState extends State<Client_Zones> {
   String filterText = '';
 
   void Reload() async {
-    await Srv_DbTools.getZones(Srv_DbTools.gSite.SiteId);
+    bool wRes = await Srv_DbTools.getZones(Srv_DbTools.gSite.SiteId);
+
+    if (!wRes) Srv_DbTools.ListZone = await DbTools.getZones(Srv_DbTools.gSite.SiteId);
 
     print("Client_Zones ${Srv_DbTools.ListZone.length} ");
 
@@ -123,7 +125,11 @@ class Client_ZonesState extends State<Client_Zones> {
             },
             child: Padding(
               padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
-              child: Image.asset("assets/images/IcoW.png"),
+              child: DbTools.gErrorSync
+                  ? Image.asset(
+                "assets/images/IcoWErr.png",
+              )
+                  : Image.asset("assets/images/IcoW.png"),
             ),
           ),
           actions: <Widget>[

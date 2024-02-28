@@ -163,7 +163,7 @@ class DbTools {
     String wCREATE_Sites =
         "CREATE TABLE `Sites` (`SiteId` int(11) NOT NULL,`Site_GroupeId` int(11) NOT NULL,`Site_Code` varchar(24) NOT NULL DEFAULT '',`Site_Depot` varchar(128) NOT NULL DEFAULT '',`Site_Nom` varchar(64) NOT NULL DEFAULT '',`Site_Adr1` varchar(40) NOT NULL DEFAULT '',`Site_Adr2` varchar(40) NOT NULL DEFAULT '',`Site_Adr3` varchar(40) NOT NULL DEFAULT '',`Site_Adr4` varchar(40) NOT NULL,`Site_CP` varchar(10) NOT NULL DEFAULT '',`Site_Ville` varchar(40) NOT NULL DEFAULT '',`Site_Pays` varchar(40) NOT NULL DEFAULT '',`Site_Acces` varchar(128) NOT NULL,`Site_RT` varchar(1024) NOT NULL DEFAULT '',`Site_APSAD` varchar(1024) NOT NULL DEFAULT '',`Site_Rem` varchar(1024) NOT NULL DEFAULT '',`Site_ResourceId` int(11) NOT NULL DEFAULT 0,`Livr` varchar(8) NOT NULL, Site_isUpdate INTEGER NOT NULL DEFAULT 0)";
     String wCREATE_Zones =
-        "CREATE TABLE `Zones` (`ZoneId` int(11) NOT NULL,`Zone_SiteId` int(11) NOT NULL,`Zone_Code` varchar(24) NOT NULL DEFAULT '',`Zone_Depot` varchar(128) NOT NULL DEFAULT '',`Zone_Nom` varchar(64) NOT NULL DEFAULT '',`Zone_Adr1` varchar(40) NOT NULL DEFAULT '',`Zone_Adr2` varchar(40) NOT NULL DEFAULT '',`Zone_Adr3` varchar(40) NOT NULL DEFAULT '',`Zone_Adr4` varchar(40) NOT NULL,`Zone_CP` varchar(10) NOT NULL DEFAULT '',`Zone_Ville` varchar(40) NOT NULL DEFAULT '',`Zone_Pays` varchar(40) NOT NULL DEFAULT '',`Zone_Acces` varchar(128) NOT NULL,`Zone_Rem` varchar(1024) NOT NULL DEFAULT '',`Livr` varchar(8) NOT NULL)";
+        "CREATE TABLE `Zones` (`ZoneId` int(11) NOT NULL,`Zone_SiteId` int(11) NOT NULL,`Zone_Code` varchar(24) NOT NULL DEFAULT '',`Zone_Depot` varchar(128) NOT NULL DEFAULT '',`Zone_Nom` varchar(64) NOT NULL DEFAULT '',`Zone_Adr1` varchar(40) NOT NULL DEFAULT '',`Zone_Adr2` varchar(40) NOT NULL DEFAULT '',`Zone_Adr3` varchar(40) NOT NULL DEFAULT '',`Zone_Adr4` varchar(40) NOT NULL,`Zone_CP` varchar(10) NOT NULL DEFAULT '',`Zone_Ville` varchar(40) NOT NULL DEFAULT '',`Zone_Pays` varchar(40) NOT NULL DEFAULT '',`Zone_Acces` varchar(128) NOT NULL,`Zone_Rem` varchar(1024) NOT NULL DEFAULT '',`Livr` varchar(8) NOT NULL, Zone_isUpdate INTEGER NOT NULL DEFAULT 0)";
     String wCREATE_Intervention =
         "CREATE TABLE `Interventions` (`InterventionId` int(11) NOT NULL,`Intervention_ZoneId` int(11) DEFAULT 0,`Intervention_Date` varchar(32) NOT NULL DEFAULT '',`Intervention_Type` varchar(32) NOT NULL DEFAULT '',`Intervention_Parcs_Type` varchar(32) NOT NULL,`Intervention_Status` varchar(32) NOT NULL DEFAULT 'Planifiée',`Intervention_Histo_Status` longtext NOT NULL DEFAULT '',`Intervention_Facturation` varchar(32) NOT NULL DEFAULT 'Détaillée',`Intervention_Histo_Facturation` longtext NOT NULL DEFAULT '',`Intervention_Responsable` varchar(128) NOT NULL DEFAULT '',`Intervention_Intervenants` mediumtext NOT NULL DEFAULT '',`Intervention_Reglementation` mediumtext NOT NULL DEFAULT '',`Intervention_Signataire_Client` varchar(128) NOT NULL,`Intervention_Signataire_Tech` varchar(128) NOT NULL,`Intervention_Signataire_Date` varchar(32) NOT NULL,`Intervention_Remarque` varchar(1024) NOT NULL DEFAULT '',`Livr` varchar(8) NOT NULL DEFAULT '',`Intervention_Contrat` varchar(64) NOT NULL DEFAULT '',`Intervention_TypeContrat` varchar(128) NOT NULL DEFAULT '',`Intervention_Duree` varchar(128) NOT NULL DEFAULT '',`Intervention_Organes` varchar(1024) NOT NULL DEFAULT '',`Intervention_RT` varchar(1024) NOT NULL DEFAULT '',`Intervention_APSAD` varchar(1024) NOT NULL DEFAULT '')";
     String wCREATE_InterMissions = "CREATE TABLE `InterMissions` (`InterMissionId` int(11) NOT NULL,`InterMission_InterventionId` int(11) NOT NULL DEFAULT 0,`InterMission_Nom` varchar(512) NOT NULL,`InterMission_Exec` tinyint(1) NOT NULL,`InterMission_Date` varchar(32) NOT NULL,`InterMission_Note` varchar(4096) NOT NULL)";
@@ -275,7 +275,7 @@ class DbTools {
         ")";
 
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
-    String wDbPath = "sCoke2obao.db";
+    String wDbPath = "sstat2obao.db";
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
 
     database = openDatabase(
@@ -2090,11 +2090,16 @@ class DbTools {
   static Future<List<Site>> getSiteGroupe(int ID) async {
     final db = await database;
 
-    final List<Map<String, dynamic>> maps = await db.query("Sites", orderBy: "Site_Nom ASC", where: "Site_GroupeId = $ID");
+    String wSql = "SELECT Groupe_Nom , Sites.* FROM Sites , Groupes where Site_GroupeId = GroupeId AND Site_GroupeId = ${ID} ORDER BY Groupe_Nom ASC, Site_Nom ASC;";
 
+    print("getSiteGroupe wSql ${wSql}");
+
+    String wRet = await db.execute(wSql);
+    print("getSiteGroupe wRet ${wRet}");
+
+    final List<Map<String, dynamic>> maps = await db.execute(wSql);
     return List.generate(maps.length, (i) {
       String wSite_Code = "";
-
       try {
         wSite_Code = maps[i]['Site_Code'];
       } catch (e) {
@@ -2137,6 +2142,9 @@ class DbTools {
 
 
   static Future<void> updateSites(Site wSite) async {
+    print("VALIDER updateSites ${wSite.toMap()}");
+
+
     final db = await DbTools.database;
     int? repid = await db.update(
       "Sites",
@@ -2144,6 +2152,10 @@ class DbTools {
       where: "SiteId = ?",
       whereArgs: [wSite.SiteId],
     );
+
+    print("VALIDER updateSites ${repid}");
+
+
   }
 
 
@@ -2158,7 +2170,7 @@ class DbTools {
   //******************** Z O N E S *****************
   //************************************************
 
-  static Future<List<Zone>> getZones() async {
+  static Future<List<Zone>> getZonesAll() async {
     final db = await database;
 
     final List<Map<String, dynamic>> maps = await db.query("Zones", orderBy: "Zone_Nom ASC");
@@ -2187,10 +2199,44 @@ class DbTools {
         maps[i]["Zone_Acces"],
         maps[i]["Zone_Rem"],
         maps[i]["Livr"],
+        maps[i]["Zone_isUpdate"] == 1,
       );
     });
   }
+  static Future<List<Zone>> getZones(int ID) async {
+    final db = await database;
 
+    final List<Map<String, dynamic>> maps = await db.query("Zones", orderBy: "Zone_Nom ASC",where: "Zone_SiteId = $ID");
+
+    return List.generate(maps.length, (i) {
+      String wZone_Code = "";
+
+      try {
+        wZone_Code = maps[i]['Zone_Code'];
+      } catch (e) {
+        print(e);
+      }
+      return Zone(
+        maps[i]["ZoneId"],
+        maps[i]["Zone_SiteId"],
+        maps[i]["Zone_Code"],
+        maps[i]["Zone_Depot"],
+        maps[i]["Zone_Nom"],
+        maps[i]["Zone_Adr1"],
+        maps[i]["Zone_Adr2"],
+        maps[i]["Zone_Adr3"],
+        maps[i]["Zone_Adr4"],
+        maps[i]["Zone_CP"],
+        maps[i]["Zone_Ville"],
+        maps[i]["Zone_Pays"],
+        maps[i]["Zone_Acces"],
+        maps[i]["Zone_Rem"],
+        maps[i]["Livr"],
+        maps[i]["Zone_isUpdate"] == 1,
+
+      );
+    });
+  }
   static Future<void> inserZones(Zone wZone) async {
     final db = await DbTools.database;
     int? repid = await db.insert("Zones", wZone.toMap());

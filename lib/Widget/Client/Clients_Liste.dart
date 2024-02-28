@@ -20,7 +20,8 @@ class Liste_Clients extends StatefulWidget {
   Liste_ClientsState createState() => Liste_ClientsState();
 }
 
-class Liste_ClientsState extends State<Liste_Clients> {
+class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveClientMixin<Liste_Clients>
+{
   double textSize = 14.0;
   int SelCol = -1;
   int SelID = -1;
@@ -70,12 +71,17 @@ class Liste_ClientsState extends State<Liste_Clients> {
 
   @override
   void initLib() async {
+
     print("Liste_Clients initLib");
     Reload();
   }
 
   void initState() {
-    print("Liste_Clients initState");
+    print("");
+    print("");
+    print(" CLIENT LISTE ");
+    print("");
+    print("");
     initLib();
     super.initState();
 
@@ -85,10 +91,9 @@ class Liste_ClientsState extends State<Liste_Clients> {
     });
   }
 
-
-
   @override
   void dispose() {
+    print("      CLIENT LISTE DISPOSE         ");
     super.dispose();
   }
 
@@ -240,9 +245,6 @@ class Liste_ClientsState extends State<Liste_Clients> {
 
     await Srv_ImportExport.ImportGroupe(Srv_DbTools.gClient.ClientId);
 
-
-//    await Srv_DbTools.getGroupesClient(Srv_DbTools.gClient.ClientId);
-
     if (Srv_DbTools.ListGroupe.isEmpty) {
       Srv_DbTools.gGroupe = Groupe.GroupeInit();
       bool wRet = await Srv_DbTools.addGroupe(Srv_DbTools.gClient.ClientId);
@@ -258,9 +260,6 @@ class Liste_ClientsState extends State<Liste_Clients> {
       Srv_DbTools.gGroupe.Groupe_Ville = Srv_DbTools.gAdresse.Adresse_Ville;
       await DbTools.inserGroupes(Srv_DbTools.gGroupe);
       if (wRet)  await Srv_DbTools.setGroupe(Srv_DbTools.gGroupe);
-
-
-
 
       Srv_DbTools.gContactLivr = Srv_DbTools.gContact;
       await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gGroupe.GroupeId, "GRP");
@@ -468,4 +467,7 @@ class Liste_ClientsState extends State<Liste_Clients> {
       ],
     );
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

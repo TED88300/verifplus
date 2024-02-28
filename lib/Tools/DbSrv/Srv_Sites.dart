@@ -15,10 +15,10 @@ class Site {
   String Site_RT = "";
   String Site_APSAD = "";
   String Site_Rem = "";
-  int Site_ResourceId = -1;
+  int    Site_ResourceId = -1;
   String Livr = "";
   String Groupe_Nom = "";
-  bool    Site_isUpdate = true;
+  bool   Site_isUpdate = true;
 
   static SiteInit() {
     return Site(0, 0, "", "", "", "", "", "", "", "", "", "","","","","", 0, "", "", false);

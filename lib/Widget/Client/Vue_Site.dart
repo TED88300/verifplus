@@ -5,6 +5,7 @@ import 'package:maps_launcher/maps_launcher.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Contacts.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
+import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Client/Vue_Site_Popup.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
@@ -125,7 +126,11 @@ class _Site_VueState extends State<Site_Vue> {
             },
             child: Padding(
               padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
-              child: Image.asset("assets/images/IcoW.png"),
+              child: DbTools.gErrorSync
+                  ? Image.asset(
+                "assets/images/IcoWErr.png",
+              )
+                  : Image.asset("assets/images/IcoW.png"),
             ),
           ),
           actions: <Widget>[

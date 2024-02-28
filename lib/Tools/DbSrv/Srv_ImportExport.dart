@@ -189,9 +189,10 @@ class Srv_ImportExport {
               Groupe wGroupe = Srv_DbTools.ListGroupe[i];
               if (!wGroupe.Groupe_isUpdate && wGroupe.GroupeId >= 0) {
                 bool wRes = await Groupe_Export_Update(wGroupe);
+
               }
-              else
-                {
+              else if (!wGroupe.Groupe_isUpdate && wGroupe.GroupeId < 0)
+              {
                 bool wRes = await Groupe_Export_Insert(wGroupe);
 
                 }
@@ -212,8 +213,14 @@ class Srv_ImportExport {
               Site wSite = Srv_DbTools.ListSite[i];
               if (!wSite.Site_isUpdate && wSite.SiteId >= 0) {
                 bool wRes = await Site_Export_Update(wSite);
+
+
+
+//                wRes = await Contact_Export_Insert(wClient, saveClientId, "FACT");
+
+
               }
-              else
+              else if (!wSite.Site_isUpdate && wSite.SiteId < 0)
               {
                 bool wRes = await Site_Export_Insert(wSite);
 
@@ -282,7 +289,7 @@ class Srv_ImportExport {
       if (!wGroupe.Groupe_isUpdate && wGroupe.GroupeId >= 0) {
         bool wRes = await Groupe_Export_Update(wGroupe);
       }
-      else
+      else if (!wGroupe.Groupe_isUpdate && wGroupe.GroupeId < 0)
       {
         bool wRes = await Groupe_Export_Insert(wGroupe);
 
@@ -292,7 +299,24 @@ class Srv_ImportExport {
 
 
 
+    // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
+    // ☀︎☀︎☀︎ SITE UPDATE ☀︎☀︎☀︎
+    // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
 
+
+    Srv_DbTools.ListSite = await DbTools.getSitesAll();
+    for (int i = 0; i < Srv_DbTools.ListSite.length; i++) {
+      Site wSite = Srv_DbTools.ListSite[i];
+      if (!wSite.Site_isUpdate && wSite.SiteId >= 0) {
+        bool wRes = await Site_Export_Update(wSite);
+      }
+      else if (!wSite.Site_isUpdate && wSite.SiteId < 0)
+      {
+        bool wRes = await Site_Export_Insert(wSite);
+
+      }
+
+    }
 
 
   }

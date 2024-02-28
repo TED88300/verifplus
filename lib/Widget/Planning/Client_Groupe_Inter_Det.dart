@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
+import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Client/Client_Dialog.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter.dart';
 import 'package:verifplus/Widget/Planning/Client_Groupe_Inter_Det_Popup.dart';
@@ -177,7 +178,11 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
         },
         child: Padding(
           padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
-          child: Image.asset("assets/images/IcoW.png"),
+          child: DbTools.gErrorSync
+              ? Image.asset(
+            "assets/images/IcoWErr.png",
+          )
+              : Image.asset("assets/images/IcoW.png"),
         ),
       ),
       actions: <Widget>[
