@@ -1445,9 +1445,16 @@ class Srv_DbTools {
     String wValue = "NULL, $Zone_SiteId";
     String wSlq = "INSERT INTO Zones (ZoneId, Zone_SiteId) VALUES ($wValue)";
     print("addZone " + wSlq);
-    bool ret = await add_API_Post("insert", wSlq);
-    print("addZone ret ${ret.toString()} ${ret.toString()}");
-    return ret;
+
+    try {
+      bool ret = await add_API_Post("insert", wSlq);
+      print("addZone ret ${ret.toString()} ${ret.toString()}");
+      return true;
+    } catch (e) {
+      print("addZone ERROR " + e.toString());
+      return false;
+    }
+
   }
 
   static Future<bool> delZone(Zone zone) async {
@@ -1535,19 +1542,25 @@ class Srv_DbTools {
 
   static Future<bool> getInterventionsZone(int ID) async {
     String wTmp = "select * from Interventions WHERE Intervention_ZoneId = ${ID} ORDER BY Intervention_Date";
-
-    print("wTmp getInterventionsSite ${wTmp}");
-    ListIntervention = await getIntervention_API_Post("select", wTmp);
-
-    ListIntervention.sort(affSortComparisonData);
-
-    if (ListIntervention == null) return false;
-    print("getInterventionsSite ${ListIntervention.length}");
-    if (ListIntervention.length > 0) {
-      print("getInterventionsSite return TRUE");
-      return true;
+    print("SRV_DbTools getInterventionsZone ${wTmp}");
+    try {
+      ListIntervention = await getIntervention_API_Post("select", wTmp);
+      if (ListIntervention == null) return false;
+      print("getInterventionsZone ${ListIntervention.length}");
+      if (ListIntervention.length > 0) {
+        print("getInterventionsZone return TRUE");
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
+
+
+
+
+
+
   }
 
   static Future<bool> getInterventionsID_Srv(int ID) async {
@@ -1587,18 +1600,33 @@ class Srv_DbTools {
         "Intervention_Remarque      = \"${Intervention.Intervention_Remarque}\" " +
         "WHERE InterventionId      = ${Intervention.InterventionId.toString()}";
     gColors.printWrapped("setIntervention " + wSlq);
-    bool ret = await add_API_Post("upddel", wSlq);
-    print("setIntervention ret " + ret.toString());
-    return ret;
+
+    try {
+      bool ret = await add_API_Post("upddel", wSlq);
+      print("setIntervention ret " + ret.toString());
+      return true;
+    } catch (e) {
+      print("setIntervention ERROR " + e.toString());
+      return false;
+    }
+
+
   }
 
   static Future<bool> addIntervention(int Intervention_ZoneId) async {
     String wValue = "NULL, $Intervention_ZoneId";
     String wSlq = "INSERT INTO Interventions (InterventionId, Intervention_ZoneId) VALUES ($wValue)";
     print("addIntervention " + wSlq);
-    bool ret = await add_API_Post("insert", wSlq);
-    print("addIntervention ret $ret  gLastID $gLastID");
-    return ret;
+
+    try {
+      bool ret = await add_API_Post("insert", wSlq);
+      print("addIntervention ret $ret  gLastID $gLastID");
+      return true;
+    } catch (e) {
+      print("addIntervention ERROR " + e.toString());
+      return false;
+    }
+
   }
 
   static Future<bool> delIntervention(Intervention Intervention) async {

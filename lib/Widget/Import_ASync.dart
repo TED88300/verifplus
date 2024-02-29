@@ -45,7 +45,6 @@ class Import_ASync_Dialog {
 class Import_ASyncDialog extends StatefulWidget {
   final VoidCallback onSaisie;
 
-
   const Import_ASyncDialog({
     Key? key,
     required this.onSaisie,
@@ -56,24 +55,20 @@ class Import_ASyncDialog extends StatefulWidget {
 }
 
 class Import_ASyncDialogState extends State<Import_ASyncDialog> with TickerProviderStateMixin {
-
   bool iStrfExp = false;
 
   String wSt = "Deb \n";
 
-
   @override
   void initLib() async {
-
     wSt += "Clients\n";
     List<Client> ListClient = await DbTools.getClients();
     for (int i = 0; i < ListClient.length; i++) {
       Client wClient = ListClient[i];
-      
+
       // ☀︎☀︎☀︎ CLIENT UPDATE ☀︎☀︎☀︎
       if (!wClient.Client_isUpdate && wClient.ClientId >= 0) {
         wSt += "UPDATE ${wClient.Client_Nom} [${wClient.ClientId}]\n";
-
       }
       // ☀︎☀︎☀︎ CLIENT INSERT ☀︎☀︎☀︎
       else if (!wClient.Client_isUpdate && wClient.ClientId < 0) {
@@ -81,7 +76,6 @@ class Import_ASyncDialogState extends State<Import_ASyncDialog> with TickerProvi
       }
     }
     wSt += "\n";
-
 
     wSt += "Adresses\n";
     List<Adresse> ListAdresse = await DbTools.getAdresse();
@@ -91,7 +85,6 @@ class Import_ASyncDialogState extends State<Import_ASyncDialog> with TickerProvi
       // ☀︎☀︎☀︎ ADRESSE UPDATE ☀︎☀︎☀︎
       if (!wAdresse.Adresse_isUpdate && wAdresse.AdresseId >= 0) {
         wSt += "UPDATE ${wAdresse.Adresse_Nom} [${wAdresse.Adresse_ClientId}, ${wAdresse.AdresseId}]\n";
-
       }
       // ☀︎☀︎☀︎ ADRESSE INSERT ☀︎☀︎☀︎
       else if (!wAdresse.Adresse_isUpdate && wAdresse.AdresseId < 0) {
@@ -99,7 +92,6 @@ class Import_ASyncDialogState extends State<Import_ASyncDialog> with TickerProvi
       }
     }
     wSt += "\n";
-
 
     wSt += "Contacts\n";
     List<Contact> ListContact = await DbTools.getContact();
@@ -109,7 +101,6 @@ class Import_ASyncDialogState extends State<Import_ASyncDialog> with TickerProvi
       // ☀︎☀︎☀︎ CONTACT UPDATE ☀︎☀︎☀︎
       if (!wContact.Contact_isUpdate && wContact.ContactId >= 0) {
         wSt += "UPDATE ${wContact.Contact_Nom} [${wContact.Contact_ClientId}, ${wContact.Contact_AdresseId}, ${wContact.ContactId}]\n";
-
       }
       // ☀︎☀︎☀︎ CONTACT INSERT ☀︎☀︎☀︎
       else if (!wContact.Contact_isUpdate && wContact.ContactId < 0) {
@@ -117,7 +108,6 @@ class Import_ASyncDialogState extends State<Import_ASyncDialog> with TickerProvi
       }
     }
     wSt += "\n";
-
 
     wSt += "Groupes\n";
     List<Groupe> ListGroupe = await DbTools.getGroupesAll();
@@ -127,7 +117,6 @@ class Import_ASyncDialogState extends State<Import_ASyncDialog> with TickerProvi
       // ☀︎☀︎☀︎ GROUPE UPDATE ☀︎☀︎☀︎
       if (!wGroupe.Groupe_isUpdate && wGroupe.GroupeId >= 0) {
         wSt += "UPDATE ${wGroupe.Groupe_Nom} [${wGroupe.Groupe_ClientId}, ${wGroupe.GroupeId}]\n";
-
       }
       // ☀︎☀︎☀︎ GROUPE INSERT ☀︎☀︎☀︎
       else if (!wGroupe.Groupe_isUpdate && wGroupe.GroupeId < 0) {
@@ -140,12 +129,11 @@ class Import_ASyncDialogState extends State<Import_ASyncDialog> with TickerProvi
     List<Site> ListSite = await DbTools.getSitesAll();
     for (int i = 0; i < ListSite.length; i++) {
       Site wSite = ListSite[i];
-      print( "LISTE ${wSite.Site_Nom} [${wSite.Site_GroupeId}, ${wSite.SiteId}] ${wSite.Site_isUpdate}");
+      print("LISTE ${wSite.Site_Nom} [${wSite.Site_GroupeId}, ${wSite.SiteId}] ${wSite.Site_isUpdate}");
 
       // ☀︎☀︎☀︎ SITE UPDATE ☀︎☀︎☀︎
       if (!wSite.Site_isUpdate && wSite.SiteId >= 0) {
         wSt += "UPDATE ${wSite.Site_Nom} [${wSite.Site_GroupeId}, ${wSite.SiteId}]\n";
-
       }
       // ☀︎☀︎☀︎ SITE INSERT ☀︎☀︎☀︎
       else if (!wSite.Site_isUpdate && wSite.SiteId < 0) {
@@ -154,24 +142,47 @@ class Import_ASyncDialogState extends State<Import_ASyncDialog> with TickerProvi
     }
     wSt += "\n";
 
+    wSt += "Zones\n";
+    List<Zone> ListZone = await DbTools.getZonesAll();
+    for (int i = 0; i < ListZone.length; i++) {
+      Zone wZone = ListZone[i];
+      print("LISTE ${wZone.Zone_Nom} [${wZone.Zone_SiteId}, ${wZone.ZoneId}] ${wZone.Zone_isUpdate}");
 
+      // ☀︎☀︎☀︎ ZONE UPDATE ☀︎☀︎☀︎
+      if (!wZone.Zone_isUpdate && wZone.ZoneId >= 0) {
+        wSt += "UPDATE ${wZone.Zone_Nom} [${wZone.Zone_SiteId}, ${wZone.ZoneId}]\n";
+      }
+      // ☀︎☀︎☀︎ ZONE INSERT ☀︎☀︎☀︎
+      else if (!wZone.Zone_isUpdate && wZone.ZoneId < 0) {
+        wSt += "INSERT ${wZone.Zone_Nom} [${wZone.Zone_SiteId}, ${wZone.ZoneId}]\n";
+      }
+    }
+    wSt += "\n";
 
+    wSt += "Interventions\n";
+    List<Intervention> ListIntervention = await DbTools.getInterventionsAll();
+    for (int i = 0; i < ListIntervention.length; i++) {
+      Intervention wIntervention = ListIntervention[i];
+      print("LISTE ${wIntervention.Intervention_Organes} [${wIntervention.Intervention_ZoneId}, ${wIntervention.InterventionId}] ${wIntervention.Intervention_isUpdate}");
 
-
+      // ☀︎☀︎☀︎ INTERVENTION UPDATE ☀︎☀︎☀︎
+      if (!wIntervention.Intervention_isUpdate && wIntervention.InterventionId >= 0) {
+        wSt += "UPDATE ${wIntervention.Intervention_Organes} [${wIntervention.Intervention_ZoneId}, ${wIntervention.InterventionId}]\n";
+      }
+      // ☀︎☀︎☀︎ INTERVENTION INSERT ☀︎☀︎☀︎
+      else if (!wIntervention.Intervention_isUpdate && wIntervention.InterventionId < 0) {
+        wSt += "INSERT ${wIntervention.Intervention_Organes} [${wIntervention.Intervention_ZoneId}, ${wIntervention.InterventionId}]\n";
+      }
+    }
+    wSt += "\n";
 
     wSt += "\n\n Fin";
 
-
-    setState(() {
-
-});
-
-
+    setState(() {});
   }
 
   @override
   void initState() {
-
     print("initState");
     super.initState();
     initLib();
@@ -210,42 +221,33 @@ class Import_ASyncDialogState extends State<Import_ASyncDialog> with TickerProvi
           color: gColors.greyLight,
           height: 900,
           width: MediaQuery.of(context).size.width,
-
           child: Column(
             children: [
               Container(
                 color: gColors.black,
                 height: 1,
               ),
-
               Container(
                 height: 10,
               ),
-
               Container(
                 height: 10,
               ),
-
-          SingleChildScrollView(
-            child:
-
-           Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-
-              Container(
-                width: MediaQuery.of(context).size.width,
-
-                padding: const EdgeInsets.fromLTRB(50, 5, 5, 0),
-                child: Expanded(
-                  //height: MediaQuery.of(context).size.width*0.33,
-                  child: Text(
-                  wSt,
-                  style: gColors.bodyTitle1_N_G24,
-                ),),
+              SingleChildScrollView(
+                child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    padding: const EdgeInsets.fromLTRB(50, 5, 5, 0),
+                    child: Expanded(
+                      //height: MediaQuery.of(context).size.width*0.33,
+                      child: Text(
+                        wSt,
+                        style: gColors.bodyTitle1_N_G24,
+                      ),
+                    ),
+                  ),
+                ]),
               ),
-              ]),),
               Spacer(),
               Container(
                 color: gColors.black,
@@ -254,17 +256,19 @@ class Import_ASyncDialogState extends State<Import_ASyncDialog> with TickerProvi
             ],
           )),
       actions: <Widget>[
-        iStrfExp ? Container() : ElevatedButton(
-          child: Text(
-            "OK",
-            style: TextStyle(
-              fontSize: 22,
-            ),
-          ),
-          onPressed: () async {
-            Navigator.pop(context);
-          },
-        )
+        iStrfExp
+            ? Container()
+            : ElevatedButton(
+                child: Text(
+                  "OK",
+                  style: TextStyle(
+                    fontSize: 22,
+                  ),
+                ),
+                onPressed: () async {
+                  Navigator.pop(context);
+                },
+              )
       ],
     );
   }

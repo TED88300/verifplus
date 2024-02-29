@@ -16,10 +16,10 @@ import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 
 class Client_Interventions_Add {
   Client_Interventions_Add();
-  static Future<void> Dialogs_Add(BuildContext context, bool isNew ) async {
+  static Future<void> Dialogs_Add(BuildContext context, bool isNew) async {
     await showDialog(
       context: context,
-      builder: (BuildContext context) => Client_InterventionsAdd(isNew : isNew),
+      builder: (BuildContext context) => Client_InterventionsAdd(isNew: isNew),
     );
   }
 }
@@ -29,9 +29,11 @@ class Client_Interventions_Add {
 //**********************************
 
 class Client_InterventionsAdd extends StatefulWidget {
-
   bool isNew = false;
-  Client_InterventionsAdd({Key? key, required this.isNew, }) : super(key: key);
+  Client_InterventionsAdd({
+    Key? key,
+    required this.isNew,
+  }) : super(key: key);
 
   @override
   _Client_InterventionsAddState createState() => _Client_InterventionsAddState();
@@ -48,15 +50,9 @@ class _Client_InterventionsAddState extends State<Client_InterventionsAdd> {
   String wOrg = "";
   String wOrgID = "";
 
-
-  Intervention newIntervention = Intervention.InterventionInit();
-
   @override
   void initLib() async {
-
-
-
-    await Srv_DbTools.getParam_ParamAll();
+    await DbTools.getParam_Param();
 
     ListParam_Type.clear();
     Srv_DbTools.ListParam_ParamAll.forEach((element) {
@@ -356,32 +352,31 @@ class _Client_InterventionsAddState extends State<Client_InterventionsAdd> {
               var formatter = new DateFormat('dd/MM/yyyy');
               String formattedDate = formatter.format(now);
 
-              await Srv_DbTools.addIntervention(Srv_DbTools.gSite.SiteId);
+              Srv_DbTools.gIntervention = Intervention.InterventionInit();
+              bool wRet = await Srv_DbTools.addIntervention(Srv_DbTools.gSite.SiteId);
+              Srv_DbTools.gIntervention.Intervention_isUpdate = wRet;
+              if (!wRet) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
               print("ADD Srv_DbTools.gLastID ${Srv_DbTools.gLastID}");
-              if (Srv_DbTools.gLastID >= 0) {
-                print("ADD ");
-                newIntervention.InterventionId = Srv_DbTools.gLastID;
-                newIntervention.Intervention_ZoneId = Srv_DbTools.gZone.ZoneId;
-                newIntervention.Intervention_Type = wType;
-                newIntervention.Intervention_Parcs_Type = wOrgID;
-                newIntervention.Intervention_Date = formattedDate;
-                newIntervention.Livr = "";
-                Srv_DbTools.gSelIntervention = wOrgID;
-                await Srv_DbTools.setIntervention(newIntervention);
-              }
+              print("ADD ");
+              Srv_DbTools.gIntervention.InterventionId = Srv_DbTools.gLastID;
+              Srv_DbTools.gIntervention.Intervention_ZoneId = Srv_DbTools.gZone.ZoneId;
+              Srv_DbTools.gIntervention.Intervention_Type = wType;
+              Srv_DbTools.gIntervention.Intervention_Parcs_Type = wOrgID;
+              Srv_DbTools.gIntervention.Intervention_Date = formattedDate;
+              Srv_DbTools.gIntervention.Livr = "";
+              Srv_DbTools.gSelIntervention = wOrgID;
+
+              await DbTools.inserInterventions(Srv_DbTools.gIntervention);
+              if (wRet) await Srv_DbTools.setIntervention(Srv_DbTools.gIntervention);
 
               if (widget.isNew) {
-                Parc_Ent wParc_Ent = Parc_Ent.Parc_EntInit(newIntervention.InterventionId!, wOrgID, 1);
+                Parc_Ent wParc_Ent = Parc_Ent.Parc_EntInit(Srv_DbTools.gIntervention.InterventionId!, wOrgID, 1);
                 await DbTools.insertParc_Ent(wParc_Ent);
                 await Srv_DbTools.InsertUpdateParc_Ent_Srv(wParc_Ent);
-              } else {
-
-
+              }
+              else {
                 Intervention LastIntervention = Srv_DbTools.gIntervention;
-
-
                 await Srv_DbTools.getParcs_DescInter(LastIntervention.InterventionId!);
-
                 print("LastIntervention ${LastIntervention.InterventionId} ${Srv_DbTools.ListParc_Desc.length}");
 
                 await Srv_DbTools.getParc_EntID(LastIntervention.InterventionId!);
@@ -392,7 +387,7 @@ class _Client_InterventionsAddState extends State<Client_InterventionsAdd> {
                   if (wParc_Ent_Srv.Action!.compareTo("REFO") == 0) continue;
 
                   print(">>>>>>>>>>>>>>>>>>>> wParc_Ent_Srv ${wParc_Ent_Srv.toMap()}");
-                  wParc_Ent_Srv.Parcs_InterventionId = newIntervention.InterventionId;
+                  wParc_Ent_Srv.Parcs_InterventionId = Srv_DbTools.gIntervention.InterventionId;
                   var uuid = Uuid();
                   String uuidv1 = uuid.v1();
                   print("insertParc_Ent uuidv1 ${uuidv1}");

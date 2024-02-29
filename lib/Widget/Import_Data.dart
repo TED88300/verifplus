@@ -1,10 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Adresses.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Articles_Ebp.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Clients.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Contacts.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
@@ -16,9 +13,9 @@ import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie_Param.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Planning.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Sites.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Zones.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_User_Desc.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_User_Hab.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Zones.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 
@@ -192,7 +189,7 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
       Intervention wIntervention = Srv_DbTools.ListIntervention[i];
       await DbTools.inserInterventions(wIntervention);
     }
-    Srv_DbTools.ListIntervention = await  DbTools.getInterventions();
+    Srv_DbTools.ListIntervention = await  DbTools.getInterventionsAll();
     print("Import_DataDialog Srv_DbTools.ListIntervention ${Srv_DbTools.ListIntervention}");
     setState(() {
       wSt += "► Intervention : ${Srv_DbTools.ListIntervention.length} Interventions\n";

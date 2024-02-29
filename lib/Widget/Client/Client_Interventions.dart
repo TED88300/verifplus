@@ -37,12 +37,11 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
   String wAction = "";
 
   void Reload() async {
+    bool wRes = await Srv_DbTools.getInterventionsZone(Srv_DbTools.gZone.ZoneId);
+    if (!wRes) Srv_DbTools.ListIntervention = await DbTools.getInterventions(Srv_DbTools.gZone.ZoneId);
+    print("Client_Sites A ${Srv_DbTools.ListSite.length} ");
 
-
-
-    await Srv_DbTools.getInterventionsZone(Srv_DbTools.gZone.ZoneId);
     List<String> lIntervention = [];
-
     for (int i = 0; i < Srv_DbTools.ListIntervention.length; i++) {
       Intervention wIntervention = Srv_DbTools.ListIntervention[i];
       if (lIntervention.indexOf(wIntervention.Intervention_Parcs_Type!) == -1) {

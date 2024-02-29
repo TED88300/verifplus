@@ -38,15 +38,17 @@ class Client_SitesState extends State<Client_Sites> {
   Future Reload() async {
 
     Srv_DbTools.gSelGroupe = Srv_DbTools.gSelGroupeBase;
-
     bool wRes = await Srv_DbTools.getGroupeSites(Srv_DbTools.gGroupe.GroupeId);
-    if (!wRes) Srv_DbTools.ListSite = await DbTools.getSiteGroupe(Srv_DbTools.gGroupe.GroupeId);
 
-    print("Client_Sites A ${Srv_DbTools.ListSite.length} ");
+    if (!wRes) Srv_DbTools.ListSite = await DbTools.getSiteGroupe(Srv_DbTools.gGroupe.GroupeId);
+    print("getSiteGroupe A ${Srv_DbTools.ListSite.length} ");
 
     if (Srv_DbTools.ListSite.isEmpty) {
-      await Srv_DbTools.addSite(Srv_DbTools.gGroupe.GroupeId);
       Srv_DbTools.gSite = Site.SiteInit();
+      bool wRet = await Srv_DbTools.addSite(Srv_DbTools.gGroupe.GroupeId);
+      Srv_DbTools.gSite.Site_isUpdate = wRet;
+      if (!wRet) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
+
       Srv_DbTools.gSite.SiteId = Srv_DbTools.gLastID;
       Srv_DbTools.gSite.Site_GroupeId = Srv_DbTools.gGroupe.GroupeId;
       Srv_DbTools.gSite.Site_Nom = Srv_DbTools.gGroupe.Groupe_Nom;
@@ -55,12 +57,14 @@ class Client_SitesState extends State<Client_Sites> {
       Srv_DbTools.gSite.Site_Adr3 = Srv_DbTools.gAdresse.Adresse_Adr3;
       Srv_DbTools.gSite.Site_CP = Srv_DbTools.gAdresse.Adresse_CP;
       Srv_DbTools.gSite.Site_Ville = Srv_DbTools.gAdresse.Adresse_Ville;
-      await Srv_DbTools.setSite(Srv_DbTools.gSite);
+
+      await DbTools.inserSites(Srv_DbTools.gSite);
+      if (wRet)   await Srv_DbTools.setSite(Srv_DbTools.gSite);
       Srv_DbTools.ListSite.add(Srv_DbTools.gSite);
 
-      print("Client_Sites B ${Srv_DbTools.ListSite.length} ");
+      print("getSiteGroupe B ${Srv_DbTools.ListSite.length} ");
     }
-    print("Client_Sites B2 ${Srv_DbTools.ListSite.length} ");
+    print("getSiteGroupe B2 ${Srv_DbTools.ListSite.length} ");
 
     List<String> lGroupe = [];
     for (int i = 0; i < Srv_DbTools.ListSite.length; i++) {
@@ -368,10 +372,11 @@ class Client_SitesState extends State<Client_Sites> {
   }
 
   void OpenZone() async {
-    await Srv_DbTools.getZones(Srv_DbTools.gSite.SiteId);
+    bool wRes = await Srv_DbTools.getZones(Srv_DbTools.gSite.SiteId);
+    if (!wRes) Srv_DbTools.ListZone = await DbTools.getZones(Srv_DbTools.gSite.SiteId);
+
 
     if (Srv_DbTools.ListZone.isEmpty) {
-      print("ADDZONE ${Srv_DbTools.gLastID}");
       Srv_DbTools.gZone = Zone.ZoneInit();
       bool wRet = await Srv_DbTools.addZone(Srv_DbTools.gSite.SiteId);
       Srv_DbTools.gZone.Zone_isUpdate = wRet;

@@ -1,35 +1,37 @@
 class Intervention {
 
-  int? InterventionId = 0;
-  int? Intervention_ZoneId = 0;
+  int InterventionId = 0;
+  int Intervention_ZoneId = 0;
 
-  String? Intervention_Date = "";
-  String? Intervention_Type = "";
-  String? Intervention_Parcs_Type = "";
-  String? Intervention_Status = "";
+  String Intervention_Date = "";
+  String Intervention_Type = "";
+  String Intervention_Parcs_Type = "";
+  String Intervention_Status = "";
 
-  String? Intervention_Histo_Status = "";
-  String? Intervention_Facturation = "";
-  String? Intervention_Histo_Facturation = "";
-  String? Intervention_Responsable = "";
-  String? Intervention_Intervenants = "";
-  String? Intervention_Reglementation = "";
-  String? Intervention_Signataire_Client = "";
-  String? Intervention_Signataire_Tech = "";
-  String? Intervention_Signataire_Date = "";
+  String Intervention_Histo_Status = "";
+  String Intervention_Facturation = "";
+  String Intervention_Histo_Facturation = "";
+  String Intervention_Responsable = "";
+  String Intervention_Intervenants = "";
+  String Intervention_Reglementation = "";
+  String Intervention_Signataire_Client = "";
+  String Intervention_Signataire_Tech = "";
+  String Intervention_Signataire_Date = "";
 
-  String? Intervention_Contrat = "";
-  String? Intervention_TypeContrat = "";
-  String? Intervention_Duree = "";
-  String? Intervention_Organes = "";
-  String? Intervention_RT = "";
-  String? Intervention_APSAD = "";
+  String Intervention_Contrat = "";
+  String Intervention_TypeContrat = "";
+  String Intervention_Duree = "";
+  String Intervention_Organes = "";
+  String Intervention_RT = "";
+  String Intervention_APSAD = "";
 
-  String? Intervention_Remarque = "";
-  String? Livr = "";
+  String Intervention_Remarque = "";
+  String Livr = "";
+  bool   Intervention_isUpdate = true;
+
 
   static InterventionInit() {
-    return Intervention(0, 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "");
+    return Intervention(0, 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", true);
   }
 
   Intervention(
@@ -56,6 +58,7 @@ class Intervention {
     String Intervention_APSAD,
     String Intervention_Remarque,
     String Livr,
+      bool   Intervention_isUpdate,
   ) {
     this.InterventionId = InterventionId;
     this.Intervention_ZoneId = Intervention_ZoneId;
@@ -83,6 +86,7 @@ class Intervention {
 
     this.Intervention_Remarque = Intervention_Remarque;
     this.Livr = Livr;
+    this.Intervention_isUpdate = Intervention_isUpdate;
   }
 
   Map<String, dynamic> toMap() {
@@ -109,6 +113,7 @@ class Intervention {
       'Intervention_RT': Intervention_RT,
       'Intervention_APSAD': Intervention_APSAD,
       'Intervention_Remarque': Intervention_Remarque,
+      'Intervention_isUpdate': Intervention_isUpdate,
     };
   }
 
@@ -138,6 +143,7 @@ class Intervention {
       json['Intervention_APSAD'],
       json['Intervention_Remarque'],
       json['Livr'],
+      true,
     );
     return wUser;
   }
