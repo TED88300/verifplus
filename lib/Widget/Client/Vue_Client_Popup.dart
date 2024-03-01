@@ -483,7 +483,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
                         await DbTools.updateAdresse(Srv_DbTools.gAdresseLivr);
                         bool wRes = await Srv_DbTools.setAdresse(Srv_DbTools.gAdresseLivr);
                         Srv_DbTools.gAdresseLivr.Adresse_isUpdate = wRes;
-                        if (!wRes) DbTools.gErrorSync = true;
+                        if (!wRes) DbTools.setBoolErrorSync(true);
                         await DbTools.updateAdresse(Srv_DbTools.gAdresseLivr);
                         print("VALIDER AdresseLivr wRes ${wRes}");
 
@@ -504,7 +504,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
                       await DbTools.updateContact(Srv_DbTools.gContact);
                       bool wRes = await  Srv_DbTools.setContact(Srv_DbTools.gContact);
                       Srv_DbTools.gContact.Contact_isUpdate = wRes;
-                      if (!wRes) DbTools.gErrorSync = true;
+                      if (!wRes) DbTools.setBoolErrorSync(true);
                       await DbTools.updateContact(Srv_DbTools.gContact);
                       print("VALIDER gContact wRes ${wRes}");
 
@@ -580,7 +580,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
               await DbTools.updateAdresse(Srv_DbTools.gAdresseLivr);
               wRes = await Srv_DbTools.setAdresse(Srv_DbTools.gAdresseLivr);
               Srv_DbTools.gAdresseLivr.Adresse_isUpdate = wRes;
-              if (!wRes) DbTools.gErrorSync = true;
+              if (!wRes) DbTools.setBoolErrorSync(true);
               await DbTools.updateAdresse(Srv_DbTools.gAdresseLivr);
               print("VALIDER AdresseLivr wRes ${wRes}");
 
@@ -600,7 +600,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
               await DbTools.updateContact(Srv_DbTools.gContact);
               wRes = await  Srv_DbTools.setContact(Srv_DbTools.gContact);
               Srv_DbTools.gContact.Contact_isUpdate = wRes;
-              if (!wRes) DbTools.gErrorSync = true;
+              if (!wRes) DbTools.setBoolErrorSync(true);
               await DbTools.updateContact(Srv_DbTools.gContact);
               print("VALIDER gContact wRes ${wRes}");
 
@@ -619,7 +619,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
               await DbTools.updateContact(Srv_DbTools.gContactLivr);
               wRes = await  Srv_DbTools.setContact(Srv_DbTools.gContactLivr);
               Srv_DbTools.gContactLivr.Contact_isUpdate = wRes;
-              if (!wRes) DbTools.gErrorSync = true;
+              if (!wRes) DbTools.setBoolErrorSync(true);
               await DbTools.updateContact(Srv_DbTools.gContactLivr);
               print("VALIDER gContactLivr wRes ${wRes}");
 

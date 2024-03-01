@@ -7,9 +7,92 @@ import 'package:verifplus/Tools/DbSrv/Srv_Interventions.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Sites.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Zones.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
+import 'package:verifplus/Tools/DbTools/Db_Parcs_Ent.dart';
 
 class Srv_ImportExport {
   Srv_ImportExport();
+
+
+
+
+  static Future getErrorSync() async {
+    List<Client> ListClient = await DbTools.getClients();
+    for (int i = 0; i < ListClient.length; i++) {
+      Client wClient = ListClient[i];
+      if (!wClient.Client_isUpdate ) {
+        DbTools.setBoolErrorSync(true);
+        return;
+      }
+    }
+
+    List<Adresse> ListAdresse = await DbTools.getAdresse();
+    for (int i = 0; i < ListAdresse.length; i++) {
+      Adresse wAdresse = ListAdresse[i];
+
+      if (!wAdresse.Adresse_isUpdate ) {
+        DbTools.setBoolErrorSync(true);
+        return;
+      }
+    }
+
+    List<Contact> ListContact = await DbTools.getContact();
+    for (int i = 0; i < ListContact.length; i++) {
+      Contact wContact = ListContact[i];
+      if (!wContact.Contact_isUpdate ) {
+        DbTools.setBoolErrorSync(true);
+        return;
+      }
+    }
+
+    List<Groupe> ListGroupe = await DbTools.getGroupesAll();
+    for (int i = 0; i < ListGroupe.length; i++) {
+      Groupe wGroupe = ListGroupe[i];
+      if (!wGroupe.Groupe_isUpdate ) {
+        DbTools.setBoolErrorSync(true);
+        return;
+      }
+    }
+
+    List<Site> ListSite = await DbTools.getSitesAll();
+    for (int i = 0; i < ListSite.length; i++) {
+      Site wSite = ListSite[i];
+      if (!wSite.Site_isUpdate) {
+        DbTools.setBoolErrorSync(true);
+        return;
+      }
+    }
+
+    List<Zone> ListZone = await DbTools.getZonesAll();
+    for (int i = 0; i < ListZone.length; i++) {
+      Zone wZone = ListZone[i];
+      if (!wZone.Zone_isUpdate) {
+        DbTools.setBoolErrorSync(true);
+        return;
+      }
+    }
+
+    List<Intervention> ListIntervention = await DbTools.getInterventionsAll();
+    for (int i = 0; i < ListIntervention.length; i++) {
+      Intervention wIntervention = ListIntervention[i];
+      if (!wIntervention.Intervention_isUpdate ) {
+        DbTools.setBoolErrorSync(true);
+        return;
+      }
+    }
+
+    List<Parc_Ent> ListParcs_Ent = await DbTools.getParcs_EntAll();
+    for (int i = 0; i < ListParcs_Ent.length; i++) {
+      Parc_Ent wParc_Ent = ListParcs_Ent[i];
+      if (wParc_Ent.Parcs_Update == 1) {
+        DbTools.setBoolErrorSync(true);
+        return;
+      }
+    }
+
+    DbTools.setBoolErrorSync(false);
+
+
+  }
 
   // ☀︎☀︎☀︎ CLIENT UPDATE ☀︎☀︎☀︎
   static Future<bool> Client_Export_Update(Client wClient) async {
@@ -33,7 +116,7 @@ class Srv_ImportExport {
       wRes = await Srv_DbTools.setClient(wClient);
     }
     wClient.Client_isUpdate = wRes;
-    if (!wRes) DbTools.gErrorSync = true;
+    if (!wRes) DbTools.setBoolErrorSync(true);
     Srv_DbTools.gAdresse.Adresse_isUpdate = wRes;
     await DbTools.updateClients(wClient);
     return wRes;
@@ -62,7 +145,7 @@ class Srv_ImportExport {
       wRes = await Srv_DbTools.setGroupe(wGroupe);
     }
     wGroupe.Groupe_isUpdate = wRes;
-    if (!wRes) DbTools.gErrorSync = true;
+    if (!wRes) DbTools.setBoolErrorSync(true);
     Srv_DbTools.gAdresse.Adresse_isUpdate = wRes;
     await DbTools.updateGroupes(wGroupe);
     return wRes;
@@ -92,7 +175,7 @@ class Srv_ImportExport {
       wRes = await Srv_DbTools.setSite(wSite);
     }
     wSite.Site_isUpdate = wRes;
-    if (!wRes) DbTools.gErrorSync = true;
+    if (!wRes) DbTools.setBoolErrorSync(true);
     Srv_DbTools.gAdresse.Adresse_isUpdate = wRes;
     await DbTools.updateSites(wSite);
     return wRes;
@@ -116,19 +199,16 @@ class Srv_ImportExport {
     if (wRes) {
       wZone.Zone_SiteId = newSiteId;
       wZone.ZoneId = Srv_DbTools.gLastID;
-      newZoneId= Srv_DbTools.gLastID;
+      newZoneId = Srv_DbTools.gLastID;
       print("Zone à remonter INSERT OK ${wZone.Zone_Nom} >>>> ${wZone.ZoneId}");
       wRes = await Srv_DbTools.setZone(wZone);
     }
     wZone.Zone_isUpdate = wRes;
-    if (!wRes) DbTools.gErrorSync = true;
+    if (!wRes) DbTools.setBoolErrorSync(true);
     Srv_DbTools.gAdresse.Adresse_isUpdate = wRes;
     await DbTools.updateZones(wZone);
     return wRes;
   }
-
-
-
 
   // ☀︎☀︎☀︎ INTERVENTION UPDATE ☀︎☀︎☀︎
   static Future<bool> Intervention_Export_Update(Intervention wIntervention) async {
@@ -150,19 +230,15 @@ class Srv_ImportExport {
       wIntervention.InterventionId = Srv_DbTools.gLastID;
       newInterventionId = Srv_DbTools.gLastID;
 
-
-
-
       print("Intervention à remonter INSERT OK ${wIntervention.Intervention_Type} >>>> ${wIntervention.InterventionId}");
       wRes = await Srv_DbTools.setIntervention(wIntervention);
     }
     wIntervention.Intervention_isUpdate = wRes;
-    if (!wRes) DbTools.gErrorSync = true;
+    if (!wRes) DbTools.setBoolErrorSync(true);
     Srv_DbTools.gAdresse.Adresse_isUpdate = wRes;
     await DbTools.updateInterventions(wIntervention);
     return wRes;
   }
-
 
   // ☀︎☀︎☀︎ ADRESSE INSERT ☀︎☀︎☀︎
   static Future<bool> Adresse_Export_Insert(Client wClient, int saveClientId, String wType) async {
@@ -177,7 +253,7 @@ class Srv_ImportExport {
       wRes = await Srv_DbTools.setAdresse(wAdresse);
     }
     wAdresse.Adresse_isUpdate = wRes;
-    if (!wRes) DbTools.gErrorSync = true;
+    if (!wRes) DbTools.setBoolErrorSync(true);
     Srv_DbTools.gAdresse.Adresse_isUpdate = wRes;
     await DbTools.updateAdresse(wAdresse);
     print("Adresse à remonter Adresse wRes ${wRes}");
@@ -198,7 +274,7 @@ class Srv_ImportExport {
       wRes = await Srv_DbTools.setContact(wContact);
     }
     wContact.Contact_isUpdate = wRes;
-    if (!wRes) DbTools.gErrorSync = true;
+    if (!wRes) DbTools.setBoolErrorSync(true);
     Srv_DbTools.gContact.Contact_isUpdate = wRes;
     await DbTools.updateContact(wContact);
     print("Contact à remonter Contact wRes ${wRes}");
@@ -221,12 +297,11 @@ class Srv_ImportExport {
   static int saveInterventionId = 0;
   static int newInterventionId = 0;
 
-
   static int saveAdresseId = 0;
   static int AdresseId = 0;
 
   static Future ExportNotSync() async {
-    DbTools.gErrorSync = false;
+    DbTools.setBoolErrorSync(false);
     Srv_DbTools.ListClient = await DbTools.getClients();
     for (int i = 0; i < Srv_DbTools.ListClient.length; i++) {
       Client wClient = Srv_DbTools.ListClient[i];
@@ -271,13 +346,11 @@ class Srv_ImportExport {
             // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
 
             Srv_DbTools.ListGroupe = await DbTools.getGroupes(saveClientId);
-            for (int i = 0; i < Srv_DbTools.ListGroupe.length; i++) {
-              Groupe wGroupe = Srv_DbTools.ListGroupe[i];
+            for (int ig = 0; ig < Srv_DbTools.ListGroupe.length; ig++) {
+              Groupe wGroupe = Srv_DbTools.ListGroupe[ig];
               if (!wGroupe.Groupe_isUpdate && wGroupe.GroupeId >= 0) {
                 bool wRes = await Groupe_Export_Update(wGroupe);
-              }
-              else if (!wGroupe.Groupe_isUpdate && wGroupe.GroupeId < 0)
-              {
+              } else if (!wGroupe.Groupe_isUpdate && wGroupe.GroupeId < 0) {
                 saveGroupeId = wGroupe.GroupeId;
                 bool wRes = await Groupe_Export_Insert(wGroupe);
                 // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
@@ -285,13 +358,11 @@ class Srv_ImportExport {
                 // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
 
                 Srv_DbTools.ListSite = await DbTools.getSiteGroupe(saveGroupeId);
-                for (int i = 0; i < Srv_DbTools.ListSite.length; i++) {
-                  Site wSite = Srv_DbTools.ListSite[i];
+                for (int isi = 0; isi < Srv_DbTools.ListSite.length; isi++) {
+                  Site wSite = Srv_DbTools.ListSite[isi];
                   if (!wSite.Site_isUpdate && wSite.SiteId >= 0) {
                     bool wRes = await Site_Export_Update(wSite);
-                  }
-                  else if (!wSite.Site_isUpdate && wSite.SiteId < 0)
-                  {
+                  } else if (!wSite.Site_isUpdate && wSite.SiteId < 0) {
                     saveSiteId = wSite.SiteId;
                     bool wRes = await Site_Export_Insert(wSite);
 
@@ -300,13 +371,11 @@ class Srv_ImportExport {
                     // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
 
                     Srv_DbTools.ListZone = await DbTools.getZones(saveSiteId);
-                    for (int i = 0; i < Srv_DbTools.ListZone.length; i++) {
-                      Zone wZone = Srv_DbTools.ListZone[i];
+                    for (int iz = 0; iz < Srv_DbTools.ListZone.length; iz++) {
+                      Zone wZone = Srv_DbTools.ListZone[iz];
                       if (!wZone.Zone_isUpdate && wZone.ZoneId >= 0) {
                         bool wRes = await Zone_Export_Update(wZone);
-                      }
-                      else if (!wZone.Zone_isUpdate && wZone.ZoneId < 0)
-                      {
+                      } else if (!wZone.Zone_isUpdate && wZone.ZoneId < 0) {
                         saveZoneId = wZone.ZoneId;
                         bool wRes = await Zone_Export_Insert(wZone);
 
@@ -315,14 +384,23 @@ class Srv_ImportExport {
                         // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
 
                         Srv_DbTools.ListIntervention = await DbTools.getInterventions(saveZoneId);
-                        for (int i = 0; i < Srv_DbTools.ListIntervention.length; i++) {
-                          Intervention wIntervention = Srv_DbTools.ListIntervention[i];
+                        for (int ii = 0; ii < Srv_DbTools.ListIntervention.length; ii++) {
+                          Intervention wIntervention = Srv_DbTools.ListIntervention[ii];
                           if (!wIntervention.Intervention_isUpdate && wIntervention.InterventionId >= 0) {
                             bool wRes = await Intervention_Export_Update(wIntervention);
-                          }
-                          else if (!wIntervention.Intervention_isUpdate && wIntervention.InterventionId < 0)
-                          {
+                          } else if (!wIntervention.Intervention_isUpdate && wIntervention.InterventionId < 0) {
                             bool wRes = await Intervention_Export_Insert(wIntervention);
+
+
+                                DbTools.glfParcs_Ent = await DbTools.getParcs_Ent(wIntervention.InterventionId!);
+                                  for (int j = 0; j < DbTools.lParcs_Ent.length; j++) {
+                                    Parc_Ent wParc_Ent = DbTools.lParcs_Ent[j];
+                                     if (wParc_Ent.Parcs_Update == 1 && wParc_Ent.Parcs_InterventionId! < 0) {
+                                       wParc_Ent.Parcs_InterventionId = newInterventionId;
+                                       await DbTools.updateParc_Ent(wParc_Ent);
+                                    }
+                                  }
+
                           }
                         }
 
@@ -333,28 +411,22 @@ class Srv_ImportExport {
                     }
                   }
                 }
-
-
               }
-              }
-
+            }
 
             // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
             // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎ CONTACT GROUPE ☀︎☀︎☀︎☀︎
             // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
 
-
             // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
             // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎ CONTACT SITE   ☀︎☀︎☀︎☀︎
             // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
-
-
-
-
           }
         }
       }
     }
+
+
     Srv_DbTools.ListClient = await DbTools.getClients();
 
     // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
@@ -367,7 +439,7 @@ class Srv_ImportExport {
         print("Adresse à remonter ${wAdresse.Adresse_Adr1}");
         bool wRes = await Srv_DbTools.setAdresse(wAdresse);
         wAdresse.Adresse_isUpdate = wRes;
-        if (!wRes) DbTools.gErrorSync = true;
+        if (!wRes) DbTools.setBoolErrorSync(true);
         Srv_DbTools.gAdresse.Adresse_isUpdate = wRes;
         await DbTools.updateAdresse(wAdresse);
         print("Adresse à remonter Adresse wRes ${wRes}");
@@ -389,7 +461,7 @@ class Srv_ImportExport {
         print("Contact à remonter ${wContact.Contact_Nom}");
         bool wRes = await Srv_DbTools.setContact(wContact);
         wContact.Contact_isUpdate = wRes;
-        if (!wRes) DbTools.gErrorSync = true;
+        if (!wRes) DbTools.setBoolErrorSync(true);
         Srv_DbTools.gContact.Contact_isUpdate = wRes;
         await DbTools.updateContact(wContact);
         print("Contact à remonter Contact wRes ${wRes}");
@@ -401,40 +473,112 @@ class Srv_ImportExport {
     // ☀︎☀︎☀︎ GROUPE UPDATE ☀︎☀︎☀︎
     // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
 
-
     Srv_DbTools.ListGroupe = await DbTools.getGroupesAll();
     for (int i = 0; i < Srv_DbTools.ListGroupe.length; i++) {
       Groupe wGroupe = Srv_DbTools.ListGroupe[i];
       if (!wGroupe.Groupe_isUpdate && wGroupe.GroupeId >= 0) {
         bool wRes = await Groupe_Export_Update(wGroupe);
-      }
-      else if (!wGroupe.Groupe_isUpdate && wGroupe.GroupeId < 0)
-      {
+      } else if (!wGroupe.Groupe_isUpdate && wGroupe.GroupeId < 0) {
         bool wRes = await Groupe_Export_Insert(wGroupe);
-
       }
-
     }
-
-
 
     // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
     // ☀︎☀︎☀︎ SITE UPDATE ☀︎☀︎☀︎
     // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
-
 
     Srv_DbTools.ListSite = await DbTools.getSitesAll();
     for (int i = 0; i < Srv_DbTools.ListSite.length; i++) {
       Site wSite = Srv_DbTools.ListSite[i];
       if (!wSite.Site_isUpdate && wSite.SiteId >= 0) {
         bool wRes = await Site_Export_Update(wSite);
-      }
-      else if (!wSite.Site_isUpdate && wSite.SiteId < 0)
-      {
+      } else if (!wSite.Site_isUpdate && wSite.SiteId < 0) {
         bool wRes = await Site_Export_Insert(wSite);
+      }
+    }
+
+    // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
+    // ☀︎☀︎☀︎ INTERVENTION UPDATE ☀︎☀︎☀︎
+    // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
+
+    Srv_DbTools.ListIntervention = await DbTools.getInterventionsAll();
+    for (int i = 0; i < Srv_DbTools.ListIntervention.length; i++) {
+      Intervention wIntervention = Srv_DbTools.ListIntervention[i];
+      if (!wIntervention.Intervention_isUpdate && wIntervention.InterventionId >= 0) {
+        bool wRes = await Intervention_Export_Update(wIntervention);
+      } else if (!wIntervention.Intervention_isUpdate && wIntervention.InterventionId < 0) {
+        bool wRes = await Intervention_Export_Insert(wIntervention);
+      }
+    }
+
+
+    // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
+    // ☀︎☀︎☀︎ Parcs_Ent UPDATE ☀︎☀︎☀︎
+    // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
+
+    DbTools.glfParcs_Ent = await DbTools.getParcs_EntAll();
+    for (int j = 0; j < DbTools.lParcs_Ent.length; j++) {
+      Parc_Ent wParc_Ent = DbTools.lParcs_Ent[j];
+      if (wParc_Ent.Parcs_Update == 1 && wParc_Ent.Parcs_InterventionId! < 0) {
+
+
+        int NbDesc = 0;
+        int NbArt = 0;
+
+        DbTools.glfParcs_Ent = await DbTools.getParcs_Ent_Upd(wParc_Ent.Parcs_InterventionId!);
+        print("glfParcs_Ent lenght ${DbTools.glfParcs_Ent.length}");
+
+        DbTools.lParcs_Art.clear();
+        DbTools.glfParcs_Art = await DbTools.getParcs_ArtInter(wParc_Ent.Parcs_InterventionId!);
+        print("getParcs_ArtInter ${Srv_DbTools.gIntervention.InterventionId!}");
+        print("glfParcs_Art lenght ${DbTools.glfParcs_Art.length}");
+        DbTools.lParcs_Art.addAll(DbTools.glfParcs_Art);
+
+//                    await Srv_DbTools.delParc_Ent_Srv(Srv_DbTools.gIntervention.InterventionId!);
+        await Srv_DbTools.delParc_Ent_Srv_Upd();
+
+        for (int i = 0; i < DbTools.glfParcs_Ent.length; i++) {
+          var element = DbTools.glfParcs_Ent[i];
+          await Srv_DbTools.InsertUpdateParc_Ent_Srv(element);
+
+          int gLastID = Srv_DbTools.gLastID;
+          print("Srv_DbTools.gLastID ${gLastID}      <   ${element.ParcsId}");
+
+          String wSql = "";
+          for (int i = 0; i < DbTools.glfParcs_Desc.length; i++) {
+            var element2 = DbTools.glfParcs_Desc[i];
+            if (element2.ParcsDesc_ParcsId == element.ParcsId) {
+              NbDesc++;
+              element2.ParcsDesc_ParcsId = gLastID;
+              String wTmp = Srv_DbTools.InsertUpdateParc_Desc_Srv_GetSql(element2);
+              wSql = "${wSql} ${wTmp};";
+            }
+          }
+
+          if (wSql.isNotEmpty) {
+            await Srv_DbTools.InsertUpdateParc_Desc_Srv_Sql(wSql);
+          }
+
+          wSql = "";
+          for (int i = 0; i < DbTools.lParcs_Art.length; i++) {
+            var element2 = DbTools.lParcs_Art[i];
+            if (element2.ParcsArt_ParcsId == element.ParcsId) {
+              NbArt++;
+              element2.ParcsArt_ParcsId = gLastID;
+              String wTmp = Srv_DbTools.InsertUpdateParc_Art_Srv_GetSql(element2);
+              wSql = "${wSql} ${wTmp};";
+            }
+          }
+
+          if (wSql.isNotEmpty) {
+            await Srv_DbTools.InsertUpdateParc_Art_Srv_Sql(wSql);
+          }
+
+          print(" updateParc_Ent_Update");
+          await DbTools.updateParc_Ent_Update(element.ParcsId!, 0);
+        }
 
       }
-
     }
 
 
@@ -443,7 +587,7 @@ class Srv_ImportExport {
   //******************************************************************
   //******************************************************************
   //******************************************************************
-  
+
   static Future<bool> ImportClient() async {
     bool wResult = await Srv_DbTools.IMPORT_ClientAll();
     print("ImportClient wResult ${wResult}");
@@ -500,14 +644,12 @@ class Srv_ImportExport {
 
   static Future<bool> ImportGSZ(int ID) async {
     bool wRet = await ImportGroupe(ID);
-     wRet = await ImportSite(ID);
+    wRet = await ImportSite(ID);
 
     return false;
   }
 
   static Future<bool> ImportGroupe(int ID) async {
-
-
     bool wResult = await Srv_DbTools.getGroupesClient(ID);
     print("ImportGroupe Groupe wResult ${wResult}");
     if (wResult) {

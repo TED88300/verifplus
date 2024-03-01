@@ -125,7 +125,7 @@ class _Groupe_VueState extends State<Groupe_Vue> {
             },
             child: Padding(
               padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
-              child: DbTools.gErrorSync
+              child: DbTools.gBoolErrorSync
                   ? Image.asset(
                 "assets/images/IcoWErr.png",
               )

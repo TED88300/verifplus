@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
+import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
+import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
+import 'package:verifplus/Tools/DbTools/Db_Parcs_Ent.dart';
 import 'package:verifplus/Widget/Import_Data.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 
@@ -125,7 +128,7 @@ class Import_MenuDialogState extends State<Import_MenuDialog> with TickerProvide
 
               new ElevatedButton(
                 onPressed: () async {
-                  DbTools.gErrorSync = false;
+                  DbTools.setBoolErrorSync(false);
                   await Import_Data_Dialog.Dialogs_Saisie(context, widget.onSaisie, "Listing");
                 },
                 style: ElevatedButton.styleFrom(
@@ -147,7 +150,7 @@ class Import_MenuDialogState extends State<Import_MenuDialog> with TickerProvide
 
               new ElevatedButton(
                 onPressed: () async {
-                  DbTools.gErrorSync = false;
+                  DbTools.setBoolErrorSync(false);
                   await Import_Data_Dialog.Dialogs_Saisie(context, widget.onSaisie, "Param");
                 },
                 style: ElevatedButton.styleFrom(
@@ -169,7 +172,7 @@ class Import_MenuDialogState extends State<Import_MenuDialog> with TickerProvide
 
               new ElevatedButton(
                 onPressed: () async {
-                  DbTools.gErrorSync = false;
+                  DbTools.setBoolErrorSync(false);
                   await Import_Data_Dialog.Dialogs_Saisie(context, widget.onSaisie, "NF74");
                 },
                 style: ElevatedButton.styleFrom(
@@ -189,7 +192,38 @@ class Import_MenuDialogState extends State<Import_MenuDialog> with TickerProvide
                 height: 50,
               ),
 
+              new ElevatedButton(
+                onPressed: () async {
+                  List<Parc_Ent> ListParcs_Ent = await DbTools.getParcs_EntAll();
+                  print(" ListParcs_Ent ${ListParcs_Ent.length}");
+                  await DbTools.TrunckParcs_Ent();
 
+                  List<Parc_Desc> ListParc_Desc = await DbTools.getParcs_DescAll();
+                  print(" ListParc_Desc ${ListParc_Desc.length}");
+                  await DbTools.TrunckParcs_Desc();
+
+                  List<Parc_Art> ListParc_Art = await DbTools.getParcs_ArtTout();
+                  print(" ListParc_Art ${ListParc_Art.length}");
+                  await DbTools.TrunckParcs_Desc();
+
+
+    },
+
+
+
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: gColors.secondary,
+                    minimumSize: Size(400, 100),
+                    padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8.0),
+                    ),
+                    side: const BorderSide(
+                      width: 10,
+                      color: gColors.secondary,
+                    )),
+                child: Text('Trunck Parc', style: gColors.bodyTitle1_B_W32),
+              ),
 
 
             ]),

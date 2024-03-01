@@ -309,7 +309,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
           },
           child:Padding(
             padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
-            child: DbTools.gErrorSync
+            child: DbTools.gBoolErrorSync
                 ? Image.asset(
               "assets/images/IcoWErr.png",
             )

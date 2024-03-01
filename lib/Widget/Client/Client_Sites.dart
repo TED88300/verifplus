@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Sites.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Zones.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
@@ -36,6 +37,8 @@ class Client_SitesState extends State<Client_Sites> {
   bool isAll = true;
 
   Future Reload() async {
+
+    await Srv_ImportExport.getErrorSync();
 
     Srv_DbTools.gSelGroupe = Srv_DbTools.gSelGroupeBase;
     bool wRes = await Srv_DbTools.getGroupeSites(Srv_DbTools.gGroupe.GroupeId);
@@ -175,7 +178,7 @@ class Client_SitesState extends State<Client_Sites> {
             },
             child: Padding(
               padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
-              child: DbTools.gErrorSync
+              child: DbTools.gBoolErrorSync
                   ? Image.asset(
                 "assets/images/IcoWErr.png",
               )

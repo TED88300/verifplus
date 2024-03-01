@@ -73,6 +73,10 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   @override
   Future reload() async {
+    await Srv_ImportExport.getErrorSync();
+    print("   Home reload ${DbTools.gBoolErrorSync}");
+
+
     await checkConnection();
     Srv_DbTools.ListParam_ParamAll = await  DbTools.getParam_Param();
     print("   ListParam_ParamAll ${Srv_DbTools.ListParam_ParamAll.length}");
@@ -138,10 +142,11 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     initLib();
 
-//    FBroadcast.instance().broadcast("MAJHOME");
+
+
     FBroadcast.instance().register("MAJHOME", (value, callback) {
       print(" MAJHOME MAJHOME MAJHOME ");
-      setState(() {});
+      reload();
     });
   }
 
@@ -232,7 +237,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         leading: Padding(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: IconButton(
-            icon: DbTools.gErrorSync
+            icon: DbTools.gBoolErrorSync
                 ? Image.asset(
                     "assets/images/IcoWErr.png",
                   )

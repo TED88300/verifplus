@@ -47,8 +47,6 @@ class Parc_Ent_Srv {
   String? Parcs_FAB_Id = "";
   String? Parcs_FAB_Label = "";
 
-
-
   String? Parcs_NIV_Id = "";
   String? Parcs_NIV_Label = "";
   String? Parcs_ZNE_Id = "";

@@ -32,7 +32,7 @@ class Parc_Ent_Count {
   String? Parcs_Verif_Note = "";
 
   int?    Parcs_Intervention_Timer = 0;
-  int?   Parcs_Update = 0;
+  int?   Parcs_Update = 1;
 
   String? Parcs_UUID = "";
   String? Parcs_UUID_Parent = "";
@@ -191,6 +191,7 @@ class Parc_Ent_Count {
       'Livr':     Livr,
       'Devis':     Devis,
       'Action':     Action,
+      'Parcs_Update': Parcs_Update,
 
 
 

@@ -20,6 +20,7 @@ import 'package:verifplus/Tools/DbSrv/Srv_Zones.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_User_Desc.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_User_Hab.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
+import 'package:verifplus/Tools/DbTools/Db_Parcs_Ent.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 
 class Import_ASync_Dialog {
@@ -163,7 +164,7 @@ class Import_ASyncDialogState extends State<Import_ASyncDialog> with TickerProvi
     List<Intervention> ListIntervention = await DbTools.getInterventionsAll();
     for (int i = 0; i < ListIntervention.length; i++) {
       Intervention wIntervention = ListIntervention[i];
-      print("LISTE ${wIntervention.Intervention_Organes} [${wIntervention.Intervention_ZoneId}, ${wIntervention.InterventionId}] ${wIntervention.Intervention_isUpdate}");
+      print("Interventions ${wIntervention.Intervention_Organes} [${wIntervention.Intervention_ZoneId}, ${wIntervention.InterventionId}] ${wIntervention.Intervention_isUpdate}");
 
       // ☀︎☀︎☀︎ INTERVENTION UPDATE ☀︎☀︎☀︎
       if (!wIntervention.Intervention_isUpdate && wIntervention.InterventionId >= 0) {
@@ -175,6 +176,28 @@ class Import_ASyncDialogState extends State<Import_ASyncDialog> with TickerProvi
       }
     }
     wSt += "\n";
+
+    wSt += "Parcs\n";
+
+
+    List<Parc_Ent> ListParcs_Ent = await DbTools.getParcs_EntAll();
+    for (int i = 0; i < ListParcs_Ent.length; i++) {
+      Parc_Ent wParc_Ent = ListParcs_Ent[i];
+      print("Parcs ${wParc_Ent.ParcsId} [${wParc_Ent.Parcs_InterventionId}] ${wParc_Ent.Parcs_Update}");
+
+/*
+      // ☀︎☀︎☀︎ INTERVENTION UPDATE ☀︎☀︎☀︎
+      if (!wParc_Ent.Intervention_isUpdate && wParc_Ent.InterventionId >= 0) {
+        wSt += "UPDATE ${wParc_Ent.Intervention_Organes} [${wParc_Ent.Intervention_ZoneId}, ${wParc_Ent.InterventionId}]\n";
+      }
+      // ☀︎☀︎☀︎ INTERVENTION INSERT ☀︎☀︎☀︎
+      else if (!wParc_Ent.Intervention_isUpdate && wParc_Ent.InterventionId < 0) {
+        wSt += "INSERT ${wParc_Ent.Intervention_Organes} [${wParc_Ent.Intervention_ZoneId}, ${wParc_Ent.InterventionId}]\n";
+      }
+*/
+    }
+    wSt += "\n";
+
 
     wSt += "\n\n Fin";
 
@@ -233,22 +256,18 @@ class Import_ASyncDialogState extends State<Import_ASyncDialog> with TickerProvi
               Container(
                 height: 10,
               ),
-              SingleChildScrollView(
-                child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  Container(
-                    width: MediaQuery.of(context).size.width,
-                    padding: const EdgeInsets.fromLTRB(50, 5, 5, 0),
-                    child: Expanded(
-                      //height: MediaQuery.of(context).size.width*0.33,
-                      child: Text(
+
+                    new Expanded(
+                      flex: 1,
+                      child: new SingleChildScrollView(
+                        scrollDirection: Axis.vertical,//.horizontal
+                        child: Text(
                         wSt,
                         style: gColors.bodyTitle1_N_G24,
                       ),
                     ),
                   ),
-                ]),
-              ),
-              Spacer(),
+
               Container(
                 color: gColors.black,
                 height: 1,

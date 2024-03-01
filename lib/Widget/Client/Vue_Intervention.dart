@@ -41,84 +41,7 @@ class Intervention_VueState extends State<Intervention_Vue> {
   Future Reload(String Param_Saisie_ID) async {
     setState(() {});
   }
-/*
 
-  Future UpdateChaine() async {
-    print(" UpdateChaine");
-    DbTools.glfParcs_Desc = await DbTools.getParcs_Desc(DbTools.gParc_Ent.ParcsId!);
-    for (int i = 0; i < Srv_DbTools.ListParam_Saisie.length; i++) {
-      Param_Saisie param_Saisie = Srv_DbTools.ListParam_Saisie[i];
-      Parc_Desc wParc_Desc = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, param_Saisie.Param_Saisie_ID);
-
-      bool MajAuto = false;
-      if (wParc_Desc.ParcsDesc_Lib!.compareTo("---") == 0) {
-        switch (param_Saisie.Param_Saisie_ID) {
-          case "PRS":
-            await Srv_DbTools.getParam_Saisie_ParamMem_PRS();
-            if (Srv_DbTools.ListParam_Saisie_Param.length == 1) {
-              MajAuto = true;
-              Srv_DbTools.PRS_Lib = Srv_DbTools.ListParam_Saisie_Param[0].Param_Saisie_Param_Label;
-              print(" MajAuto ${param_Saisie.Param_Saisie_ID} > ${Srv_DbTools.ListParam_Saisie_Param.length}) ${wParc_Desc.ParcsDesc_Lib} >");
-            }
-            break;
-          case "CLF":
-            await Srv_DbTools.getParam_Saisie_ParamMem_CLF();
-            if (Srv_DbTools.ListParam_Saisie_Param.length == 1) {
-              MajAuto = true;
-              Srv_DbTools.CLF_Lib = Srv_DbTools.ListParam_Saisie_Param[0].Param_Saisie_Param_Label;
-              print(" MajAuto ${param_Saisie.Param_Saisie_ID} > ${Srv_DbTools.ListParam_Saisie_Param.length}) ${wParc_Desc.ParcsDesc_Lib} >");
-            }
-            break;
-          case "MOB":
-            await Srv_DbTools.getParam_Saisie_ParamMem_MOB();
-            print(" MajAuto Srv_DbTools.ListParam_Saisie_Param.length  ${Srv_DbTools.ListParam_Saisie_Param.length }");
-            if (Srv_DbTools.ListParam_Saisie_Param.length == 1) {
-              MajAuto = true;
-              Srv_DbTools.MOB_Lib = Srv_DbTools.ListParam_Saisie_Param[0].Param_Saisie_Param_Label;
-              print(" MajAuto ${param_Saisie.Param_Saisie_ID} > ${Srv_DbTools.ListParam_Saisie_Param.length}) ${wParc_Desc.ParcsDesc_Id} >  ${wParc_Desc.ParcsDesc_Lib}");
-            }
-            break;
-            break;
-          case "PDT":
-            await Srv_DbTools.getParam_Saisie_ParamMem_PDT();
-            print("PDT ${Srv_DbTools.ListParam_Saisie_Param.length} >");
-            if (Srv_DbTools.ListParam_Saisie_Param.length == 1) {
-              MajAuto = true;
-              Srv_DbTools.PDT_Lib = Srv_DbTools.ListParam_Saisie_Param[0].Param_Saisie_Param_Label;
-              print(" MajAuto ${param_Saisie.Param_Saisie_ID} > ${Srv_DbTools.ListParam_Saisie_Param.length}) ${wParc_Desc.ParcsDesc_Lib} >");
-            }
-            break;
-          case "POIDS":
-            await Srv_DbTools.getParam_Saisie_ParamMem_POIDS();
-            if (Srv_DbTools.ListParam_Saisie_Param.length == 1) {
-              MajAuto = true;
-              Srv_DbTools.POIDS_Lib = Srv_DbTools.ListParam_Saisie_Param[0].Param_Saisie_Param_Label;
-              print(" MajAuto ${param_Saisie.Param_Saisie_ID} > ${Srv_DbTools.ListParam_Saisie_Param.length}) ${wParc_Desc.ParcsDesc_Lib} >");
-            }
-            break;
-          case "GAM":
-            await Srv_DbTools.getParam_Saisie_ParamMem_GAM();
-            if (Srv_DbTools.ListParam_Saisie_Param.length == 1) {
-              MajAuto = true;
-              Srv_DbTools.GAM_Lib = Srv_DbTools.ListParam_Saisie_Param[0].Param_Saisie_Param_Label;
-              print(" MajAuto ${param_Saisie.Param_Saisie_ID} > ${Srv_DbTools.ListParam_Saisie_Param.length}) ${wParc_Desc.ParcsDesc_Lib} >");
-            }
-            break;
-        }
-
-        if (MajAuto) {
-          print("  MajAuto updateParc_Desc");
-          wParc_Desc.ParcsDesc_Id = Srv_DbTools.ListParam_Saisie_Param[0].Param_Saisie_ParamId.toString();
-          wParc_Desc.ParcsDesc_Lib = Srv_DbTools.ListParam_Saisie_Param[0].Param_Saisie_Param_Label;
-          await DbTools.updateParc_Desc(wParc_Desc, "---");
-          widget.onMaj();
-          await Reload(param_Saisie.Param_Saisie_ID);
-        }
-      }
-    }
-  }
-
-*/
   void initState() {
     initLib();
     super.initState();
@@ -153,7 +76,7 @@ class Intervention_VueState extends State<Intervention_Vue> {
         },
         child: Padding(
           padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
-          child: DbTools.gErrorSync
+          child: DbTools.gBoolErrorSync
               ? Image.asset(
             "assets/images/IcoWErr.png",
           )

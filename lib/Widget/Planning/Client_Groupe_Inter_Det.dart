@@ -178,7 +178,7 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
         },
         child: Padding(
           padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
-          child: DbTools.gErrorSync
+          child: DbTools.gBoolErrorSync
               ? Image.asset(
             "assets/images/IcoWErr.png",
           )

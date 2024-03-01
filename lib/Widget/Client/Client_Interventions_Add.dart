@@ -371,9 +371,13 @@ class _Client_InterventionsAddState extends State<Client_InterventionsAdd> {
 
               if (widget.isNew) {
                 Parc_Ent wParc_Ent = Parc_Ent.Parc_EntInit(Srv_DbTools.gIntervention.InterventionId!, wOrgID, 1);
+                wParc_Ent.Parcs_Update = 1;
                 await DbTools.insertParc_Ent(wParc_Ent);
-                await Srv_DbTools.InsertUpdateParc_Ent_Srv(wParc_Ent);
+//                await Srv_DbTools.InsertUpdateParc_Ent_Srv(wParc_Ent);
               }
+
+              /*
+
               else {
                 Intervention LastIntervention = Srv_DbTools.gIntervention;
                 await Srv_DbTools.getParcs_DescInter(LastIntervention.InterventionId!);
@@ -427,6 +431,13 @@ class _Client_InterventionsAddState extends State<Client_InterventionsAdd> {
                   }
                 }
               }
+
+
+*/
+
+
+
+
               Navigator.of(context).pop();
             },
             style: ElevatedButton.styleFrom(

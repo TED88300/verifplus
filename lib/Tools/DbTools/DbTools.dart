@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:csv/csv.dart';
+import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -70,7 +71,15 @@ class DbTools {
   static List<GrdBtnGrp> lGrdBtnGrp = [];
   static bool gTED = false;
   static bool gOffLine = false;
-  static bool gErrorSync = false;
+  static bool gBoolErrorSync = false;
+
+  static void setBoolErrorSync(bool wgBoolErrorSync)
+  {
+    if (gBoolErrorSync == wgBoolErrorSync ) return;
+    gBoolErrorSync = wgBoolErrorSync;
+    FBroadcast.instance().broadcast("MAJHOME");
+  }
+
 
   static int gCurrentIndex = 0;
   static int gCurrentIndex2 = 0;
@@ -495,7 +504,7 @@ class DbTools {
   //*********** P A R A M   S A I S I E ************
   //************************************************
 
-  static Future<List<Param_Saisie>> getParam_Saisie() async {
+  static Future<List<Param_Saisie>> getParam_SaisieAll() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query("Param_Saisie");
     return List.generate(maps.length, (i) {
@@ -520,6 +529,94 @@ class DbTools {
       );
     });
   }
+
+  static Future<bool>  getParam_Saisie_Base(String Param_Saisie_Type) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query("Param_Saisie", where: "Param_Saisie_Organe = 'Base' AND Param_Saisie_Type = '${Param_Saisie_Type}'", orderBy: "Param_Saisie_Organe, Param_Saisie_Type, Param_Saisie_Ordre,Param_Saisie_ID");
+
+    Srv_DbTools.ListParam_Saisie_Base =  List.generate(maps.length, (i) {
+      return Param_Saisie(
+        maps[i]["Param_SaisieId"],
+        maps[i]["Param_Saisie_Organe"],
+        maps[i]["Param_Saisie_Type"],
+        maps[i]["Param_Saisie_ID"],
+        maps[i]["Param_Saisie_Label"],
+        maps[i]["Param_Saisie_Aide"],
+        maps[i]["Param_Saisie_Controle"],
+        maps[i]["Param_Saisie_Ordre"],
+        maps[i]["Param_Saisie_Affichage"],
+        maps[i]["Param_Saisie_Ordre_Affichage"],
+        maps[i]["Param_Saisie_Affichage_Titre"],
+        (maps[i]["Param_Saisie_Affichage_L1"] == 1),
+        maps[i]["Param_Saisie_Affichage_L1_Ordre"],
+        (maps[i]["Param_Saisie_Affichage_L2"] == 1),
+        maps[i]["Param_Saisie_Affichage_L2_Ordre"],
+        maps[i]["Param_Saisie_Icon"],
+        maps[i]["Param_Saisie_Triger"],
+      );
+    });
+
+    if (Srv_DbTools.ListParam_Saisie_Base == null) return false;
+    if (Srv_DbTools.ListParam_Saisie_Base.length > 0) {
+      int i = 1;
+      Srv_DbTools.ListParam_Saisie_Base.forEach((element) {
+        element.Param_Saisie_Ordre = i++;
+        setParam_Saisie(element);
+      });
+      return true;
+    }
+    return false;
+
+  }
+
+
+
+    static Future<bool>  getParam_Saisie(String Param_Saisie_Organe, String Param_Saisie_Type) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query("Param_Saisie", where: "Param_Saisie_Organe = '${Param_Saisie_Organe}' AND Param_Saisie_Type = '${Param_Saisie_Type}'", orderBy: "Param_Saisie_Organe, Param_Saisie_Type, Param_Saisie_Ordre,Param_Saisie_ID");
+
+    Srv_DbTools.ListParam_Saisie_Base =  List.generate(maps.length, (i) {
+      return Param_Saisie(
+        maps[i]["Param_SaisieId"],
+        maps[i]["Param_Saisie_Organe"],
+        maps[i]["Param_Saisie_Type"],
+        maps[i]["Param_Saisie_ID"],
+        maps[i]["Param_Saisie_Label"],
+        maps[i]["Param_Saisie_Aide"],
+        maps[i]["Param_Saisie_Controle"],
+        maps[i]["Param_Saisie_Ordre"],
+        maps[i]["Param_Saisie_Affichage"],
+        maps[i]["Param_Saisie_Ordre_Affichage"],
+        maps[i]["Param_Saisie_Affichage_Titre"],
+        (maps[i]["Param_Saisie_Affichage_L1"] == 1),
+        maps[i]["Param_Saisie_Affichage_L1_Ordre"],
+        (maps[i]["Param_Saisie_Affichage_L2"] == 1),
+        maps[i]["Param_Saisie_Affichage_L2_Ordre"],
+        maps[i]["Param_Saisie_Icon"],
+        maps[i]["Param_Saisie_Triger"],
+      );
+    });
+
+    if (Srv_DbTools.ListParam_Saisie_Base == null) return false;
+    if (Srv_DbTools.ListParam_Saisie_Base.length > 0) {
+      int i = 1;
+      Srv_DbTools.ListParam_Saisie_Base.forEach((element) {
+        element.Param_Saisie_Ordre = i++;
+        setParam_Saisie(element);
+      });
+      return true;
+    }
+    return false;
+
+  }
+
+
+  static Future<void> setParam_Saisie(Param_Saisie wParam_Saisie) async {
+    final db = await DbTools.database;
+    int? repid = await db.update("Param_Saisie", wParam_Saisie.toMap(), where: "Param_SaisieId = ?", whereArgs: [wParam_Saisie.Param_SaisieId],);
+    gLastID = repid!;
+  }
+
 
   static Future<void> inserParam_Saisie(Param_Saisie wParam_Saisie) async {
     final db = await DbTools.database;
@@ -2427,10 +2524,17 @@ class DbTools {
     });
   }
 
+
+  static Future<void> TrunckParcs_Ent() async {
+    final db = await DbTools.database;
+    int? repid = await db.delete("Parcs_Ent");
+  }
+
+
   static Future<List<Parc_Ent>> getParcs_EntAll() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query("Parcs_Ent", orderBy: "Parcs_order ASC");
-    print("getParcs_EntAll Parcs_Ent.length ${maps.length}");
+//    print("getParcs_EntAll Parcs_Ent.length ${maps.length}");
     return List.generate(maps.length, (i) {
       return Parc_Ent.fromMap(maps[i]);
     });
@@ -2467,9 +2571,7 @@ class DbTools {
 
   static Future<List<Parc_Ent>> getParcs_Ent_Upd(int Parcs_InterventionId) async {
     final db = await database;
-//    final List<Map<String, dynamic>> maps = await db.query("Parcs_Ent", where: '"Parcs_InterventionId" = ${Parcs_InterventionId} AND Parcs_Update = 1', whereArgs: []);
     final List<Map<String, dynamic>> maps = await db.query("Parcs_Ent", where: '"Parcs_InterventionId" = ${Parcs_InterventionId} AND Parcs_Update > 0', whereArgs: []);
-//    final List<Map<String, dynamic>> maps = await db.query("Parcs_Ent", where: '"Parcs_InterventionId" = ${Parcs_InterventionId} ', whereArgs: []);
     print("getParcs_Ent Parcs_Ent.length ${maps.length} ${Parcs_InterventionId}");
     return List.generate(maps.length, (i) {
       print("getParcs Parcs ${maps[i]}");
@@ -2844,17 +2946,17 @@ class DbTools {
     await db.execute(wSlq);
   }
 
-  static Future<void> insertParc_Ent(Parc_Ent Parc_Ent) async {
+  static Future<void> insertParc_Ent(Parc_Ent wParc_Ent) async {
     final db = await DbTools.database;
-    print("insertParc_Ent");
-    Parc_Ent.Parcs_Update = 1;
+    print("insertParc_Ent wParc_Ent ${wParc_Ent.Parcs_InterventionId}");
+    wParc_Ent.Parcs_Update = 1;
 
     var uuid = Uuid();
     String uuidv1 = uuid.v1();
     print("insertParc_Ent uuidv1 ${uuidv1}");
-    Parc_Ent.Parcs_UUID = uuidv1;
+    wParc_Ent.Parcs_UUID = uuidv1;
 
-    int? repid = await db.insert("Parcs_Ent", Parc_Ent.toMap());
+    int? repid = await db.insert("Parcs_Ent", wParc_Ent.toMap());
     print("insertParc_Ent repid ${repid}");
 
     gLastID = repid!;
@@ -2921,6 +3023,11 @@ class DbTools {
   static List<Parc_Desc> lParcs_Desc = [];
 
   static Parc_Desc gParc_Desc = Parc_Desc();
+
+  static Future<void> TrunckParcs_Desc() async {
+    final db = await DbTools.database;
+    int? repid = await db.delete("Parcs_Desc");
+  }
 
   static Future<List<Parc_Desc>> getParcs_DescAll() async {
     final db = await database;
@@ -3201,6 +3308,13 @@ class DbTools {
       return Parc_Art.fromMapQte(maps[i]);
     });
   }
+
+  static Future<void> TrunckParcs_Art() async {
+    final db = await DbTools.database;
+    int? repid = await db.delete("Parcs_Art");
+  }
+
+
 
   static Future<List<Parc_Art>> getParcs_ArtTout() async {
     final db = await database;

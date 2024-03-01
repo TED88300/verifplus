@@ -273,7 +273,7 @@ class _Groupe_Vue_PopupState extends State<Groupe_Vue_Popup> {
               await DbTools.updateContact(Srv_DbTools.gContact);
               wRes = await  Srv_DbTools.setContact(Srv_DbTools.gContact);
               Srv_DbTools.gContact.Contact_isUpdate = wRes;
-              if (!wRes) DbTools.gErrorSync = true;
+              if (!wRes) DbTools.setBoolErrorSync(true);
               await DbTools.updateContact(Srv_DbTools.gContact);
               print("VALIDER gContact wRes ${wRes}");
 

@@ -1,9 +1,7 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Articles_Link_Verif_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie_Param.dart';
@@ -15,8 +13,8 @@ import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Article.d
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Verif_Saisie.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Tools.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
-import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 import 'package:verifplus/Widget/Widget_Tools/gDialogs.dart';
+import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
 class Client_Groupe_Parc_Inter_Verif extends StatefulWidget {
   final VoidCallback onMaj;
@@ -480,9 +478,7 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                       await HapticFeedback.vibrate();
                       Parc_Desc wParc_Desc = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, Param_Saisie_ID);
                       if (wText.contains("---")) {
-
                         print("SELECTION ${wParc_Desc.ParcsDescId} ${wParc_Desc.ParcsDesc_Id} ${wParc_Desc.ParcsDesc_Lib}");
-
 
                         Param_Saisie_Param wParam_Saisie_Param = Srv_DbTools.getParam_Saisie_ParamMem_Lib0(Param_Saisie_ID);
                         wParc_Desc.ParcsDesc_Id = wParam_Saisie_Param.Param_Saisie_Param_Id;
@@ -490,7 +486,6 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                         print(" SELECTION SELECT SET param_Saisie ${param_Saisie.DescAuto()}}");
                         print(" SELECTION SELECT SET wParam_Saisie_Param ${wParam_Saisie_Param.Desc()}");
                         print(" SELECTION SELECT SET wParc_Desc ${wParc_Desc.toMap()}");
-
 
                         // TRIGER : Ex Recharge => Verif Annuel
                         await DbTools.updateParc_Desc_NoRaz(wParc_Desc, "");

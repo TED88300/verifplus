@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Zones.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Client/Client_Dialog.dart';
@@ -33,6 +34,8 @@ class Client_ZonesState extends State<Client_Zones> {
   String filterText = '';
 
   void Reload() async {
+    await Srv_ImportExport.getErrorSync();
+
     bool wRes = await Srv_DbTools.getZones(Srv_DbTools.gSite.SiteId);
 
     if (!wRes) Srv_DbTools.ListZone = await DbTools.getZones(Srv_DbTools.gSite.SiteId);
@@ -125,7 +128,7 @@ class Client_ZonesState extends State<Client_Zones> {
             },
             child: Padding(
               padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
-              child: DbTools.gErrorSync
+              child: DbTools.gBoolErrorSync
                   ? Image.asset(
                 "assets/images/IcoWErr.png",
               )

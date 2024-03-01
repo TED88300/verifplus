@@ -2,6 +2,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Interventions.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
@@ -37,6 +38,8 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
   String wAction = "";
 
   void Reload() async {
+    await Srv_ImportExport.getErrorSync();
+
     bool wRes = await Srv_DbTools.getInterventionsZone(Srv_DbTools.gZone.ZoneId);
     if (!wRes) Srv_DbTools.ListIntervention = await DbTools.getInterventions(Srv_DbTools.gZone.ZoneId);
     print("Client_Sites A ${Srv_DbTools.ListSite.length} ");
@@ -258,7 +261,7 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
           },
           child: Padding(
             padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
-            child: DbTools.gErrorSync
+            child: DbTools.gBoolErrorSync
                 ? Image.asset(
               "assets/images/IcoWErr.png",
             )
@@ -381,6 +384,17 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
                       color: Colors.white,
                       child: Row(
                         children: <Widget>[
+                          !intervention.Intervention_isUpdate ?
+                          Expanded(
+                              flex: 10,
+                              child:                           Container(
+                            padding: EdgeInsets.only(left: 25, bottom: 2),
+                            child: Text(
+                              "◉ --",
+                              maxLines: 1,
+                              style: gColors.bodyTitle1_B_R32,
+                            ),
+                          ) ):
                           Expanded(
                               flex: 10,
                               child: Container(

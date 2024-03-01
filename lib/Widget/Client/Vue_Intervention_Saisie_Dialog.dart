@@ -57,40 +57,8 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
 
   Future Reload() async {
     print("widget.param_Saisie.Param_Saisie_ID ${widget.param_Saisie.Param_Saisie_ID}");
-/*
 
-    switch (widget.param_Saisie.Param_Saisie_ID) {
-      case "PRS":
-        Srv_DbTools.getParam_Saisie_ParamMem_PRS();
-        if (Srv_DbTools.ListParam_Saisie_Param.length == 0) Srv_DbTools.getParam_Saisie_ParamMem(widget.param_Saisie.Param_Saisie_ID);
-        break;
-      case "CLF":
-        Srv_DbTools.getParam_Saisie_ParamMem_CLF();
-        if (Srv_DbTools.ListParam_Saisie_Param.length == 0) Srv_DbTools.getParam_Saisie_ParamMem(widget.param_Saisie.Param_Saisie_ID);
-        break;
-      case "MOB":
-        Srv_DbTools.getParam_Saisie_ParamMem_MOB();
-        print("Saisie MOB ${Srv_DbTools.ListParam_Saisie_Param.length}");
-        if (Srv_DbTools.ListParam_Saisie_Param.length == 0) Srv_DbTools.getParam_Saisie_ParamMem(widget.param_Saisie.Param_Saisie_ID);
-        break;
-      case "PDT":
-        Srv_DbTools.getParam_Saisie_ParamMem_PDT();
-        if (Srv_DbTools.ListParam_Saisie_Param.length == 0) Srv_DbTools.getParam_Saisie_ParamMem(widget.param_Saisie.Param_Saisie_ID);
-        break;
-      case "POIDS":
-        Srv_DbTools.getParam_Saisie_ParamMem_POIDS();
-        if (Srv_DbTools.ListParam_Saisie_Param.length == 0) Srv_DbTools.getParam_Saisie_ParamMem(widget.param_Saisie.Param_Saisie_ID);
-        break;
-      case "GAM":
-        Srv_DbTools.getParam_Saisie_ParamMem_GAM();
-        if (Srv_DbTools.ListParam_Saisie_Param.length == 0) Srv_DbTools.getParam_Saisie_ParamMem(widget.param_Saisie.Param_Saisie_ID);
-        break;
 
-      default:
-        Srv_DbTools.getParam_Saisie_ParamMem(widget.param_Saisie.Param_Saisie_ID);
-        break;
-    }
-*/
 
     print("${widget.param_Saisie.Param_Saisie_ID} ListParam_Saisie_Param lenght  ${Srv_DbTools.ListParam_Saisie_Param.length}");
 

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Client/Client_Sites.dart';
 import 'package:verifplus/Widget/Client/Vue_Groupe.dart';
@@ -26,6 +27,8 @@ class Client_GroupesState extends State<Client_Groupes> {
   String filterText = '';
 
   Future Reload() async {
+    await Srv_ImportExport.getErrorSync();
+
     await Srv_DbTools.getGroupesClient(Srv_DbTools.gClient.ClientId);
 
     Filtre();
@@ -162,7 +165,7 @@ class Client_GroupesState extends State<Client_Groupes> {
             },
             child: Padding(
               padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
-              child: DbTools.gErrorSync
+              child: DbTools.gBoolErrorSync
                   ? Image.asset(
                 "assets/images/IcoWErr.png",
               )
