@@ -28,6 +28,9 @@ class _Zone_VueState extends State<Zone_Vue> {
   List<Widget> wAff = [];
 
   void Reload() async {
+
+    print("getContactClientAdrType ${Srv_DbTools.gZone.toMap()}");
+
     await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gZone.ZoneId, "ZONE");
 
     String Dep = "";
@@ -343,9 +346,33 @@ class _Zone_VueState extends State<Zone_Vue> {
         ),
         onPressed: () async {
           print("onPressed AffBtnAdd  ${Srv_DbTools.gClient.ClientId} ${Srv_DbTools.gZone.ZoneId}");
-          await Srv_DbTools.addContactAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gZone.ZoneId, "ZONE");
+
+          Contact wContact = await Contact.ContactInit();
+          bool wRet = await Srv_DbTools.addContactAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gZone.ZoneId, "ZONE");
+
+          print("onPressed wRet  ${wRet}");
+
+
+          wContact.Contact_ClientId = Srv_DbTools.gClient.ClientId;
+          wContact.Contact_AdresseId = Srv_DbTools.gZone.ZoneId;
+          wContact.Contact_Type =  "ZONE";
+          wContact.Contact_isUpdate = wRet;
+          if (!wRet) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
+          wContact.ContactId = Srv_DbTools.gLastID;
+          wContact.Contact_Nom = "???";
+          print("onPressed wContact  ${wContact.toMap()}");
+          await DbTools.inserContact(wContact);
+          Srv_DbTools.gContact =  wContact;
+
+          print("onPressed Srv_DbTools.gContact  ${Srv_DbTools.gContact.toMap()}");
+
+/*
           await Srv_DbTools.getContactGrp(Srv_DbTools.gClient.ClientId, Srv_DbTools.gZone.ZoneId);
+          print("getContactGrp wContact  ${Srv_DbTools.ListContact.length}");
           Srv_DbTools.gContact = Srv_DbTools.ListContact[Srv_DbTools.ListContact.length - 1];
+*/
+
+
           await showDialog(
               context: context,
               builder: (BuildContext context) {

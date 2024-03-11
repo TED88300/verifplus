@@ -365,15 +365,25 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
 
     Srv_DbTools.ListParam_Saisie_Base.sort(Srv_DbTools.affSortComparison);
     Srv_DbTools.ListParam_Saisie_Base.forEach((element) async {
+       LargeurCol = 190;
+       LargeurCol2 = gColors.MediaQuerysizewidth - 190 - 60;
       if (element.Param_Saisie_Controle.compareTo("Group") == 0) {
         for (int i = 0; i < Groups.length; i++) {
           if (element.Param_Saisie_ID.compareTo(Groups[i]) == 0) {
-            //print("           §§§§§§§§§§§§§§§§§§§§b RowSaisies.add( RowSaisieEntGroup ${element.Desc()}");
-            RowSaisies.add(RowSaisieEntGroup(element, gColors.AbrevTxt(GroupLibs[i]), LargeurCol, LargeurCol2, H2));
+            print("           §§§§§§§§§§§§§§§§§§§§b RowSaisies.add( RowSaisieEntGroup ${element.Desc()}");
+
+
+            if (element.Param_Saisie_ID == "LOTSERIE"){
+            LargeurCol = 80;
+            LargeurCol2 = gColors.MediaQuerysizewidth - LargeurCol - 60;
+
+         }
+
+           RowSaisies.add(RowSaisieEntGroup(element, gColors.AbrevTxt(GroupLibs[i]), LargeurCol, LargeurCol2, H2));
           }
         }
       } else {
-        //       print("           §§§§§§§§§§§§§§§§§§§§b DET ${element.Desc()}");
+             // print("           §§§§§§§§§§§§§§§§§§§§b DET ${element.Desc()}");
 
         bool Trv = false;
         for (int i = 0; i < GroupDets.length; i++) {

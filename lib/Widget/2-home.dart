@@ -55,52 +55,26 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 //    await reload();
   }
 
-  bool hasConnection = false;
-  Future<bool> checkConnection() async {
-    try {
-      final result = await InternetAddress.lookup('google.com');
-      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
-        hasConnection = true;
-      } else {
-        hasConnection = false;
-      }
-    } on SocketException catch (_) {
-      hasConnection = false;
-    }
-
-    return hasConnection;
-  }
 
   @override
   Future reload() async {
     await Srv_ImportExport.getErrorSync();
-    print("   Home reload ${DbTools.gBoolErrorSync}");
+    await DbTools.checkConnection();
 
-
-    await checkConnection();
-    Srv_DbTools.ListParam_ParamAll = await  DbTools.getParam_Param();
-    print("   ListParam_ParamAll ${Srv_DbTools.ListParam_ParamAll.length}");
     if (Srv_DbTools.ListParam_ParamAll.length == 0)
       {
-      print(" >>>>>  ListParam_ParamAll ${Srv_DbTools.ListParam_ParamAll.length}");
       await Import_Data_Dialog.Dialogs_Saisie(context, onSaisie, "Param");
       FBroadcast.instance().broadcast("MAJCLIENT");
       reload();
       }
 
     DbTools.glfNF074_Gammes = await  DbTools.getNF074_Gammes();
-    print("    glfNF074_Gammes ${DbTools.glfNF074_Gammes.length}");
     if (DbTools.glfNF074_Gammes.length == 0)
     {
-      print(" >>>>>  glfNF074_Gammes ${DbTools.glfNF074_Gammes.length}");
       await Import_Data_Dialog.Dialogs_Saisie(context, onSaisie, "NF74");
       FBroadcast.instance().broadcast("MAJCLIENT");
       reload();
     }
-
-
-
-    await checkConnection();
     setState(() {});
   }
 
@@ -167,7 +141,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
     print("HOME _updateConnectionStatus");
-    await checkConnection();
+    await DbTools.checkConnection();
     setState(() {});
   }
 
@@ -193,15 +167,6 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     String title_string = P_itemsTitre[DbTools.gCurrentIndex];
 
 
-    if (wchildren.toString() == "Liste_Clients")
-      {
-        print(" wchildren ${wchildren.toString()}");
-      }
-
-
-//    wchildren = P_children[DbTools.gCurrentIndex];
-
-    print(" wchildren ${wchildren.toString()}");
 
     print("Block_MenuApp");
 
@@ -266,8 +231,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
           IconButton(
             icon: Icon(
-              hasConnection ? Icons.cloud_download : Icons.cloud_off,
-              color: hasConnection ? Colors.green : Colors.red,
+              DbTools.hasConnection ? Icons.cloud_download : Icons.cloud_off,
+              color: DbTools.hasConnection ? Colors.green : Colors.red,
             ),
             onPressed: () async {
               await Import_Menu_Dialog.Dialogs_Saisie(context, onSaisie);

@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:verifplus/Tools/Api_Gouv.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
+import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
@@ -253,9 +254,19 @@ print("wZone_Nom $wZone_Nom" "${widget.wChamps}");
               Srv_DbTools.gZone.Zone_CP = wZone_CP;
               Srv_DbTools.gZone.Zone_Ville = wZone_Ville;
               Srv_DbTools.gZone.Zone_Pays = wZone_Pays;
-              await Srv_DbTools.setZone(Srv_DbTools.gZone);
+              await DbTools.updateZones(Srv_DbTools.gZone);
+              bool wRes = await Srv_DbTools.setZone(Srv_DbTools.gZone);
+              print("•••• updateZones ${wRes}");
+              Srv_DbTools.gZone.Zone_isUpdate = wRes;
+              if (!wRes) DbTools.setBoolErrorSync(true);
+/*
+              if (!wRes) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
+              Srv_DbTools.gZone.ZoneId = Srv_DbTools.gLastID ;
+*/
+              await DbTools.updateZones(Srv_DbTools.gZone);
 
 
+              print("•••• setContact");
               Srv_DbTools.gContact.Contact_Civilite = wContact_Civilite;
               Srv_DbTools.gContact.Contact_Prenom = wContact_Prenom;
               Srv_DbTools.gContact.Contact_Nom = wContact_Nom;
@@ -264,8 +275,15 @@ print("wZone_Nom $wZone_Nom" "${widget.wChamps}");
               Srv_DbTools.gContact.Contact_Tel1 = wContact_Tel1;
               Srv_DbTools.gContact.Contact_Tel2 = wContact_Tel2;
               Srv_DbTools.gContact.Contact_eMail = wContact_eMail;
-              await Srv_DbTools.setContact(Srv_DbTools.gContact);
+              await DbTools.updateContact(Srv_DbTools.gContact);
+               wRes = await  Srv_DbTools.setContact(Srv_DbTools.gContact);
+              print("•••• setContact wRes ${wRes}");
+              Srv_DbTools.gContact.Contact_isUpdate = wRes;
+              if (!wRes) DbTools.setBoolErrorSync(true);
+ //             if (!wRes) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
+ //             Srv_DbTools.gContact.ContactId = Srv_DbTools.gLastID ;
 
+              await DbTools.updateContact(Srv_DbTools.gContact);
 
               Navigator.of(context).pop();
             },

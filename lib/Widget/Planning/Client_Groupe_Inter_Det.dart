@@ -46,15 +46,26 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
     setState(() {});
   }
 
+
   @override
   void initLib() async {
-    await Srv_DbTools.getPlanning_InterventionId(Srv_DbTools.gIntervention.InterventionId!);
-    await Srv_DbTools.getPlanning_InterventionIdRes(Srv_DbTools.gIntervention.InterventionId!);
-    await Srv_DbTools.getInterMissionsIntervention(Srv_DbTools.gIntervention.InterventionId!);
+
+    Srv_DbTools.ListPlanning = await DbTools.getPlanning_InterventionId(Srv_DbTools.gIntervention.InterventionId!);
+    await DbTools.getPlanning_InterventionIdRes(Srv_DbTools.gIntervention.InterventionId!);
+    Srv_DbTools.ListInterMission = await DbTools.getInterMissionsIntervention(Srv_DbTools.gIntervention.InterventionId!);
 
     bool wMin = false, wMax = false;
+
+    print("Srv_DbTools.ListInterMission! ${Srv_DbTools.ListInterMission}");
+
+
     for (int i = 0; i < Srv_DbTools.ListPlanning.length; i++) {
+
+
       var element = Srv_DbTools.ListPlanning[i];
+      print("element ${element.Desc()}");
+
+
       if (element.Planning_InterventionstartTime.isBefore(minStartTime)) {
         minStartTime = element.Planning_InterventionstartTime;
         wMin = true;
@@ -107,9 +118,12 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
       AffLigne("Contact", "", gColors.greyLight, "Icon_Cont2", gColors.primaryBlue),
     ];
 
-    await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gZone.ZoneId, "ZONE");
-    for (int i = 0; i < Srv_DbTools.ListContact.length; i++) {
+    await DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gZone.ZoneId, "ZONE");
+
+   for (int i = 0; i < Srv_DbTools.ListContact.length; i++) {
       var element = Srv_DbTools.ListContact[i];
+      print("Srv_DbTools.ListContact ZONE ${element.Desc()}");
+
       String wNom = "${element.Contact_Prenom} ${element.Contact_Nom}";
       if (element.Contact_Fonction.isNotEmpty) wNom = wNom + " - ${element.Contact_Fonction}";
       if (element.Contact_Service.isNotEmpty) wNom = wNom + "/${element.Contact_Service}";
@@ -120,9 +134,16 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
       ListContact.add(AffLigne("    Contact Zone", "$wNom", gColors.white, "", gColors.primaryBlue));
     }
 
-    await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gSite.SiteId, "SITE");
+    await DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gSite.SiteId, "SITE");
+
+
+
     for (int i = 0; i < Srv_DbTools.ListContact.length; i++) {
       var element = Srv_DbTools.ListContact[i];
+
+      print("Srv_DbTools.ListContact SITE ${element.Desc()}");
+
+
       String wNom = "${element.Contact_Prenom} ${element.Contact_Nom}";
       if (element.Contact_Tel1.isNotEmpty) wNom = wNom + " - ${element.Contact_Tel1}";
       if (element.Contact_Tel2.isNotEmpty) wNom = wNom + " - ${element.Contact_Tel2}";

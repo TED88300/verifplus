@@ -1,12 +1,12 @@
 class Planning_Intervention {
 
+
   int? Planning_Interv_PlanningId = -1;
   int? Planning_Interv_InterventionId = -1;
   int? Planning_Interv_ResourceId = -1;
   DateTime Planning_Interv_InterventionstartTime = DateTime.now();
   DateTime Planning_Interv_InterventionendTime = DateTime.now();
   String Planning_Libelle = "";
-
   String? Planning_Interv_Intervention_Type = "";
   String? Planning_Interv_Intervention_Parcs_Type = "";
   String? Planning_Interv_Intervention_Status = "";
@@ -18,6 +18,8 @@ class Planning_Intervention {
   String? Planning_Interv_Groupe_Nom = "";
   int? Planning_Interv_ClientId = -1;
   String? Planning_Interv_Client_Nom = "";
+
+
 
   static Planning_InterventionInit() {
     return Planning_Intervention( 0, 0, 0, DateTime.now(), DateTime.now(), "", "", "", "", 0, "", 0, "", 0, "", 0, "");
@@ -50,8 +52,8 @@ class Planning_Intervention {
     this.Planning_Libelle   = Planning_Libelle;
 
     this.Planning_Interv_Intervention_Type = Planning_Interv_Intervention_Type;
-    this.Planning_Interv_Intervention_Parcs_Type = Planning_Interv_Intervention_Parc;
-    this.Planning_Interv_Intervention_Status = Planning_Interv_Intervention_Stat;
+    this.Planning_Interv_Intervention_Parcs_Type = Planning_Interv_Intervention_Parcs_Type;
+    this.Planning_Interv_Intervention_Status = Planning_Interv_Intervention_Status;
 
     this.Planning_Interv_ZoneId = Planning_Interv_ZoneId;
     this.Planning_Interv_Zone_Nom = Planning_Interv_Zone_Nom;
@@ -63,6 +65,30 @@ class Planning_Intervention {
     this.Planning_Interv_Client_Nom = Planning_Interv_Client_Nom;
   }
 
+  Map<String, dynamic> toMap() {
+
+    return {
+      'Planning_Interv_PlanningId': Planning_Interv_PlanningId,
+      'Planning_Interv_InterventionId': Planning_Interv_InterventionId,
+      'Planning_Interv_ResourceId': Planning_Interv_ResourceId,
+      'Planning_Interv_InterventionstartTime': '${Planning_Interv_InterventionstartTime}',
+      'Planning_Interv_InterventionendTime': '${Planning_Interv_InterventionendTime}',
+      'Planning_Libelle': Planning_Libelle,
+
+      'Planning_Interv_Intervention_Type': Planning_Interv_Intervention_Type,
+      'Planning_Interv_Intervention_Parcs_Type': Planning_Interv_Intervention_Parcs_Type,
+      'Planning_Interv_Intervention_Status': Planning_Interv_Intervention_Status,
+      'Planning_Interv_ZoneId': Planning_Interv_ZoneId,
+      'Planning_Interv_Zone_Nom': Planning_Interv_Zone_Nom,
+      'Planning_Interv_SiteId': Planning_Interv_SiteId,
+      'Planning_Interv_Site_Nom': Planning_Interv_Site_Nom,
+      'Planning_Interv_GroupeId': Planning_Interv_GroupeId,
+      'Planning_Interv_Groupe_Nom': Planning_Interv_Groupe_Nom,
+      'Planning_Interv_ClientId': Planning_Interv_ClientId,
+      'Planning_Interv_Client_Nom': Planning_Interv_Client_Nom,
+
+    };
+  }
 
   factory Planning_Intervention.fromJson(Map<String, dynamic> json) {
     Planning_Intervention wPlanning_Intervention = Planning_Intervention(

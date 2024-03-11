@@ -357,7 +357,8 @@ class _Client_InterventionsAddState extends State<Client_InterventionsAdd> {
               Srv_DbTools.gIntervention.Intervention_isUpdate = wRet;
               if (!wRet) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
               print("ADD Srv_DbTools.gLastID ${Srv_DbTools.gLastID}");
-              print("ADD ");
+              print("ADD wRet ${wRet}");
+
               Srv_DbTools.gIntervention.InterventionId = Srv_DbTools.gLastID;
               Srv_DbTools.gIntervention.Intervention_ZoneId = Srv_DbTools.gZone.ZoneId;
               Srv_DbTools.gIntervention.Intervention_Type = wType;

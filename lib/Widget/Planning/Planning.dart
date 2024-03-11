@@ -4,7 +4,9 @@ import 'package:intl/date_symbol_data_local.dart';
 import 'package:intl/intl.dart';
 import 'package:sticky_and_expandable_list/sticky_and_expandable_list.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Planning_Interventions.dart';
+import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter.dart';
 import 'package:verifplus/Widget/Planning/Client_Groupe_Inter_Det.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
@@ -23,8 +25,7 @@ class PlanningState extends State<Planning> {
   List<DateSection> sectionList = [];
 
   Future Reload() async {
-    await Srv_DbTools.getPlanning_InterventionRes(Srv_DbTools.gUserLogin.UserID);
-
+    await Srv_ImportExport.ImportAll();
     sectionList = getDateSection();
     print("sectionList length ${sectionList.length}");
 
@@ -69,17 +70,28 @@ class PlanningState extends State<Planning> {
                 return Column(children: [
                   new GestureDetector(
                       onTap: () async {
-                        await HapticFeedback.vibrate();
-                        await Srv_DbTools.getClient(wPlanning_Intervention.Planning_Interv_ClientId!);
-                        await Srv_DbTools.getGroupesClient(wPlanning_Intervention.Planning_Interv_ClientId!);
-                        await Srv_DbTools.getGroupeID(wPlanning_Intervention.Planning_Interv_GroupeId!);
-                        await Srv_DbTools.getGroupeSites(wPlanning_Intervention.Planning_Interv_ClientId!);
-                        await Srv_DbTools.getSiteID(wPlanning_Intervention.Planning_Interv_SiteId!);
-                        await Srv_DbTools.getZones(wPlanning_Intervention.Planning_Interv_SiteId!);
-                        await Srv_DbTools.getZoneID(wPlanning_Intervention.Planning_Interv_ZoneId!);
-                        await Srv_DbTools.getInterventionsID_Srv(wPlanning_Intervention.Planning_Interv_InterventionId!);
 
-//                        await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Groupe_Parc_Inter()));
+
+                        print("wPlanning_Intervention.Planning_Interv_InterventionId ${wPlanning_Intervention.Planning_Interv_InterventionId}");
+
+
+                        await HapticFeedback.vibrate();
+                        await DbTools.getClient(wPlanning_Intervention.Planning_Interv_ClientId!);
+                        Srv_DbTools.ListGroupe = await DbTools.getGroupes(wPlanning_Intervention.Planning_Interv_ClientId!);
+                        await Srv_DbTools.getGroupeID(wPlanning_Intervention.Planning_Interv_GroupeId!);
+                        Srv_DbTools.ListSite = await DbTools.getSiteGroupe(Srv_DbTools.gGroupe.GroupeId);
+                        await Srv_DbTools.getSiteID(wPlanning_Intervention.Planning_Interv_SiteId!);
+                        Srv_DbTools.ListZone =  await DbTools.getZones(wPlanning_Intervention.Planning_Interv_SiteId!);
+
+                        print("wPlanning_Intervention.Planning_Interv_InterventionId ${wPlanning_Intervention.Planning_Interv_InterventionId}");
+
+
+
+                        await Srv_DbTools.getZoneID(wPlanning_Intervention.Planning_Interv_ZoneId!);
+                        await DbTools.getInterventions(wPlanning_Intervention.Planning_Interv_ZoneId!);
+
+                        await DbTools.getIntervention(wPlanning_Intervention.Planning_Interv_InterventionId!);
+
                         await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Groupe_Inter_Det()));
                       },
                       child: Container(

@@ -71,8 +71,6 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState extends State<Client_Grou
     print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ widget.param_Saisie.Param_Saisie_ID ${widget.param_Saisie.Param_Saisie_ID}");
 
     switch (widget.param_Saisie.Param_Saisie_ID) {
-
-
       case "FAB":
         await DbTools.getNF074_Gammes_FAB();
         if (Srv_DbTools.ListParam_Saisie_Param.length == 0) Srv_DbTools.getParam_Saisie_ParamMem(widget.param_Saisie.Param_Saisie_ID);
@@ -106,6 +104,8 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState extends State<Client_Grou
         if (Srv_DbTools.ListParam_Saisie_Param.length == 0) Srv_DbTools.getParam_Saisie_ParamMem(widget.param_Saisie.Param_Saisie_ID);
         break;
       default:
+        print("ææææ getParam_Saisie_ParamMem ${widget.param_Saisie.Param_Saisie_ID}");
+
         Srv_DbTools.getParam_Saisie_ParamMem(widget.param_Saisie.Param_Saisie_ID);
 
 
@@ -1961,7 +1961,7 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState extends State<Client_Grou
           child: ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
-              txtController.text = "Non renseigné sur l'équipement".toUpperCase();
+              txtController.text = "Non renseigné sur l'équipement";
               widget.parc_Desc.ParcsDesc_Lib = txtController.text;
               await HapticFeedback.vibrate();
             },
@@ -1971,7 +1971,7 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState extends State<Client_Grou
                   width: 1.0,
                   color: gColors.black,
                 )),
-            child: Text("Non renseigné sur l'équipement".toUpperCase(), style: gColors.bodyTitle1_N_Gr),
+            child: Text("Non renseigné sur l'équipement", style: gColors.bodyTitle1_N_Gr),
           ),
         ),
       ],

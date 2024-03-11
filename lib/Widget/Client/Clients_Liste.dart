@@ -37,10 +37,7 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
 
   Future Reload() async {
 
-    await Srv_ImportExport.ImportClient();
-    await Srv_ImportExport.ImportAdresse();
-    await Srv_ImportExport.ImportContact();
-
+    await Srv_ImportExport.ImportAll();
     await Srv_ImportExport.getErrorSync();
 
 

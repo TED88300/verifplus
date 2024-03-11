@@ -216,8 +216,6 @@ class Client_SitesState extends State<Client_Sites> {
               await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gAdresse.AdresseId, "LIVR");
               await Srv_DbTools.addSite(Srv_DbTools.gClient.ClientId);
 
-
-
               Srv_DbTools.gSite = Site.SiteInit();
               Srv_DbTools.gSite.SiteId          = Srv_DbTools.gLastID;
               Srv_DbTools.gSite.Site_GroupeId   = Srv_DbTools.gGroupe.GroupeId;
@@ -239,6 +237,7 @@ class Client_SitesState extends State<Client_Sites> {
               Srv_DbTools.gContact.Contact_Tel1      = Srv_DbTools.gContactLivr.Contact_Tel1     ;
               Srv_DbTools.gContact.Contact_Tel2      = Srv_DbTools.gContactLivr.Contact_Tel2     ;
               Srv_DbTools.gContact.Contact_eMail     = Srv_DbTools.gContactLivr.Contact_eMail    ;
+
               Srv_DbTools.setContact(Srv_DbTools.gContact);
 
               await Reload();
@@ -405,6 +404,8 @@ class Client_SitesState extends State<Client_Sites> {
     } else {
       await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Zones()));
     }
+    setState(() {});
+
   }
 
   //***************************

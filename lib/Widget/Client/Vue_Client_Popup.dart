@@ -479,7 +479,6 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
                         Srv_DbTools.gAdresseLivr.Adresse_CP     = Srv_DbTools.gAdresse.Adresse_CP ;
                         Srv_DbTools.gAdresseLivr.Adresse_Ville  = Srv_DbTools.gAdresse.Adresse_Ville ;
                         Srv_DbTools.gAdresseLivr.Adresse_Pays   = Srv_DbTools.gAdresse.Adresse_Pays ;
-
                         await DbTools.updateAdresse(Srv_DbTools.gAdresseLivr);
                         bool wRes = await Srv_DbTools.setAdresse(Srv_DbTools.gAdresseLivr);
                         Srv_DbTools.gAdresseLivr.Adresse_isUpdate = wRes;
@@ -552,7 +551,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
               await DbTools.updateClients(Srv_DbTools.gClient);
               print("VALIDER Client wRes ${wRes}");
 
-              await DbTools.getClients();
+              await DbTools.getClientsAll();
 
               Srv_DbTools.gAdresse.Adresse_Adr1 = wAdresse_Adr1;
               Srv_DbTools.gAdresse.Adresse_Adr2 = wAdresse_Adr2;
@@ -584,7 +583,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
               await DbTools.updateAdresse(Srv_DbTools.gAdresseLivr);
               print("VALIDER AdresseLivr wRes ${wRes}");
 
-              await DbTools.getAdresse();
+              await DbTools.getAdresseAll();
 
               Srv_DbTools.gContact.Contact_Civilite = wContact_Civilite;
               Srv_DbTools.gContact.Contact_Prenom = wContact_Prenom;
@@ -623,7 +622,6 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
               await DbTools.updateContact(Srv_DbTools.gContactLivr);
               print("VALIDER gContactLivr wRes ${wRes}");
 
-              await DbTools.getContact();
 
               Navigator.of(context).pop();
             },

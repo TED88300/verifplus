@@ -2,11 +2,13 @@ import 'dart:async';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:davi/davi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Art.dart';
@@ -37,6 +39,8 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
   late TabController _tabController;
   bool affEdtFilter = false;
 
+  bool canClose = false;
+
   late AnimationController acontroller;
   bool iStrfExp = false;
   bool iStrfImp = false;
@@ -56,9 +60,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
   bool isChecked = false;
   bool affAll = true;
-
-  bool canClose = false;
-
 
   String QrcValue = "";
 
@@ -104,17 +105,22 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
   double dyPosition = 0;
 
   Future Reload() async {
+    await Srv_ImportExport.getErrorSync();
+
     print("Client_Groupe_Parc_Inter <<<<<<<<<<<<<<<<<<<RELOAD ${DbTools.glfParcs_Ent.length} >>>>>>>>>>>>>>>>>>>>>");
+
 
     print("Parc_Ent_GetOrder >>> ${DbTools.glfParcs_Ent.length}");
     await DbTools.Parc_Ent_GetOrder();
     print("Parc_Ent_GetOrder <<< ${DbTools.glfParcs_Ent.length}");
     print("Reload glfParcs_Ent order fin");
 
-    await DbTools.getParam_Saisie_Base("Audit");
 
+    await DbTools.getParam_Saisie_Base("Audit");
     Srv_DbTools.ListParam_Audit_Base.clear();
     Srv_DbTools.ListParam_Audit_Base.addAll(Srv_DbTools.ListParam_Saisie_Base);
+
+    print("♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎ DbTools ListParam_Audit_Base ${Srv_DbTools.ListParam_Audit_Base.length}");
 
     await DbTools.getParam_Saisie_Base("Verif");
     Srv_DbTools.ListParam_Verif_Base.clear();
@@ -154,7 +160,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     int index = subLibArray.indexWhere((element) => element.compareTo(DbTools.ParamTypeOg) == 0);
     DbTools.OrgLib = subLibArray[index];
 
-    await DbTools.getParam_Saisie(subTitleArray[index], "Desc");
+    await Srv_DbTools.getParam_Saisie(subTitleArray[index], "Desc");
 
     String DescAffnewParam = "";
     Srv_DbTools.getParam_ParamMemDet("Param_Div", "${subTitleArray[index]}_Desc");
@@ -477,12 +483,37 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     setState(() {});
   }
 
-
-
   @override
   void initLib() async {
     Reload();
   }
+
+  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  final Connectivity _connectivity = Connectivity();
+  late StreamSubscription<ConnectivityResult> _connectivitySubscription;
+
+  Future<void> initConnectivity() async {
+    late ConnectivityResult result;
+    try {
+      result = await _connectivity.checkConnectivity();
+    } on PlatformException catch (e) {
+      return;
+    }
+    if (!mounted) {
+      return Future.value(null);
+    }
+    print(" initConnectivity");
+setState(() {
+
+});  }
+
+  Future<void> _updateConnectionStatus(ConnectivityResult result) async {
+    print("HOME _updateConnectionStatus");
+    await DbTools.checkConnection();
+    setState(() {});
+  }
+
+
 
   void initState() {
     DbTools.gRowisSel = false;
@@ -520,6 +551,8 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     });
 
     initLib();
+    initConnectivity();
+    _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
 
     ctrlNbInsert.text = "${NbAdd}";
     ctrlPos.text = "${iPos}";
@@ -748,11 +781,13 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
   }
 
   void onMaj() async {
-    print("Parent onMaj() Relaod()");
+    print("•••••••••• Parent onMaj() Relaod()");
+
   }
 
   @override
   Widget Import_Export() {
+
     return Padding(
       padding: const EdgeInsets.only(left: 70, right: 30.0, bottom: 40.0),
       child: Row(
@@ -772,8 +807,16 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                     height: icoWidth,
                     width: icoWidth,
                   ),
-                  backgroundColor: gColors.primaryGreen,
+                  backgroundColor: DbTools.hasConnection ? gColors.primaryGreen : Colors.black26,
                   onPressed: () async {
+                    if (!DbTools.hasConnection)
+                      {
+                        await OffLine();
+                        await Srv_ImportExport.getErrorSync();
+                        setState(() {});
+                        return;
+                      }
+
                     List<Parc_Ent> lParcs_Ent = await DbTools.getParcs_Ent_Upd(Srv_DbTools.gIntervention.InterventionId!);
                     print("lParcs_Ent lenght ${lParcs_Ent.length}");
 
@@ -878,6 +921,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                       DbTools.glfParcs_Ent = await DbTools.getParcs_Ent(Srv_DbTools.gIntervention.InterventionId!);
                       print("Client_Groupe_Parc_Inter <<<<<<<<<<<<<<<<<<< DDD ${DbTools.glfParcs_Ent.length}>>>>>>>>>>>>>>>>>>>>>");
                     }
+                    await Srv_ImportExport.getErrorSync();
 
 
 
@@ -896,8 +940,15 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                     height: icoWidth,
                     width: icoWidth,
                   ),
-                  backgroundColor: gColors.primaryRed,
+              backgroundColor: DbTools.hasConnection ? gColors.primaryRed : Colors.black26,
                   onPressed: () async {
+                    if (!DbTools.hasConnection)
+                    {
+                      await OffLine();
+                      await Srv_ImportExport.getErrorSync();
+                      setState(() {});
+                      return;
+                    }
                     print("setSt 8");
 
                     setState(() {
@@ -905,7 +956,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                       acontroller.repeat(reverse: true);
                       iStrfExp = true;
                     });
-
                     int NbDesc = 0;
                     int NbArt = 0;
 
@@ -923,6 +973,9 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
                     for (int i = 0; i < DbTools.glfParcs_Ent.length; i++) {
                       var element = DbTools.glfParcs_Ent[i];
+
+
+
                       await Srv_DbTools.InsertUpdateParc_Ent_Srv(element);
 
                       int gLastID = Srv_DbTools.gLastID;
@@ -975,6 +1028,8 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                         "- ${NbArt} Articles";
 
                     await gObj.AffMessageInfo(context, "Verif Plus", wStr);
+                    await Srv_ImportExport.getErrorSync();
+
                   })
         ],
       ),
@@ -987,6 +1042,8 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: Column(children: [
           gObj.InterventionTitleWidget("${Srv_DbTools.gClient.Client_Nom.toUpperCase()}", wTitre2 : "${Srv_DbTools.gGroupe.Groupe_Nom} / ${Srv_DbTools.gSite.Site_Nom} / ${Srv_DbTools.gZone.Zone_Nom}", wTimer : wTimer),
+
+
         ]));
   }
 
@@ -1063,65 +1120,123 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     );
   }
 
-
-  Future  Popop() async
+  Future  OffLine() async
   {
-    print("Popop ${canClose}");
-    if(canClose) Navigator.of(context).pop();
-
-
     List<Parc_Ent> lParcs_Ent = await DbTools.getParcs_Ent_Upd(Srv_DbTools.gIntervention.InterventionId!);
     if (lParcs_Ent.length > 0) {
       await showDialog(
-        context: context,
-        builder: (context) =>
-        new AlertDialog(
-          surfaceTintColor: Colors.white,
-          title: Column(
-            //Slide3
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image(
-                  image: AssetImage('assets/images/AppIco.png'),
-                  height: 50,
-                ),
-                SizedBox(height: 8.0),
-                Container(color: Colors.grey, height: 1.0),
-                SizedBox(height: 8.0),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  child: Text(
-                    "Vous avez des enregistrements à remonter sur le serveur !!!",
-                    style: TextStyle(
-                      fontSize: 22,
+          context: context,
+          builder: (context) =>
+          new AlertDialog(
+            surfaceTintColor: Colors.white,
+            title: Column(
+              //Slide3
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image(
+                    image: AssetImage('assets/images/AppIco.png'),
+                    height: 50,
+                  ),
+                  SizedBox(height: 8.0),
+                  Container(color: Colors.grey, height: 1.0),
+                  SizedBox(height: 8.0),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    child: Text(
+                      "Mode Off Line",
+                      style: TextStyle(
+                        fontSize: 22,
+                      ),
                     ),
                   ),
-                ),
-              ]),
-          content: Text("Êtes-vous sûre de vouloir quitter cette fenêtre ?"),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop(false);
-              },
-              child: new Text('Non'),
-            ),
-            TextButton(
-              onPressed: () {
-                canClose = true;
-                Navigator.of(context).pop();
-                Navigator.of(context).pop();
-              },
-              child: new Text('Oui'),
-            ),
-          ],
-        )
+                ]),
+            content: Text("Vous n'avez pas de connexion : Import/Export impossible!!!"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: new Text('Ok'),
+              ),
+
+            ],
+          )
 
 
       );
     }
     else
       Navigator.of(context).pop();
+  }
+
+  Future  Popop() async
+  {
+    print("Popop ${canClose}");
+    if(canClose) {
+      Navigator.of(context).pop();
+    }
+
+    if(!DbTools.hasConnection) {
+      canClose = true;
+      Navigator.of(context).pop();
+      return;
+    }
+
+    List<Parc_Ent> lParcs_Ent = await DbTools.getParcs_Ent_Upd(Srv_DbTools.gIntervention.InterventionId!);
+    if (lParcs_Ent.length > 0) {
+      await showDialog(
+          context: context,
+          builder: (context) =>
+          new AlertDialog(
+            surfaceTintColor: Colors.white,
+            title: Column(
+              //Slide3
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image(
+                    image: AssetImage('assets/images/AppIco.png'),
+                    height: 50,
+                  ),
+                  SizedBox(height: 8.0),
+                  Container(color: Colors.grey, height: 1.0),
+                  SizedBox(height: 8.0),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                    child: Text(
+                      "Vous avez des enregistrements à remonter sur le serveur !!!",
+                      style: TextStyle(
+                        fontSize: 22,
+                      ),
+                    ),
+                  ),
+                ]),
+            content: Text("Êtes-vous sûre de vouloir quitter cette fenêtre ?"),
+            actions: <Widget>[
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop(false);
+                },
+                child: new Text('Non'),
+              ),
+              TextButton(
+                onPressed: () {
+                  canClose = true;
+                  Navigator.of(context).pop();
+                  Navigator.of(context).pop();
+                },
+                child: new Text('Oui'),
+              ),
+            ],
+          )
+
+
+      );
+    }
+    else
+      {
+        canClose = true;
+        Navigator.of(context).pop();
+      }
 
 
   }
@@ -1150,16 +1265,13 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     } else
       wchildren = Enntete_Inter();
 
-    return
-      new PopScope(
-          canPop: canClose,
-          onPopInvoked: (_) async {
-              await Popop();
-          },
+    return new PopScope(
+        canPop: canClose,
+        onPopInvoked: (_) async {
+      await Popop();
+    },
 
-        child: new
-
-        Scaffold(
+    child:Scaffold(
         backgroundColor: Colors.white,
         appBar: appBar(),
         body: Stack(fit: StackFit.expand, children: <Widget>[
@@ -1179,8 +1291,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
             : (DbTools.gCurrentIndex3 > 0 || !affAll)
                 ? Container()
                 : Import_Export()));
-
-}
+  }
 
   Widget CadreWidget(Widget wWidget, Color Color1, Color Color2, Color ColorTxt) {
     double p = 2;
@@ -2071,6 +2182,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
             if (row.data.Parcs_MaintCorrect!) hab = 1;
             if (row.data.Parcs_MaintCorrect!) hab = 2;
             if (row.data.Parcs_Install!) hab = 3;
+
             upd = (row.data.Parcs_Update == 1);
 
             return InkWell(
@@ -2087,7 +2199,8 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                                   color: Colors.orange,
                                   size: 10,
                                 ))
-                            : Container(
+                            :
+                        Container(
                                 width: 15,
                               ),
                         Text(
@@ -2424,13 +2537,13 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     }
 
     if (DbTools.gParc_Ent.Parcs_LOT_Label!.isEmpty) {
-      DbTools.gParc_Ent.Parcs_LOT_Label = "Non renseigné sur l'équipement".toUpperCase();
+      DbTools.gParc_Ent.Parcs_LOT_Label = "Non renseigné sur l'équipement";
       print(" updateParc_Ent I");
       DbTools.updateParc_Ent(DbTools.gParc_Ent);
     }
 
     if (DbTools.gParc_Ent.Parcs_SERIE_Label!.isEmpty) {
-      DbTools.gParc_Ent.Parcs_SERIE_Label = "Non renseigné sur l'équipement".toUpperCase();
+      DbTools.gParc_Ent.Parcs_SERIE_Label = "Non renseigné sur l'équipement";
       print(" updateParc_Ent J");
       DbTools.updateParc_Ent(DbTools.gParc_Ent);
     }

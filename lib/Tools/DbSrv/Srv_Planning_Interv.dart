@@ -1,4 +1,6 @@
 class Planning_Interv {
+
+  /*
   int? Planning_Interv_InterventionId = -1;
   String? Planning_Interv_Intervention_Type = "";
   String? Planning_Interv_Intervention_Parcs_Type = "";
@@ -77,19 +79,5 @@ class Planning_Interv {
         '$Planning_Interv_Groupe_Nom, '
         '$Planning_Interv_ClientId, '
         '$Planning_Interv_Client_Nom,  ';}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+*/
 }

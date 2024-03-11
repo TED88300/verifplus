@@ -23,6 +23,7 @@ import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Art.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Desc.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Ent.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Planning.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Planning_Interventions.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Sites.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_User.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_User_Desc.dart';
@@ -107,6 +108,23 @@ class DbTools {
 
   static int gLastID = 0;
 
+  static bool hasConnection = false;
+  static Future<bool> checkConnection() async {
+    try {
+      final result = await InternetAddress.lookup('google.com');
+      if (result.isNotEmpty && result[0].rawAddress.isNotEmpty) {
+        hasConnection = true;
+      } else {
+        hasConnection = false;
+      }
+    } on SocketException catch (_) {
+      hasConnection = false;
+    }
+
+    return hasConnection;
+  }
+
+
   static PackageInfo packageInfo = PackageInfo(
     appName: 'Unknown',
     packageName: 'Unknown',
@@ -183,6 +201,29 @@ class DbTools {
         "Planning_InterventionstartTime` datetime NOT NULL DEFAULT current_timestamp,"
         "`Planning_InterventionendTime` datetime NOT NULL DEFAULT current_timestamp,"
         "`Planning_Libelle` varchar(512) NOT NULL DEFAULT '')";
+
+
+    String wCREATE_Planning_Intervention = "CREATE TABLE Planning_Intervention ("
+        "Planning_Interv_PlanningId int(11) NOT NULL,"
+        "Planning_Interv_InterventionId int(11) NOT NULL DEFAULT 0,"
+        "Planning_Interv_ResourceId int(11) NOT NULL DEFAULT 0,"
+        "Planning_Interv_InterventionstartTime datetime NOT NULL DEFAULT current_timestamp,"
+        "Planning_Interv_InterventionendTime datetime NOT NULL DEFAULT current_timestamp,"
+        "Planning_Libelle varchar(512) NOT NULL DEFAULT '',"
+        "Planning_Interv_Intervention_Type varchar(512) NOT NULL DEFAULT '',"
+        "Planning_Interv_Intervention_Parcs_Type varchar(512) NOT NULL DEFAULT '',"
+        "Planning_Interv_Intervention_Status varchar(512) NOT NULL DEFAULT '',"
+        "Planning_Interv_ZoneId int(11) NOT NULL DEFAULT 0,"
+        "Planning_Interv_Zone_Nom varchar(512) NOT NULL DEFAULT '',"
+        "Planning_Interv_SiteId int(11) NOT NULL DEFAULT 0,"
+        "Planning_Interv_Site_Nom varchar(512) NOT NULL DEFAULT '',"
+        "Planning_Interv_GroupeId int(11) NOT NULL DEFAULT 0,"
+        "Planning_Interv_Groupe_Nom varchar(512) NOT NULL DEFAULT '',"
+        "Planning_Interv_ClientId int(11) NOT NULL DEFAULT 0,"
+        "Planning_Interv_Client_Nom varchar(512) NOT NULL DEFAULT ''"
+        ")";
+
+
 
     String wCREATE_Parcimgs = "CREATE TABLE Parc_Imgs (Parc_Imgid  INTEGER PRIMARY KEY AUTOINCREMENT,Parc_Imgs_ParcsId  INTEGER, Parc_Imgs_Type  INTEGER,  Parc_Imgs_Data  TEXT,  Parc_Imgs_Path varchar(512) NOT NULL DEFAULT '')";
 
@@ -284,7 +325,7 @@ class DbTools {
         ")";
 
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
-    String wDbPath = "statoust2obao.db";
+    String wDbPath = "sLLEasFIoust2obao.db";
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
 
     database = openDatabase(
@@ -310,6 +351,7 @@ class DbTools {
         await db.execute(wCREATE_Sites);
         await db.execute(wCREATE_Zones);
 
+        await db.execute(wCREATE_Planning_Intervention);
         await db.execute(wCREATE_Intervention);
         await db.execute(wCREATE_InterMissions);
         await db.execute(wCREATE_Parcimgs);
@@ -338,7 +380,7 @@ class DbTools {
     tables.forEach((element) {
       print("-------------------> tables ${element}");
     });
-//    DbTools.glfClients = await DbTools.getClients();
+
   }
 
   //************************************************
@@ -641,6 +683,14 @@ class DbTools {
       return User.fromMap(maps[i]);
     });
   }
+
+  static Future<void> inserUser(User wUser) async {
+    final db = await DbTools.database;
+    int? repid = await db.insert("Users", wUser.toMap());
+    gLastID = repid!;
+  }
+
+
 
   static Future<void> inserUsers() async {
     final db = await DbTools.database;
@@ -1771,7 +1821,7 @@ class DbTools {
   //******************** C L I E N T S *************
   //************************************************
 
-  static Future<List<Client>> getClients() async {
+  static Future<List<Client>> getClientsAll() async {
     final db = await database;
 
     final List<Map<String, dynamic>> maps = await db.query("Clients", orderBy: "Client_Nom ASC");
@@ -1803,7 +1853,44 @@ class DbTools {
     });
   }
 
-  static Future<void> inserClients(Client wClient) async {
+
+
+    static Future getClient(int ID) async {
+      final db = await database;
+      Srv_DbTools.gClient = Client.ClientInit();
+
+      final List<Map<String, dynamic>> maps = await db.query("Clients", orderBy: "Client_Nom ASC",where: "ClientId = $ID");
+
+    if (maps.length > 0 )
+      Srv_DbTools.gClient =  Client(
+          maps[0]["ClientId"],
+          maps[0]["Client_CodeGC"],
+          maps[0]["Client_CL_Pr"] == "true",
+          maps[0]["Client_Famille"],
+          maps[0]["Client_Rglt"],
+          maps[0]["Client_Depot"],
+          maps[0]["Client_PersPhys"] == "true",
+          maps[0]["Client_OK_DataPers"] == "true",
+          maps[0]["Client_Civilite"],
+          maps[0]["Client_Nom"],
+          maps[0]["Client_Siret"],
+          maps[0]["Client_NAF"],
+          maps[0]["Client_TVA"],
+          maps[0]["Client_Commercial"],
+          maps[0]["Client_Createur"],
+          maps[0]["Client_Contrat"] == "true",
+          maps[0]["Client_TypeContrat"],
+          maps[0]["Client_Ct_Debut"],
+          maps[0]["Client_Ct_Fin"],
+          maps[0]["Client_Organes"],
+          maps[0]["Client_isUpdate"] == 1,
+        );
+
+
+    }
+
+
+    static Future<void> inserClients(Client wClient) async {
     final db = await DbTools.database;
     int? repid = await db.insert("Clients", wClient.toMap());
     gLastID = repid!;
@@ -1818,6 +1905,15 @@ class DbTools {
       whereArgs: [wClient.ClientId],
     );
   }
+  static Future<void> updateClientsID(Client wClient, int oldID) async {
+    final db = await DbTools.database;
+    int? repid = await db.update(
+      "Clients",
+      wClient.toMap(),
+      where: "ClientId = ?",
+      whereArgs: [oldID],
+    );
+  }
 
   static Future<void> TrunckClients() async {
     final db = await DbTools.database;
@@ -1828,7 +1924,7 @@ class DbTools {
   //****************** A D R E S S E S *************
   //************************************************
 
-  static Future<List<Adresse>> getAdresse() async {
+  static Future<List<Adresse>> getAdresseAll() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query("Adresses", orderBy: "AdresseId ASC");
     return List.generate(maps.length, (i) {
@@ -1851,6 +1947,32 @@ class DbTools {
         );
     });
   }
+
+
+  static Future<List<Adresse>> getAdresse(int ID) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query("Adresses", orderBy: "AdresseId ASC",where: "AdresseId = $ID");
+    return List.generate(maps.length, (i) {
+      return Adresse(
+        maps[i]["AdresseId"],
+        maps[i]["Adresse_ClientId"],
+        maps[i]["Adresse_Code"],
+        maps[i]["Adresse_Type"],
+        maps[i]["Adresse_Nom"],
+        maps[i]["Adresse_Adr1"],
+        maps[i]["Adresse_Adr2"],
+        maps[i]["Adresse_Adr3"],
+        maps[i]["Adresse_Adr4"],
+        maps[i]["Adresse_CP"],
+        maps[i]["Adresse_Ville"],
+        maps[i]["Adresse_Pays"],
+        maps[i]["Adresse_Acces"],
+        maps[i]["Adresse_Rem"],
+        maps[i]["Adresse_isUpdate"] == 1,
+      );
+    });
+  }
+
 
   static Future<bool> getAdresseClientType(int ClientID, String Type) async {
     final db = await database;
@@ -1954,6 +2076,9 @@ class DbTools {
   }
 
   static Future<bool> getContactClientAdrType(int ClientID, int AdresseId, String Type) async {
+
+    print("getContactClientAdrType Contact_ClientId = $ClientID AND Contact_AdresseId = $AdresseId AND Contact_Type = '$Type'");
+
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query("Contacts", orderBy: "Contact_Nom ASC", where: "Contact_ClientId = $ClientID AND Contact_AdresseId = $AdresseId AND Contact_Type = '$Type'");
     Srv_DbTools.ListContact = List.generate(maps.length, (i) {
@@ -2001,28 +2126,75 @@ class DbTools {
     return false;
   }
 
+  static Future<bool> getContacts_ClientAdrType(int ClientID, int AdresseId, String Type) async {
+
+    print("getContactClientAdrType Contact_ClientId = $ClientID AND Contact_AdresseId = $AdresseId AND Contact_Type = '$Type'");
+
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query("Contacts", orderBy: "Contact_Nom ASC", where: "Contact_ClientId = $ClientID AND Contact_AdresseId = $AdresseId AND Contact_Type = '$Type'");
+    Srv_DbTools.ListContact = List.generate(maps.length, (i) {
+      return Contact(
+        maps[i]["ContactId"],
+        maps[i]["Contact_ClientId"],
+        maps[i]["Contact_AdresseId"],
+        maps[i]["Contact_Code"],
+        maps[i]["Contact_Type"],
+        maps[i]["Contact_Civilite"],
+        maps[i]["Contact_Prenom"],
+        maps[i]["Contact_Nom"],
+        maps[i]["Contact_Fonction"],
+        maps[i]["Contact_Service"],
+        maps[i]["Contact_Tel1"],
+        maps[i]["Contact_Tel2"],
+        maps[i]["Contact_eMail"],
+        maps[i]["Contact_Rem"],
+        true,
+      );
+    });
+
+    if (Srv_DbTools.ListContact == null) return false;
+    print("getContactClientType ${Srv_DbTools.ListContact.length}");
+    if (Srv_DbTools.ListContact.length > 0) {
+      Srv_DbTools.gContact = Srv_DbTools.ListContact[0];
+      print("getContactClientType return TRUE ${Srv_DbTools.gContact.ContactId} ${Srv_DbTools.gContact.Contact_Nom}");
+      return true;
+    } else
+    {
+      Contact wContact = await Contact.ContactInit();
+      bool wRet = await Srv_DbTools.addContactAdrType(ClientID, AdresseId, Type);
+      wContact.Contact_ClientId = ClientID;
+      wContact.Contact_AdresseId = AdresseId;
+      wContact.Contact_Type = Type;
+      wContact.Contact_isUpdate = wRet;
+      if (!wRet) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
+      wContact.ContactId = Srv_DbTools.gLastID;
+      wContact.Contact_Nom = "???";
+      await DbTools.inserContact(wContact);
+      Srv_DbTools.gContact =  wContact;
+
+      // await getContactClientAdrType(ClientID, AdresseId, Type);
+    }
+    return false;
+  }
+
+
   static Future<void> inserContact(Contact wContact) async {
     final db = await DbTools.database;
-//    print("inserContact ${wContact.toMap()}");
     int? repid = await db.insert("Contacts", wContact.toMap());
-
-  //  print("inserContact ${repid}");
-
     gLastID = repid!;
   }
 
   static Future<void> updateContact(Contact wContact) async {
     final db = await DbTools.database;
 
-    print("VALIDER gContact wContact.toMap() ${wContact.toMap()}");
-
-
+    print("updateContact wContact.toMap() ${wContact.toMap()}");
     int? repid = await db.update(
       "Contacts",
       wContact.toMap(),
       where: "ContactId = ?",
       whereArgs: [wContact.ContactId],
     );
+    print("updateContact repid ${repid}");
   }
 
   static Future<void> TrunckContact() async {
@@ -2034,7 +2206,7 @@ class DbTools {
   //****************** P L A N N I N G *************
   //************************************************
 
-  static Future<List<Planning>> getPlanning() async {
+  static Future<List<Planning>> getPlanningAll() async {
     final db = await database;
 
     final List<Map<String, dynamic>> maps = await db.query("Planning", orderBy: "PlanningId ASC");
@@ -2051,9 +2223,63 @@ class DbTools {
     });
   }
 
+  static Future<List<Planning>> getPlanning(int ID) async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> maps = await db.query("Planning", orderBy: "PlanningId ASC", where : "PlanningId = $ID");
+
+    return List.generate(maps.length, (i) {
+      return Planning(
+        maps[i]["PlanningId"],
+        maps[i]["Planning_InterventionId"],
+        maps[i]["Planning_ResourceId"],
+        DateTime.parse(maps[i]["Planning_InterventionstartTime"]),
+        DateTime.parse(maps[i]["Planning_InterventionendTime"]),
+        maps[i]["Planning_Libelle"],
+      );
+    });
+  }
+
+  static Future<List<Planning>> getPlanning_InterventionId(int ID) async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> maps = await db.query("Planning", orderBy: "PlanningId ASC", where : "Planning_InterventionId = $ID");
+//    final List<Map<String, dynamic>> maps = await db.query("Planning", orderBy: "PlanningId ASC");
+
+    return List.generate(maps.length, (i) {
+      return Planning(
+        maps[i]["PlanningId"],
+        maps[i]["Planning_InterventionId"],
+        maps[i]["Planning_ResourceId"],
+        DateTime.parse(maps[i]["Planning_InterventionstartTime"]),
+        DateTime.parse(maps[i]["Planning_InterventionendTime"]),
+        maps[i]["Planning_Libelle"],
+      );
+    });
+  }
+
+
+  static Future getPlanning_InterventionIdRes(int InterventionId) async {
+    final db = await database;
+    Srv_DbTools.ListUserH.clear();
+
+
+    String wSql ="SELECT Users.User_Nom , Users.User_Prenom, SUM(ROUND((JULIANDAY(Planning_InterventionendTime) - JULIANDAY(Planning_InterventionstartTime)) * 24)  ) as H FROM Planning , Users where `Planning_ResourceId` = Users.UserID AND   Planning_InterventionId = $InterventionId GROUP BY Planning.Planning_ResourceId ORDER BY H DESC;";
+    final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
+    Srv_DbTools.ListUserH = List.generate(maps.length, (i) {
+      return UserH(
+        maps[i]["User_Nom"],
+        maps[i]["User_Prenom"],
+        maps[i]['H'],
+      );
+    });
+  }
+
+
+
+
   static Future<void> inserPlanning(Planning wPlanning) async {
     final db = await DbTools.database;
-    print("wPlanning.toMap() ${wPlanning.toMap()}");
     int? repid = await db.insert("Planning", wPlanning.toMap());
     gLastID = repid!;
   }
@@ -2062,6 +2288,85 @@ class DbTools {
     final db = await DbTools.database;
     int? repid = await db.delete("Planning");
   }
+
+
+  //****************************************************************************
+  //****************** P L A N N I N G  I N T R E V E N T I O N    *************
+  //****************************************************************************
+
+  static Future<List<Planning_Intervention>> getPlanning_InterventionAll() async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> maps = await db.query("Planning_Intervention", orderBy: "Planning_Interv_PlanningId ASC");
+
+    print("getPlanning_Intervention.toMap() ${maps.length}");
+    return List.generate(maps.length, (i) {
+      return Planning_Intervention(
+        maps[i]["Planning_Interv_PlanningId"],
+        maps[i]["Planning_Interv_InterventionId"],
+        maps[i]["Planning_Interv_ResourceId"],
+        DateTime.parse(maps[i]["Planning_Interv_InterventionstartTime"]),
+        DateTime.parse(maps[i]["Planning_Interv_InterventionendTime"]),
+        maps[i]["Planning_Libelle"],
+          maps[i]["Planning_Interv_Intervention_Type"],
+          maps[i]["Planning_Interv_Intervention_Parcs_Type"],
+          maps[i]["Planning_Interv_Intervention_Status"],
+          maps[i]["Planning_Interv_ZoneId"],
+          maps[i]["Planning_Interv_Zone_Nom"],
+          maps[i]["Planning_Interv_SiteId"],
+          maps[i]["Planning_Interv_Site_Nom"],
+          maps[i]["Planning_Interv_GroupeId"],
+          maps[i]["Planning_Interv_Groupe_Nom"],
+          maps[i]["Planning_Interv_ClientId"],
+          maps[i]["Planning_Interv_Client_Nom"],
+      );
+    });
+  }
+
+
+  static Future<List<Planning_Intervention>> getPlanning_Intervention(int ID) async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> maps = await db.query("Planning_Intervention", orderBy: "Planning_Interv_PlanningId ASC", where : "Planning_Interv_InterventionId = $ID");
+
+    print("getPlanning_Intervention.toMap() ${maps.length}");
+    return List.generate(maps.length, (i) {
+      return Planning_Intervention(
+        maps[i]["Planning_Interv_PlanningId"],
+        maps[i]["Planning_Interv_InterventionId"],
+        maps[i]["Planning_Interv_ResourceId"],
+        DateTime.parse(maps[i]["Planning_Interv_InterventionstartTime"]),
+        DateTime.parse(maps[i]["Planning_Interv_InterventionendTime"]),
+        maps[i]["Planning_Libelle"],
+        maps[i]["Planning_Interv_Intervention_Type"],
+        maps[i]["Planning_Interv_Intervention_Parcs_Type"],
+        maps[i]["Planning_Interv_Intervention_Status"],
+        maps[i]["Planning_Interv_ZoneId"],
+        maps[i]["Planning_Interv_Zone_Nom"],
+        maps[i]["Planning_Interv_SiteId"],
+        maps[i]["Planning_Interv_Site_Nom"],
+        maps[i]["Planning_Interv_GroupeId"],
+        maps[i]["Planning_Interv_Groupe_Nom"],
+        maps[i]["Planning_Interv_ClientId"],
+        maps[i]["Planning_Interv_Client_Nom"],
+      );
+    });
+  }
+
+
+
+  static Future<void> inserPlanning_Intervention(Planning_Intervention wPlanning_Intervention) async {
+    final db = await DbTools.database;
+    print("wPlanning_Intervention.toMap() ${wPlanning_Intervention.toMap()}");
+    int? repid = await db.insert("Planning_Intervention", wPlanning_Intervention.toMap());
+    gLastID = repid!;
+  }
+
+  static Future<void> TrunckPlanning_Intervention() async {
+    final db = await DbTools.database;
+    int? repid = await db.delete("Planning_Intervention");
+  }
+
 
   //************************************************
   //******************** G R O U P E S *************
@@ -2135,6 +2440,15 @@ class DbTools {
     );
   }
 
+  static Future<void> updateGroupesID(Groupe wGroupe, int oldID) async {
+    final db = await DbTools.database;
+    int? repid = await db.update(
+      "Groupes",
+      wGroupe.toMap(),
+      where: "GroupeId = ?",
+      whereArgs: [oldID],
+    );
+  }
   static Future<void> TrunckGroupes() async {
     final db = await DbTools.database;
     int? repid = await db.delete("Groupes");
@@ -2182,6 +2496,22 @@ class DbTools {
       );
     });
   }
+
+
+  static Future<int> getClient_ID_Site(int ID) async {
+    final db = await database;
+
+    String wTmp = "SELECT Groupe_ClientId FROM Groupes, Sites WHERE Site_GroupeId = GroupeId  AND SiteId = $ID;";
+
+    final List<Map<String, dynamic>> maps  = await db.rawQuery(wTmp);
+
+    if (maps.length > 0)
+      {
+        return maps[0]["Groupe_ClientId"];
+      }
+     return -1;
+  }
+
 
 
   static Future<List<Site>> getSiteGroupe(int ID) async {
@@ -2238,6 +2568,19 @@ class DbTools {
   }
 
 
+  static Future<void> updateSitesID(Site wSite, int oldID) async {
+    print("VALIDER updateSites ${wSite.toMap()}");
+    final db = await DbTools.database;
+    int? repid = await db.update(
+      "Sites",
+      wSite.toMap(),
+      where: "SiteId = ?",
+      whereArgs: [oldID],
+    );
+    print("VALIDER updateSites ${repid}");
+  }
+
+
   static Future<void> updateSites(Site wSite) async {
     print("VALIDER updateSites ${wSite.toMap()}");
     final db = await DbTools.database;
@@ -2249,8 +2592,6 @@ class DbTools {
     );
     print("VALIDER updateSites ${repid}");
   }
-
-
 
 
   static Future<void> TrunckSites() async {
@@ -2311,7 +2652,7 @@ class DbTools {
       return Zone(
         maps[i]["ZoneId"],
         maps[i]["Zone_SiteId"],
-        maps[i]["Zone_Code"],
+        wZone_Code,
         maps[i]["Zone_Depot"],
         maps[i]["Zone_Nom"],
         maps[i]["Zone_Adr1"],
@@ -2335,11 +2676,16 @@ class DbTools {
     gLastID = repid!;
   }
 
+  static Future<void> updateZonesID(Zone wZone, int OldID) async {
+    final db = await DbTools.database;
+    int? repid = await db.update("Zones", wZone.toMap(),where: "ZoneId = ?", whereArgs: [OldID]);
+
+  }
+
   static Future<void> updateZones(Zone wZone) async {
     final db = await DbTools.database;
-    int? repid = await db.update("Zones", wZone.toMap(),where: "ZoneId = ?",
-        whereArgs: [wZone.ZoneId]);
-    gLastID = repid!;
+    int? repid = await db.update("Zones", wZone.toMap(),where: "ZoneId = ?", whereArgs: [wZone.ZoneId]);
+
   }
 
 
@@ -2393,6 +2739,11 @@ class DbTools {
     final List<Map<String, dynamic>> maps = await db.query("Interventions", where: "Intervention_ZoneId = $ID");
 
     return List.generate(maps.length, (i) {
+
+
+      print("maps.length ${maps.length} ${maps[i].toString()}");
+
+
       return Intervention(
         maps[i]["InterventionId"],
         maps[i]["Intervention_ZoneId"],
@@ -2422,23 +2773,66 @@ class DbTools {
     });
   }
 
+  static Future<Intervention> getIntervention(int ID) async {
+    final db = await database;
 
+    final List<Map<String, dynamic>> maps = await db.query("Interventions", where: "InterventionId = $ID");
+
+    print("maps.length ${maps.length} $ID");
+
+    Srv_DbTools.gIntervention=     Intervention.InterventionInit();
+    if (maps.length > 0)
+      Srv_DbTools.gIntervention=  Intervention(
+        maps[0]["InterventionId"],
+        maps[0]["Intervention_ZoneId"],
+        maps[0]["Intervention_Date"],
+        maps[0]["Intervention_Type"],
+        maps[0]["Intervention_Parcs_Type"],
+        maps[0]["Intervention_Status"],
+        maps[0]["Intervention_Histo_Status"],
+        maps[0]["Intervention_Facturation"],
+        maps[0]["Intervention_Histo_Facturation"],
+        maps[0]["Intervention_Responsable"],
+        maps[0]["Intervention_Intervenants"],
+        maps[0]["Intervention_Reglementation"],
+        maps[0]["Intervention_Signataire_Client"],
+        maps[0]["Intervention_Signataire_Tech"],
+        maps[0]["Intervention_Signataire_Date"],
+        maps[0]["Intervention_Contrat"],
+        maps[0]["Intervention_TypeContrat"],
+        maps[0]["Intervention_Duree"],
+        maps[0]["Intervention_Organes"],
+        maps[0]["Intervention_RT"],
+        maps[0]["Intervention_APSAD"],
+        maps[0]["Intervention_Remarque"],
+        maps[0]["Livr"],
+        maps[0]["Intervention_isUpdate"] ==1,
+      );
+
+
+    return Srv_DbTools.gIntervention;
+
+  }
   static Future<void> inserInterventions(Intervention wIntervention) async {
     final db = await DbTools.database;
     int? repid = await db.insert("Interventions", wIntervention.toMap());
     gLastID = repid!;
   }
 
-  static Future<void> updateInterventions(Intervention wIntervention) async {
-    print("VALIDER updateInterventions ${wIntervention.toMap()}");
+  static Future<void> updateInterventionsID(Intervention wIntervention , int oldID) async {
+    print(" updateInterventions ${wIntervention.toMap()}");
     final db = await DbTools.database;
-    int? repid = await db.update(
-      "Interventions",
-      wIntervention.toMap(),
-      where: "InterventionId = ?",
-      whereArgs: [wIntervention.InterventionId],
+    int? repid = await db.update("Interventions", wIntervention.toMap(), where: "InterventionId = ?", whereArgs: [oldID],
     );
-    print("VALIDER updateInterventions ${repid}");
+  }
+
+    static Future<void> updateInterventions(Intervention wIntervention) async {
+      print(" updateInterventions ${wIntervention.toMap()}");
+      final db = await DbTools.database;
+      int? repid = await db.update("Interventions", wIntervention.toMap(), where: "InterventionId = ?", whereArgs: [wIntervention.InterventionId],
+      );
+
+
   }
 
 
@@ -2469,6 +2863,31 @@ class DbTools {
       );
     });
   }
+
+  static Future<List<InterMission>> getInterMissionsIntervention(int ID) async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> maps = await db.query("InterMissions", where : "InterMission_InterventionId = $ID");
+
+
+    print("InterMission ${maps} InterMission_InterventionId = $ID");
+
+
+
+    return List.generate(maps.length, (i) {
+      return InterMission(
+        maps[i]["InterMissionId"],
+        maps[i]["InterMission_InterventionId"],
+        maps[i]["InterMission_Nom"],
+        maps[i]["InterMission_Exec"] == "true",
+        maps[i]["InterMission_Date"],
+        maps[i]["InterMission_Note"],
+      );
+    });
+  }
+
+
+
 
   static Future<void> inserInterMissions(InterMission wInterMission) async {
     final db = await DbTools.database;

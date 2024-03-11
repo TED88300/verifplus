@@ -109,9 +109,6 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
     //**********************************
     //**********************************
 
-
-
-
     await Srv_DbTools.getPlanning_All();
     print("Import_DataDialog ListPlanning ${Srv_DbTools.ListPlanning.length}");
     await DbTools.TrunckPlanning();
@@ -119,14 +116,12 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
       Planning wPlanning = Srv_DbTools.ListPlanning[i];
       await DbTools.inserPlanning(wPlanning);
     }
-    Srv_DbTools.ListPlanning = await  DbTools.getPlanning();
+    Srv_DbTools.ListPlanning = await  DbTools.getPlanningAll();
     print("Import_DataDialog Srv_DbTools.ListPlanning ${Srv_DbTools.ListPlanning}");
     setState(() {
       wSt += "► Planning : ${Srv_DbTools.ListPlanning.length} Plannings\n";
     });
-    
-    
-    
+
     //**********************************
     //**********************************
     //**********************************
@@ -178,42 +173,45 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
       wSt += "► Zone : ${Srv_DbTools.ListZone.length} Zones\n";
     });
 
-    //**********************************
-    //**********************************
-    //**********************************
 
-    await Srv_DbTools.getInterventionAll();
-    print("Import_DataDialog ListIntervention ${Srv_DbTools.ListIntervention.length}");
-    await DbTools.TrunckInterventions();
-    for (int i = 0; i < Srv_DbTools.ListIntervention.length; i++) {
-      Intervention wIntervention = Srv_DbTools.ListIntervention[i];
-      await DbTools.inserInterventions(wIntervention);
-    }
-    Srv_DbTools.ListIntervention = await  DbTools.getInterventionsAll();
-    print("Import_DataDialog Srv_DbTools.ListIntervention ${Srv_DbTools.ListIntervention}");
+    await Srv_ImportExport.ImportIntervention();
     setState(() {
       wSt += "► Intervention : ${Srv_DbTools.ListIntervention.length} Interventions\n";
     });
 
+
     //**********************************
     //**********************************
     //**********************************
 
-    await Srv_DbTools.getInterMissionAll();
-    print("Import_DataDialog ListInterMissions ${Srv_DbTools.ListInterMission.length}");
-    await DbTools.TrunckInterMissions();
-    for (int i = 0; i < Srv_DbTools.ListInterMission.length; i++) {
-      InterMission wInterMissions = Srv_DbTools.ListInterMission[i];
-      await DbTools.inserInterMissions(wInterMissions);
-    }
-    Srv_DbTools.ListInterMission = await  DbTools.getInterMissions();
-    print("Import_DataDialog Srv_DbTools.ListInterMissions ${Srv_DbTools.ListInterMission}");
+    await Srv_ImportExport.ImportPlanning_Intervention();
+    setState(() {
+      wSt += "► Intervention : ${Srv_DbTools.ListPlanning_Intervention.length} Interventions\n";
+    });
+
+
+
+    //**********************************
+    //**********************************
+    //**********************************
+
+    
+    
+    await Srv_ImportExport.ImportInterMission();
     setState(() {
       wSt += "► InterMission : ${Srv_DbTools.ListInterMission.length} InterMissions\n";
     });
 
 
+    //**********************************
+    //**********************************
+    //**********************************
 
+
+    await Srv_ImportExport.ImportUsers();
+    setState(() {
+      wSt += "► User : ${Srv_DbTools.ListIntervention.length} Utilisateurs\n";
+    });
 
     //**********************************
     //**********************************
@@ -450,6 +448,8 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
       wSt += "► NF074 : ${DbTools.glfNF074_Pieces_Actions.length} Pièces / Actions\n";
     });
 
+
+
     // Familles EBP
     await Srv_DbTools.IMPORT_Article_Fam_EbpAll();
     // Articles EBP
@@ -463,6 +463,7 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
 
     Srv_DbTools.ListArticle_Ebp = await Article_Ebp.getArticle_Ebp();
     print("getArticle_Ebp ${Srv_DbTools.ListArticle_Ebp.length}");
+
 
 
 

@@ -82,6 +82,30 @@ class Zone {
     };
   }
 
+  Map<String, dynamic> toMapSite() {
+    return {
+      'ZoneId': ZoneId,
+      'Zone_SiteId': Zone_SiteId,
+      'Zone_Code': Zone_Code,
+      'Zone_Depot': Zone_Depot,
+      'Zone_Nom': Zone_Nom,
+      'Zone_Adr1': Zone_Adr1,
+      'Zone_Adr2': Zone_Adr2,
+      'Zone_Adr3': Zone_Adr3,
+      'Zone_Adr4': Zone_Adr4,
+      'Zone_CP': Zone_CP,
+      'Zone_Ville': Zone_Ville,
+      'Zone_Pays': Zone_Pays,
+      'Zone_Acces': Zone_Acces,
+      'Zone_Rem': Zone_Rem,
+      'Livr': Livr,
+      'Zone_isUpdate': Zone_isUpdate,
+
+    };
+  }
+
+
+
   factory Zone.fromJson(Map<String, dynamic> json) {
 //    print("json $json");
 

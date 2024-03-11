@@ -1174,7 +1174,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
           child: ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
-              txtController.text = "Non renseigné sur l'équipement".toUpperCase();
+              txtController.text = "Non renseigné sur l'équipement";
               widget.param_Saisie.Param_Saisie_Value = txtController.text;
               await HapticFeedback.vibrate();
             },
@@ -1184,7 +1184,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
                   width: 1.0,
                   color: gColors.black,
                 )),
-            child: Text("Non renseigné sur l'équipement".toUpperCase(), style: gColors.bodyTitle1_N_Gr),
+            child: Text("Non renseigné sur l'équipement", style: gColors.bodyTitle1_N_Gr),
           ),
         ),
 //        Valider(context),

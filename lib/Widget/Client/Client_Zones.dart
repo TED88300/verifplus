@@ -33,7 +33,7 @@ class Client_ZonesState extends State<Client_Zones> {
   TextEditingController ctrlFilter = new TextEditingController();
   String filterText = '';
 
-  void Reload() async {
+  Future Reload() async {
     await Srv_ImportExport.getErrorSync();
 
     bool wRes = await Srv_DbTools.getZones(Srv_DbTools.gSite.SiteId);
@@ -163,7 +163,42 @@ class Client_ZonesState extends State<Client_Zones> {
             child: new Icon(Icons.add),
             backgroundColor: gColors.secondary,
             onPressed: () async {
-              setState(() {});
+              await DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
+              await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gAdresse.AdresseId, "LIVR");
+
+              Srv_DbTools.gZone = Zone.ZoneInit();
+              bool wRet = await Srv_DbTools.addZone(Srv_DbTools.gSite.SiteId);
+
+              print("retour addZone  ${wRet.toString()}");
+              Srv_DbTools.gZone.Zone_isUpdate = wRet;
+              if (!wRet) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
+              Srv_DbTools.gZone.ZoneId          = Srv_DbTools.gLastID;
+              print("retour Srv_DbTools.gZone.ZoneId  ${Srv_DbTools.gZone.ZoneId}");
+              Srv_DbTools.gZone.Zone_SiteId   = Srv_DbTools.gSite.SiteId;
+              Srv_DbTools.gZone.Zone_Nom        = Srv_DbTools.gGroupe.Groupe_Nom + "_${Srv_DbTools.ListZone.length+1}";
+              Srv_DbTools.gZone.Zone_Adr1       = Srv_DbTools.gAdresse.Adresse_Adr1;
+              Srv_DbTools.gZone.Zone_Adr2       = Srv_DbTools.gAdresse.Adresse_Adr2;
+              Srv_DbTools.gZone.Zone_Adr3       = Srv_DbTools.gAdresse.Adresse_Adr3;
+              Srv_DbTools.gZone.Zone_CP         = Srv_DbTools.gAdresse.Adresse_CP;
+              Srv_DbTools.gZone.Zone_Ville      = Srv_DbTools.gAdresse.Adresse_Ville;
+              DbTools.inserZones(Srv_DbTools.gZone);
+              if (wRet) Srv_DbTools.setZone(Srv_DbTools.gZone);
+
+
+
+              await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gZone.ZoneId , "ZONE");
+              Srv_DbTools.gContact.Contact_Civilite  = Srv_DbTools.gContactLivr.Contact_Civilite ;
+              Srv_DbTools.gContact.Contact_Prenom    = Srv_DbTools.gContactLivr.Contact_Prenom   ;
+              Srv_DbTools.gContact.Contact_Nom       = Srv_DbTools.gContactLivr.Contact_Nom      ;
+              Srv_DbTools.gContact.Contact_Fonction  = Srv_DbTools.gContactLivr.Contact_Fonction ;
+              Srv_DbTools.gContact.Contact_Service   = Srv_DbTools.gContactLivr.Contact_Service  ;
+              Srv_DbTools.gContact.Contact_Tel1      = Srv_DbTools.gContactLivr.Contact_Tel1     ;
+              Srv_DbTools.gContact.Contact_Tel2      = Srv_DbTools.gContactLivr.Contact_Tel2     ;
+              Srv_DbTools.gContact.Contact_eMail     = Srv_DbTools.gContactLivr.Contact_eMail    ;
+              Srv_DbTools.setContact(Srv_DbTools.gContact);
+
+              await Reload();
+
             }));
   }
 
@@ -362,6 +397,14 @@ class Client_ZonesState extends State<Client_Zones> {
                       color : Colors.white,
                       child: Row(
                         children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.only(left: 5, bottom: 2),
+                            child: Text(
+                              zone.Zone_isUpdate ? " " : "◉",
+                              maxLines: 1,
+                              style: gColors.bodyTitle1_B_R32,
+                            ),
+                          ),
                           Expanded(
                               flex: 25,
                               child: Container(

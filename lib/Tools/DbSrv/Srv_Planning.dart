@@ -55,7 +55,7 @@ class Planning {
   }
   String Desc() {
     return '$PlanningId        '
-        'id $Planning_InterventionId '
+        'Planning_InterventionId $Planning_InterventionId '
         'user $Planning_ResourceId     '
         'start $Planning_InterventionstartTime     '
         'end $Planning_InterventionendTime     ';

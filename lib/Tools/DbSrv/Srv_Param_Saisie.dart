@@ -27,7 +27,7 @@ class Param_Saisie {
     return 'Param_SaisieId : $Param_SaisieId '
         'O : $Param_Saisie_Organe '
         'T : $Param_Saisie_Type '
-        'SID $Param_Saisie_ID '
+        'SID : $Param_Saisie_ID '
         'L : $Param_Saisie_Label '
         'A : $Param_Saisie_Aide '
         'C : $Param_Saisie_Controle '

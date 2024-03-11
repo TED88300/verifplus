@@ -178,7 +178,6 @@ class Srv_DbTools {
   static NF074_Pieces_Det gNF074_Pieces_Det = NF074_Pieces_Det.NF074_Pieces_DetInit();
 
   static Future<bool> IMPORT_Srv_NF074_Pieces_Det() async {
-
     String wSlq = "select * from NF074_Pieces_Det ORDER BY NF074_Pieces_DetId";
     try {
       ListNF074_Pieces_Det = await getNF074_Pieces_Det_API_Post("select", wSlq);
@@ -225,7 +224,6 @@ class Srv_DbTools {
   static NF074_Pieces_Det_Inc gNF074_Pieces_Det_Inc = NF074_Pieces_Det_Inc.NF074_Pieces_Det_IncInit();
 
   static Future<bool> IMPORT_Srv_NF074_Pieces_Det_Inc() async {
-
     String wSlq = "select * from NF074_Pieces_Det_Inc ORDER BY NF074_Pieces_Det_IncId";
     try {
       ListNF074_Pieces_Det_Inc = await getNF074_Pieces_Det_Inc_API_Post("select", wSlq);
@@ -272,7 +270,6 @@ class Srv_DbTools {
   static NF074_Mixte_Produit gNF074_Mixte_Produit = NF074_Mixte_Produit.NF074_Mixte_ProduitInit();
 
   static Future<bool> IMPORT_Srv_NF074_Mixte_Produit() async {
-
     String wSlq = "select * from NF074_Mixte_Produit ORDER BY NF074_Mixte_ProduitId";
     try {
       ListNF074_Mixte_Produit = await getNF074_Mixte_Produit_API_Post("select", wSlq);
@@ -319,7 +316,6 @@ class Srv_DbTools {
   static NF074_Pieces_Actions gNF074_Pieces_Actions = NF074_Pieces_Actions.NF074_Pieces_ActionsInit();
 
   static Future<bool> IMPORT_Srv_NF074_Pieces_Actions() async {
-
     String wSlq = "select * from NF074_Pieces_Actions ORDER BY NF074_Pieces_ActionsId";
     try {
       ListNF074_Pieces_Actions = await getNF074_Pieces_Actions_API_Post("select", wSlq);
@@ -381,7 +377,6 @@ class Srv_DbTools {
   }
 
   static Future<bool> IMPORT_Article_EbpAll() async {
-
     String wSlq = "select * from Articles_Ebp ORDER BY Article_codeArticle";
     try {
       ListArticle_Ebp = await getArticle_Ebp_API_Post("select", wSlq);
@@ -445,7 +440,6 @@ class Srv_DbTools {
   static Article_Fam_Ebp gArticle_Fam_Ebp = Article_Fam_Ebp.Article_Fam_EbpInit();
 
   static Future<bool> IMPORT_Article_Fam_EbpAll() async {
-
     String wSlq = "select * from Articles_Fam_Ebp ORDER BY Article_Fam_Libelle";
     try {
       ListArticle_Fam_Ebp = await getArticle_Fam_Ebp_API_Post("select", wSlq);
@@ -458,7 +452,6 @@ class Srv_DbTools {
       return false;
     }
   }
-
 
   static Future<List<Article_Fam_Ebp>> getArticle_Fam_Ebp_API_Post(String aType, String aSQL) async {
     setSrvToken();
@@ -695,8 +688,6 @@ class Srv_DbTools {
   //
   //
 
-
-
   //******************************************
   //************   CLIENT   ******************
   //******************************************
@@ -875,17 +866,16 @@ class Srv_DbTools {
   static Future<bool> addClient(Client Client) async {
     String wValue = "NULL,'???'";
     String wSlq = "INSERT INTO Clients (ClientId, Client_Nom) VALUES ($wValue)";
-    print("addClient wSlq "  + wSlq);
+    print("addClient wSlq " + wSlq);
 
     try {
       bool ret = await add_API_Post("insert", wSlq);
       print("addClient ret " + ret.toString());
-      return true;
+      return ret;
     } catch (e) {
       print("addClient ERROR " + e.toString());
       return false;
     }
-
   }
 
   static Future<bool> delClient(Client Client) async {
@@ -1027,7 +1017,6 @@ class Srv_DbTools {
   }
 
   static Future<bool> addAdresse(int Adresse_ClientId, String Type) async {
-
     String wValue = "NULL, $Adresse_ClientId, '$Type'";
     String wSlq = "INSERT INTO Adresses (AdresseId, Adresse_ClientId, Adresse_Type) VALUES ($wValue)";
     print("addAdresse " + wSlq);
@@ -1035,12 +1024,11 @@ class Srv_DbTools {
     try {
       bool ret = await add_API_Post("insert", wSlq);
       print("addAdresse ret " + ret.toString());
-      return true;
+      return ret;
     } catch (e) {
       print("addAdresse ERROR " + e.toString());
       return false;
     }
-
   }
 /*
 
@@ -1086,7 +1074,6 @@ class Srv_DbTools {
   static Groupe gGroupe = Groupe.GroupeInit();
 
   static Future<bool> getGroupeAll() async {
-
     try {
       ListGroupe = await getGroupe_API_Post("select", "select * from Groupes ORDER BY Groupe_Nom");
       if (ListGroupe == null) return false;
@@ -1099,7 +1086,6 @@ class Srv_DbTools {
     } catch (e) {
       return false;
     }
-
   }
 
   static Future<bool> getGroupesClient(int ID) async {
@@ -1144,7 +1130,6 @@ class Srv_DbTools {
         "WHERE GroupeId      = ${Groupe.GroupeId.toString()}";
     gColors.printWrapped("setGroupe " + wSlq);
 
-
     try {
       gColors.printWrapped("setGroupe " + wSlq);
       bool ret = await add_API_Post("upddel", wSlq);
@@ -1154,9 +1139,6 @@ class Srv_DbTools {
       print("setGroupe ERROR " + e.toString());
       return false;
     }
-
-
-
   }
 
   static Future<bool> addGroupe(int Groupe_ClientId) async {
@@ -1166,7 +1148,7 @@ class Srv_DbTools {
     try {
       bool ret = await add_API_Post("insert", wSlq);
       print("addGroupe ret ${ret.toString()} ${gLastID}");
-      return true;
+      return ret;
     } catch (e) {
       print("addGroupe ERROR " + e.toString());
       return false;
@@ -1231,7 +1213,6 @@ class Srv_DbTools {
     } catch (e) {
       return false;
     }
-
   }
 
   static Future<bool> getSitesGroupe(int ID) async {
@@ -1249,7 +1230,6 @@ class Srv_DbTools {
     } catch (e) {
       return false;
     }
-
   }
 
   static Future<bool> getGroupeSites(int ID) async {
@@ -1306,14 +1286,13 @@ class Srv_DbTools {
   }
 
   static Future<bool> addSite(int Site_GroupeId) async {
-
     String wValue = "NULL, $Site_GroupeId";
     String wSlq = "INSERT INTO Sites (SiteId, Site_GroupeId) VALUES ($wValue)";
     print("addSite " + wSlq);
     try {
       bool ret = await add_API_Post("insert", wSlq);
       print("addSite ret " + ret.toString());
-      return true;
+      return ret;
     } catch (e) {
       print("addSite ERROR " + e.toString());
       return false;
@@ -1395,7 +1374,6 @@ class Srv_DbTools {
   }
 
   static Future<bool> getZones(int ID) async {
-
     try {
       String wTmp = "SELECT Zones.* FROM Zones where Zone_SiteId =  ${ID} ORDER BY Zone_Nom ASC;";
       ListZone = await getZone_API_Post("select", wTmp);
@@ -1409,13 +1387,15 @@ class Srv_DbTools {
     } catch (e) {
       return false;
     }
-
   }
 
   static Future getZoneID(int ID) async {
+    print("getZoneID $ID ListZone ${ListZone.length}");
+
     ListZone.forEach((element) {
       if (element.ZoneId == ID) {
         gZone = element;
+        print("gZone ${gZone.Zone_Nom}");
         return;
       }
     });
@@ -1436,25 +1416,29 @@ class Srv_DbTools {
         "Zone_Rem       = \"${Zone.Zone_Rem}\" " +
         "WHERE ZoneId      = ${Zone.ZoneId.toString()}";
     gColors.printWrapped("setZone " + wSlq);
-    bool ret = await add_API_Post("upddel", wSlq);
-    print("setZone ret " + ret.toString());
-    return ret;
+
+    try {
+      bool ret = await add_API_Post("upddel", wSlq);
+      print("setZone ret " + ret.toString());
+      return ret;
+    } catch (e) {
+      print("setZone ERROR " + e.toString());
+      return false;
+    }
   }
 
   static Future<bool> addZone(int Zone_SiteId) async {
     String wValue = "NULL, $Zone_SiteId";
     String wSlq = "INSERT INTO Zones (ZoneId, Zone_SiteId) VALUES ($wValue)";
     print("addZone " + wSlq);
-
     try {
       bool ret = await add_API_Post("insert", wSlq);
-      print("addZone ret ${ret.toString()} ${ret.toString()}");
-      return true;
+      print("addZone ret ${ret.toString()}");
+      return ret;
     } catch (e) {
       print("addZone ERROR " + e.toString());
       return false;
     }
-
   }
 
   static Future<bool> delZone(Zone zone) async {
@@ -1529,15 +1513,18 @@ class Srv_DbTools {
   }
 
   static Future<bool> getInterventionAll() async {
-    ListIntervention = await getIntervention_API_Post("select", "select * from Interventions");
-
-    if (ListIntervention == null) return false;
-    print("getInterventionAll ${ListIntervention.length}");
-    if (ListIntervention.length > 0) {
-      print("getInterventionAll return TRUE");
-      return true;
+    try {
+      ListIntervention = await getIntervention_API_Post("select", "select * from Interventions");
+      if (ListIntervention == null) return false;
+      print("getInterventionAll ${ListIntervention.length}");
+      if (ListIntervention.length > 0) {
+        print("getInterventionAll return TRUE");
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
   static Future<bool> getInterventionsZone(int ID) async {
@@ -1555,12 +1542,6 @@ class Srv_DbTools {
     } catch (e) {
       return false;
     }
-
-
-
-
-
-
   }
 
   static Future<bool> getInterventionsID_Srv(int ID) async {
@@ -1609,8 +1590,6 @@ class Srv_DbTools {
       print("setIntervention ERROR " + e.toString());
       return false;
     }
-
-
   }
 
   static Future<bool> addIntervention(int Intervention_ZoneId) async {
@@ -1621,12 +1600,11 @@ class Srv_DbTools {
     try {
       bool ret = await add_API_Post("insert", wSlq);
       print("addIntervention ret $ret  gLastID $gLastID");
-      return true;
+      return ret;
     } catch (e) {
       print("addIntervention ERROR " + e.toString());
       return false;
     }
-
   }
 
   static Future<bool> delIntervention(Intervention Intervention) async {
@@ -1670,12 +1648,17 @@ class Srv_DbTools {
   static List<UserH> ListUserH = [];
 
   static Future getPlanning_InterventionIdRes(int InterventionId) async {
-    ListUserH = await getPlanningH_API_Post("select", "SELECT Users.User_Nom , Users.User_Prenom, SUM(TIMEDIFF( Planning.Planning_InterventionendTime,Planning.Planning_InterventionstartTime) / 10000) as H FROM Planning , Users where `Planning_ResourceId` = Users.UserID AND   Planning_InterventionId = $InterventionId GROUP BY Planning.Planning_ResourceId ORDER BY H DESC;");
-    if (ListUserH == null) return false;
-    if (ListUserH.length > 0) {
-      return true;
+    ListUserH.clear();
+    try {
+      ListUserH = await getPlanningH_API_Post("select", "SELECT Users.User_Nom , Users.User_Prenom, SUM(TIMEDIFF( Planning.Planning_InterventionendTime,Planning.Planning_InterventionstartTime) / 10000) as H FROM Planning , Users where `Planning_ResourceId` = Users.UserID AND   Planning_InterventionId = $InterventionId GROUP BY Planning.Planning_ResourceId ORDER BY H DESC;");
+      if (ListPlanning == null) return false;
+      if (ListPlanning.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
   static List<Planning> ListPlanning = [];
@@ -1691,21 +1674,29 @@ class Srv_DbTools {
   }
 
   static Future getPlanning_InterventionId(int InterventionId) async {
-    ListPlanning = await getPlanning_API_Post("select", "select * from Planning where Planning_InterventionId = $InterventionId");
-    if (ListPlanning == null) return false;
-    if (ListPlanning.length > 0) {
-      return true;
+    try {
+      ListPlanning = await getPlanning_API_Post("select", "select * from Planning where Planning_InterventionId = $InterventionId");
+      if (ListPlanning == null) return false;
+      if (ListPlanning.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
   static Future getPlanning_ResourceId(int ResourceId) async {
-    ListPlanning = await getPlanning_API_Post("select", "select * from Planning where Planning_ResourceId = $ResourceId");
-    if (ListPlanning == null) return false;
-    if (ListPlanning.length > 0) {
-      return true;
+    try {
+      ListPlanning = await getPlanning_API_Post("select", "select * from Planning where Planning_ResourceId = $ResourceId");
+      if (ListPlanning == null) return false;
+      if (ListPlanning.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
   static Future<bool> setPlanning(Planning planning) async {
@@ -1803,35 +1794,23 @@ class Srv_DbTools {
   //************   PLANNING INTERVENTIONS   ***********
   //***************************************************
 
-/*
-
-  SELECT PlanningId, Planning_InterventionId, Planning_ResourceId,Planning_InterventionstartTime, Planning_InterventionendTime, Planning_Libelle, InterventionId,Intervention_Type,Intervention_Parcs_Type,Intervention_Status, ZoneId, Zone_Nom, SiteId, Site_Nom, GroupeId, Groupe_Nom, ClientId, Client_Nom
-  FROM Planning, Interventions, Zones, Sites, Groupes, Clients
-  WHERE Planning_InterventionId = InterventionId AND Intervention_ZoneId = ZoneId AND Zone_SiteId = SiteId AND Site_GroupeId = GroupeId AND Groupe_ClientId = ClientId
-  ORDER BY InterventionId DESC
-
-
-  SELECT PlanningId, Planning_InterventionId, Planning_ResourceId,Planning_InterventionstartTime, Planning_InterventionendTime, Planning_Libelle, InterventionId,Intervention_Type,Intervention_Parcs_Type,Intervention_Status, ZoneId, Zone_Nom, SiteId, Site_Nom, GroupeId, Groupe_Nom, ClientId, Client_Nom
-  FROM Planning, Interventions, Zones, Sites, Groupes, Clients
-  WHERE Planning_InterventionId = InterventionId AND Intervention_ZoneId = ZoneId AND Zone_SiteId = SiteId AND Site_GroupeId = GroupeId AND Groupe_ClientId = ClientId AND Planning_ResourceId = 1
-
-*/
-
   static List<Planning_Intervention> ListPlanning_Intervention = [];
   static Planning_Intervention gPlanning_Intervention = Planning_Intervention.Planning_InterventionInit();
 
   static Future getPlanning_InterventionRes(int ResourceId) async {
-    String wTmp =
-        "  SELECT PlanningId, Planning_InterventionId, Planning_ResourceId,Planning_InterventionstartTime, Planning_InterventionendTime, Planning_Libelle, InterventionId,Intervention_Type,Intervention_Parcs_Type,Intervention_Status, ZoneId, Zone_Nom, SiteId, Site_Nom, GroupeId, Groupe_Nom, ClientId, Client_Nom FROM Planning, Interventions, Zones, Sites, Groupes, Clients WHERE Planning_InterventionId = InterventionId AND Intervention_ZoneId = ZoneId AND Zone_SiteId = SiteId AND Site_GroupeId = GroupeId AND Groupe_ClientId = ClientId AND Planning_ResourceId = $ResourceId ORDER BY Planning_InterventionstartTime";
-    print("getPlanning_InterventionRes $wTmp");
-
-    ListPlanning_Intervention = await getPlanning_Intervention_API_Post("select", wTmp);
-
-    if (ListPlanning_Intervention == null) return false;
-    if (ListPlanning_Intervention.length > 0) {
-      return true;
+    try {
+      String wTmp =
+          "  SELECT PlanningId, Planning_InterventionId, Planning_ResourceId,Planning_InterventionstartTime, Planning_InterventionendTime, Planning_Libelle, InterventionId,Intervention_Type,Intervention_Parcs_Type,Intervention_Status, ZoneId, Zone_Nom, SiteId, Site_Nom, GroupeId, Groupe_Nom, ClientId, Client_Nom FROM Planning, Interventions, Zones, Sites, Groupes, Clients WHERE Planning_InterventionId = InterventionId AND Intervention_ZoneId = ZoneId AND Zone_SiteId = SiteId AND Site_GroupeId = GroupeId AND Groupe_ClientId = ClientId AND Planning_ResourceId = $ResourceId ORDER BY Planning_InterventionstartTime";
+      print("getPlanning_InterventionRes $wTmp");
+      ListPlanning_Intervention = await getPlanning_Intervention_API_Post("select", wTmp);
+      if (ListPlanning_Intervention == null) return false;
+      if (ListPlanning_Intervention.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
   static Future<List<Planning_Intervention>> getPlanning_Intervention_API_Post(String aType, String aSQL) async {
@@ -1867,20 +1846,10 @@ class Srv_DbTools {
   //***************************************************
   //************   PLANNING INTERVENTIONS   ***********
   //***************************************************
-  static List<Planning_Interv> ListPlanning_Interv = [];
-  static Planning_Interv gPlanning_Interv = Planning_Interv.Planning_RdvInit();
 
   /*
-  SELECT InterventionId,Intervention_Type,Intervention_Parcs_Type,Intervention_Status,
-      ZoneId, Zone_Nom, SiteId, Site_Nom, GroupeId, Groupe_Nom, ClientId, Client_Nom
-  FROM Interventions, Zones, Sites, Groupes, Clients
-  WHERE Intervention_ZoneId = ZoneId
-  AND Zone_SiteId = SiteId
-  AND Site_GroupeId = GroupeId
-  AND Groupe_ClientId = ClientId
-  AND InterventionId = 20
-
-*/
+  static List<Planning_Interv> ListPlanning_Interv = [];
+  static Planning_Interv gPlanning_Interv = Planning_Interv.Planning_RdvInit();
 
   static Future getPlanning_IntervAll() async {
     String wTmp = "SELECT InterventionId,Intervention_Type,Intervention_Parcs_Type,Intervention_Status, ZoneId, Zone_Nom, SiteId, Site_Nom, GroupeId, Groupe_Nom, ClientId, Client_Nom FROM Interventions, Zones, Sites, Groupes, Clients WHERE Intervention_ZoneId = ZoneId AND Zone_SiteId = SiteId AND Site_GroupeId = GroupeId AND Groupe_ClientId = ClientId ORDER BY InterventionId DESC";
@@ -1919,7 +1888,7 @@ class Srv_DbTools {
 
   static Future<List<Planning_Interv>> getPlanning_Interv_API_Post(String aType, String aSQL) async {
     setSrvToken();
-    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
+    String eSQL = base64.encode(utf8.encode(aSQL));
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
     request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
 
@@ -1945,7 +1914,7 @@ class Srv_DbTools {
       print(response.reasonPhrase);
     }
     return [];
-  }
+  }*/
 
   //******************************************
   //************   InterMissionS   ***********
@@ -1973,14 +1942,18 @@ class Srv_DbTools {
   }
 
   static Future<bool> getInterMissionAll() async {
-    ListInterMission = await getInterMission_API_Post("select", "select * from InterMissions ORDER BY InterMission_Nom");
-    if (ListInterMission == null) return false;
-    print("getInterMissionAll ${ListInterMission.length}");
-    if (ListInterMission.length > 0) {
-      print("getInterMissionAll return TRUE");
-      return true;
+    try {
+      ListInterMission = await getInterMission_API_Post("select", "select * from InterMissions ORDER BY InterMission_Nom");
+      if (ListInterMission == null) return false;
+      print("getInterMissionAll ${ListInterMission.length}");
+      if (ListInterMission.length > 0) {
+        print("getInterMissionAll return TRUE");
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
   static Future<bool> getInterMissionsIntervention(int ID) async {
@@ -2075,7 +2048,6 @@ class Srv_DbTools {
 
   static Future<bool> getParc_EntAll() async {
     ListParc_Ent = await getParc_Ent_API_Post("select", "select * from Parcs_Ent ORDER BY Parcs_Type");
-
     if (ListParc_Ent == null) return false;
     print("getParc_EntAll ${ListParc_Ent.length}");
     if (ListParc_Ent.length > 0) {
@@ -2086,15 +2058,16 @@ class Srv_DbTools {
   }
 
   static Future getParc_EntID(int ID) async {
-    ListParc_Ent = await getParc_Ent_API_Post("select", "select * from Parcs_Ent WHERE Parcs_InterventionId = $ID  ORDER BY Parcs_Type");
-
-    if (ListParc_Ent == null) return false;
-//    print("getParc_EntAll ${ListParc_Ent.length}");
-    if (ListParc_Ent.length > 0) {
-      //    print("getParc_EntAll return TRUE");
-      return true;
+    try {
+      ListParc_Ent = await getParc_Ent_API_Post("select", "select * from Parcs_Ent WHERE Parcs_InterventionId = $ID  ORDER BY Parcs_Type");
+      if (ListParc_Ent == null) return false;
+      if (ListParc_Ent.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
   static Future<bool> setParc_Ent(Parc_Ent_Srv Parc_Ent) async {
@@ -2366,15 +2339,16 @@ class Srv_DbTools {
   }
 
   static Future<bool> getParcs_DescInter(int Parcs_InterventionId) async {
-    ListParc_Desc = await getParc_Desc_API_Post("select", "SELECT Parcs_Desc.* FROM Parcs_Desc, Parcs_Ent  WHERE ParcsDesc_ParcsId = ParcsId AND Parcs_InterventionId = $Parcs_InterventionId");
-
-    if (ListParc_Desc == null) return false;
-//    print("getParc_DescAll ${ListParc_Desc.length}");
-    if (ListParc_Desc.length > 0) {
-      //    print("getParc_DescAll return TRUE");
-      return true;
+    try {
+      ListParc_Desc = await getParc_Desc_API_Post("select", "SELECT Parcs_Desc.* FROM Parcs_Desc, Parcs_Ent  WHERE ParcsDesc_ParcsId = ParcsId AND Parcs_InterventionId = $Parcs_InterventionId");
+      if (ListParc_Desc == null) return false;
+      if (ListParc_Desc.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
   static Future<bool> setParc_Desc(Parc_Desc_Srv Parc_Desc) async {
@@ -2510,15 +2484,16 @@ class Srv_DbTools {
   }
 
   static Future<bool> getParcs_ArtInter(int Parcs_InterventionId) async {
-    ListParc_Art = await getParc_Art_API_Post("select", "SELECT Parcs_Art.* FROM Parcs_Art, Parcs_Ent  WHERE ParcsArt_ParcsId = ParcsId AND Parcs_InterventionId = $Parcs_InterventionId");
-
-    if (ListParc_Art == null) return false;
-//    print("getParc_ArtAll ${ListParc_Art.length}");
-    if (ListParc_Art.length > 0) {
-      //    print("getParc_ArtAll return TRUE");
-      return true;
+    try {
+      ListParc_Art = await getParc_Art_API_Post("select", "SELECT Parcs_Art.* FROM Parcs_Art, Parcs_Ent  WHERE ParcsArt_ParcsId = ParcsId AND Parcs_InterventionId = $Parcs_InterventionId");
+      if (ListParc_Art == null) return false;
+      if (ListParc_Art.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
   static Future<bool> setParc_Art(Parc_Art_Srv Parc_Art) async {
@@ -2669,25 +2644,34 @@ class Srv_DbTools {
 
   static Future<bool> getContactClientAdrType(int ClientID, int AdresseId, String Type) async {
     String wSlq = "select * from Contacts  where Contact_ClientId = $ClientID AND Contact_AdresseId = $AdresseId AND Contact_Type = '$Type' ORDER BY Contact_Type";
-    print("getContactClientType ${wSlq}");
+    print("getContactClientAdrType ${wSlq}");
 
     try {
       ListContact = await getContact_API_Post("select", wSlq);
+      print("getContact_API_Post ");
       if (ListContact == null) return false;
-      print("getContactClientType ${ListContact.length}");
+      print("getContact_API_Post ${ListContact.length}");
       if (ListContact.length > 0) {
         gContact = ListContact[0];
-        print("getContactClientType return TRUE ${gContact.ContactId} ${gContact.Contact_Nom}");
+        print("getContact_API_Post return TRUE ${gContact.ContactId} ${gContact.Contact_Nom}");
         return true;
       } else {
+        bool wRes = await DbTools.getContactClientAdrType(ClientID, AdresseId, Type);
+        if (!wRes) {
+          await addContactAdrType(ClientID, AdresseId, Type);
+          await getContactClientAdrType(ClientID, AdresseId, Type);
+        }
+        return wRes;
+      }
+
+    } catch (e) {
+      bool wRes = await DbTools.getContactClientAdrType(ClientID, AdresseId, Type);
+      if (!wRes) {
         await addContactAdrType(ClientID, AdresseId, Type);
         await getContactClientAdrType(ClientID, AdresseId, Type);
       }
       return false;
-    } catch (e) {
-      return false;
     }
-
   }
 
   static Future<bool> getContactClient(int ClientID) async {
@@ -2695,7 +2679,6 @@ class Srv_DbTools {
 //    print("getContactClientType ${wSlq}");
 
     ListContact = await getContact_API_Post("select", wSlq);
-
     if (ListContact == null) return false;
     //  print("getContactClientType ${ListContact.length}");
     if (ListContact.length > 0) {
@@ -2721,9 +2704,9 @@ class Srv_DbTools {
         "Contact_AdresseId     =   ${Contact.Contact_AdresseId}, " +
         "Contact_Code             = \"${Contact.Contact_Code}\", " +
         "Contact_Type             = \"${Contact.Contact_Type}\", " +
+        "Contact_Nom              = \"${Contact.Contact_Nom}\", " +
         "Contact_Civilite         = \"${Contact.Contact_Civilite}\", " +
         "Contact_Prenom           = \"${Contact.Contact_Prenom}\", " +
-        "Contact_Nom              = \"${Contact.Contact_Nom}\", " +
         "Contact_Fonction         = \"${Contact.Contact_Fonction}\", " +
         "Contact_Service          = \"${Contact.Contact_Service}\", " +
         "Contact_Tel1             = \"${Contact.Contact_Tel1}\", " +
@@ -2733,11 +2716,10 @@ class Srv_DbTools {
         "WHERE ContactId      = ${Contact.ContactId.toString()}";
 
     gColors.printWrapped("setContact sql " + wSlq);
-
     try {
       bool ret = await add_API_Post("upddel", wSlq);
       print("setContact ret " + ret.toString());
-      return true;
+      return ret;
     } catch (e) {
       print("setContact ERROR " + e.toString());
       return false;
@@ -2745,15 +2727,13 @@ class Srv_DbTools {
   }
 
   static Future<bool> addContactAdrType(int Contact_ClientId, int Contact_AdresseId, String Type) async {
-
     String wValue = "NULL, $Contact_ClientId, $Contact_AdresseId, '$Type'";
     String wSlq = "INSERT INTO Contacts (ContactId, Contact_ClientId, Contact_AdresseId, Contact_Type) VALUES ($wValue)";
     print("addContact " + wSlq);
-
     try {
       bool ret = await add_API_Post("insert", wSlq);
       print("addContact ret " + ret.toString());
-      return true;
+      return ret;
     } catch (e) {
       print("addContact ERROR " + e.toString());
       return false;
@@ -2771,19 +2751,20 @@ class Srv_DbTools {
 
   static Future<bool> getContactGrp(int contactClientid, int contactAdresseid) async {
     String wSlq = "select * from Contacts  where Contact_ClientId = $contactClientid AND Contact_AdresseId = $contactAdresseid AND Contact_Type = 'GRP' ORDER BY Contact_Type";
+    try {
+      ListContact = await getContact_API_Post("select", wSlq);
+      if (ListContact == null) return false;
+      if (ListContact.length > 0) {
+        gContact = ListContact[0];
+        return true;
+      }      return false;
+    } catch (e) {
+      return false;
+    }
 
-    ListContact = await getContact_API_Post("select", wSlq);
 
-    if (ListContact == null) return false;
-    //  print("getContactClientType ${ListContact.length}");
-    if (ListContact.length > 0) {
-      gContact = ListContact[0];
-      //  print("getContactClientType return TRUE");
-      return true;
-    } else {}
-    return false;
+
   }
-
 
   static Future<bool> getContactSite(int contactClientid, int contactAdresseid) async {
     String wSlq = "select * from Contacts  where Contact_ClientId = $contactClientid AND Contact_AdresseId = $contactAdresseid AND Contact_Type = 'SITE' ORDER BY Contact_Type";
@@ -2799,7 +2780,6 @@ class Srv_DbTools {
     } else {}
     return false;
   }
-
 
   static Future<bool> delContact(Contact Contact) async {
     String aSQL = "DELETE FROM Contacts WHERE ContactId = ${Contact.ContactId} ";
@@ -2818,7 +2798,6 @@ class Srv_DbTools {
     if (response.statusCode == 200) {
       var parsedJson = json.decode(await response.stream.bytesToString());
       final items = parsedJson['data'];
-
       if (items != null) {
         List<Contact> ContactList = await items.map<Contact>((json) {
           return Contact.fromJson(json);
@@ -2961,7 +2940,6 @@ class Srv_DbTools {
     return [];
   }
 
-
   //****************************************************
   //************************  USERS  *******************
   //****************************************************
@@ -2994,7 +2972,7 @@ class Srv_DbTools {
       print("getUserLogin D");
     } catch (e) {
       List<User> wListUser = await DbTools.getUsers();
-      if (wListUser.length == 0)  return false;
+      if (wListUser.length == 0) return false;
       gUserLogin = wListUser[0];
       gLoginID = gUserLogin.UserID;
       Srv_DbTools.ListUser_Hab = await DbTools.getUser_Hab();
@@ -3012,7 +2990,6 @@ class Srv_DbTools {
       }
 
       return true;
-
     }
 
     print("getUserLogin E ${ListUser.length}");
@@ -3033,8 +3010,6 @@ class Srv_DbTools {
       await SharedPref.setStrKey("picUser", base64Encode(gObj.picUser));
       int timestamp = DateTime.now().millisecondsSinceEpoch;
       await SharedPref.setIntKey("timestampLogin", timestamp);
-
-
 
       print("gObj.picUser ${gObj.picUser.length}");
 
@@ -3088,19 +3063,16 @@ class Srv_DbTools {
   }
 
   static Future<bool> getUserAll() async {
-    ListUser = await getUser_API_Post("select", "select * from Users WHERE User_Actif = 1 ORDER BY User_Nom");
-
-    if (ListUser == null) return false;
-
-    print("getUserName ${ListUser.length}");
-
-    if (ListUser.length > 0) {
-      print("getUserName return TRUE");
-
-      return true;
+    try {
+      ListUser = await getUser_API_Post("select", "select * from Users WHERE User_Actif = 1 ORDER BY User_Nom");
+      if (ListUser == null) return false;
+      if (ListUser.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-
-    return false;
   }
 
   static Future<bool> getUserid(int id) async {
@@ -3406,29 +3378,30 @@ class Srv_DbTools {
 
   static Future<bool> getParam_SaisieAll() async {
     ListParam_Saisie = await getParam_Saisie_API_Post("select", "select * from Param_Saisie ORDER BY Param_Saisie_Organe, Param_Saisie_Type, Param_Saisie_Ordre,Param_Saisie_ID");
-
     if (ListParam_Saisie == null) return false;
     print("getParam_SaisieAll ${ListParam_Saisie.length}");
     if (ListParam_Saisie.length > 0) {
       return true;
     }
-
     return false;
   }
 
   static Future<bool> getParam_Saisie(String Param_Saisie_Organe, String Param_Saisie_Type) async {
-    ListParam_Saisie = await getParam_Saisie_API_Post("select", "select * from Param_Saisie WHERE Param_Saisie_Organe = '${Param_Saisie_Organe}' AND Param_Saisie_Type = '${Param_Saisie_Type}'  ORDER BY Param_Saisie_Organe, Param_Saisie_Type, Param_Saisie_Ordre,Param_Saisie_ID");
-    if (ListParam_Saisie == null) return false;
-    if (ListParam_Saisie.length > 0) {
-      int i = 1;
-      ListParam_Saisie.forEach((element) {
-        element.Param_Saisie_Ordre = i++;
-        setParam_Saisie(element);
-      });
-      return true;
+    try {
+      ListParam_Saisie = await getParam_Saisie_API_Post("select", "select * from Param_Saisie WHERE Param_Saisie_Organe = '${Param_Saisie_Organe}' AND Param_Saisie_Type = '${Param_Saisie_Type}'  ORDER BY Param_Saisie_Organe, Param_Saisie_Type, Param_Saisie_Ordre,Param_Saisie_ID");
+      if (ListParam_Saisie == null) return false;
+      if (ListParam_Saisie.length > 0) {
+        int i = 1;
+        ListParam_Saisie.forEach((element) {
+          element.Param_Saisie_Ordre = i++;
+          setParam_Saisie(element);
+        });
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
     }
-
-    return false;
   }
 
   static Future<bool> getParam_Saisie_Base(String Param_Saisie_Type) async {
@@ -3754,7 +3727,7 @@ class Srv_DbTools {
       }
     });
 
-//    print("<<<<<<<<<<<<<<<<<<<<<<<<<< getParam_Saisie_ParamMem ${Param_Saisie_Param_Id} ${ListParam_Saisie_Param.length} ");
+    //  print("<<<<<<<<<<<<<<<<<<<<<<<<<< getParam_Saisie_ParamMem ${Param_Saisie_Param_Id} ${ListParam_Saisie_Param.length} ");
 
     return true;
   }
@@ -4096,35 +4069,33 @@ class Srv_DbTools {
   static Future<bool> add_API_Post(String aType, String aSQL) async {
     setSrvToken();
     gLastID = -1;
-    print("add_API_Post A $aType $aSQL");
-
 
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
     request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL});
 
-    print("add_API_Post B $aType $aSQL");
+//    print("add_API_Post B $aType $aSQL");
 
+    try {
+      http.StreamedResponse response = await request.send();
+      if (response.statusCode == 200) {
+        String wRep = await response.stream.bytesToString();
+        //      print("add_API_Post wRep " + wRep);
+        var parsedJson = json.decode(wRep);
 
-    http.StreamedResponse response = await request.send();
-    print("add_API_Post " + response.statusCode.toString());
-    if (response.statusCode == 200) {
-      String wRep = await response.stream.bytesToString();
-          print("add_API_Post wRep " + wRep);
-      var parsedJson = json.decode(wRep);
+        var success = parsedJson['success'];
 
-      var success = parsedJson['success'];
-
-      if (success == 1) {
-        gLastID = int.tryParse("${parsedJson['last_id']}") ?? 0;
-
-            print("add_API_Post ${Srv_DbTools.gLastID}");
+        if (success == 1) {
+          gLastID = int.tryParse("${parsedJson['last_id']}") ?? 0;
+        }
+        return true;
+      } else {
+        print(response.reasonPhrase);
       }
-      return true;
-    } else {
-      print(response.reasonPhrase);
+      return false;
+    } catch (e) {
+      return false;
     }
-    return false;
   }
 
   //*****************************

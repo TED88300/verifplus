@@ -62,7 +62,29 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
     DbTools.gVersion = "V${DbTools.packageInfo.version} b${DbTools.packageInfo.buildNumber}";
     print("DbTools.gVersion ${DbTools.gVersion}");
 
+    Srv_DbTools.ListPlanning_Intervention = await DbTools.getPlanning_InterventionAll();
 
+    Srv_DbTools.ListPlanning = await DbTools.getPlanningAll();
+    Srv_DbTools.ListIntervention = await  DbTools.getInterventionsAll();
+    Srv_DbTools.ListInterMission = await  DbTools.getInterMissions();
+
+
+
+    print("Srv_DbTools.ListIntervention.length ${Srv_DbTools.ListIntervention.length}");
+    Srv_DbTools.ListParam_ParamAll = await  DbTools.getParam_Param();
+    Srv_DbTools.ListParam_Saisie = await  DbTools.getParam_SaisieAll();
+    Srv_DbTools.ListParam_Saisie_ParamAll = await  DbTools.getParam_Saisie_Param();
+    Srv_DbTools.ListUser_Hab = await  DbTools.getUser_Hab();
+    Srv_DbTools.ListUser_Desc = await  DbTools.getUser_Desc();
+
+    DbTools.glfNF074_Gammes = await  DbTools.getNF074_Gammes();
+    DbTools.glfNF074_Mixte_Produit = await  DbTools.getNF074_Mixte_Produit();
+    DbTools.glfNF074_Pieces_Det_Inc = await  DbTools.getNF074_Pieces_Det_Inc();
+    DbTools.glfNF074_Pieces_Det = await  DbTools.getNF074_Pieces_Det();
+    DbTools.glfNF074_Histo_Normes = await  DbTools.getNF074_Histo_Normes();
+    DbTools.glfNF074_Pieces_Actions = await  DbTools.getNF074_Pieces_Actions();
+    Srv_DbTools.ListArticle_Ebp = await Article_Ebp.getArticle_Ebp();
+    await Srv_DbTools.IMPORT_Article_Ebp_ES();
 
 
     if (DbTools.gIsRememberLogin) DbTools.gIsRememberLogin = await Srv_DbTools.getUserLogin(DbTools.gUsername, DbTools.gPassword);
