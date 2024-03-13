@@ -124,7 +124,6 @@ class DbTools {
     return hasConnection;
   }
 
-
   static PackageInfo packageInfo = PackageInfo(
     appName: 'Unknown',
     packageName: 'Unknown',
@@ -512,7 +511,7 @@ class DbTools {
   //*********** P A R A M   S A I S I E ************
   //************************************************
 
-  static Future<List<Param_Saisie_Param>> getParam_Saisie_Param() async {
+  static Future<List<Param_Saisie_Param>> getParam_Saisie_ParamAll() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query("Param_Saisie_Param");
     return List.generate(maps.length, (i) {
@@ -610,14 +609,11 @@ class DbTools {
     return false;
 
   }
-
-
-
-    static Future<bool>  getParam_Saisie(String Param_Saisie_Organe, String Param_Saisie_Type) async {
+ static Future<bool>  getParam_Saisie(String Param_Saisie_Organe, String Param_Saisie_Type) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query("Param_Saisie", where: "Param_Saisie_Organe = '${Param_Saisie_Organe}' AND Param_Saisie_Type = '${Param_Saisie_Type}'", orderBy: "Param_Saisie_Organe, Param_Saisie_Type, Param_Saisie_Ordre,Param_Saisie_ID");
 
-    Srv_DbTools.ListParam_Saisie_Base =  List.generate(maps.length, (i) {
+    Srv_DbTools.ListParam_Saisie =  List.generate(maps.length, (i) {
       return Param_Saisie(
         maps[i]["Param_SaisieId"],
         maps[i]["Param_Saisie_Organe"],
@@ -639,10 +635,10 @@ class DbTools {
       );
     });
 
-    if (Srv_DbTools.ListParam_Saisie_Base == null) return false;
-    if (Srv_DbTools.ListParam_Saisie_Base.length > 0) {
+    if (Srv_DbTools.ListParam_Saisie == null) return false;
+    if (Srv_DbTools.ListParam_Saisie.length > 0) {
       int i = 1;
-      Srv_DbTools.ListParam_Saisie_Base.forEach((element) {
+      Srv_DbTools.ListParam_Saisie.forEach((element) {
         element.Param_Saisie_Ordre = i++;
         setParam_Saisie(element);
       });
@@ -2401,9 +2397,15 @@ class DbTools {
   static Future<List<Groupe>> getGroupes(int ClientID) async {
     final db = await database;
 
-    final List<Map<String, dynamic>> maps = await db.query("Groupes", orderBy: "Groupe_Nom ASC", where: "Groupe_ClientId = $ClientID");
+    String wTmp = "SELECT * FROM Groupes WHERE Groupe_ClientId = $ClientID";
+    print("getGroupes ClientID ${ClientID} ${wTmp}");
 
-    return List.generate(maps.length, (i) {
+    final List<Map<String, dynamic>> maps  = await db.rawQuery(wTmp);
+
+    print("getGroupes ClientID maps ${maps.length}");
+
+
+    List<Groupe> wListGroup =  List.generate(maps.length, (i) {
       return Groupe(
         maps[i]["GroupeId"],
         maps[i]["Groupe_ClientId"],
@@ -2422,15 +2424,21 @@ class DbTools {
         maps[i]["Groupe_isUpdate"] == 1,
       );
     });
+
+    print("getGroupes ClientID wListGroup ${wListGroup.length}");
+
+    return wListGroup;
   }
 
   static Future<void> inserGroupes(Groupe wGroupe) async {
     final db = await DbTools.database;
     int? repid = await db.insert("Groupes", wGroupe.toMap());
     gLastID = repid!;
+    print("inserGroupes gLastID ${gLastID} ${wGroupe.Groupe_ClientId}");
   }
 
   static Future<void> updateGroupes(Groupe wGroupe) async {
+
     final db = await DbTools.database;
     int? repid = await db.update(
       "Groupes",
@@ -2500,11 +2508,8 @@ class DbTools {
 
   static Future<int> getClient_ID_Site(int ID) async {
     final db = await database;
-
     String wTmp = "SELECT Groupe_ClientId FROM Groupes, Sites WHERE Site_GroupeId = GroupeId  AND SiteId = $ID;";
-
     final List<Map<String, dynamic>> maps  = await db.rawQuery(wTmp);
-
     if (maps.length > 0)
       {
         return maps[0]["Groupe_ClientId"];
@@ -2512,13 +2517,24 @@ class DbTools {
      return -1;
   }
 
+  static Future<int> getClient_ID_Groupe(int ID) async {
+    final db = await database;
+    String wTmp = "SELECT Groupe_ClientId FROM Groupes WHERE GroupeId = $ID;";
+    final List<Map<String, dynamic>> maps  = await db.rawQuery(wTmp);
+    if (maps.length > 0)
+    {
+      return maps[0]["Groupe_ClientId"];
+    }
+    return -1;
+  }
 
 
   static Future<List<Site>> getSiteGroupe(int ID) async {
     final db = await database;
 
 
-    String wTmp = "SELECT Groupe_Nom , Sites.* FROM Sites , Groupes where Site_GroupeId = GroupeId AND Site_GroupeId = ${ID} ORDER BY Groupe_Nom ASC, Site_Nom ASC;";
+//    String wTmp = "SELECT Groupe_Nom , Sites.* FROM Sites , Groupes where Site_GroupeId = GroupeId AND Site_GroupeId = ${ID} ORDER BY Groupe_Nom ASC, Site_Nom ASC;";
+    String wTmp = "SELECT * FROM Sites where Site_GroupeId = ${ID} ORDER BY  Site_Nom ASC;";
     print("rawQuery ${wTmp}");
     final List<Map<String, dynamic>> maps  = await db.rawQuery(wTmp);
 
@@ -2551,7 +2567,8 @@ class DbTools {
         maps[i]["Site_Rem"],
         maps[i]["Site_ResourceId"],
         maps[i]["Livr"],
-        maps[i]["Groupe_Nom"],
+        "",
+//        maps[i]["Groupe_Nom"],
         maps[i]["Site_isUpdate"] == 1,
 //maps[i]["Groupe_Nom"],
       );
@@ -2579,7 +2596,6 @@ class DbTools {
     );
     print("VALIDER updateSites ${repid}");
   }
-
 
   static Future<void> updateSites(Site wSite) async {
     print("VALIDER updateSites ${wSite.toMap()}");

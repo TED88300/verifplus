@@ -256,13 +256,9 @@ print("wZone_Nom $wZone_Nom" "${widget.wChamps}");
               Srv_DbTools.gZone.Zone_Pays = wZone_Pays;
               await DbTools.updateZones(Srv_DbTools.gZone);
               bool wRes = await Srv_DbTools.setZone(Srv_DbTools.gZone);
-              print("•••• updateZones ${wRes}");
+              print("•••• setZone ${wRes}");
               Srv_DbTools.gZone.Zone_isUpdate = wRes;
               if (!wRes) DbTools.setBoolErrorSync(true);
-/*
-              if (!wRes) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
-              Srv_DbTools.gZone.ZoneId = Srv_DbTools.gLastID ;
-*/
               await DbTools.updateZones(Srv_DbTools.gZone);
 
 

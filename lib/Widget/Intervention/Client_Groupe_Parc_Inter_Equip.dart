@@ -74,37 +74,7 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
   Future Reload(String Param_Saisie_ID) async {
     print(" Reload Param_Saisie_ID ${Param_Saisie_ID}");
 
-   /* switch (Param_Saisie_ID) {
-      case "PRS":
-        Srv_DbTools.getParam_Saisie_ParamMem_PRS();
-        if (Srv_DbTools.ListParam_Saisie_Param.length == 0) Srv_DbTools.getParam_Saisie_ParamMem(Param_Saisie_ID);
-        break;
-      case "CLF":
-        Srv_DbTools.getParam_Saisie_ParamMem_CLF();
-        if (Srv_DbTools.ListParam_Saisie_Param.length == 0) Srv_DbTools.getParam_Saisie_ParamMem(Param_Saisie_ID);
-        break;
-      case "MOB":
-        await  DbTools.getNF074_Gammes_MOB();
-        if (Srv_DbTools.ListParam_Saisie_Param.length == 0) Srv_DbTools.getParam_Saisie_ParamMem(Param_Saisie_ID);
-        break;
-      case "PDT":
-        Srv_DbTools.getParam_Saisie_ParamMem_PDT();
-        if (Srv_DbTools.ListParam_Saisie_Param.length == 0) Srv_DbTools.getParam_Saisie_ParamMem(Param_Saisie_ID);
-        break;
-      case "POIDS":
-        Srv_DbTools.getParam_Saisie_ParamMem_POIDS();
-        if (Srv_DbTools.ListParam_Saisie_Param.length == 0) Srv_DbTools.getParam_Saisie_ParamMem(Param_Saisie_ID);
-        break;
-      case "GAM":
-        Srv_DbTools.getParam_Saisie_ParamMem_GAM();
-        if (Srv_DbTools.ListParam_Saisie_Param.length == 0) Srv_DbTools.getParam_Saisie_ParamMem(Param_Saisie_ID);
-        break;
 
-      default:
-        Srv_DbTools.getParam_Saisie_ParamMem(Param_Saisie_ID);
-        break;
-
-    }*/
 
     await UpdateChaine();
 
@@ -370,9 +340,6 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
       if (element.Param_Saisie_Controle.compareTo("Group") == 0) {
         for (int i = 0; i < Groups.length; i++) {
           if (element.Param_Saisie_ID.compareTo(Groups[i]) == 0) {
-            print("           §§§§§§§§§§§§§§§§§§§§b RowSaisies.add( RowSaisieEntGroup ${element.Desc()}");
-
-
             if (element.Param_Saisie_ID == "LOTSERIE"){
             LargeurCol = 80;
             LargeurCol2 = gColors.MediaQuerysizewidth - LargeurCol - 60;
@@ -473,7 +440,10 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
   Widget RowSaisieEnt(Param_Saisie param_Saisie, double LargeurCol, double LargeurCol2, double H2) {
     Parc_Desc wParc_Desc = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, param_Saisie.Param_Saisie_ID);
 
-//    print("RowSaisie Base 1 ${wParc_Desc.toString()}");
+
+
+
+
     if (wParc_Desc.ParcsDesc_Type!.compareTo("FREQ") == 0) {
       wParc_Desc.ParcsDesc_Id = DbTools.gParc_Ent.Parcs_FREQ_Id;
       wParc_Desc.ParcsDesc_Lib = DbTools.gParc_Ent.Parcs_FREQ_Label;
@@ -686,6 +656,7 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
       if (i == 0)
         {
           print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ param_Saisie.Param_Saisie_ID ${element.Param_Saisie_ID}");
+          print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ param_Saisie.Param_Saisie_ID ${element.toMap()}");
           RowSaisies.add(RowSaisie(element, LargeurCol, LargeurCol2, H2));
         }
     }
@@ -727,10 +698,8 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
     }
 
     return
-        //Expanded(child:
         Container(
             width: gColors.MediaQuerysizewidth,
-//          height: 400,
             child: Container(
                 padding: EdgeInsets.fromLTRB(0, 1, 0, 0),
                 color: gColors.greyDark,
@@ -748,7 +717,6 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
                     ),
                   ),
                 ))
-            //),
             );
   }
 

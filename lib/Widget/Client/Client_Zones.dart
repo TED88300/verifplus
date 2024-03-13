@@ -168,7 +168,6 @@ class Client_ZonesState extends State<Client_Zones> {
 
               Srv_DbTools.gZone = Zone.ZoneInit();
               bool wRet = await Srv_DbTools.addZone(Srv_DbTools.gSite.SiteId);
-
               print("retour addZone  ${wRet.toString()}");
               Srv_DbTools.gZone.Zone_isUpdate = wRet;
               if (!wRet) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
@@ -383,13 +382,13 @@ class Client_ZonesState extends State<Client_Zones> {
                       await HapticFeedback.vibrate();
                       Srv_DbTools.gZone = zone;
                       await Navigator.push(context, MaterialPageRoute(builder: (context) => Zone_Vue()));
+                      setState(() {});
                     },
 
                     onTap: () async {
                       await HapticFeedback.vibrate();
                       Srv_DbTools.gZone = zone;
                       await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Interventions()));
-
                       setState(() {});
                     },
                     child: Container(

@@ -547,9 +547,10 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
               Srv_DbTools.gClient.Client_Commercial = wClient_Commercial;
               await DbTools.updateClients(Srv_DbTools.gClient);
               bool wRes = await Srv_DbTools.setClient(Srv_DbTools.gClient);
+              print("•••• setClient ${wRes}");
               Srv_DbTools.gClient.Client_isUpdate = wRes;
               await DbTools.updateClients(Srv_DbTools.gClient);
-              print("VALIDER Client wRes ${wRes}");
+
 
               await DbTools.getClientsAll();
 
@@ -578,6 +579,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
 
               await DbTools.updateAdresse(Srv_DbTools.gAdresseLivr);
               wRes = await Srv_DbTools.setAdresse(Srv_DbTools.gAdresseLivr);
+              print("•••• setAdresse wRes ${wRes}");
               Srv_DbTools.gAdresseLivr.Adresse_isUpdate = wRes;
               if (!wRes) DbTools.setBoolErrorSync(true);
               await DbTools.updateAdresse(Srv_DbTools.gAdresseLivr);
@@ -593,15 +595,13 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
               Srv_DbTools.gContact.Contact_Tel1 = wContact_Tel1;
               Srv_DbTools.gContact.Contact_Tel2 = wContact_Tel2;
               Srv_DbTools.gContact.Contact_eMail = wContact_eMail;
-
-              print(">>> Srv_DbTools.gContact  ${Srv_DbTools.gContact.ContactId}");
-
               await DbTools.updateContact(Srv_DbTools.gContact);
               wRes = await  Srv_DbTools.setContact(Srv_DbTools.gContact);
+              print("•••• setContact wRes ${wRes}");
               Srv_DbTools.gContact.Contact_isUpdate = wRes;
               if (!wRes) DbTools.setBoolErrorSync(true);
               await DbTools.updateContact(Srv_DbTools.gContact);
-              print("VALIDER gContact wRes ${wRes}");
+
 
 
 
@@ -617,10 +617,11 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
 
               await DbTools.updateContact(Srv_DbTools.gContactLivr);
               wRes = await  Srv_DbTools.setContact(Srv_DbTools.gContactLivr);
+              print("•••• setContact LIVR  wRes ${wRes}");
               Srv_DbTools.gContactLivr.Contact_isUpdate = wRes;
               if (!wRes) DbTools.setBoolErrorSync(true);
               await DbTools.updateContact(Srv_DbTools.gContactLivr);
-              print("VALIDER gContactLivr wRes ${wRes}");
+
 
 
               Navigator.of(context).pop();

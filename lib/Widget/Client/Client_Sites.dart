@@ -214,10 +214,14 @@ class Client_SitesState extends State<Client_Sites> {
             onPressed: () async {
               await DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
               await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gAdresse.AdresseId, "LIVR");
-              await Srv_DbTools.addSite(Srv_DbTools.gClient.ClientId);
 
               Srv_DbTools.gSite = Site.SiteInit();
+              bool wRet =  await Srv_DbTools.addSite(Srv_DbTools.gClient.ClientId);
+              print("retour addSite  ${wRet.toString()}");
+              Srv_DbTools.gSite.Site_isUpdate = wRet;
+              if (!wRet) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
               Srv_DbTools.gSite.SiteId          = Srv_DbTools.gLastID;
+              print("retour gSite.gZone.SiteId  ${Srv_DbTools.gSite.SiteId}");
               Srv_DbTools.gSite.Site_GroupeId   = Srv_DbTools.gGroupe.GroupeId;
               Srv_DbTools.gSite.Site_Nom        = Srv_DbTools.gGroupe.Groupe_Nom + "_${Srv_DbTools.ListSite.length+1}";
               Srv_DbTools.gSite.Site_Adr1       = Srv_DbTools.gAdresse.Adresse_Adr1;
@@ -225,10 +229,12 @@ class Client_SitesState extends State<Client_Sites> {
               Srv_DbTools.gSite.Site_Adr3       = Srv_DbTools.gAdresse.Adresse_Adr3;
               Srv_DbTools.gSite.Site_CP         = Srv_DbTools.gAdresse.Adresse_CP;
               Srv_DbTools.gSite.Site_Ville      = Srv_DbTools.gAdresse.Adresse_Ville;
-              Srv_DbTools.setSite(Srv_DbTools.gSite);
+              DbTools.inserSites(Srv_DbTools.gSite);
+              if (wRet)  Srv_DbTools.setSite(Srv_DbTools.gSite);
+
+
 
               await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gSite.SiteId, "GRP");
-
               Srv_DbTools.gContact.Contact_Civilite  = Srv_DbTools.gContactLivr.Contact_Civilite ;
               Srv_DbTools.gContact.Contact_Prenom    = Srv_DbTools.gContactLivr.Contact_Prenom   ;
               Srv_DbTools.gContact.Contact_Nom       = Srv_DbTools.gContactLivr.Contact_Nom      ;
@@ -237,7 +243,6 @@ class Client_SitesState extends State<Client_Sites> {
               Srv_DbTools.gContact.Contact_Tel1      = Srv_DbTools.gContactLivr.Contact_Tel1     ;
               Srv_DbTools.gContact.Contact_Tel2      = Srv_DbTools.gContactLivr.Contact_Tel2     ;
               Srv_DbTools.gContact.Contact_eMail     = Srv_DbTools.gContactLivr.Contact_eMail    ;
-
               Srv_DbTools.setContact(Srv_DbTools.gContact);
 
               await Reload();

@@ -378,6 +378,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                           ),
 
 // subTitle
+
                           Expanded(
                             child:
                             Text (
@@ -385,9 +386,10 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                             maxLines: 1,
                             style: gColors.bodyTitle1_B_Gr,
                             ),
-
-
                           ),
+
+
+
                           Container(
                             width: 60,
                             child: CounterScreen(),
@@ -415,7 +417,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                             await Client_Groupe_Parc_Inter_Entete_Dialog.Dialogs_Entete(context, onMaj);
                           },
                           child:
-                          Expanded(child:
+//                          Expanded(child:
                           Container(
 //                            width: 600,
                             padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
@@ -453,7 +455,8 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                               ],
                             ),
                           ),
-                        ),),
+                        ),
+ //   ),
                         IconButton(
                           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                           icon: isImage ? imgList[0] : Image.asset("assets/images/Icon_Photo.png"),

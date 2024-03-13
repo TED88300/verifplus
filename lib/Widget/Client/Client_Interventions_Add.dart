@@ -377,67 +377,6 @@ class _Client_InterventionsAddState extends State<Client_InterventionsAdd> {
 //                await Srv_DbTools.InsertUpdateParc_Ent_Srv(wParc_Ent);
               }
 
-              /*
-
-              else {
-                Intervention LastIntervention = Srv_DbTools.gIntervention;
-                await Srv_DbTools.getParcs_DescInter(LastIntervention.InterventionId!);
-                print("LastIntervention ${LastIntervention.InterventionId} ${Srv_DbTools.ListParc_Desc.length}");
-
-                await Srv_DbTools.getParc_EntID(LastIntervention.InterventionId!);
-                for (int i = 0; i < Srv_DbTools.ListParc_Ent.length; i++) {
-                  Parc_Ent_Srv wParc_Ent_Srv = Srv_DbTools.ListParc_Ent[i];
-
-                  if (wParc_Ent_Srv.Action!.compareTo("ES") == 0) continue;
-                  if (wParc_Ent_Srv.Action!.compareTo("REFO") == 0) continue;
-
-                  print(">>>>>>>>>>>>>>>>>>>> wParc_Ent_Srv ${wParc_Ent_Srv.toMap()}");
-                  wParc_Ent_Srv.Parcs_InterventionId = Srv_DbTools.gIntervention.InterventionId;
-                  var uuid = Uuid();
-                  String uuidv1 = uuid.v1();
-                  print("insertParc_Ent uuidv1 ${uuidv1}");
-                  wParc_Ent_Srv.Parcs_UUID = uuidv1;
-                  wParc_Ent_Srv.Parcs_UUID_Parent = "";
-                  wParc_Ent_Srv.Action = "";
-                  wParc_Ent_Srv.Livr = "";
-                  wParc_Ent_Srv.Devis = "";
-                  wParc_Ent_Srv.Parcs_Date_Rev = "";
-
-                  print("wParc_Ent_Srv.Livr ${wParc_Ent_Srv.Livr}");
-                  await Srv_DbTools.InsertUpdateParc_Ent_Srv_Srv(wParc_Ent_Srv);
-                  int newParcsDesc_ParcsIdSrv = Srv_DbTools.gLastID;
-                  await DbTools.insertParc_Ent_Srv(wParc_Ent_Srv);
-                  int newParcsDesc_ParcsId = DbTools.gLastID;
-                  Srv_DbTools.getParc_DescID(wParc_Ent_Srv.ParcsId!);
-                  var lParc_Desc_Srv = Srv_DbTools.ListParc_Desc.where((element) => element.ParcsDesc_ParcsId == wParc_Ent_Srv.ParcsId);
-                  print("lParc_Desc_Srv ${lParc_Desc_Srv.length}");
-                  await Srv_DbTools.getParam_Saisie(wParc_Ent_Srv.Parcs_Type!, "Desc");
-                  for (int i = 0; i < Srv_DbTools.ListParc_Desc.length; i++) {
-                    print("wParc_Desc_Srv i ${i}");
-                    Parc_Desc_Srv wParc_Desc_Srv = Srv_DbTools.ListParc_Desc[i];
-
-                    var wListParam_Saisie = Srv_DbTools.ListParam_Saisie.where((element) => element.Param_Saisie_ID == wParc_Desc_Srv.ParcsDesc_Type);
-                    print("wListParam_Saisie ${wParc_Desc_Srv.ParcsDesc_Type} ${wListParam_Saisie.length}");
-
-                    if (wListParam_Saisie.length > 0) {
-                      if (wParc_Desc_Srv.ParcsDesc_ParcsId == wParc_Ent_Srv.ParcsId) {
-                        wParc_Desc_Srv.ParcsDesc_ParcsId = newParcsDesc_ParcsIdSrv;
-                        print("wParc_Desc_Srv  ${wParc_Desc_Srv.toMap()}");
-                        await Srv_DbTools.InsertUpdateParc_Desc_Srv_Srv(wParc_Desc_Srv);
-                        print("wParc_Desc_Srv gLastID ${Srv_DbTools.gLastID} ");
-                        wParc_Desc_Srv.ParcsDesc_ParcsId = newParcsDesc_ParcsId;
-                        await DbTools.insertParc_Desc_Srv(wParc_Desc_Srv);
-                      }
-                    }
-                  }
-                }
-              }
-
-
-*/
-
-
-
 
               Navigator.of(context).pop();
             },

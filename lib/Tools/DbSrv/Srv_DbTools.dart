@@ -3387,12 +3387,19 @@ class Srv_DbTools {
   }
 
   static Future<bool> getParam_Saisie(String Param_Saisie_Organe, String Param_Saisie_Type) async {
+
+    ListParam_Saisie.clear();
     try {
       ListParam_Saisie = await getParam_Saisie_API_Post("select", "select * from Param_Saisie WHERE Param_Saisie_Organe = '${Param_Saisie_Organe}' AND Param_Saisie_Type = '${Param_Saisie_Type}'  ORDER BY Param_Saisie_Organe, Param_Saisie_Type, Param_Saisie_Ordre,Param_Saisie_ID");
+
+      print("•••• •••• •••• •••• ${ListParam_Saisie.length}");
+
       if (ListParam_Saisie == null) return false;
       if (ListParam_Saisie.length > 0) {
         int i = 1;
         ListParam_Saisie.forEach((element) {
+          print(">>>>>>>>>>> getParam_Saisie ${Param_Saisie_Organe} ${Param_Saisie_Type} ${element.toMap()}");
+
           element.Param_Saisie_Ordre = i++;
           setParam_Saisie(element);
         });
@@ -3400,6 +3407,10 @@ class Srv_DbTools {
       }
       return false;
     } catch (e) {
+      print("•••• •••• •••• •••• error ${ListParam_Saisie.length}");
+      await DbTools.getParam_Saisie( Param_Saisie_Organe,  Param_Saisie_Type);
+      print("•••• •••• •••• •••• DbTools ${ListParam_Saisie.length}");
+
       return false;
     }
   }
@@ -3690,18 +3701,24 @@ class Srv_DbTools {
   }
 
   static Future<bool> getParam_Saisie_ParamAll() async {
-    ListParam_Saisie_ParamAll = await getParam_Saisie_Param_API_Post("select", "select * from Param_Saisie_Param ORDER BY Param_Saisie_Param_Id,Param_Saisie_Param_Ordre");
 
-    if (ListParam_Saisie_ParamAll == null) return false;
-    if (ListParam_Saisie_ParamAll.length > 0) {
-      Srv_DbTools.ListParam_Saisie_ParamAll.forEach((element) async {
-        element.Param_Saisie_Param_Ico = await gObj.getAssetImage("assets/images/Aide_Ico_${element.Param_Saisie_Param_Label}.png");
-      });
-
-      return true;
+    ListParam_Saisie_ParamAll.clear();
+    try {
+      ListParam_Saisie_ParamAll = await getParam_Saisie_Param_API_Post("select", "select * from Param_Saisie_Param ORDER BY Param_Saisie_Param_Id,Param_Saisie_Param_Ordre");
+      if (ListParam_Saisie_ParamAll == null) return false;
+      if (ListParam_Saisie_ParamAll.length > 0) {
+        Srv_DbTools.ListParam_Saisie_ParamAll.forEach((element) async {
+          element.Param_Saisie_Param_Ico = await gObj.getAssetImage("assets/images/Aide_Ico_${element.Param_Saisie_Param_Label}.png");
+        });
+        return true;
+      }
+      return false;
+    } catch (e) {
+      DbTools.getParam_Saisie_ParamAll();
+      return false;
     }
 
-    return false;
+
   }
 
   static Future<bool> getParam_Saisie_Param(String Param_Saisie_Param_Id) async {
@@ -3746,15 +3763,6 @@ class Srv_DbTools {
     Param_Saisie_Param param_Saisie_Param = Param_Saisie_Param.Param_Saisie_ParamInit();
 
     Srv_DbTools.ListParam_Saisie_ParamAll.sort(Srv_DbTools.Param_Saisie_ParamSortComparison);
-
-/*
-    for (int i = 0; i < ListParam_Saisie_ParamAll.length; i++) {
-      Param_Saisie_Param element = ListParam_Saisie_ParamAll[i];
-      if (element.Param_Saisie_Param_Id.compareTo(Param_Saisie_Param_Id) == 0 && element.Param_Saisie_Param_Label.compareTo("---") != 0) {
-        print("e ${element.Param_Saisie_Param_Ordre} ${element.Param_Saisie_Param_Label}");
-      }
-    }
-*/
 
     for (int i = 0; i < ListParam_Saisie_ParamAll.length; i++) {
       Param_Saisie_Param element = ListParam_Saisie_ParamAll[i];

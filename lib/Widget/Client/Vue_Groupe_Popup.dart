@@ -257,9 +257,10 @@ class _Groupe_Vue_PopupState extends State<Groupe_Vue_Popup> {
 
               await DbTools.updateGroupes(Srv_DbTools.gGroupe);
               bool wRes = await Srv_DbTools.setGroupe(Srv_DbTools.gGroupe);
+              print("•••• setGroupe ${wRes}");
               Srv_DbTools.gGroupe.Groupe_isUpdate = wRes;
               await DbTools.updateGroupes(Srv_DbTools.gGroupe);
-              print("VALIDER Groupe wRes ${wRes}");
+
 
               Srv_DbTools.gContact.Contact_Civilite = wContact_Civilite;
               Srv_DbTools.gContact.Contact_Prenom = wContact_Prenom;
@@ -272,10 +273,11 @@ class _Groupe_Vue_PopupState extends State<Groupe_Vue_Popup> {
 
               await DbTools.updateContact(Srv_DbTools.gContact);
               wRes = await  Srv_DbTools.setContact(Srv_DbTools.gContact);
+              print("•••• setContact wRes ${wRes}");
               Srv_DbTools.gContact.Contact_isUpdate = wRes;
               if (!wRes) DbTools.setBoolErrorSync(true);
               await DbTools.updateContact(Srv_DbTools.gContact);
-              print("VALIDER gContact wRes ${wRes}");
+
 
               Navigator.of(context).pop();
             },

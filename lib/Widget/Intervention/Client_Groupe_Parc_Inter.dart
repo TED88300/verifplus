@@ -107,7 +107,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
   Future Reload() async {
     await Srv_ImportExport.getErrorSync();
 
-    print("Client_Groupe_Parc_Inter <<<<<<<<<<<<<<<<<<<RELOAD ${DbTools.glfParcs_Ent.length} >>>>>>>>>>>>>>>>>>>>>");
+    print("Client_Groupe_Parc_Inter <<<<<<<<<<<<<<<<<<<RELOAD ${DbTools.glfParcs_Ent.length} DbTools.hasConnection ${DbTools.hasConnection} >>>>>>>>>>>>>>>>>>>>>");
 
 
     print("Parc_Ent_GetOrder >>> ${DbTools.glfParcs_Ent.length}");
@@ -160,7 +160,9 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     int index = subLibArray.indexWhere((element) => element.compareTo(DbTools.ParamTypeOg) == 0);
     DbTools.OrgLib = subLibArray[index];
 
-    await Srv_DbTools.getParam_Saisie(subTitleArray[index], "Desc");
+    print(" getParam_Saisie subTitleArray[index] ${subTitleArray[index]}");
+
+    await DbTools.getParam_Saisie(subTitleArray[index], "Desc");
 
     String DescAffnewParam = "";
     Srv_DbTools.getParam_ParamMemDet("Param_Div", "${subTitleArray[index]}_Desc");
@@ -246,8 +248,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
             if (elementEnt.ParcsId == element2.ParcsDesc_ParcsId && element.Param_Saisie_ID == element2.ParcsDesc_Type) {
               Parcs_Cols.add(element2.ParcsDesc_Lib);
             }
-          }
-          ;
+          };
         }
       }
       ;
@@ -807,6 +808,7 @@ setState(() {
                     height: icoWidth,
                     width: icoWidth,
                   ),
+
                   backgroundColor: DbTools.hasConnection ? gColors.primaryGreen : Colors.black26,
                   onPressed: () async {
                     if (!DbTools.hasConnection)
@@ -1173,12 +1175,20 @@ setState(() {
   {
     print("Popop ${canClose}");
     if(canClose) {
-      Navigator.of(context).pop();
+      try {
+        Navigator.of(context).pop();
+      } catch (e) {
+        print(e);
+      }
     }
 
     if(!DbTools.hasConnection) {
       canClose = true;
-      Navigator.of(context).pop();
+      try {
+        Navigator.of(context).pop();
+      } catch (e) {
+        print(e);
+      }
       return;
     }
 
@@ -2533,25 +2543,37 @@ setState(() {
 
     for (int i = 0; i < Srv_DbTools.ListParam_Saisie.length; i++) {
       Param_Saisie element = Srv_DbTools.ListParam_Saisie[i];
+
+/*
+      if (element.Param_Saisie_Type == "DESC")
+        print("Param_Saisie  ${element.toMap()}");
+*/
+
+
       await DbTools.getParcs_Desc_Id_Type_Add(DbTools.gParc_Ent.ParcsId!, element.Param_Saisie_ID);
     }
 
     if (DbTools.gParc_Ent.Parcs_LOT_Label!.isEmpty) {
       DbTools.gParc_Ent.Parcs_LOT_Label = "Non renseigné sur l'équipement";
-      print(" updateParc_Ent I");
       DbTools.updateParc_Ent(DbTools.gParc_Ent);
     }
 
     if (DbTools.gParc_Ent.Parcs_SERIE_Label!.isEmpty) {
       DbTools.gParc_Ent.Parcs_SERIE_Label = "Non renseigné sur l'équipement";
-      print(" updateParc_Ent J");
       DbTools.updateParc_Ent(DbTools.gParc_Ent);
     }
 
     DbTools.glfParcs_Desc = await DbTools.getParcs_Desc(DbTools.gParc_Ent.ParcsId!);
-    DbTools.glfParcs_Desc.forEach((param_Saisie) {});
-
     print("glfParcs_Desc.length ${DbTools.glfParcs_Desc.length}");
+    DbTools.glfParcs_Desc.forEach((param_Saisie) {
+
+//      print("glfParcs_Desc.length ${param_Saisie.toMap()}");
+
+
+
+
+    });
+
 
     Srv_DbTools.FAB_Lib = "";
     Srv_DbTools.PRS_Lib = "";

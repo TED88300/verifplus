@@ -28,9 +28,9 @@ class Client_GroupesState extends State<Client_Groupes> {
 
   Future Reload() async {
     await Srv_ImportExport.getErrorSync();
-
-    await Srv_DbTools.getGroupesClient(Srv_DbTools.gClient.ClientId);
-
+    print("reload ${Srv_DbTools.ListGroupe.length} ${Srv_DbTools.gClient.ClientId}");
+    Srv_DbTools.ListGroupe = await DbTools.getGroupes(Srv_DbTools.gClient.ClientId);
+    print("reload ${Srv_DbTools.ListGroupe.length}");
     Filtre();
   }
 
@@ -54,7 +54,7 @@ class Client_GroupesState extends State<Client_Groupes> {
       }
     });
 
-    print("FILTRE CLIENTS FIN");
+    print("FILTRE CLIENTS FIN ${Srv_DbTools.ListGroupesearchresult.length}");
     setState(() {});
   }
 
@@ -199,7 +199,6 @@ class Client_GroupesState extends State<Client_Groupes> {
             child: new Icon(Icons.add),
             backgroundColor: gColors.secondary,
             onPressed: () async {
-
               await DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
               await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gAdresse.AdresseId, "LIVR");
 
@@ -217,6 +216,7 @@ class Client_GroupesState extends State<Client_Groupes> {
               Srv_DbTools.gGroupe.Groupe_Ville      = Srv_DbTools.gAdresse.Adresse_Ville;
               await DbTools.inserGroupes(Srv_DbTools.gGroupe);
               if (wRet)  await Srv_DbTools.setGroupe(Srv_DbTools.gGroupe);
+              await DbTools.getGroupes(Srv_DbTools.gClient.ClientId);
 
               await DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gGroupe.GroupeId, "GRP");
               Srv_DbTools.gContact.Contact_Civilite  = Srv_DbTools.gContactLivr.Contact_Civilite ;
@@ -229,7 +229,9 @@ class Client_GroupesState extends State<Client_Groupes> {
               Srv_DbTools.gContact.Contact_eMail     = Srv_DbTools.gContactLivr.Contact_eMail    ;
               Srv_DbTools.setContact(Srv_DbTools.gContact);
               await Reload();
+setState(() {
 
+});
             }));
   }
 
@@ -331,6 +333,7 @@ class Client_GroupesState extends State<Client_Groupes> {
                       Srv_DbTools.gGroupe = groupe;
                       Srv_DbTools.gSelGroupe = groupe.Groupe_Nom;
                       await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Sites()));
+                      setState(() {});
                     },
                     child: Container(
                       height: 57,

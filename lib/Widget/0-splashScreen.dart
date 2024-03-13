@@ -73,7 +73,7 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
     print("Srv_DbTools.ListIntervention.length ${Srv_DbTools.ListIntervention.length}");
     Srv_DbTools.ListParam_ParamAll = await  DbTools.getParam_Param();
     Srv_DbTools.ListParam_Saisie = await  DbTools.getParam_SaisieAll();
-    Srv_DbTools.ListParam_Saisie_ParamAll = await  DbTools.getParam_Saisie_Param();
+    Srv_DbTools.ListParam_Saisie_ParamAll = await  DbTools.getParam_Saisie_ParamAll();
     Srv_DbTools.ListUser_Hab = await  DbTools.getUser_Hab();
     Srv_DbTools.ListUser_Desc = await  DbTools.getUser_Desc();
 
