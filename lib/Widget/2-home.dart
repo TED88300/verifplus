@@ -63,18 +63,27 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
     if (Srv_DbTools.ListParam_ParamAll.length == 0)
       {
+        print("⚄⚄⚄⚄⚄⚄⚄ Call import Param >");
       await Import_Data_Dialog.Dialogs_Saisie(context, onSaisie, "Param");
-      FBroadcast.instance().broadcast("MAJCLIENT");
+        print("⚄⚄⚄⚄⚄⚄⚄ Call import Param <");
+
+        print("⚄⚄⚄⚄⚄⚄⚄ Call import NF74 >");
+        await Import_Data_Dialog.Dialogs_Saisie(context, onSaisie, "NF74");
+        print("⚄⚄⚄⚄⚄⚄⚄ Call import NF74 <");
+
+        FBroadcast.instance().broadcast("MAJCLIENT");
       reload();
       }
 
-    DbTools.glfNF074_Gammes = await  DbTools.getNF074_Gammes();
+  /*  DbTools.glfNF074_Gammes = await  DbTools.getNF074_Gammes();
     if (DbTools.glfNF074_Gammes.length == 0)
     {
+      print("⚄⚄⚄⚄⚄⚄⚄ Call import NF74 >");
       await Import_Data_Dialog.Dialogs_Saisie(context, onSaisie, "NF74");
+      print("⚄⚄⚄⚄⚄⚄⚄ Call import NF74 <");
       FBroadcast.instance().broadcast("MAJCLIENT");
       reload();
-    }
+    }*/
     setState(() {});
   }
 

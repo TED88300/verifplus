@@ -247,8 +247,15 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
     await DbTools.TrunckParam_Saisie();
     for (int i = 0; i < Srv_DbTools.ListParam_Saisie.length; i++) {
       Param_Saisie wParam_Saisie = Srv_DbTools.ListParam_Saisie[i];
+
+      print(" Import_DataDialog wParam_Saisie ${wParam_Saisie.Param_Saisie_Type} ${wParam_Saisie.Param_Saisie_Triger}");
+
+
+
       await DbTools.inserParam_Saisie(wParam_Saisie);
     }
+
+
     Srv_DbTools.ListParam_Saisie = await  DbTools.getParam_SaisieAll();
     print("Import_DataDialog Srv_DbTools.ListParam_Saisie ${Srv_DbTools.ListParam_Saisie}");
     setState(() {

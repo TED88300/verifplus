@@ -169,6 +169,8 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
       return;
     }
 
+
+
     print("Filtre isProp $isProp widget.art_Type ${widget.art_Type} ");
     print("Filtre ListResult_Article_Link_Verif_PROP ${Srv_DbTools.ListResult_Article_Link_Verif_PROP.length}");
     print("Filtre ListResult_Article_Link_Verif_PROP_Mixte ${Srv_DbTools.ListResult_Article_Link_Verif_PROP_Mixte.length}");
@@ -188,7 +190,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
           }
         }
       }
-      if (widget.art_Type.compareTo("S") == 0) {
+      if (widget.art_Type.compareTo("M") == 0) {
         for (int i = 0; i < Srv_DbTools.ListArticle_Ebp.length; i++) {
           Article_Ebp element = Srv_DbTools.ListArticle_Ebp[i];
           for (int i = 0; i < Srv_DbTools.ListResult_Article_Link_Verif_PROP_Mixte.length; i++) {
@@ -366,7 +368,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
           child: Column(
             children: [
               Text(
-                "Articles ${widget.art_Type.compareTo("S") == 0 ? "Services" : widget.art_Type.compareTo("G") == 0 ? "Gammes" : "Pièces"}",
+                "Articles ${widget.art_Type.compareTo("M") == 0 ? "Mixte" : widget.art_Type.compareTo("G") == 0 ? "Gammes" : "Pièces"}",
                 textAlign: TextAlign.center,
                 style: gColors.bodyTitle1_B_G_20,
               ),

@@ -441,6 +441,10 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
 
   Widget BtnCard(String? wText, double LargeurCol2, String color, String ico, Param_Saisie param_Saisie) {
     String Param_Saisie_ID = param_Saisie.Param_Saisie_ID;
+
+//    print("♦︎♦︎♦︎♦︎♦︎♦︎ BtnCard param_Saisie ${param_Saisie.DescAuto()}");
+
+
     Color wColor = gColors.getColor(color);
     double IcoWidth = 40;
     return new Container(
@@ -490,7 +494,7 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                         // TRIGER : Ex Recharge => Verif Annuel
                         await DbTools.updateParc_Desc_NoRaz(wParc_Desc, "");
                         var lTriger = param_Saisie.Param_Saisie_Triger.split(",");
-                        print("lTriger ${param_Saisie.Param_Saisie_Triger}");
+
                         lTriger.forEach((triger) async {
                           print("triger ${triger.trim()}");
                           Parc_Desc wParc_DescAuto = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, triger.trim());

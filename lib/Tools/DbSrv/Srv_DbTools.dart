@@ -856,7 +856,7 @@ class Srv_DbTools {
     try {
       bool ret = await add_API_Post("upddel", wSlq);
       print("setClient ret " + ret.toString());
-      return true;
+      return ret;
     } catch (e) {
       print("setClient ERROR " + e.toString());
       return false;
@@ -3392,7 +3392,6 @@ class Srv_DbTools {
     try {
       ListParam_Saisie = await getParam_Saisie_API_Post("select", "select * from Param_Saisie WHERE Param_Saisie_Organe = '${Param_Saisie_Organe}' AND Param_Saisie_Type = '${Param_Saisie_Type}'  ORDER BY Param_Saisie_Organe, Param_Saisie_Type, Param_Saisie_Ordre,Param_Saisie_ID");
 
-      print("•••• •••• •••• •••• ${ListParam_Saisie.length}");
 
       if (ListParam_Saisie == null) return false;
       if (ListParam_Saisie.length > 0) {
@@ -3415,6 +3414,7 @@ class Srv_DbTools {
     }
   }
 
+/*
   static Future<bool> getParam_Saisie_Base(String Param_Saisie_Type) async {
     ListParam_Saisie_Base = await getParam_Saisie_API_Post("select", "select * from Param_Saisie WHERE Param_Saisie_Organe = 'Base' AND Param_Saisie_Type = '${Param_Saisie_Type}'  ORDER BY Param_Saisie_Organe, Param_Saisie_Type, Param_Saisie_Ordre,Param_Saisie_ID");
     if (ListParam_Saisie_Base == null) return false;
@@ -3428,6 +3428,7 @@ class Srv_DbTools {
     }
     return false;
   }
+*/
 
   static Param_Saisie getParam_Saisie_Det(String type) {
     Param_Saisie wParam_Saisie = Param_Saisie.Param_SaisieInit();

@@ -106,21 +106,12 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
   Future Reload() async {
     await Srv_ImportExport.getErrorSync();
-
-    print("Client_Groupe_Parc_Inter <<<<<<<<<<<<<<<<<<<RELOAD ${DbTools.glfParcs_Ent.length} DbTools.hasConnection ${DbTools.hasConnection} >>>>>>>>>>>>>>>>>>>>>");
-
-
-    print("Parc_Ent_GetOrder >>> ${DbTools.glfParcs_Ent.length}");
     await DbTools.Parc_Ent_GetOrder();
-    print("Parc_Ent_GetOrder <<< ${DbTools.glfParcs_Ent.length}");
-    print("Reload glfParcs_Ent order fin");
-
-
     await DbTools.getParam_Saisie_Base("Audit");
     Srv_DbTools.ListParam_Audit_Base.clear();
     Srv_DbTools.ListParam_Audit_Base.addAll(Srv_DbTools.ListParam_Saisie_Base);
 
-    print("♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎ DbTools ListParam_Audit_Base ${Srv_DbTools.ListParam_Audit_Base.length}");
+
 
     await DbTools.getParam_Saisie_Base("Verif");
     Srv_DbTools.ListParam_Verif_Base.clear();
@@ -142,7 +133,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     }
 
     DbTools.glfParcs_Desc = await DbTools.getParcs_DescInter(Srv_DbTools.gIntervention.InterventionId!);
-    print(" getParcs_DescInter lenght ${DbTools.glfParcs_Desc.length}");
     String DescAff = "";
 
     Srv_DbTools.ListParam_Saisie.sort(Srv_DbTools.affSort2Comparison);
@@ -160,21 +150,16 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     int index = subLibArray.indexWhere((element) => element.compareTo(DbTools.ParamTypeOg) == 0);
     DbTools.OrgLib = subLibArray[index];
 
-    print(" getParam_Saisie subTitleArray[index] ${subTitleArray[index]}");
-
     await DbTools.getParam_Saisie(subTitleArray[index], "Desc");
 
     String DescAffnewParam = "";
     Srv_DbTools.getParam_ParamMemDet("Param_Div", "${subTitleArray[index]}_Desc");
     if (Srv_DbTools.ListParam_Param.length > 0) DescAffnewParam = Srv_DbTools.ListParam_Param[0].Param_Param_Text;
 
-    print(">>>>>>>>>>> DescAffnewParam ${DescAffnewParam}");
     //DescAffnewParam PDT POIDS PRS MOB / ZNE EMP NIV / ANN / FAB
     List<Param_Saisie> ListParam_Saisie_Tmp = [];
     ListParam_Saisie_Tmp.addAll(Srv_DbTools.ListParam_Saisie);
     ListParam_Saisie_Tmp.addAll(Srv_DbTools.ListParam_Saisie_Base);
-
-    print("DbTools.glfParcs_Ent.length ${DbTools.glfParcs_Ent.length}");
 
 //    Parcs_Date_VRMC
 
@@ -503,8 +488,8 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     if (!mounted) {
       return Future.value(null);
     }
-    print(" initConnectivity");
-setState(() {
+
+    setState(() {
 
 });  }
 
@@ -1087,7 +1072,14 @@ setState(() {
       leading: InkWell(
         onTap: () async {
           await HapticFeedback.vibrate();
+          print("LOGO Popop ${canClose}");
           await Popop();
+          print("return  Popop  canClose ${canClose}");
+          if (canClose)
+          {
+            Navigator.of(context).pop();
+          }
+
         },
         child: Padding(
           padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
@@ -1173,22 +1165,13 @@ setState(() {
 
   Future  Popop() async
   {
-    print("Popop ${canClose}");
-    if(canClose) {
-      try {
-        Navigator.of(context).pop();
-      } catch (e) {
-        print(e);
-      }
-    }
+    print("Popop() ${canClose}");
+
 
     if(!DbTools.hasConnection) {
       canClose = true;
-      try {
-        Navigator.of(context).pop();
-      } catch (e) {
-        print(e);
-      }
+      print("Popop OFFLINE ${canClose}");
+
       return;
     }
 
@@ -1224,6 +1207,7 @@ setState(() {
             actions: <Widget>[
               TextButton(
                 onPressed: () {
+                  print("Popop NO ${canClose}");
                   Navigator.of(context).pop(false);
                 },
                 child: new Text('Non'),
@@ -1231,8 +1215,8 @@ setState(() {
               TextButton(
                 onPressed: () {
                   canClose = true;
-                  Navigator.of(context).pop();
-                  Navigator.of(context).pop();
+                  print("Popop YES ${canClose}");
+                  Navigator.of(context).pop(false);
                 },
                 child: new Text('Oui'),
               ),
@@ -1245,7 +1229,10 @@ setState(() {
     else
       {
         canClose = true;
-        Navigator.of(context).pop();
+
+        print("Popop NO MAJ ${canClose}");
+
+        return;
       }
 
 
@@ -1275,13 +1262,22 @@ setState(() {
     } else
       wchildren = Enntete_Inter();
 
-    return new PopScope(
-        canPop: canClose,
-        onPopInvoked: (_) async {
-      await Popop();
-    },
 
-    child:Scaffold(
+    print("Scaffold ");
+    return
+      WillPopScope(
+          onWillPop: () async {
+            print("LOGO Popop ${canClose}");
+            await Popop();
+            print("return  Popop  canClose ${canClose}");
+            if (canClose)
+            {
+              return true;
+            }
+            return false;
+          },        child:
+
+    Scaffold(
         backgroundColor: Colors.white,
         appBar: appBar(),
         body: Stack(fit: StackFit.expand, children: <Widget>[

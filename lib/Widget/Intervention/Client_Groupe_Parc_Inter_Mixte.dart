@@ -9,17 +9,17 @@ import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Piece_Sai
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
-class Client_Groupe_Parc_Inter_Sign extends StatefulWidget {
+class Client_Groupe_Parc_Inter_Mixte extends StatefulWidget {
   final VoidCallback onMaj;
   final String x_t;
 
-  const Client_Groupe_Parc_Inter_Sign({Key? key, required this.onMaj, required this.x_t}) : super(key: key);
+  const Client_Groupe_Parc_Inter_Mixte({Key? key, required this.onMaj, required this.x_t}) : super(key: key);
 
   @override
-  Client_Groupe_Parc_Inter_SignState createState() => Client_Groupe_Parc_Inter_SignState();
+  Client_Groupe_Parc_Inter_MixteState createState() => Client_Groupe_Parc_Inter_MixteState();
 }
 
-class Client_Groupe_Parc_Inter_SignState extends State<Client_Groupe_Parc_Inter_Sign> {
+class Client_Groupe_Parc_Inter_MixteState extends State<Client_Groupe_Parc_Inter_Mixte> {
 
 
   @override
@@ -35,7 +35,7 @@ class Client_Groupe_Parc_Inter_SignState extends State<Client_Groupe_Parc_Inter_
     }
 
 
-    DbTools.lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "S");
+    DbTools.lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "M");
 
     print("DbTools.lParcs_Art ${DbTools.lParcs_Art.length}");
     setState(() {});
@@ -127,7 +127,7 @@ class Client_Groupe_Parc_Inter_SignState extends State<Client_Groupe_Parc_Inter_
           new ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
-              await Client_Groupe_Parc_Inter_Article_Dialog.Dialogs_Saisie(context,  onSaisie, "S");
+              await Client_Groupe_Parc_Inter_Article_Dialog.Dialogs_Saisie(context,  onSaisie, "M");
               print("Retour Saisie SIGN");
 
             },

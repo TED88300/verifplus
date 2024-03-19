@@ -324,7 +324,7 @@ class DbTools {
         ")";
 
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
-    String wDbPath = "sLLEasFIoust2obao.db";
+    String wDbPath = "sAZML233615scot2obao.db";
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
 
     database = openDatabase(
@@ -601,6 +601,12 @@ class DbTools {
     if (Srv_DbTools.ListParam_Saisie_Base.length > 0) {
       int i = 1;
       Srv_DbTools.ListParam_Saisie_Base.forEach((element) {
+
+        print("♦︎♦︎♦︎♦︎♦︎♦︎ ListParam_Saisie_Base ${element.Param_Saisie_Type} ${element.Param_Saisie_Triger}");
+
+
+
+
         element.Param_Saisie_Ordre = i++;
         setParam_Saisie(element);
       });
@@ -1024,10 +1030,14 @@ class DbTools {
   static List<NF074_Pieces_Det> glfNF074_Pieces_Det_Prop = [];
 
   static Future<bool> getNF074_Pieces_Det_Is_Def() async {
+
+    if (Srv_DbTools.REF_Lib.isEmpty) return false;
+
+
     final db = await database;
     bool wRet = false;
     String selSQL = "SELECT * FROM `NF074_Pieces_Det` WHERE NF074_Pieces_Det_CODF = '${Srv_DbTools.REF_Lib}'";
-    //print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_Is_Def selSQL ${selSQL}");
+    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_Is_Def selSQL ${selSQL}");
     final List<Map<String, dynamic>> maps = await db.rawQuery(selSQL);
     if (maps.length > 0) wRet = true;
     return wRet;
@@ -1041,27 +1051,27 @@ class DbTools {
     String selTypeVerif = "";
     if (wType.contains("Inst")) {
       if (selTypeVerif.length > 0) selTypeVerif += " OR ";
-      selTypeVerif += "NF074_Pieces_Det_Inst  = 1 ";
+      selTypeVerif += "NF074_Pieces_Det_Inst  >= 1 ";
     }
     if (wType.contains("VerifAnn") && !wType.contains("RES")) {
       if (selTypeVerif.length > 0) selTypeVerif += " OR ";
-      selTypeVerif += "NF074_Pieces_Det_VerifAnn  = 1 ";
+      selTypeVerif += "NF074_Pieces_Det_VerifAnn  >= 1 ";
     }
     if (wType.contains("Rech")) {
       if (selTypeVerif.length > 0) selTypeVerif += " OR ";
-      selTypeVerif += "NF074_Pieces_Det_Rech  = 1 ";
+      selTypeVerif += "NF074_Pieces_Det_Rech  >= 1 ";
     }
     if (wType.contains("MAA")) {
       if (selTypeVerif.length > 0) selTypeVerif += " OR ";
-      selTypeVerif += "NF074_Pieces_Det_MAA  = 1 ";
+      selTypeVerif += "NF074_Pieces_Det_MAA  >= 1 ";
     }
     if (wType.contains("Charge")) {
       if (selTypeVerif.length > 0) selTypeVerif += " OR ";
-      selTypeVerif += "NF074_Pieces_Det_Charge  = 1 ";
+      selTypeVerif += "NF074_Pieces_Det_Charge  >= 1 ";
     }
     if (wType.contains("RA")) {
       if (selTypeVerif.length > 0) selTypeVerif += " OR ";
-      selTypeVerif += "NF074_Pieces_Det_RA  = 1 ";
+      selTypeVerif += "NF074_Pieces_Det_RA  >= 1 ";
     }
     if (wType.contains("RES")) {
       if (selTypeVerif.length > 0) selTypeVerif += " OR ";
@@ -1136,7 +1146,7 @@ class DbTools {
     selTypeVerif += "NF074_Pieces_Det_RA  = 0  AND ";
     selTypeVerif += "NF074_Pieces_Det_RES  = 0 ";
 
-    String selSQL = "$selBase ($selTypeVerif)  AND  $selDESC ";
+    String selSQL = "$selBase ($selTypeVerif)  AND  $selDESC ORDER BY NF074_Pieces_Det_CodearticlePD1";
     print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_PROP selSQL ${selSQL}");
 
     final List<Map<String, dynamic>> maps = await db.rawQuery(selSQL);
@@ -1245,6 +1255,9 @@ class DbTools {
 
   static List<NF074_Pieces_Det_Inc> glfNF074_Pieces_Det_Inc = [];
   static List<NF074_Pieces_Det_Inc> glfNF074_Pieces_Det_Inc_In = [];
+  static List<NF074_Pieces_Det_Inc> glfNF074_Pieces_Det_Inc_Prop = [];
+
+
 
   static Future<List<NF074_Pieces_Det_Inc>> getNF074_Pieces_Det_Inc_In(String wType) async {
     final db = await database;
@@ -1268,8 +1281,7 @@ class DbTools {
     int wPOIDS = int.tryParse(wPOIDS_Lib) ?? 0;
 
     String selBase = "SELECT * FROM NF074_Pieces_Det_Inc WHERE ";
-    String selDESCTous = "NF074_Pieces_Det_Inc_DESC = '' ";
-    String selDESCPRS = "NF074_Pieces_Det_Inc_DESC LIKE '%${Srv_DbTools.DESC_Lib}%' AND NF074_Pieces_Det_Inc_PRS LIKE '%${Srv_DbTools.PRS_Lib}%'  AND NF074_Pieces_Det_Inc_CLF LIKE '%/${Srv_DbTools.CLF_Lib}/%' ";
+    String selDESCPRS = "(NF074_Pieces_Det_Inc_DESC = '' OR NF074_Pieces_Det_Inc_DESC LIKE '%${Srv_DbTools.DESC_Lib}%') AND (NF074_Pieces_Det_Inc_PRS LIKE '%/${Srv_DbTools.PRS_Lib}/%'  OR NF074_Pieces_Det_Inc_PRS  = '') AND (NF074_Pieces_Det_Inc_CLF LIKE '%/${Srv_DbTools.CLF_Lib}/%' OR NF074_Pieces_Det_Inc_CLF  = '')";
     String selMOBPDT = " ((NF074_Pieces_Det_Inc_POIDS LIKE '%/${wPOIDS}/%' AND NF074_Pieces_Det_Inc_POIDS LIKE '%${wUNIT}%') OR NF074_Pieces_Det_Inc_POIDS  = '') AND (NF074_Pieces_Det_Inc_MOB LIKE '%/${Srv_DbTools.MOB_Lib}/%' OR NF074_Pieces_Det_Inc_MOB  = '') AND (NF074_Pieces_Det_Inc_PDT LIKE '%/${Srv_DbTools.PDT_Lib}/%' OR NF074_Pieces_Det_Inc_PDT  = '')  ";
 
     String selTypeVerif = "";
@@ -1306,7 +1318,7 @@ class DbTools {
     if (selTypeVerif.isEmpty)
       return [];
     else
-      selSQL = "$selBase ($selTypeVerif)  AND  $selDESCTous or ($selDESCPRS AND $selDESCPRS AND $selMOBPDT)";
+      selSQL = "$selBase ($selTypeVerif)  AND ($selDESCPRS AND $selMOBPDT) GROUP BY NF074_Pieces_Det_Inc_CodearticlePD1 ORDER BY NF074_Pieces_Det_Inc_CodearticlePD1";
 
     print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_Inc_In selSQL ${selSQL}");
 
@@ -1343,7 +1355,7 @@ class DbTools {
     });
   }
 
-  static Future<List<NF074_Pieces_Det_Inc>> getNF074_Pieces_Det_Inc_Prop(String wType) async {
+  static Future<List<NF074_Pieces_Det_Inc>> getNF074_Pieces_Det_Inc_Prop() async {
     String wPOIDS_Lib = Srv_DbTools.POIDS_Lib;
     String wUNIT = "";
     if (wPOIDS_Lib.contains("Kilos")) {
@@ -1370,13 +1382,13 @@ class DbTools {
     String selMOBPDT = " ((NF074_Pieces_Det_Inc_POIDS LIKE '%/${wPOIDS}/%' AND NF074_Pieces_Det_Inc_POIDS LIKE '%${wUNIT}%') OR NF074_Pieces_Det_Inc_POIDS  = '') AND (NF074_Pieces_Det_Inc_MOB LIKE '%/${Srv_DbTools.MOB_Lib}/%' OR NF074_Pieces_Det_Inc_MOB  = '') AND (NF074_Pieces_Det_Inc_PDT LIKE '%/${Srv_DbTools.PDT_Lib}/%' OR NF074_Pieces_Det_Inc_PDT  = '')  ";
 
     String selTypeVerif = "";
-    selTypeVerif += "NF074_Pieces_Det_Inst  = 0 AND ";
-    selTypeVerif += "NF074_Pieces_Det_VerifAnn  = 0  AND ";
-    selTypeVerif += "NF074_Pieces_Det_Rech  = 0  AND ";
-    selTypeVerif += "NF074_Pieces_Det_MAA  = 0  AND ";
-    selTypeVerif += "NF074_Pieces_Det_Charge  = 0  AND ";
-    selTypeVerif += "NF074_Pieces_Det_RA  = 0  AND ";
-    selTypeVerif += "NF074_Pieces_Det_RES  = 0 ";
+    selTypeVerif += "NF074_Pieces_Det_Inc_Inst  = 0 AND ";
+    selTypeVerif += "NF074_Pieces_Det_Inc_VerifAnn  = 0  AND ";
+    selTypeVerif += "NF074_Pieces_Det_Inc_Rech  = 0  AND ";
+    selTypeVerif += "NF074_Pieces_Det_Inc_MAA  = 0  AND ";
+    selTypeVerif += "NF074_Pieces_Det_Inc_Charge  = 0  AND ";
+    selTypeVerif += "NF074_Pieces_Det_Inc_RA  = 0  AND ";
+    selTypeVerif += "NF074_Pieces_Det_Inc_RES  = 0 ";
 
     String selSQL = "";
     if (selTypeVerif.isEmpty)
@@ -1893,6 +1905,10 @@ class DbTools {
   }
 
   static Future<void> updateClients(Client wClient) async {
+
+    print("•••• updateClients ${wClient.toMap()}");
+
+
     final db = await DbTools.database;
     int? repid = await db.update(
       "Clients",
@@ -1900,6 +1916,8 @@ class DbTools {
       where: "ClientId = ?",
       whereArgs: [wClient.ClientId],
     );
+
+    print("•••• updateClients repid ${repid}");
   }
   static Future<void> updateClientsID(Client wClient, int oldID) async {
     final db = await DbTools.database;
@@ -3468,7 +3486,7 @@ class DbTools {
     final db = await database;
 
     final List<Map<String, dynamic>> maps = await db.query("Parcs_Desc", orderBy: "ParcsDescId ASC");
-//    print("***********   getParcs_DescAll Parcs_Desc.length ${maps.length}");
+  //  print("♠︎♠︎♠︎♠︎♠︎   getParcs_DescAll Parcs_Desc.length ${maps.length}");
     return List.generate(maps.length, (i) {
       return Parc_Desc.fromMap(maps[i]);
     });
@@ -3477,7 +3495,7 @@ class DbTools {
   static Future<List<Parc_Desc>> getParcs_DescInter(int Parcs_InterventionId) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.rawQuery('SELECT Parcs_Desc.* FROM Parcs_Desc, Parcs_Ent  WHERE ParcsDesc_ParcsId = ParcsId AND Parcs_InterventionId = ? ', [Parcs_InterventionId]);
-//    print("***********>>>   getParcs_DescInter Parcs_Desc.length ${maps.length}");
+  //  print("♠︎♠︎♠︎♠︎♠︎   getParcs_DescInter Parcs_Desc.length ${maps.length}");
     return List.generate(maps.length, (i) {
 //    print("***********>>>   getParcs_DescInter maps ${maps[i]}");
       return Parc_Desc.fromMap(maps[i]);
@@ -3487,7 +3505,7 @@ class DbTools {
   static Future<List<Parc_Desc>> getParcs_Desc(int ParcsDesc_ParcsId) async {
     final db = await database;
     String wSql = "SELECT Parcs_Desc.* FROM Parcs_Desc  WHERE ParcsDesc_ParcsId = ${ParcsDesc_ParcsId} ";
-    print("getParcs_Desc ${wSql}");
+   // print("♠︎♠︎♠︎♠︎♠︎ getParcs_Desc ${wSql}");
     final List<Map<String, dynamic>> maps = await db.rawQuery('SELECT Parcs_Desc.* FROM Parcs_Desc  WHERE ParcsDesc_ParcsId = ? ', [ParcsDesc_ParcsId]);
     return await List.generate(maps.length, (i) {
       return Parc_Desc.fromMap(maps[i]);
@@ -3497,8 +3515,9 @@ class DbTools {
   static Parc_Desc getParcs_Desc_Id_Type(int ParcsDesc_ParcsId, String Param_Saisie_ID) {
 //    print("getParcs_Desc_Id_Type");
     Parc_Desc wParc_Desc = Parc_Desc.Parc_DescInit(ParcsDesc_ParcsId, Param_Saisie_ID);
-    //  print("getParcs_Desc_Id_Type glfParcs_Desc.length ${glfParcs_Desc.length}");
+  //   print("♠︎♠︎♠︎♠︎♠︎ getParcs_Desc_Id_Type glfParcs_Desc.length ${glfParcs_Desc.length}");
     glfParcs_Desc.forEach((element) async {
+//      print("♠︎♠︎♠︎♠︎♠︎ getParcs_Desc_Id_Type element ${element.toMap()}");
       if (element.ParcsDesc_ParcsId == ParcsDesc_ParcsId) {
         if (element.ParcsDesc_Type!.compareTo(Param_Saisie_ID) == 0) {
           wParc_Desc = element;
@@ -3510,7 +3529,7 @@ class DbTools {
   }
 
   static Future<Parc_Desc> getParcs_Desc_Id_Type_Add(int ParcsDesc_ParcsId, ParcsDesc_Type) async {
-    //print("getParcs_Desc_Id_Type_Add ParcsDesc_ParcsId ${ParcsDesc_ParcsId} ParcsDesc_Type ${ParcsDesc_Type}");
+    print("♠︎♠︎♠︎♠︎♠︎ getParcs_Desc_Id_Type_Add ParcsDesc_ParcsId ${ParcsDesc_ParcsId} ParcsDesc_Type ${ParcsDesc_Type}");
 
     Parc_Desc wParc_Desc = Parc_Desc.Parc_DescInit(ParcsDesc_ParcsId, ParcsDesc_Type);
     for (int i = 0; i < glfParcs_Desc.length; i++) {
@@ -3546,7 +3565,7 @@ class DbTools {
   }*/
 
   static Future<bool> updateParc_Desc(Parc_Desc parc, String InitLib) async {
-    print(">>>> updateParc_Desc A ${parc.ParcsDescId} ${parc.ParcsDesc_Lib} ");
+    print(">>>> updateParc_Desc ${parc.ParcsDescId} ${parc.ParcsDesc_Lib} ");
 
     bool isEq = false;
     for (int i = 0; i < DbTools.glfParcs_Desc.length; i++) {
@@ -3684,7 +3703,7 @@ class DbTools {
     Parc_ArtRet.addAll(Parc_ArtTmp);
     Parc_ArtTmp = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "P");
     Parc_ArtRet.addAll(Parc_ArtTmp);
-    Parc_ArtTmp = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "S");
+    Parc_ArtTmp = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "M");
     Parc_ArtRet.addAll(Parc_ArtTmp);
     Parc_ArtTmp = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "ES");
     Parc_ArtRet.addAll(Parc_ArtTmp);

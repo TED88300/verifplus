@@ -7,6 +7,7 @@ import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
 
+
 class Client_Groupe_Parc_Tools {
   static List<Result_Article_Link_Verif> listResult_Article_Link_Verif_Deb = [];
   static List<Result_Article_Link_Verif> listResult_Article_Link_Verif_Fin = [];
@@ -45,8 +46,8 @@ class Client_Groupe_Parc_Tools {
   }
 
   static Future<List<Result_Article_Link_Verif>> getVerifLink() async {
-    bool wDbg = true;
-    bool wDbg2 = true;
+    bool wDbg = false;
+    bool wDbg2 = false;
 
     print(" getVerifLink ");
 
@@ -141,8 +142,11 @@ class Client_Groupe_Parc_Tools {
       DbTools.glfNF074_Pieces_Det_In = await DbTools.getNF074_Pieces_Det_In(sVerif);
       for (int i = 0; i < DbTools.glfNF074_Pieces_Det_In.length; i++) {
         NF074_Pieces_Det wNF074_Pieces_Det_In = DbTools.glfNF074_Pieces_Det_In[i];
-        if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det P  ${wNF074_Pieces_Det_In.NF074_Pieces_Det_CodeArticlePD1}  ${wNF074_Pieces_Det_In.NF074_Pieces_Det_DescriptionPD1}  1");
-        Srv_DbTools.ListResult_Article_Link_Verif.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "P", "${wNF074_Pieces_Det_In.NF074_Pieces_Det_CodeArticlePD1}", 1.0));
+        double MaxQte = 1.0;
+        if ( wNF074_Pieces_Det_In.NF074_Pieces_Det_VerifAnn == 2) MaxQte= 2;
+
+        if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det P  ${wNF074_Pieces_Det_In.NF074_Pieces_Det_CodeArticlePD1}  ${wNF074_Pieces_Det_In.NF074_Pieces_Det_DescriptionPD1}  ${MaxQte}");
+        Srv_DbTools.ListResult_Article_Link_Verif.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "P", "${wNF074_Pieces_Det_In.NF074_Pieces_Det_CodeArticlePD1}", MaxQte));
       }
 
       /*     for (int i = 0; i < DbTools.glfNF074_Pieces_Det_In.length; i++) {
@@ -221,11 +225,11 @@ class Client_Groupe_Parc_Tools {
       }*/
 
       if (!sVerif.contains("RES")) {
-        DbTools.glfNF074_Pieces_Det_Prop = await DbTools.getNF074_Pieces_Det_PROP();
-        for (int i = 0; i < DbTools.glfNF074_Pieces_Det_Inc_In.length; i++) {
-          NF074_Pieces_Det_Inc wNF074_Pieces_Det_Inc = DbTools.glfNF074_Pieces_Det_Inc_In[i];
+        DbTools.glfNF074_Pieces_Det_Inc_Prop = await DbTools.getNF074_Pieces_Det_Inc_Prop();
+        for (int i = 0; i < DbTools.glfNF074_Pieces_Det_Inc_Prop.length; i++) {
+          NF074_Pieces_Det_Inc wNF074_Pieces_Det_Inc = DbTools.glfNF074_Pieces_Det_Inc_Prop[i];
           if (wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_CodeArticlePD1.isNotEmpty) {
-            if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det_Inc PROP P ${wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_CodeArticlePD1}  ${wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_DescriptionPD1}  1");
+            if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det_Inc PROP P ${wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_CodeArticlePD1}                    ${wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_DescriptionPD1}  1");
             Srv_DbTools.ListResult_Article_Link_Verif_PROP.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "P", "${wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_CodeArticlePD1}", 1.0));
           }
         }
@@ -254,7 +258,7 @@ class Client_Groupe_Parc_Tools {
     for (int i = 0; i < DbTools.glfNF074_Mixte_Produit_In.length; i++) {
       NF074_Mixte_Produit wNF074_Mixte_Produit = DbTools.glfNF074_Mixte_Produit_In[i];
       if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>> Mixte_Produit S ${wNF074_Mixte_Produit.NF074_Mixte_Produit_CodeArticlePD1}  ${wNF074_Mixte_Produit.NF074_Mixte_Produit_DescriptionPD1}  1");
-      Srv_DbTools.ListResult_Article_Link_Verif.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "S", "${wNF074_Mixte_Produit.NF074_Mixte_Produit_CodeArticlePD1}", 1.0));
+      Srv_DbTools.ListResult_Article_Link_Verif.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "M", "${wNF074_Mixte_Produit.NF074_Mixte_Produit_CodeArticlePD1}", 1.0));
     }
     if (wDbg) print("\n\n");
 
@@ -262,8 +266,8 @@ class Client_Groupe_Parc_Tools {
       DbTools.glfNF074_Mixte_Produit_In = await DbTools.getNF074_Mixte_Produit_In_Prop(sVerif);
       for (int i = 0; i < DbTools.glfNF074_Mixte_Produit_In.length; i++) {
         NF074_Mixte_Produit wNF074_Mixte_Produit = DbTools.glfNF074_Mixte_Produit_In[i];
-        if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>> Mixte_Produit PROP ${wNF074_Mixte_Produit.NF074_Mixte_Produit_CodeArticlePD1}  ${wNF074_Mixte_Produit.NF074_Mixte_Produit_DescriptionPD1}  1");
-        Srv_DbTools.ListResult_Article_Link_Verif_PROP_Mixte.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "S", "${wNF074_Mixte_Produit.NF074_Mixte_Produit_CodeArticlePD1}", 1.0));
+        if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>> Mixte_Produit PROP ${wNF074_Mixte_Produit.NF074_Mixte_Produit_CodeArticlePD1}                    ${wNF074_Mixte_Produit.NF074_Mixte_Produit_DescriptionPD1}  1");
+        Srv_DbTools.ListResult_Article_Link_Verif_PROP_Mixte.add(Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "M", "${wNF074_Mixte_Produit.NF074_Mixte_Produit_CodeArticlePD1}", 1.0));
       }
       if (wDbg) print("\n\n");
     }

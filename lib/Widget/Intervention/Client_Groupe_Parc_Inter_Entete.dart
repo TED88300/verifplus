@@ -13,7 +13,7 @@ import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Entete_Di
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Equip.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Piece.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Serv.dart';
-import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Sign.dart';
+import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Mixte.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Synth.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Verif.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Tools.dart';
@@ -125,7 +125,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
       new Client_Groupe_Parc_Inter_Audit(onMaj: onMaj, x_t: "1/6"),
       new Client_Groupe_Parc_Inter_Verif(onMaj: onMaj, x_t: "2/6"),
       new Client_Groupe_Parc_Inter_Piece(onMaj: onMaj, x_t: "3/6"),
-      new Client_Groupe_Parc_Inter_Sign(onMaj: onMaj, x_t: "4/6"),
+      new Client_Groupe_Parc_Inter_Mixte(onMaj: onMaj, x_t: "4/6"),
       new Client_Groupe_Parc_Inter_Serv(onMaj: onMaj, x_t: "5/6"),
       new Client_Groupe_Parc_Inter_Synth(onMaj: onMaj, x_t: "6/6"),
     ];

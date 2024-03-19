@@ -62,7 +62,6 @@ class Srv_ImportExport {
     for (int i = 0; i < ListSite.length; i++) {
       Site wSite = ListSite[i];
       if (!wSite.Site_isUpdate) {
-        print("S");
         DbTools.setBoolErrorSync(true);
         return;
       }

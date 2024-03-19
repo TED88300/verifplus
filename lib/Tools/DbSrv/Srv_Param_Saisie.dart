@@ -107,6 +107,7 @@ class Param_Saisie {
       'Param_Saisie_Affichage_L2': Param_Saisie_Affichage_L2,
       'Param_Saisie_Affichage_L2_Ordre': Param_Saisie_Affichage_L2_Ordre,
       'Param_Saisie_Icon': Param_Saisie_Icon,
+      'Param_Saisie_Triger': Param_Saisie_Triger,
     };
   }
 

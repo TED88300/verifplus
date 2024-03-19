@@ -141,6 +141,10 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState extends State<Client_Grou
 
   @override
   void initState() {
+
+//    NCERT_Search.text = "EP6130589";
+
+
     initParcsDesc_Lib = widget.parc_Desc.ParcsDesc_Lib!;
     initParcsDesc_Id = widget.parc_Desc.ParcsDesc_Id!;
 
@@ -390,11 +394,8 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState extends State<Client_Grou
                                 return InkWell(
                                     onTap: () async {
                                       await HapticFeedback.vibrate();
-                                      print("scrollController index $index ${scrollController.position}");
+                                      print("scrollController 1 index $index ${scrollController.position}");
                                       DbTools.gNF074_Gammes_Date = item;
-
-
-
                                       DbTools.gParc_Ent.Parcs_CodeArticle = DbTools.gNF074_Gammes_Date.NF074_Gammes_REF;
                                       DbTools.gParc_Ent.Parcs_CODF = DbTools.gNF074_Gammes_Date.NF074_Gammes_CODF;
                                       DbTools.gParc_Ent.Parcs_NCERT = DbTools.gNF074_Gammes_Date.NF074_Gammes_NCERT;
@@ -563,12 +564,21 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState extends State<Client_Grou
 
       for (int i = 0; i < DbTools.glfNF074_Gammes.length; i++) {
         NF074_Gammes wNF074_Gammes = DbTools.glfNF074_Gammes[i];
+
+
+
         if (DbTools.gParc_Ent.Parcs_CODF!.compareTo(wNF074_Gammes.NF074_Gammes_CODF) == 0) {
+          print("••••••••• wNF074_Gammes ${wNF074_Gammes.toMap()}");
         for (int i = 0; i < DbTools.glfParcs_Desc.length; i++) {
           var element2 = DbTools.glfParcs_Desc[i];
+          print("••••••••• glfParcs_Desc ${element2.toMap()}");
           if (element2.ParcsDesc_Type!.compareTo("DESC") == 0) {
             element2.ParcsDesc_Id = "";
-            element2.ParcsDesc_Lib = DbTools.gNF074_Gammes.NF074_Gammes_DESC;
+            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_DESC;
+
+            print(">>>> DESC id ${element2.ParcsDescId} Lib ${element2.ParcsDesc_Lib} ");
+
+
             Srv_DbTools.DESC_Lib = element2.ParcsDesc_Lib!;
             bool isNotRaz = await DbTools.updateParc_Desc(element2, "---");
             print(">>>> isNotRaz $isNotRaz ${element2.ParcsDescId} ${element2.ParcsDesc_Lib} ");
@@ -584,7 +594,7 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState extends State<Client_Grou
             }
           } else if (element2.ParcsDesc_Type!.compareTo("FAB") == 0) {
             element2.ParcsDesc_Id = "";
-            element2.ParcsDesc_Lib = DbTools.gNF074_Gammes.NF074_Gammes_FAB;
+            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_FAB;
             Srv_DbTools.FAB_Lib = element2.ParcsDesc_Lib!;
             await DbTools.updateParc_Desc(element2, "---");
             bool isNotRaz = await DbTools.updateParc_Desc(element2, "---");
@@ -598,7 +608,7 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState extends State<Client_Grou
             }
           } else if (element2.ParcsDesc_Type!.compareTo("PRS") == 0) {
             element2.ParcsDesc_Id = "";
-            element2.ParcsDesc_Lib = DbTools.gNF074_Gammes.NF074_Gammes_PRS;
+            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_PRS;
             Srv_DbTools.PRS_Lib = element2.ParcsDesc_Lib!;
             bool isNotRaz = await DbTools.updateParc_Desc(element2, "---");
             if (!isNotRaz) {
@@ -610,7 +620,7 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState extends State<Client_Grou
             }
           } else if (element2.ParcsDesc_Type!.compareTo("CLF") == 0) {
             element2.ParcsDesc_Id = "";
-            element2.ParcsDesc_Lib = DbTools.gNF074_Gammes.NF074_Gammes_CLF;
+            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_CLF;
             Srv_DbTools.CLF_Lib = element2.ParcsDesc_Lib!;
             bool isNotRaz = await DbTools.updateParc_Desc(element2, "---");
             if (!isNotRaz) {
@@ -621,7 +631,7 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState extends State<Client_Grou
             }
           } else if (element2.ParcsDesc_Type!.compareTo("MOB") == 0) {
             element2.ParcsDesc_Id = "";
-            element2.ParcsDesc_Lib = DbTools.gNF074_Gammes.NF074_Gammes_MOB;
+            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_MOB;
             Srv_DbTools.MOB_Lib = element2.ParcsDesc_Lib!;
             await DbTools.updateParc_Desc(element2, "---");
             bool isNotRaz = await DbTools.updateParc_Desc(element2, "---");
@@ -632,7 +642,7 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState extends State<Client_Grou
             }
           } else if (element2.ParcsDesc_Type!.compareTo("PDT") == 0) {
             element2.ParcsDesc_Id = "";
-            element2.ParcsDesc_Lib = DbTools.gNF074_Gammes.NF074_Gammes_PDT;
+            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_PDT;
             Srv_DbTools.PDT_Lib = element2.ParcsDesc_Lib!;
             bool isNotRaz = await DbTools.updateParc_Desc(element2, "---");
             if (!isNotRaz) {
@@ -641,7 +651,7 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState extends State<Client_Grou
             }
           } else if (element2.ParcsDesc_Type!.compareTo("POIDS") == 0) {
             element2.ParcsDesc_Id = "";
-            element2.ParcsDesc_Lib = DbTools.gNF074_Gammes.NF074_Gammes_POIDS;
+            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_POIDS;
             Srv_DbTools.POIDS_Lib = element2.ParcsDesc_Lib!;
             bool isNotRaz = await DbTools.updateParc_Desc(element2, "---");
             if (!isNotRaz) {
@@ -649,7 +659,7 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState extends State<Client_Grou
             }
           } else if (element2.ParcsDesc_Type!.compareTo("GAM") == 0) {
             element2.ParcsDesc_Id = "";
-            element2.ParcsDesc_Lib = DbTools.gNF074_Gammes.NF074_Gammes_GAM;
+            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_GAM;
             Srv_DbTools.GAM_Lib = element2.ParcsDesc_Lib!;
 
             bool isNotRaz = await DbTools.updateParc_Desc(element2, "---");
@@ -1601,15 +1611,27 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState extends State<Client_Grou
   }
 
   Widget Liste(BuildContext context) {
+
+
+
+
     print("tec_Search.text ${tec_Search.text}");
     print("tec_Saisie.text ${tec_Saisie.text}");
+
 
     Srv_DbTools.ListParam_Saisie_Paramsearchresult.clear();
     if (tec_Search.text.isEmpty)
       Srv_DbTools.ListParam_Saisie_Paramsearchresult.addAll(Srv_DbTools.ListParam_Saisie_Param);
     else
       Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
-        if (element.Param_Saisie_Param_Label.toLowerCase().contains(tec_Search.text.toLowerCase())) {
+        String tec_Searchlc = tec_Search.text.toLowerCase();
+        String tec_Searchra = tec_Searchlc.replaceAll(" ", "");
+
+        String Param_Saisie_Param_Labellc = element.Param_Saisie_Param_Label.toLowerCase();
+        String Param_Saisie_Param_Labelra = Param_Saisie_Param_Labellc.replaceAll(" ", "");
+
+
+        if (Param_Saisie_Param_Labelra.contains(tec_Searchra)) {
           Srv_DbTools.ListParam_Saisie_Paramsearchresult.add(element);
         }
       });
@@ -1650,7 +1672,7 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState extends State<Client_Grou
                     return InkWell(
                         onTap: () async {
                           await HapticFeedback.vibrate();
-                          print("scrollController index $index ${scrollController.position}");
+                          print("scrollController 2 index $index ${scrollController.position}  ${item.Param_Saisie_Param_Label}  ${item.Param_Saisie_Param_Id}");
                           widget.parc_Desc.ParcsDesc_Lib = item.Param_Saisie_Param_Label;
                           widget.parc_Desc.ParcsDesc_Id = item.Param_Saisie_Param_Id;
                           await Reload();
