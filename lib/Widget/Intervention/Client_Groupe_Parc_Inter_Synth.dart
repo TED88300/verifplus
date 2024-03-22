@@ -20,19 +20,20 @@ class Client_Groupe_Parc_Inter_Synth extends StatefulWidget {
   Client_Groupe_Parc_Inter_SynthState createState() => Client_Groupe_Parc_Inter_SynthState();
 }
 
-class Client_Groupe_Parc_Inter_SynthState extends State<Client_Groupe_Parc_Inter_Synth> {
+class Client_Groupe_Parc_Inter_SynthState extends State<Client_Groupe_Parc_Inter_Synth> with AutomaticKeepAliveClientMixin{
 
+  List<Parc_Art> lParcs_Art = [];
 
   @override
   Future initLib() async {
     print("initLib");
-    DbTools.lParcs_Art = await DbTools.getParcs_ArtAll(DbTools.gParc_Ent.ParcsId!);
+    lParcs_Art = await DbTools.getParcs_ArtAll(DbTools.gParc_Ent.ParcsId!);
 
     setState(() {});
   }
 
   void initState() {
-    DbTools.lParcs_Art.clear();
+    lParcs_Art.clear();
     initLib();
     super.initState();
   }
@@ -44,6 +45,8 @@ class Client_Groupe_Parc_Inter_SynthState extends State<Client_Groupe_Parc_Inter
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     print("build SYNTH");
     Srv_DbTools.getParam_Saisie_ParamMem("Fact");
 
@@ -128,8 +131,8 @@ class Client_Groupe_Parc_Inter_SynthState extends State<Client_Groupe_Parc_Inter
 
     List<Widget> RowSaisies = [];
 
-    for (int i = 0; i < DbTools.lParcs_Art.length; i++) {
-      Parc_Art element = DbTools.lParcs_Art[i];
+    for (int i = 0; i < lParcs_Art.length; i++) {
+      Parc_Art element = lParcs_Art[i];
       RowSaisies.add(RowSaisie(element, H2));
     }
 
@@ -284,4 +287,7 @@ class Client_Groupe_Parc_Inter_SynthState extends State<Client_Groupe_Parc_Inter
           ),
         ));
   }
+  @override
+  bool get wantKeepAlive => true;
+
 }

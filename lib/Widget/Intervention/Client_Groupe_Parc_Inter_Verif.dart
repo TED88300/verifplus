@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Articles_Link_Verif_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie_Param.dart';
@@ -73,8 +74,6 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
 
   @override
   void initLib() async {
-    print(">> Call getVerifLink C ");
-    Client_Groupe_Parc_Tools.listResult_Article_Link_Verif_Deb = await Client_Groupe_Parc_Tools.getVerifLink();
 
 //    print("initLib Client_Groupe_Parc_Inter_Verif >>> A ListParam_Verif_Base ${Srv_DbTools.ListParam_Verif_Base.length}");
     DbTools.lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "ES");
@@ -113,6 +112,16 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
 
   @override
   Widget build(BuildContext context) {
+
+    print("πππππππππππππππππππππ build VERIF  >> listResult_Article_Link_Verif_Deb ${Client_Groupe_Parc_Tools.listResult_Article_Link_Verif_Deb.length}");
+
+    for (int i = 0; i < Client_Groupe_Parc_Tools.listResult_Article_Link_Verif_Deb.length; i++) {
+      Result_Article_Link_Verif wLink = Client_Groupe_Parc_Tools.listResult_Article_Link_Verif_Deb[i];
+      print("πππππππππππππππππππππ build PIECE listResult_Article_Link_Verif_Deb ${wLink.Desc()}");
+    }
+
+
+
     return Scaffold(
       body: Padding(
         padding: EdgeInsets.fromLTRB(0, 10, 0, 0),

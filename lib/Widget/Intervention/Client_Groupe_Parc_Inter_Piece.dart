@@ -1,12 +1,14 @@
+import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Articles_Ebp.dart';
+
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie_Param.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Article.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Piece_Saisie.dart';
+import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Tools.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
@@ -20,61 +22,67 @@ class Client_Groupe_Parc_Inter_Piece extends StatefulWidget {
   Client_Groupe_Parc_Inter_PieceState createState() => Client_Groupe_Parc_Inter_PieceState();
 }
 
-class Client_Groupe_Parc_Inter_PieceState extends State<Client_Groupe_Parc_Inter_Piece> {
+class Client_Groupe_Parc_Inter_PieceState extends State<Client_Groupe_Parc_Inter_Piece> with AutomaticKeepAliveClientMixin {
 
   double IcoWidth = 30;
 
+  List<Parc_Art> lParcs_Art = [];
 
+  bool initLibRun = false;
   @override
   Future initLib() async {
-    print("initLib");
-
+    print("         initLib PIECE");
     List<Parc_Art> wlParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "P");
+    lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "V");
+    lParcs_Art.addAll(wlParcs_Art);
 
-    DbTools.lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "V");
-    DbTools.lParcs_Art.addAll(wlParcs_Art);
-
-    /*
-
-    for (int i = 0; i < DbTools.lParcs_Art.length; i++) {
-      Parc_Art element = DbTools.lParcs_Art[i];
-      String wImgPath = "${Srv_DbTools.SrvImg}ArticlesImg_Ebp_${element.ParcsArt_Id}s.jpg";
-      gObj.pic = await gObj.networkImageToByte(wImgPath);
-      if (gObj.pic.length > 0) {
-        element.wImage = Image.memory(
-          gObj.pic,
-          fit: BoxFit.scaleDown,
-          width: IcoWidth,
-          height: IcoWidth,
-        );
-      }
+    print("lParcs_Art ${lParcs_Art.length}");
+    Client_Groupe_Parc_Tools.DebtoArt();
+    for (int i = 0; i < lParcs_Art.length; i++) {
+      Parc_Art element = lParcs_Art[i];
+      print("♣︎♣︎♣︎ initLib PIECES Parc_Art ${element.Desc()}");
     }
+    print("         initLib PIECE FIN");
 
-*/
-
-
-
-    print("DbTools.lParcs_Art ${DbTools.lParcs_Art.length}");
+    initLibRun = false;
     setState(() {});
   }
 
   void initState() {
-    DbTools.lParcs_Art.clear();
+    print("                     ");
+    print("         initState PIECE FIN     ");
+    print("                     ");
+
+    lParcs_Art.clear();
     initLib();
     super.initState();
+
+    FBroadcast.instance().register("Gen_Articles", (value, callback) {
+      if (!initLibRun)
+        {
+          print(" PIECE FBroadcast Gen_Articles ");
+        initLibRun = true;
+        initLib();
+        }
+    });
+
+
   }
 
   void onSaisie() async {
     widget.onMaj();
+    initLibRun = true;
     await initLib();
   }
 
+
+
   @override
   Widget build(BuildContext context) {
-    print("build PIECE");
+    super.build(context);
     Srv_DbTools.getParam_Saisie_ParamMem("Fact");
-    print("initLib ListParam_Saisie_Param ${Srv_DbTools.ListParam_Saisie_Param.length}");
-    print("initLib lParcs_Art ${DbTools.lParcs_Art.length}");
+    print("build PIECE");
+
 
     return Scaffold(
       body: Padding(
@@ -161,8 +169,10 @@ class Client_Groupe_Parc_Inter_PieceState extends State<Client_Groupe_Parc_Inter
 
     List<Widget> RowSaisies = [];
 
-    for (int i = 0; i < DbTools.lParcs_Art.length; i++) {
-      Parc_Art element = DbTools.lParcs_Art[i];
+    for (int i = 0; i < lParcs_Art.length; i++) {
+      Parc_Art element = lParcs_Art[i];
+ //     print("♠ buildDesc element ${element.Desc()}");
+
       RowSaisies.add(RowSaisie(element, H2));
     }
 
@@ -316,4 +326,7 @@ class Client_Groupe_Parc_Inter_PieceState extends State<Client_Groupe_Parc_Inter
           ),
         ));
   }
+
+  @override
+  bool get wantKeepAlive => true;
 }

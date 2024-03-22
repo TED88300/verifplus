@@ -1,11 +1,14 @@
+import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Articles_Link_Verif_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie_Param.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Article.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Piece_Saisie.dart';
+import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Tools.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
@@ -19,33 +22,41 @@ class Client_Groupe_Parc_Inter_Mixte extends StatefulWidget {
   Client_Groupe_Parc_Inter_MixteState createState() => Client_Groupe_Parc_Inter_MixteState();
 }
 
-class Client_Groupe_Parc_Inter_MixteState extends State<Client_Groupe_Parc_Inter_Mixte> {
+class Client_Groupe_Parc_Inter_MixteState extends State<Client_Groupe_Parc_Inter_Mixte> with AutomaticKeepAliveClientMixin {
 
+  List<Parc_Art> lParcs_Art = [];
 
   @override
   Future initLib() async {
     print("initLib");
     Srv_DbTools.getParam_Saisie_ParamMem("Fact");
 
-    DbTools.lParcs_Art = await DbTools.getParcs_Art_AllType(DbTools.gParc_Ent.ParcsId!);
-    for (int i = 0; i < DbTools.lParcs_Art.length; i++) {
-      Parc_Art element = DbTools.lParcs_Art[i];
-      print("getParcs_Art_AllType ${element.toString()}");
 
+    lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "M");
+    print("lParcs_Art ${lParcs_Art.length}");
+
+    for (int i = 0; i < lParcs_Art.length; i++) {
+      Parc_Art element = lParcs_Art[i];
+      print("♥︎♥︎♥︎ initLib MIXTE Parc_Art ${element.Desc()}");
     }
+    print("         initLib MIXTE FIN");
 
 
-    DbTools.lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "M");
 
-    print("DbTools.lParcs_Art ${DbTools.lParcs_Art.length}");
     setState(() {});
   }
 
   void initState() {
-    DbTools.lParcs_Art.clear();
+    lParcs_Art.clear();
 
     initLib();
     super.initState();
+    FBroadcast.instance().register("Gen_Articles", (value, callback) {
+
+        print(" MIXTE FBroadcast Gen_Articles ");
+        initLib();
+    });
+
   }
 
   void onSaisie() async {
@@ -55,7 +66,15 @@ class Client_Groupe_Parc_Inter_MixteState extends State<Client_Groupe_Parc_Inter
 
   @override
   Widget build(BuildContext context) {
-    print("build SIGN");
+    super.build(context);
+
+    print("build MIXTE");
+
+    for (int i = 0; i < lParcs_Art.length; i++) {
+      Parc_Art element = lParcs_Art[i];
+      print("♥︎♥︎♥︎ build MIXTE Parc_Art ${element.Desc()}");
+    }
+
 
     return Scaffold(
       body: Padding(
@@ -148,8 +167,8 @@ class Client_Groupe_Parc_Inter_MixteState extends State<Client_Groupe_Parc_Inter
 
     List<Widget> RowSaisies = [];
 
-    for (int i = 0; i < DbTools.lParcs_Art.length; i++) {
-      Parc_Art element = DbTools.lParcs_Art[i];
+    for (int i = 0; i < lParcs_Art.length; i++) {
+      Parc_Art element = lParcs_Art[i];
       RowSaisies.add(RowSaisie(element, H2));
     }
 
@@ -307,4 +326,9 @@ class Client_Groupe_Parc_Inter_MixteState extends State<Client_Groupe_Parc_Inter
           ),
         ));
   }
+
+  @override
+  bool get wantKeepAlive => true;
+
+
 }

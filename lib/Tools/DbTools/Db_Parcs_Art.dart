@@ -6,11 +6,12 @@ class Parc_Art {
   String? ParcsArt_Id = "";
   String? ParcsArt_Type = "";
   String? ParcsArt_lnk = "";
+
   String? ParcsArt_Fact = "";
   String? ParcsArt_Livr = "";
+  int?    ParcsArt_Qte = 0;
 
   String? ParcsArt_Lib = "";
-  int?    ParcsArt_Qte = 0;
   int?    Qte = 0;
   Image?  wImage ;
   bool    wImgeTrv       = false;
@@ -51,10 +52,10 @@ static  Parc_Art fromMap(Map<String, dynamic> map) {
     return new Parc_Art(
         ParcsArtId: map["ParcsArtId"],
         ParcsArt_ParcsId: map["ParcsArt_ParcsId"],
-        ParcsArt_Type: map["ParcsArt_Type"],
-      ParcsArt_lnk: map["ParcsArt_lnk"],
         ParcsArt_Fact: map["ParcsArt_Fact"],
-      ParcsArt_Livr: map["ParcsArt_Livr"],
+        ParcsArt_Livr: map["ParcsArt_Livr"],
+        ParcsArt_Type: map["ParcsArt_Type"],
+        ParcsArt_lnk: map["ParcsArt_lnk"],
         ParcsArt_Id: map["ParcsArt_Id"],
         ParcsArt_Lib: map["ParcsArt_Lib"],
         ParcsArt_Qte: map["ParcsArt_Qte"],
@@ -98,12 +99,12 @@ static  Parc_Art fromMap(Map<String, dynamic> map) {
 
     @override
     String toString() {
-      return 'Parc_Art {ParcsArt_ParcsId: $ParcsArt_ParcsId, ParcsArt_Type : $ParcsArt_Type, ParcsArt_lnk : $ParcsArt_lnk, ParcsArt_Fact : $ParcsArt_Fact, ParcsArt_Livr : $ParcsArt_Livr,ParcsArt_Id : $ParcsArt_Id, ParcsArt_Lib : $ParcsArt_Lib, ParcsArt_Qte : $ParcsArt_Qte,}';
+      return 'Parc_Art {ParcsArtId : $ParcsArtId, ParcsArt_ParcsId: $ParcsArt_ParcsId,ParcsArt_Id : $ParcsArt_Id, ParcsArt_Type : $ParcsArt_Type, ParcsArt_lnk : $ParcsArt_lnk, ParcsArt_Fact : $ParcsArt_Fact, ParcsArt_Livr : $ParcsArt_Livr, ParcsArt_Lib : $ParcsArt_Lib, ParcsArt_Qte : $ParcsArt_Qte,}';
     }
 
   @override
   String Desc() {
-    return 'Parc_Art {ParcsArt_ParcsId: $ParcsArt_ParcsId, ParcsArt_Type : $ParcsArt_Type, ParcsArt_lnk : ParcsArt_Id : $ParcsArt_Id, ParcsArt_Lib : $ParcsArt_Lib, ParcsArt_Qte : $ParcsArt_Qte,}';
+    return 'Parc_Art {ParcsArtId : $ParcsArtId,ParcsArt_Id : $ParcsArt_Id, ParcsArt_Fact : $ParcsArt_Fact, ParcsArt_Livr: $ParcsArt_Livr, ParcsArt_ParcsId: $ParcsArt_ParcsId, ParcsArt_Type : $ParcsArt_Type, ParcsArt_lnk : ParcsArt_Id : $ParcsArt_Id, ParcsArt_Lib : $ParcsArt_Lib, ParcsArt_Qte : $ParcsArt_Qte,}';
   }
 
 

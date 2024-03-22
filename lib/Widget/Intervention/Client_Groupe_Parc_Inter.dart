@@ -26,6 +26,7 @@ import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_BL.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Entete.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Note.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Signature.dart';
+import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Tools.dart';
 import 'package:verifplus/Widget/Widget_Tools/bottom_navigation_bar3.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
@@ -105,12 +106,18 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
   double dyPosition = 0;
 
   Future Reload() async {
+
+    print("♦︎♦︎♦︎♦︎♦︎♦︎ Client_Groupe_Parc_Inter Reload ♦︎♦︎♦︎♦︎♦︎♦︎ ");
+    print("♦︎♦︎♦︎♦︎♦︎♦︎ Client_Groupe_Parc_Inter Reload ♦︎♦︎♦︎♦︎♦︎♦︎ ");
+    print("♦︎♦︎♦︎♦︎♦︎♦︎ Client_Groupe_Parc_Inter Reload ♦︎♦︎♦︎♦︎♦︎♦︎ ");
+    print("♦︎♦︎♦︎♦︎♦︎♦︎ Client_Groupe_Parc_Inter Reload ♦︎♦︎♦︎♦︎♦︎♦︎ ");
+    print("♦︎♦︎♦︎♦︎♦︎♦︎ Client_Groupe_Parc_Inter Reload ♦︎♦︎♦︎♦︎♦︎♦︎ ");
+
     await Srv_ImportExport.getErrorSync();
     await DbTools.Parc_Ent_GetOrder();
     await DbTools.getParam_Saisie_Base("Audit");
     Srv_DbTools.ListParam_Audit_Base.clear();
     Srv_DbTools.ListParam_Audit_Base.addAll(Srv_DbTools.ListParam_Saisie_Base);
-
 
 
     await DbTools.getParam_Saisie_Base("Verif");
@@ -315,8 +322,8 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       bool isDevis = false;
       for (int ji = 0; ji < DbTools.lParcs_Art.length; ji++) {
         Parc_Art wParc_Art = DbTools.lParcs_Art[ji];
+        print("wParc_Art ${wParc_Art.Desc()} ");
         if (wParc_Art.ParcsArt_Livr!.substring(0, 1).contains("R")) {
-          print("wParc_Art.ParcsArt_Livr ${wParc_Art.ParcsArt_Lib} ${wParc_Art.ParcsArt_Livr}");
           isRel = true;
           break;
         }
@@ -727,6 +734,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
   //********************************************
   //********************************************
   //********************************************
+/*
 
   Widget GrpBtn(BuildContext context, List<GrdBtn> alGrdBtn, int nbCol, double aAspectRatio) {
     return GridView.builder(
@@ -766,6 +774,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     );
   }
 
+*/
   void onMaj() async {
     print("•••••••••• Parent onMaj() Relaod()");
 
@@ -820,17 +829,28 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                     });
 
                     await Srv_DbTools.getParc_EntID(Srv_DbTools.gIntervention.InterventionId!);
-                    print("ListParc_Ent lenght ${Srv_DbTools.ListParc_Ent.length}");
+                    print("♦︎♦︎ IMPORT ♦︎♦︎ ListParc_Ent lenght ${Srv_DbTools.ListParc_Ent.length}");
 
                     for (int i = 0; i < Srv_DbTools.ListParc_Ent.length; i++) {
                       Parc_Ent_Srv xParc_Ent_Srv = Srv_DbTools.ListParc_Ent[i];
-                      print("ListParc_Ent lenght ${xParc_Ent_Srv.toMap()}");
+                      print("♦︎♦︎ IMPORT ♦︎♦︎ ListParc_Ent ${xParc_Ent_Srv.toMap()}");
                     }
 
                     await Srv_DbTools.getParcs_DescInter(Srv_DbTools.gIntervention.InterventionId!);
-                    print("ListParc_Desc lenght ${Srv_DbTools.ListParc_Desc.length}");
+                    print("♦︎♦︎ IMPORT ♦︎♦︎ ListParc_Desc lenght ${Srv_DbTools.ListParc_Desc.length}");
+
+
+
                     await Srv_DbTools.getParcs_ArtInter(Srv_DbTools.gIntervention.InterventionId!);
-                    print("ListParc_Art lenght ${Srv_DbTools.ListParc_Art.length}");
+                    print("♦︎♦︎ IMPORT ♦︎♦︎ ListParc_Art lenght ${Srv_DbTools.ListParc_Art.length}");
+
+                    for (int i = 0; i < Srv_DbTools.ListParc_Art.length; i++) {
+                      Parc_Art_Srv element = Srv_DbTools.ListParc_Art[i];
+
+
+                      print("¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶ Srv_DbTools ${element.toString()}");
+                    }
+
 
                     print("***************** DELETE ****************");
 
@@ -946,28 +966,29 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                     int NbDesc = 0;
                     int NbArt = 0;
 
+                    print("Export 0 glfParcs_Ent lenght ${DbTools.glfParcs_Ent.length}");
                     DbTools.glfParcs_Ent = await DbTools.getParcs_Ent_Upd(Srv_DbTools.gIntervention.InterventionId!);
-                    print("glfParcs_Ent lenght ${DbTools.glfParcs_Ent.length}");
+                    print("Export 1 glfParcs_Ent lenght ${DbTools.glfParcs_Ent.length}");
 
                     DbTools.lParcs_Art.clear();
                     DbTools.glfParcs_Art = await DbTools.getParcs_ArtInter(Srv_DbTools.gIntervention.InterventionId!);
-                    print("getParcs_ArtInter ${Srv_DbTools.gIntervention.InterventionId!}");
-                    print("glfParcs_Art lenght ${DbTools.glfParcs_Art.length}");
+                    print("Export getParcs_ArtInter ${Srv_DbTools.gIntervention.InterventionId!}");
+                    print("Export glfParcs_Art lenght ${DbTools.glfParcs_Art.length}");
                     DbTools.lParcs_Art.addAll(DbTools.glfParcs_Art);
 
 //                    await Srv_DbTools.delParc_Ent_Srv(Srv_DbTools.gIntervention.InterventionId!);
                     await Srv_DbTools.delParc_Ent_Srv_Upd();
 
+                    print("Export A glfParcs_Ent lenght ${  DbTools.glfParcs_Ent.length}");
+
                     for (int i = 0; i < DbTools.glfParcs_Ent.length; i++) {
+                      print("glfParcs_Ent ${i}");
+
+
                       var element = DbTools.glfParcs_Ent[i];
-
-
-
                       await Srv_DbTools.InsertUpdateParc_Ent_Srv(element);
-
                       int gLastID = Srv_DbTools.gLastID;
                       print("Srv_DbTools.gLastID ${gLastID}      <   ${element.ParcsId}");
-
                       String wSql = "";
                       for (int i = 0; i < DbTools.glfParcs_Desc.length; i++) {
                         var element2 = DbTools.glfParcs_Desc[i];
@@ -1008,9 +1029,11 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                       acontroller.stop();
                       iStrfExp = false;
                     });
+                    print("Export B glfParcs_Ent lenght ${  DbTools.glfParcs_Ent.length}");
                     await Reload();
+                    print("Export C glfParcs_Ent lenght ${  DbTools.glfParcs_Ent.length}");
 
-                    String wStr = "Transfert de ${DbTools.glfParcs_Ent.length} organes terminé\n\n"
+                    String wStr = "Export => Transfert de ${DbTools.glfParcs_Ent.length} organes terminé \n\n"
                         "- ${NbDesc} descriptions\n"
                         "- ${NbArt} Articles";
 
@@ -1262,8 +1285,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     } else
       wchildren = Enntete_Inter();
 
-
-    print("Scaffold ");
     return
       WillPopScope(
           onWillPop: () async {
@@ -2533,18 +2554,13 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
     print("DbTools.gParc_Ent.ParcsId! ${DbTools.gParc_Ent.ParcsId!}");
 
-//    Srv_DbTools.getParam_Gamme_Mem(DbTools.gParc_Ent.Parcs_Type!);
+
+    Client_Groupe_Parc_Tools.listResult_Article_Link_Verif_Deb.clear();
 
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> _onRowDoubleTap");
 
     for (int i = 0; i < Srv_DbTools.ListParam_Saisie.length; i++) {
       Param_Saisie element = Srv_DbTools.ListParam_Saisie[i];
-
-/*
-      if (element.Param_Saisie_Type == "DESC")
-        print("Param_Saisie  ${element.toMap()}");
-*/
-
 
       await DbTools.getParcs_Desc_Id_Type_Add(DbTools.gParc_Ent.ParcsId!, element.Param_Saisie_ID);
     }
@@ -2560,15 +2576,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     }
 
     DbTools.glfParcs_Desc = await DbTools.getParcs_Desc(DbTools.gParc_Ent.ParcsId!);
-    print("glfParcs_Desc.length ${DbTools.glfParcs_Desc.length}");
-    DbTools.glfParcs_Desc.forEach((param_Saisie) {
 
-//      print("glfParcs_Desc.length ${param_Saisie.toMap()}");
-
-
-
-
-    });
 
 
     Srv_DbTools.FAB_Lib = "";
@@ -2581,6 +2589,14 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     Srv_DbTools.IsComplet = !"${DbTools.gParc_Ent.toString()} ${DbTools.glfParcs_Desc}".contains("---");
 
     await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Groupe_Parc_Inter_Entete()));
+
+    DbTools.lParcs_Art = await DbTools.getParcs_Art_AllType(DbTools.gParc_Ent.ParcsId!);
+    for (int i = 0; i < DbTools.lParcs_Art.length; i++) {
+      Parc_Art element = DbTools.lParcs_Art[i];
+//      print("¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶ Client_Groupe_Parc_Inter_Entete ${element.Desc()}");
+    }
+
+
     Reload();
   }
 

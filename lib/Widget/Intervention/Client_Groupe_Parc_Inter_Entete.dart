@@ -31,7 +31,7 @@ class Client_Groupe_Parc_Inter_Entete extends StatefulWidget {
 }
 
 class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with SingleTickerProviderStateMixin {
-  late TabController _tabController;
+//  late TabController _tabController;
 
   double textSize = 14.0;
 
@@ -78,13 +78,19 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
 
   int _count = 0;
   List<Widget> widgets = [];
+  final pageController = PageController(keepPage: false, initialPage: DbTools.gCurrentIndex2);
 
   bool isImage = false;
   List<Widget> imgList = [];
 
   void Reload() async {
-    await AffDesc();
 
+    print("");
+    print(" ENTETE Reload ******************");
+    print("");
+
+
+      await AffDesc();
       print(" Call InitArt() ******************");
       await Client_Groupe_Parc_Tools.InitArt();
       print("***************** Call Gen_Articles() ******************");
@@ -110,6 +116,8 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
 
   @override
   void initLib() async {
+
+    print("initLib Relaod()");
     Reload();
   }
 
@@ -121,20 +129,25 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
   void initState() {
     subTitle = subTitleArray[0];
     widgets = [
-      new Client_Groupe_Parc_Inter_Equip(onMaj: onMaj),
-      new Client_Groupe_Parc_Inter_Audit(onMaj: onMaj, x_t: "1/6"),
-      new Client_Groupe_Parc_Inter_Verif(onMaj: onMaj, x_t: "2/6"),
-      new Client_Groupe_Parc_Inter_Piece(onMaj: onMaj, x_t: "3/6"),
-      new Client_Groupe_Parc_Inter_Mixte(onMaj: onMaj, x_t: "4/6"),
-      new Client_Groupe_Parc_Inter_Serv(onMaj: onMaj, x_t: "5/6"),
-      new Client_Groupe_Parc_Inter_Synth(onMaj: onMaj, x_t: "6/6"),
+      Client_Groupe_Parc_Inter_Equip(onMaj: onMaj),
+      Client_Groupe_Parc_Inter_Audit(onMaj: onMaj, x_t: "1/6"),
+      Client_Groupe_Parc_Inter_Verif(onMaj: onMaj, x_t: "2/6"),
+      Client_Groupe_Parc_Inter_Piece(onMaj: onMaj, x_t: "3/6"),
+      Client_Groupe_Parc_Inter_Mixte(onMaj: onMaj, x_t: "4/6"),
+      Client_Groupe_Parc_Inter_Serv(onMaj: onMaj, x_t: "5/6"),
+      Client_Groupe_Parc_Inter_Synth(onMaj: onMaj, x_t: "6/6"),
     ];
+
+
+
+/*
     _tabController = TabController(vsync: this, length: widgets.length);
     _tabController.addListener(() {
       setState(() {
         subTitle = subTitleArray[DbTools.gCurrentIndex2];
       });
     });
+*/
 
     initLib();
     super.initState();
@@ -146,17 +159,6 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
 
   Future AffDesc() async {
     DbTools.glfParcs_Desc = await DbTools.getParcs_Desc(DbTools.gParc_Ent.ParcsId!);
-//    Parc_Desc wParc_Desc = await DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, param_Saisie.Param_Saisie_ID);
-
-    print("&&&&&&&&&&&&&&&&&& ENTETE AffDesc ${DbTools.glfParcs_Desc.length}");
-    print("&&&&&&&&&&&&&&&&&& ENTETE AffDesc ${DbTools.glfParcs_Desc.length}");
-    print("&&&&&&&&&&&&&&&&&& ENTETE AffDesc ${DbTools.glfParcs_Desc.length}");
-    print("&&&&&&&&&&&&&&&&&& ENTETE AffDesc ${DbTools.glfParcs_Desc.length}");
-    print("&&&&&&&&&&&&&&&&&& ENTETE AffDesc ${DbTools.glfParcs_Desc.length}");
-
-
-
-
     for (int i = 0; i < Srv_DbTools.ListParam_Saisie.length; i++) {
       Param_Saisie element = Srv_DbTools.ListParam_Saisie[i];
       await DbTools.getParcs_Desc_Id_Type_Add(DbTools.gParc_Ent.ParcsId!, element.Param_Saisie_ID);
@@ -280,7 +282,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
     islock = false;
     Srv_DbTools.Hab_PDT = 99;
 
-    Widget wchildren = widgets[DbTools.gCurrentIndex2];
+//    Widget wchildren = widgets[DbTools.gCurrentIndex2];
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -484,9 +486,19 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                                         ),
                                   child: Column(
                                     children: [
+/*
                                       Expanded(
                                         child: wchildren,
                                       ),
+*/
+
+                                  Expanded(
+                                  child: PageView(
+                                        children: widgets,
+                                        controller: pageController,
+                                        onPageChanged: onBottomIconPressed,
+                                      ),
+                                  ),
                                       Container(
                                         height: 1,
                                         color: gColors.greyDark,
@@ -534,10 +546,21 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
     );
   }
 
-  void onBottomIconPressed(int index) {
+  void onBottomIconPressedvp(int index) {
     subTitle = subTitleArray[index];
     setState(() {
       DbTools.gCurrentIndex2 = index;
     });
   }
+
+  void onBottomIconPressed(int index) async {
+    if (DbTools.gCurrentIndex2 != index) {
+      DbTools.gCurrentIndex2 = index;
+      pageController.jumpToPage(index);
+      Reload();
+    }
+  }
+
+
+
 }

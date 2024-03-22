@@ -241,7 +241,17 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
               widget.parc_Art.ParcsArt_Qte = initParcsArt_Qte;
               widget.parc_Art.ParcsArt_Fact = initParcsArt_Fact;
               widget.parc_Art.ParcsArt_Livr = initParcsArt_Livr;
+              print ("Valider updateParc_Art > ParcsArtId ${widget.parc_Art.ParcsArtId}");
               await DbTools.updateParc_Art(widget.parc_Art);
+              print ("Valider updateParc_Art <");
+
+              for (int i = 0; i < DbTools.lParcs_Art.length; i++) {
+                Parc_Art element = DbTools.lParcs_Art[i];
+                print("Valider element Desc ${element.Desc()}");
+              }
+
+
+
               widget.onSaisie();
               Navigator.of(context).pop();
             },

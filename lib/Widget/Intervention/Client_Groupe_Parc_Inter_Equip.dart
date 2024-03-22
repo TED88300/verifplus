@@ -655,8 +655,6 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
       // PARAM INDICE == 0
       if (i == 0)
         {
-          print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ param_Saisie.Param_Saisie_ID ${element.Param_Saisie_ID}");
-          print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ param_Saisie.Param_Saisie_ID ${element.toMap()}");
           RowSaisies.add(RowSaisie(element, LargeurCol, LargeurCol2, H2));
         }
     }

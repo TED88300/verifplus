@@ -602,7 +602,7 @@ class DbTools {
       int i = 1;
       Srv_DbTools.ListParam_Saisie_Base.forEach((element) {
 
-        print("♦︎♦︎♦︎♦︎♦︎♦︎ ListParam_Saisie_Base ${element.Param_Saisie_Type} ${element.Param_Saisie_Triger}");
+//        print("♦︎♦︎♦︎♦︎♦︎♦︎ ListParam_Saisie_Base ${element.Param_Saisie_Type} ${element.Param_Saisie_Triger}");
 
 
 
@@ -1037,7 +1037,7 @@ class DbTools {
     final db = await database;
     bool wRet = false;
     String selSQL = "SELECT * FROM `NF074_Pieces_Det` WHERE NF074_Pieces_Det_CODF = '${Srv_DbTools.REF_Lib}'";
-    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_Is_Def selSQL ${selSQL}");
+   // print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_Is_Def selSQL ${selSQL}");
     final List<Map<String, dynamic>> maps = await db.rawQuery(selSQL);
     if (maps.length > 0) wRet = true;
     return wRet;
@@ -1078,7 +1078,7 @@ class DbTools {
       selTypeVerif += "NF074_Pieces_Det_RES  = 1 ";
     }
 
-    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_In selTypeVerif ${wType}");
+  //  print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_In selTypeVerif ${wType}");
 
     String selSQL = "";
     if (selTypeVerif.isEmpty)
@@ -1086,7 +1086,7 @@ class DbTools {
     else
       selSQL = "$selBase ($selTypeVerif)  AND  $selDESC ";
 
-    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_In selSQL ${selSQL}");
+   // print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_In selSQL ${selSQL}");
 
     final List<Map<String, dynamic>> maps = await db.rawQuery(selSQL);
 
@@ -1147,7 +1147,7 @@ class DbTools {
     selTypeVerif += "NF074_Pieces_Det_RES  = 0 ";
 
     String selSQL = "$selBase ($selTypeVerif)  AND  $selDESC ORDER BY NF074_Pieces_Det_CodearticlePD1";
-    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_PROP selSQL ${selSQL}");
+   // print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_PROP selSQL ${selSQL}");
 
     final List<Map<String, dynamic>> maps = await db.rawQuery(selSQL);
 
@@ -1267,16 +1267,16 @@ class DbTools {
     if (wPOIDS_Lib.contains("Kilos")) {
       wUNIT = "Kg";
       wPOIDS_Lib = wPOIDS_Lib.replaceAll("Kilos", "");
-      print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib KG ${wPOIDS_Lib}");
+      //print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib KG ${wPOIDS_Lib}");
     }
     if (wPOIDS_Lib.contains("Litres")) {
       wUNIT = "L";
       wPOIDS_Lib = wPOIDS_Lib.replaceAll("Litres", "");
-      print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib L ${wPOIDS_Lib}");
+      //print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib L ${wPOIDS_Lib}");
     }
     wPOIDS_Lib.replaceAll(" ", "");
 
-    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib ${wPOIDS_Lib}");
+    //print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib ${wPOIDS_Lib}");
 
     int wPOIDS = int.tryParse(wPOIDS_Lib) ?? 0;
 
@@ -1320,7 +1320,7 @@ class DbTools {
     else
       selSQL = "$selBase ($selTypeVerif)  AND ($selDESCPRS AND $selMOBPDT) GROUP BY NF074_Pieces_Det_Inc_CodearticlePD1 ORDER BY NF074_Pieces_Det_Inc_CodearticlePD1";
 
-    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_Inc_In selSQL ${selSQL}");
+  //  print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_Inc_In selSQL ${selSQL}");
 
     final List<Map<String, dynamic>> maps = await db.rawQuery(selSQL);
 
@@ -1361,16 +1361,16 @@ class DbTools {
     if (wPOIDS_Lib.contains("Kilos")) {
       wUNIT = "Kg";
       wPOIDS_Lib = wPOIDS_Lib.replaceAll("Kilos", "");
-      print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib KG ${wPOIDS_Lib}");
+      //print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib KG ${wPOIDS_Lib}");
     }
     if (wPOIDS_Lib.contains("Litres")) {
       wUNIT = "L";
       wPOIDS_Lib = wPOIDS_Lib.replaceAll("Litres", "");
-      print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib L ${wPOIDS_Lib}");
+     // print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib L ${wPOIDS_Lib}");
     }
     wPOIDS_Lib.replaceAll(" ", "");
 
-    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib ${wPOIDS_Lib}");
+    //print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib ${wPOIDS_Lib}");
 
     int wPOIDS = int.tryParse(wPOIDS_Lib) ?? 0;
 
@@ -1492,16 +1492,16 @@ class DbTools {
     if (wPOIDS_Lib.contains("Kilos")) {
       wUNIT = "Kg";
       wPOIDS_Lib = wPOIDS_Lib.replaceAll("Kilos", "");
-      print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib KG ${wPOIDS_Lib}");
+      //print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib KG ${wPOIDS_Lib}");
     }
     if (wPOIDS_Lib.contains("Litres")) {
       wUNIT = "L";
       wPOIDS_Lib = wPOIDS_Lib.replaceAll("Litres", "");
-      print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib L ${wPOIDS_Lib}");
+      //print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib L ${wPOIDS_Lib}");
     }
     wPOIDS_Lib.replaceAll(" ", "");
 
-    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib ${wPOIDS_Lib}");
+//    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib ${wPOIDS_Lib}");
 
     int wPOIDS = int.tryParse(wPOIDS_Lib) ?? 0;
 
@@ -1547,7 +1547,7 @@ class DbTools {
     else
       selSQL = "$selBase ($selTypeVerif)  AND $selPOIDS AND $selDESC AND $selMOBPDT AND $selEMPZNE";
 
-    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Mixte_Produit_In S selSQL ${selSQL}");
+    //print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Mixte_Produit_In S selSQL ${selSQL}");
     final List<Map<String, dynamic>> maps = await db.rawQuery(selSQL);
 
     return List.generate(maps.length, (i) {
@@ -1587,16 +1587,16 @@ class DbTools {
     if (wPOIDS_Lib.contains("Kilos")) {
       wUNIT = "Kg";
       wPOIDS_Lib = wPOIDS_Lib.replaceAll("Kilos", "");
-      print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib KG ${wPOIDS_Lib}");
+     // print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib KG ${wPOIDS_Lib}");
     }
     if (wPOIDS_Lib.contains("Litres")) {
       wUNIT = "L";
       wPOIDS_Lib = wPOIDS_Lib.replaceAll("Litres", "");
-      print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib L ${wPOIDS_Lib}");
+     // print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib L ${wPOIDS_Lib}");
     }
     wPOIDS_Lib.replaceAll(" ", "");
 
-    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib ${wPOIDS_Lib}");
+    //print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ wPOIDS_Lib ${wPOIDS_Lib}");
 
     int wPOIDS = int.tryParse(wPOIDS_Lib) ?? 0;
 
@@ -1619,7 +1619,7 @@ class DbTools {
     selTypeVerif += " )";
 
     String selSQL = "$selBase $selTypeVerif  AND $selPOIDS AND $selDESC AND $selMOBPDT AND $selEMPZNE";
-    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Mixte_Produit_In PROP selSQL ${selSQL}");
+  //  print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Mixte_Produit_In PROP selSQL ${selSQL}");
     final List<Map<String, dynamic>> maps = await db.rawQuery(selSQL);
     return List.generate(maps.length, (i) {
       return NF074_Mixte_Produit(
@@ -1754,7 +1754,7 @@ class DbTools {
       selSQL = "$selBase ($selTypeVerif)  AND ( $selDESC OR $selPDT_POIDS_PRS $selPOIDS)  ";
 
     final List<Map<String, dynamic>> maps = await db.rawQuery(selSQL);
-    print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Actions_In ${maps.length} ${selSQL}");
+   // print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Actions_In ${maps.length} ${selSQL}");
 
     return List.generate(maps.length, (i) {
       return NF074_Pieces_Actions(
@@ -2616,7 +2616,7 @@ class DbTools {
   }
 
   static Future<void> updateSites(Site wSite) async {
-    print("VALIDER updateSites ${wSite.toMap()}");
+//    print("VALIDER updateSites ${wSite.toMap()}");
     final db = await DbTools.database;
     int? repid = await db.update(
       "Sites",
@@ -2624,7 +2624,7 @@ class DbTools {
       where: "SiteId = ?",
       whereArgs: [wSite.SiteId],
     );
-    print("VALIDER updateSites ${repid}");
+  //  print("VALIDER updateSites ${repid}");
   }
 
 
@@ -2996,7 +2996,7 @@ class DbTools {
   static Future<List<Parc_Ent>> getParcs_Ent(int Parcs_InterventionId) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query("Parcs_Ent", orderBy: "Parcs_order ASC", where: '"Parcs_InterventionId" = ${Parcs_InterventionId}', whereArgs: []);
-    print("getParcs_Ent Parcs_Ent.length ${maps.length} ${Parcs_InterventionId}");
+    print("getParcs_Ent Parcs_Ent.length A ${maps.length} ${Parcs_InterventionId}");
     return List.generate(maps.length, (i) {
       return Parc_Ent.fromMap(maps[i]);
     });
@@ -3025,7 +3025,7 @@ class DbTools {
   static Future<List<Parc_Ent>> getParcs_Ent_Upd(int Parcs_InterventionId) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query("Parcs_Ent", where: '"Parcs_InterventionId" = ${Parcs_InterventionId} AND Parcs_Update > 0', whereArgs: []);
-    print("getParcs_Ent Parcs_Ent.length ${maps.length} ${Parcs_InterventionId}");
+    print("getParcs_Ent Parcs_Ent.length B ${maps.length} ${Parcs_InterventionId}");
     return List.generate(maps.length, (i) {
       print("getParcs Parcs ${maps[i]}");
       return Parc_Ent.fromMap(maps[i]);
@@ -3382,6 +3382,7 @@ class DbTools {
     print("updateParc_Ent_Livr ${parc.Livr}");
     final db = await database;
     String wSlq = "UPDATE Parcs_Ent SET Livr = '${parc.Livr}' WHERE ParcsId = ${parc.ParcsId}";
+    print("updateParc_Ent_Liv wSlq ${wSlq}");
     await db.execute(wSlq);
   }
 
@@ -3529,7 +3530,7 @@ class DbTools {
   }
 
   static Future<Parc_Desc> getParcs_Desc_Id_Type_Add(int ParcsDesc_ParcsId, ParcsDesc_Type) async {
-    print("♠︎♠︎♠︎♠︎♠︎ getParcs_Desc_Id_Type_Add ParcsDesc_ParcsId ${ParcsDesc_ParcsId} ParcsDesc_Type ${ParcsDesc_Type}");
+//    print("♠︎♠︎♠︎♠︎♠︎ getParcs_Desc_Id_Type_Add ParcsDesc_ParcsId ${ParcsDesc_ParcsId} ParcsDesc_Type ${ParcsDesc_Type}");
 
     Parc_Desc wParc_Desc = Parc_Desc.Parc_DescInit(ParcsDesc_ParcsId, ParcsDesc_Type);
     for (int i = 0; i < glfParcs_Desc.length; i++) {
@@ -3738,10 +3739,10 @@ class DbTools {
 
     String wTmp = "SELECT Parcs_Art.* FROM Parcs_Art, Parcs_Ent  WHERE ParcsArt_ParcsId = ParcsId AND Parcs_InterventionId = ${Parcs_InterventionId} ORDER BY `Parcs_Art`.`ParcsArt_Id` ASC";
 
-    print("getParcs_ArtInter ${wTmp}");
+//    print("getParcs_ArtInter ${wTmp}");
     List<Map<String, dynamic>> maps = await db.rawQuery(wTmp);
 
-    print("getParcs_ArtInter maps.length ${maps.length}");
+//    print("getParcs_ArtInter maps.length ${maps.length}");
 
     return await List.generate(maps.length, (i) {
       return Parc_Art.fromMap(maps[i]);
@@ -3786,22 +3787,51 @@ class DbTools {
       where: "ParcsArtId = ?",
       whereArgs: [parc.ParcsArtId],
     );
-    print(">>>> updateParc_Art ${parc.ParcsArtId} ${parc.ParcsArt_Lib} ");
+    print("☁︎☁︎☁︎☁︎☁︎☁︎☁︎☁︎☁︎☁︎☁︎☁︎>>>> updateParc_Art repid $repid toMap ${parc.toMap()} ");
+
+
 
     gParc_Ent.Livr = parc.ParcsArt_Livr!.substring(0, 1).compareTo("R") == 0 ? "R" : "";
-    updateParc_Ent_Livr(gParc_Ent);
+    await updateParc_Ent_Livr(gParc_Ent);
 
     Srv_DbTools.gIntervention.Livr = gParc_Ent.Livr!;
-    Srv_DbTools.setIntervention(Srv_DbTools.gIntervention);
+    await DbTools.updateInterventions(Srv_DbTools.gIntervention);
+    bool wRes = await Srv_DbTools.setIntervention(Srv_DbTools.gIntervention);
+//    print("•••• setIntervention ${wRes}");
+    Srv_DbTools.gIntervention.Intervention_isUpdate = wRes;
+    if (!wRes) DbTools.setBoolErrorSync(true);
+    await DbTools.updateInterventions(Srv_DbTools.gIntervention);
 
     Srv_DbTools.gGroupe.Livr = gParc_Ent.Livr!;
-    Srv_DbTools.setGroupe(Srv_DbTools.gGroupe);
+    await DbTools.updateGroupes(Srv_DbTools.gGroupe);
+     wRes = await Srv_DbTools.setGroupe(Srv_DbTools.gGroupe);
+//    print("•••• setGroupe ${wRes}");
+    Srv_DbTools.gGroupe.Groupe_isUpdate = wRes;
+    if (!wRes) DbTools.setBoolErrorSync(true);
+    await DbTools.updateGroupes(Srv_DbTools.gGroupe);
+
 
     Srv_DbTools.gSite.Livr = gParc_Ent.Livr!;
-    Srv_DbTools.setSite(Srv_DbTools.gSite);
+    await DbTools.updateSites(Srv_DbTools.gSite);
+    wRes = await Srv_DbTools.setSite(Srv_DbTools.gSite);
+  //  print("•••• setSite ${wRes}");
+    Srv_DbTools.gSite.Site_isUpdate = wRes;
+    if (!wRes) DbTools.setBoolErrorSync(true);
+    await DbTools.updateSites(Srv_DbTools.gSite);
 
     Srv_DbTools.gClient.Livr = gParc_Ent.Livr!;
-    Srv_DbTools.setClient(Srv_DbTools.gClient);
+    await DbTools.updateClients(Srv_DbTools.gClient);
+    wRes = await Srv_DbTools.setClient(Srv_DbTools.gClient);
+//    print("•••• setClient ${wRes}");
+    Srv_DbTools.gClient.Client_isUpdate = wRes;
+    if (!wRes) DbTools.setBoolErrorSync(true);
+    await DbTools.updateClients(Srv_DbTools.gClient);
+
+
+
+
+
+
   }
 
   static Future<void> insertParc_Art(Parc_Art parc_Art) async {

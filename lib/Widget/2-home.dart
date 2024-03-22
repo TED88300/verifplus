@@ -127,10 +127,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
 
 
-    FBroadcast.instance().register("MAJHOME", (value, callback) {
-      print(" MAJHOME MAJHOME MAJHOME ");
-      reload();
-    });
+
   }
 
   Future<void> initConnectivity() async {
@@ -174,9 +171,6 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   @override
   Widget Block_MenuApp(BuildContext context) {
     String title_string = P_itemsTitre[DbTools.gCurrentIndex];
-
-
-
     print("Block_MenuApp");
 
     return Scaffold(
@@ -279,13 +273,12 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
-
-
             PageView(
               children: P_children,
               controller: pageController,
               onPageChanged: onBottomIconPressed,
-            ),            Positioned(
+            ),
+            Positioned(
               bottom: 0,
               right: 0,
               child: CustomBottomNavigationBar(

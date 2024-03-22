@@ -19,8 +19,9 @@ class Client_Groupe_Parc_Inter_Serv extends StatefulWidget {
   Client_Groupe_Parc_Inter_ServState createState() => Client_Groupe_Parc_Inter_ServState();
 }
 
-class Client_Groupe_Parc_Inter_ServState extends State<Client_Groupe_Parc_Inter_Serv> {
+class Client_Groupe_Parc_Inter_ServState extends State<Client_Groupe_Parc_Inter_Serv> with AutomaticKeepAliveClientMixin{
 
+  List<Parc_Art> lParcs_Art = [];
 
   @override
   Future initLib() async {
@@ -30,27 +31,27 @@ class Client_Groupe_Parc_Inter_ServState extends State<Client_Groupe_Parc_Inter_
     List<Parc_Art> lParcs_ArtMo = [];
     List<Parc_Art> lParcs_ArtDn = [];
 
-    DbTools.lParcs_Art = await DbTools.getParcs_Art_AllType(DbTools.gParc_Ent.ParcsId!);
-    for (int i = 0; i < DbTools.lParcs_Art.length; i++) {
-      Parc_Art element = DbTools.lParcs_Art[i];
-      print("getParcs_Art_AllType ${element.toString()}");
+    lParcs_Art = await DbTools.getParcs_Art_AllType(DbTools.gParc_Ent.ParcsId!);
+    for (int i = 0; i < lParcs_Art.length; i++) {
+      Parc_Art element = lParcs_Art[i];
+      print("getParcs_Art_AllType ${element.Desc()}");
 
     }
 
-    DbTools.lParcs_Art.clear();
+    lParcs_Art.clear();
     lParcs_ArtMo = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "Mo");
-    DbTools.lParcs_Art.addAll(lParcs_ArtMo);
+    lParcs_Art.addAll(lParcs_ArtMo);
     lParcs_ArtDn = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "Dn");
-    DbTools.lParcs_Art.addAll(lParcs_ArtDn);
+    lParcs_Art.addAll(lParcs_ArtDn);
 
-    print("DbTools.lParcs_ArtMo ${lParcs_ArtMo.length}");
-    print("DbTools.lParcs_ArtDn ${lParcs_ArtDn.length}");
-    print("DbTools.lParcs_Art ${DbTools.lParcs_Art.length}");
+    print("lParcs_ArtMo ${lParcs_ArtMo.length}");
+    print("lParcs_ArtDn ${lParcs_ArtDn.length}");
+    print("lParcs_Art ${lParcs_Art.length}");
     setState(() {});
   }
 
   void initState() {
-    DbTools.lParcs_Art.clear();
+    lParcs_Art.clear();
 
     initLib();
     super.initState();
@@ -63,6 +64,8 @@ class Client_Groupe_Parc_Inter_ServState extends State<Client_Groupe_Parc_Inter_
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     print("build SIGN");
 
     return Scaffold(
@@ -156,8 +159,8 @@ class Client_Groupe_Parc_Inter_ServState extends State<Client_Groupe_Parc_Inter_
 
     List<Widget> RowSaisies = [];
 
-    for (int i = 0; i < DbTools.lParcs_Art.length; i++) {
-      Parc_Art element = DbTools.lParcs_Art[i];
+    for (int i = 0; i < lParcs_Art.length; i++) {
+      Parc_Art element = lParcs_Art[i];
       RowSaisies.add(RowSaisie(element, H2));
     }
 
@@ -322,4 +325,7 @@ class Client_Groupe_Parc_Inter_ServState extends State<Client_Groupe_Parc_Inter_
           ),
         ));
   }
+  @override
+  bool get wantKeepAlive => true;
+
 }

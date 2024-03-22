@@ -31,15 +31,21 @@ class Result_Article_Link_Verif {
   String ChildID = "";
   double Qte = 0;
 
+  String? Fact = "";
+  String? Livr = "";
+
+
   static Result_Article_Link_VerifInit() {
-    return Result_Article_Link_Verif("", "", "", 0);
+    return Result_Article_Link_Verif("", "", "", 0, "Fact.", "Livré");
   }
 
-  Result_Article_Link_Verif(String ParentID, String TypeChildID, String ChildID, double Qte) {
+  Result_Article_Link_Verif(String ParentID, String TypeChildID, String ChildID, double Qte, String Fact, String Livr) {
     this.ParentID = ParentID;
     this.TypeChildID = TypeChildID;
     this.ChildID = ChildID;
     this.Qte = Qte;
+    this.Fact = Fact;
+    this.Livr = Livr;
   }
 
   factory Result_Article_Link_Verif.fromJson(Map<String, dynamic> json) {
@@ -49,12 +55,14 @@ class Result_Article_Link_Verif {
       json['TypeChildID'],
       json['ChildID'],
       double.parse(json['Qte']),
+      json['Fact'],
+      json['Livr'],
     );
     return wResult_Article_Link_Verif;
   }
 
   String Desc() {
-    return '$ParentID, $TypeChildID, $ChildID, $Qte';
+    return '$ParentID, $TypeChildID, $ChildID, $Qte, $Fact, $Livr';
   }
 }
 

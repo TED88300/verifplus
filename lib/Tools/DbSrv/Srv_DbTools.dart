@@ -855,10 +855,10 @@ class Srv_DbTools {
 
     try {
       bool ret = await add_API_Post("upddel", wSlq);
-      print("setClient ret " + ret.toString());
+  //    print("setClient ret " + ret.toString());
       return ret;
     } catch (e) {
-      print("setClient ERROR " + e.toString());
+//      print("setClient ERROR " + e.toString());
       return false;
     }
   }
@@ -1131,12 +1131,12 @@ class Srv_DbTools {
     gColors.printWrapped("setGroupe " + wSlq);
 
     try {
-      gColors.printWrapped("setGroupe " + wSlq);
+//      gColors.printWrapped("setGroupe " + wSlq);
       bool ret = await add_API_Post("upddel", wSlq);
-      print("setGroupe ret " + ret.toString());
+  //    print("setGroupe ret " + ret.toString());
       return true;
     } catch (e) {
-      print("setGroupe ERROR " + e.toString());
+    //  print("setGroupe ERROR " + e.toString());
       return false;
     }
   }
@@ -1584,10 +1584,10 @@ class Srv_DbTools {
 
     try {
       bool ret = await add_API_Post("upddel", wSlq);
-      print("setIntervention ret " + ret.toString());
+//      print("setIntervention ret " + ret.toString());
       return true;
     } catch (e) {
-      print("setIntervention ERROR " + e.toString());
+  //    print("setIntervention ERROR " + e.toString());
       return false;
     }
   }
@@ -2125,9 +2125,7 @@ class Srv_DbTools {
 
     for (int i = 0; i < DbTools.glfParcs_Ent.length; i++) {
       Parc_Ent aParc_Ent = DbTools.glfParcs_Ent[i];
-
       if (wIn.isNotEmpty) wIn = "${wIn}, ";
-
       wIn = "${wIn} '${aParc_Ent.Parcs_UUID}'";
     }
 

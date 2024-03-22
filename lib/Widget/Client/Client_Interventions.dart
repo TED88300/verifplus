@@ -6,6 +6,7 @@ import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Interventions.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
+import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
 import 'package:verifplus/Widget/Client/Client_Dialog.dart';
 import 'package:verifplus/Widget/Client/Client_Intervention_Type_Dialog.dart';
 import 'package:verifplus/Widget/Client/Client_Interventions_Add.dart';
@@ -376,6 +377,7 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
                       await HapticFeedback.vibrate();
                       Srv_DbTools.gIntervention = intervention;
                       await HapticFeedback.vibrate();
+
                       await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Groupe_Parc_Inter()));
                       Reload();
                     },
