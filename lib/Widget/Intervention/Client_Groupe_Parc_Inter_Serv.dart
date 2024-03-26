@@ -1,3 +1,4 @@
+import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
@@ -55,6 +56,11 @@ class Client_Groupe_Parc_Inter_ServState extends State<Client_Groupe_Parc_Inter_
 
     initLib();
     super.initState();
+    FBroadcast.instance().register("Gen_Articles", (value, callback) {
+      print(" SERV FBroadcast Gen_Articles ");
+      initLib();
+    });
+
   }
 
   void onSaisie() async {

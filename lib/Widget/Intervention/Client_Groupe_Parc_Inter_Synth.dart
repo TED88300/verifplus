@@ -1,3 +1,4 @@
+import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
@@ -36,6 +37,11 @@ class Client_Groupe_Parc_Inter_SynthState extends State<Client_Groupe_Parc_Inter
     lParcs_Art.clear();
     initLib();
     super.initState();
+    FBroadcast.instance().register("Gen_Articles", (value, callback) {
+      print(" SYNTH FBroadcast Gen_Articles ");
+      initLib();
+    });
+
   }
 
   void onSaisie() async {

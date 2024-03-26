@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
-import 'package:verifplus/Widget/Client/Client_Interventions_Add.dart';
 import 'package:verifplus/Widget/Client/Client_Interventions_Status.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
+import 'package:printing/printing.dart';
+import 'package:verifplus/pdf/Aff_Bdc.dart';
+
 
 class Client_Groupe_Parc_Inter_Signature extends StatefulWidget {
   final VoidCallback onMaj;
@@ -136,6 +138,21 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
 
+          new ElevatedButton(
+            onPressed: () async {
+              await HapticFeedback.vibrate();
+
+              await Navigator.push(context, MaterialPageRoute(builder: (context) => Aff_Bdc()));
+            },
+            style: ElevatedButton.styleFrom(
+                backgroundColor: gColors.primaryGreen,
+                side: const BorderSide(
+                  width: 1.0,
+                  color: gColors.primaryGreen,
+                )),
+            child: Text('Imprimer', style: gColors.bodyTitle1_B_W),
+          ),
+
 
           new ElevatedButton(
             onPressed: () async {
@@ -143,7 +160,6 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
 
               await Client_Interventions_Status.Dialogs_Status(context);
 
-              Navigator.of(context).pop();
             },
             style: ElevatedButton.styleFrom(
                 backgroundColor: gColors.primaryGreen,

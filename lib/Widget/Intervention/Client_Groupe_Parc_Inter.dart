@@ -19,7 +19,6 @@ import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Ent.dart';
 import 'package:verifplus/Widget/Client/Client_Dialog.dart';
-import 'package:verifplus/Widget/Client/Client_Interventions_Status.dart';
 import 'package:verifplus/Widget/Client/Vue_Intervention.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_BC.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_BL.dart';

@@ -52,7 +52,6 @@ class Client_Groupe_Parc_Inter_MixteState extends State<Client_Groupe_Parc_Inter
     initLib();
     super.initState();
     FBroadcast.instance().register("Gen_Articles", (value, callback) {
-
         print(" MIXTE FBroadcast Gen_Articles ");
         initLib();
     });

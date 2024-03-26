@@ -3752,7 +3752,9 @@ class DbTools {
   static Future<List<Parc_Art>> getParcs_ArtInterSum(int Parcs_InterventionId) async {
     final db = await database;
 
-    String wTmp = "SELECT Parcs_Art.*, SUM(`ParcsArt_Qte`) as Qte FROM Parcs_Art, Parcs_Ent WHERE ParcsArt_ParcsId = ParcsId AND Parcs_InterventionId = ${Parcs_InterventionId} GROUP BY ParcsArt_Id ORDER BY `Parcs_Art`.`ParcsArt_Id` ASC;";
+
+
+    String wTmp = "SELECT Parcs_Art.*, SUM(`ParcsArt_Qte`) as Qte FROM Parcs_Art, Parcs_Ent WHERE ParcsArt_ParcsId = ParcsId AND Parcs_InterventionId = ${Parcs_InterventionId} GROUP BY ParcsArt_Id,ParcsArt_Fact,ParcsArt_Livr ORDER BY `Parcs_Art`.`ParcsArt_Id` ASC;";
 
     print("getParcs_ArtInter ${wTmp}");
     List<Map<String, dynamic>> maps = await db.rawQuery(wTmp);
