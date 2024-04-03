@@ -1,18 +1,11 @@
-import 'dart:convert';
-
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
-import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
-import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
+import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Client/Vue_Intervention_Saisie_Dialog.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
-
-import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Entete_Dialog.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
 class Intervention_Vue extends StatefulWidget {
@@ -32,7 +25,6 @@ class Intervention_VueState extends State<Intervention_Vue> {
 
     for (int j = 0; j < Srv_DbTools.ListParam_Interv_Base.length; j++) {
       Param_Saisie wParam_Saisie = Srv_DbTools.ListParam_Interv_Base[j];
-      print("&&&&&&&&&&&&&&&&&&&&&&&& ${wParam_Saisie.Desc()}");
     }
 
     setState(() {});
@@ -101,6 +93,9 @@ class Intervention_VueState extends State<Intervention_Vue> {
 
   @override
   Widget build(BuildContext context) {
+
+
+
     return Scaffold(
       appBar: appBar(),
 

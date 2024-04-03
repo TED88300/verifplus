@@ -150,11 +150,12 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
       Site wSite = Srv_DbTools.ListSite[i];
       await DbTools.inserSites(wSite);
     }
+
     Srv_DbTools.ListSite = await  DbTools.getSitesAll();
-    print("Import_DataDialog Srv_DbTools.ListSite ${Srv_DbTools.ListSite}");
     setState(() {
       wSt += "► Site : ${Srv_DbTools.ListSite.length} Sites\n";
     });
+
 
     //**********************************
     //**********************************
@@ -186,10 +187,8 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
 
     await Srv_ImportExport.ImportPlanning_Intervention();
     setState(() {
-      wSt += "► Intervention : ${Srv_DbTools.ListPlanning_Intervention.length} Interventions\n";
+      wSt += "► Planning_Intervention : ${Srv_DbTools.ListPlanning_Intervention.length} Interventions\n";
     });
-
-
 
     //**********************************
     //**********************************
@@ -206,7 +205,6 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
     //**********************************
     //**********************************
     //**********************************
-
 
     await Srv_ImportExport.ImportUsers();
     setState(() {
@@ -236,7 +234,6 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
       wSt = "◉◉◉ ${widget.ImportType}\n";
     });
 
-
     //***********************************
     //***********************************
     //***********************************
@@ -249,8 +246,6 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
       Param_Saisie wParam_Saisie = Srv_DbTools.ListParam_Saisie[i];
 
       print(" Import_DataDialog wParam_Saisie ${wParam_Saisie.Param_Saisie_Type} ${wParam_Saisie.Param_Saisie_Triger}");
-
-
 
       await DbTools.inserParam_Saisie(wParam_Saisie);
     }

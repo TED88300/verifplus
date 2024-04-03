@@ -23,6 +23,7 @@ import 'package:verifplus/Widget/Client/Vue_Intervention.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_BC.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_BL.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Entete.dart';
+import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Devis.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Note.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Signature.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Tools.dart';
@@ -228,7 +229,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                 trv = true;
               }
             }
-            ;
             if (!trv) DescAff = DescAff.replaceAll("${element.Param_Saisie_ID}", "");
           }
         }
@@ -321,7 +321,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       bool isDevis = false;
       for (int ji = 0; ji < DbTools.lParcs_Art.length; ji++) {
         Parc_Art wParc_Art = DbTools.lParcs_Art[ji];
-        print("wParc_Art ${wParc_Art.Desc()} ");
+//        print("wParc_Art ${wParc_Art.Desc()} ");
         if (wParc_Art.ParcsArt_Livr!.substring(0, 1).contains("R")) {
           isRel = true;
           break;
@@ -1073,6 +1073,24 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
   }
 
   @override
+  Widget Data() {
+    return Padding(
+        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        child: Column(
+          children: [
+            gObj.InterventionTitleWidget("${Srv_DbTools.gClient.Client_Nom.toUpperCase()}", wTitre2 : "${Srv_DbTools.gGroupe.Groupe_Nom} / ${Srv_DbTools.gSite.Site_Nom} / ${Srv_DbTools.gZone.Zone_Nom}", wTimer : wTimer),
+
+
+
+
+
+          ],
+        ));
+  }
+
+
+
+  @override
   AppBar appBar() {
     return AppBar(
       title: InkWell(
@@ -1271,10 +1289,14 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     Widget wchildren = Container();
 
     if (affAll) {
-      if (DbTools.gCurrentIndex3 == 2)
+      if (DbTools.gCurrentIndex3 == 1)
+        wchildren = Data();
+      else if (DbTools.gCurrentIndex3 == 2)
         wchildren = Client_Groupe_Parc_Inter_BL(onMaj: onMaj, x_t: "");
       else if (DbTools.gCurrentIndex3 == 3)
         wchildren = Client_Groupe_Parc_Inter_BC(onMaj: onMaj, x_t: "");
+      else if (DbTools.gCurrentIndex3 == 4)
+        wchildren = Client_Groupe_Parc_Inter_Devis(onMaj: onMaj, x_t: "");
       else if (DbTools.gCurrentIndex3 == 5)
         wchildren = Client_Groupe_Parc_Inter_Note(onMaj: onMaj, x_t: "");
       else if (DbTools.gCurrentIndex3 == 6)
@@ -1314,7 +1336,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
         ]),
         floatingActionButton: (DbTools.gRowisSel)
             ? Container()
-            : (DbTools.gCurrentIndex3 > 0 || !affAll)
+            : (DbTools.gCurrentIndex3 == 0 || DbTools.gCurrentIndex3 > 1 || !affAll)
                 ? Container()
                 : Import_Export()));
   }
@@ -2193,6 +2215,9 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
   Widget ExtGridWidget() {
 //    print(">>>>>>>>>>>>>>>>>>>>>>>>>>> ExtGridWidget ${isKeyBoard}");
 
+
+
+
     List<DaviColumn<Parc_Ent>> wColumns = [
       new DaviColumn(
           name: 'N°',
@@ -2575,8 +2600,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     }
 
     DbTools.glfParcs_Desc = await DbTools.getParcs_Desc(DbTools.gParc_Ent.ParcsId!);
-
-
 
     Srv_DbTools.FAB_Lib = "";
     Srv_DbTools.PRS_Lib = "";

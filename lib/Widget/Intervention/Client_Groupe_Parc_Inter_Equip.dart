@@ -58,12 +58,6 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
       );
     }
 
-/*
-     for (int i = 0; i < Srv_DbTools.ListParam_Saisie.length; i++) {
-       Param_Saisie element = Srv_DbTools.ListParam_Saisie[i];
-       print("element <<< ${element.Param_Saisie_ID} ${element.Param_Saisie_Type} ${element.Param_Saisie_Label}");
-     }
-*/
 
 
     isLoadImage = true;
@@ -73,9 +67,6 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
 
   Future Reload(String Param_Saisie_ID) async {
     print(" Reload Param_Saisie_ID ${Param_Saisie_ID}");
-
-
-
     await UpdateChaine();
 
 

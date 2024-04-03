@@ -1,16 +1,13 @@
+import 'dart:typed_data';
+
+import 'package:flutter/widgets.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 
 class PdfTools {
-  static const _darkColor = PdfColors.blueGrey800;
-  static const _lightColor = PdfColors.white;
-  PdfColor get _baseTextColor => _lightColor;
-  PdfColor get _accentTextColor => _lightColor;
-
   static PdfColor baseColor = PdfColors.teal;
   static PdfColor accentColor = PdfColors.blueGrey900;
-
-
   static double FontSizeTitle = 12;
   static double FontSizeTxt = 11;
 
@@ -68,7 +65,7 @@ class PdfTools {
             ),
             padding: const pw.EdgeInsets.only(left: 10, top: 0, bottom: 0, right: 20),
             alignment: pw.Alignment.centerLeft,
-            height: (25.0 + (wMaxLines) *5),
+            height: (25.0 + (wMaxLines) * 5),
             child: pw.Row(children: [
               pw.Text(
                 wLbl1,
@@ -80,16 +77,16 @@ class PdfTools {
                 ),
               ),
               pw.Expanded(
-                child:
-                pw.Text(
-                wTxt1,
-                textAlign: wTextAlign,
-                maxLines : wMaxLines +1,
-                style: pw.TextStyle(
-                  color: wTxtPdfColor,
-                  fontSize: FontSizeTxt,
+                child: pw.Text(
+                  wTxt1,
+                  textAlign: wTextAlign,
+                  maxLines: wMaxLines + 1,
+                  style: pw.TextStyle(
+                    color: wTxtPdfColor,
+                    fontSize: FontSizeTxt,
+                  ),
                 ),
-              ),),
+              ),
             ]),
           ),
         ),
@@ -97,7 +94,7 @@ class PdfTools {
     );
   }
 
-  static pw.Widget C2_L1(pw.Context context, String wLbl1, String wTxt1, int wFlex1, String wLbl2, String wTxt2, int wFlex2,pw.TextAlign wTextAlign, PdfColor wBackGroundPdfColor, PdfColor wTxtPdfColor) {
+  static pw.Widget C2_L1(pw.Context context, String wLbl1, String wTxt1, int wFlex1, String wLbl2, String wTxt2, int wFlex2, pw.TextAlign wTextAlign, PdfColor wBackGroundPdfColor, PdfColor wTxtPdfColor) {
     return pw.Row(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
@@ -138,7 +135,6 @@ class PdfTools {
             ]),
           ),
         ),
-
         pw.Expanded(
           flex: wFlex2,
           child: pw.Container(
@@ -176,13 +172,11 @@ class PdfTools {
             ]),
           ),
         ),
-
-
       ],
     );
   }
 
-  static pw.Widget C3_L1(pw.Context context, String wLbl1, String wTxt1, int wFlex1, String wLbl2, String wTxt2, int wFlex2, String wLbl3, String wTxt3, int wFlex3,pw.TextAlign wTextAlign, PdfColor wBackGroundPdfColor, PdfColor wTxtPdfColor) {
+  static pw.Widget C3_L1(pw.Context context, String wLbl1, String wTxt1, int wFlex1, String wLbl2, String wTxt2, int wFlex2, String wLbl3, String wTxt3, int wFlex3, pw.TextAlign wTextAlign, PdfColor wBackGroundPdfColor, PdfColor wTxtPdfColor) {
     return pw.Row(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
@@ -202,10 +196,7 @@ class PdfTools {
             padding: const pw.EdgeInsets.only(left: 10, top: 0, bottom: 0, right: 20),
             alignment: pw.Alignment.centerLeft,
             height: 20,
-            child: pw.Row(
-              mainAxisAlignment:  pw.MainAxisAlignment.center,
-
-                children: [
+            child: pw.Row(mainAxisAlignment: pw.MainAxisAlignment.center, children: [
               pw.Text(
                 wLbl1,
                 textAlign: pw.TextAlign.center,
@@ -226,7 +217,6 @@ class PdfTools {
             ]),
           ),
         ),
-
         pw.Expanded(
           flex: wFlex2,
           child: pw.Container(
@@ -243,9 +233,7 @@ class PdfTools {
             padding: const pw.EdgeInsets.only(left: 10, top: 0, bottom: 0, right: 20),
             alignment: pw.Alignment.center,
             height: 20,
-            child: pw.Row(
-                mainAxisAlignment:  pw.MainAxisAlignment.center,
-                children: [
+            child: pw.Row(mainAxisAlignment: pw.MainAxisAlignment.center, children: [
               pw.Text(
                 wLbl2,
                 textAlign: wTextAlign,
@@ -267,7 +255,6 @@ class PdfTools {
             ]),
           ),
         ),
-
         pw.Expanded(
           flex: wFlex3,
           child: pw.Container(
@@ -305,18 +292,12 @@ class PdfTools {
             ]),
           ),
         ),
-
       ],
     );
   }
 
-
-  static pw.Widget C2_L3(pw.Context context, String wLbl1_1, String wTxt1_1, String wLbl1_2, String wTxt1_2, String wLbl1_3, String wTxt1_3, int wFlex1, String wLbl2_1, String wTxt2_1, String wLbl2_2, String wTxt2_2, String wLbl2_3, String wTxt2_3, int wFlex2,pw.TextAlign wTextAlign, PdfColor wBackGroundPdfColor, PdfColor wTxtPdfColor) {
-    return
-
-
-
-      pw.Row(
+  static pw.Widget C2_L3(pw.Context context, String wLbl1_1, String wTxt1_1, String wLbl1_2, String wTxt1_2, String wLbl1_3, String wTxt1_3, int wFlex1, String wLbl2_1, String wTxt2_1, String wLbl2_2, String wTxt2_2, String wLbl2_3, String wTxt2_3, int wFlex2, pw.TextAlign wTextAlign, PdfColor wBackGroundPdfColor, PdfColor wTxtPdfColor, {Uint8List? imageData_Cachet}) {
+    return pw.Row(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
         pw.Expanded(
@@ -332,12 +313,15 @@ class PdfTools {
               ),
               color: wBackGroundPdfColor,
             ),
-            padding: const pw.EdgeInsets.only(left: 10, top: 10, bottom: 0, right: 20),
+            padding: const pw.EdgeInsets.only(left: 10, top: 0, bottom: 0, right: 20),
             alignment: pw.Alignment.centerLeft,
             height: 70,
-            child:
-            pw.Column(
-              children: [
+            child: pw.Row(children: [
+              pw.Column(
+                  mainAxisAlignment: pw.MainAxisAlignment.center,
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+
                 pw.Row(children: [
                   pw.Text(
                     wLbl1_1,
@@ -397,8 +381,34 @@ class PdfTools {
                     ),
                   ),
                 ]),
-              ]
-            ),
+              ]),
+
+
+              pw.Container(
+                width : 250,
+                child:
+                pw.Row(
+                    mainAxisAlignment: pw.MainAxisAlignment.center,
+                    crossAxisAlignment: pw.CrossAxisAlignment.center,
+                    children: [
+                    pw.Stack(children: [
+//
+                        pw.Container(
+                          width : 160,
+                          padding: const pw.EdgeInsets.only(left: 10, top: 1, bottom: 1),
+                          child: pw.Image(pw.MemoryImage(Srv_DbTools.gIntervention.Intervention_Signature_Tech!)),
+                        ),
+                        pw.Container(
+                          width : 160,
+                          padding: const pw.EdgeInsets.only(left: 10),
+                          child: pw.Image(pw.MemoryImage(imageData_Cachet!)),
+                        ),
+                      ]),
+
+
+                    ])
+                  )
+            ]),
           ),
         ),
 
@@ -415,76 +425,95 @@ class PdfTools {
               ),
               color: wBackGroundPdfColor,
             ),
-            padding: const pw.EdgeInsets.only(left: 10, top: 10, bottom: 0, right: 20),
+            padding: const pw.EdgeInsets.only(left: 10, top: 0, bottom: 0, right: 20),
             alignment: pw.Alignment.centerLeft,
             height: 70,
-            child:
-            pw.Column(
-                children: [
-                  pw.Row(children: [
-                    pw.Text(
-                      wLbl2_1,
-                      textAlign: wTextAlign,
-                      style: pw.TextStyle(
-                        color: wTxtPdfColor,
-                        fontWeight: pw.FontWeight.bold,
-                        fontSize: FontSizeTxt,
-                      ),
-                    ),
-                    pw.Text(
-                      wTxt2_1,
-                      textAlign: wTextAlign,
-                      style: pw.TextStyle(
-                        color: wTxtPdfColor,
-                        fontSize: FontSizeTxt,
-                      ),
-                    ),
-                  ]),
-                  pw.SizedBox(height: 5),
-                  pw.Row(children: [
-                    pw.Text(
-                      wLbl2_2,
-                      textAlign: wTextAlign,
-                      style: pw.TextStyle(
-                        color: wTxtPdfColor,
-                        fontWeight: pw.FontWeight.bold,
-                        fontSize: FontSizeTxt,
-                      ),
-                    ),
-                    pw.Text(
-                      wTxt2_2,
-                      textAlign: wTextAlign,
-                      style: pw.TextStyle(
-                        color: wTxtPdfColor,
-                        fontSize: FontSizeTxt,
-                      ),
-                    ),
-                  ]),
-                  pw.SizedBox(height: 5),
-                  pw.Row(children: [
-                    pw.Text(
-                      wLbl2_3,
-                      textAlign: wTextAlign,
-                      style: pw.TextStyle(
-                        color: wTxtPdfColor,
-                        fontWeight: pw.FontWeight.bold,
-                        fontSize: FontSizeTxt,
-                      ),
-                    ),
-                    pw.Text(
-                      wTxt2_3,
-                      textAlign: wTextAlign,
-                      style: pw.TextStyle(
-                        color: wTxtPdfColor,
-                        fontSize: FontSizeTxt,
-                      ),
-                    ),
-                  ]),
+            child: pw.Row(children: [
+              pw.Column(
+                  mainAxisAlignment: pw.MainAxisAlignment.center,
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
 
-                ]
+                    pw.Row(children: [
+                      pw.Text(
+                        wLbl2_1,
+                        textAlign: wTextAlign,
+                        style: pw.TextStyle(
+                          color: wTxtPdfColor,
+                          fontWeight: pw.FontWeight.bold,
+                          fontSize: FontSizeTxt,
+                        ),
+                      ),
+                      pw.Text(
+                        wTxt2_1,
+                        textAlign: wTextAlign,
+                        style: pw.TextStyle(
+                          color: wTxtPdfColor,
+                          fontSize: FontSizeTxt,
+                        ),
+                      ),
+                    ]),
+                    pw.SizedBox(height: 5),
+                    pw.Row(children: [
+                      pw.Text(
+                        wLbl2_2,
+                        textAlign: wTextAlign,
+                        style: pw.TextStyle(
+                          color: wTxtPdfColor,
+                          fontWeight: pw.FontWeight.bold,
+                          fontSize: FontSizeTxt,
+                        ),
+                      ),
+                      pw.Text(
+                        wTxt2_2,
+                        textAlign: wTextAlign,
+                        style: pw.TextStyle(
+                          color: wTxtPdfColor,
+                          fontSize: FontSizeTxt,
+                        ),
+                      ),
+                    ]),
+                    pw.SizedBox(height: 5),
+                    pw.Row(children: [
+                      pw.Text(
+                        wLbl2_3,
+                        textAlign: wTextAlign,
+                        style: pw.TextStyle(
+                          color: wTxtPdfColor,
+                          fontWeight: pw.FontWeight.bold,
+                          fontSize: FontSizeTxt,
+                        ),
+                      ),
+                      pw.Text(
+                        wTxt2_3,
+                        textAlign: wTextAlign,
+                        style: pw.TextStyle(
+                          color: wTxtPdfColor,
+                          fontSize: FontSizeTxt,
+                        ),
+                      ),
+                    ]),
+                  ]),
+              pw.Container(
+                width : 160,
+                padding: const pw.EdgeInsets.only(left: 10, top: 1, bottom: 1),
+                child: pw.Image(pw.MemoryImage(Srv_DbTools.gIntervention.Intervention_Signature_Client!)),
+              ),
+
+/*
+              pw.Row(crossAxisAlignment: pw.CrossAxisAlignment.end, children: [
+                pw.Container(
+                  height: 85,
+                  padding: const pw.EdgeInsets.only(left: 10),
+                  child: pw.Image(pw.MemoryImage(imageData_Cachet!)),
+                ),
+              ]),
+*/
 
 
-            ),
+
+
+            ]),
           ),
         ),
 
@@ -513,8 +542,7 @@ class PdfTools {
             padding: const pw.EdgeInsets.only(left: 10, top: 5, bottom: 0, right: 20),
             alignment: pw.Alignment.centerLeft,
             height: 38,
-            child:
-            pw.Column(children: [
+            child: pw.Column(children: [
               pw.Row(children: [
                 pw.Text(
                   wLbl1,
@@ -544,11 +572,7 @@ class PdfTools {
                   ),
                 ),
               ]),
-
             ]),
-
-
-
           ),
         ),
       ],

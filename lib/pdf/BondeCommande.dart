@@ -6,98 +6,103 @@ import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
+import 'package:verifplus/Tools/DbTools/DbTools.dart';
+import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
+import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/pdf/PdfTools.dart';
 
 Future<Uint8List> generateBdC() async {
   final lorem = pw.LoremText();
   PdfPageFormat pageFormat;
-
-
-
-  final organes = <Organe>[
-    Organe("1", "Ext Port", "65", "PA", "AB", "Eau + Add", "6L", "2023", "RDC", "Bureau/Entrée", "05/03/24", "VF"),
-    Organe("2", "Ext Port", "65", "PA", "ABC", "Poudre", "9Kg", "2023", "RDC", "Centre comm./Restaurant", "05/03/24", "RECH"),
-    Organe("3", "Ext Port", "65", "PA", "B", "Co2", "2Kg", "2023", "RDC", "Centre comm./Restaurant", "05/03/24", "MAA"),
-    Organe("4", "Ext Port", "65", "PA", "A", "Eau", "6L", "2023", "RDC", "Centre comm./Restaurant", "05/03/24", "RA"),
-    Organe("5", "Ext Port", "156", "PP", "AB", "Eau + Add", "150L", "2023", "RDC", "Centre comm./Restaurant", "05/03/24", "REF"),
-    Organe("6", "Ext Mob", "65", "PA", "ABF", "Mousse", "9L", "2024", "RDC", "Centre comm./Restaurant", "06/03/24", "MS"),
-    Organe("7", "Douche", "65", "PA", "", "Douche", "25L", "2004", "R-1", "Dépôt/Stock", "06/03/24", "VF"),
-    Organe("8", "Ext Auto", "15", "PP", "BC", "Poudre", "6Kg", "2010", "R+1", "Dépôt/Chaufferie", "06/03/24", "REF"),
-    Organe("9", "App Ext", "0", "PP", "BC", "Poudre", "6Kg", "2011", "R+20", "Bureau/Entrée", "06/03/24", "CHGE"),
-    Organe("10", "App Ext", "0", "PP", "BC", "Poudre", "6Kg", "2011", "R+20", "Bureau/Entrée", "06/03/24", "CHGE"),
-    Organe("11", "App Ext", "0", "PP", "BC", "Poudre", "6Kg", "2011", "R+20", "Bureau/Entrée", "06/03/24", "CHGE"),
-    Organe("12", "App Ext", "0", "PP", "BC", "Poudre", "6Kg", "2011", "R+20", "Bureau/Entrée", "06/03/24", "CHGE"),
-    Organe("13", "App Ext", "0", "PP", "BC", "Poudre", "6Kg", "2011", "R+20", "Bureau/Entrée", "06/03/24", "CHGE"),
-    Organe("14", "App Ext", "0", "PP", "BC", "Poudre", "6Kg", "2011", "R+20", "Bureau/Entrée", "06/03/24", "CHGE"),
-    Organe("15", "App Ext", "0", "PP", "BC", "Poudre", "6Kg", "2011", "R+20", "Bureau/Entrée", "06/03/24", "CHGE"),
-    Organe("16", "App Ext", "0", "PP", "BC", "Poudre", "6Kg", "2011", "R+20", "Bureau/Entrée", "06/03/24", "CHGE"),
-    Organe("17", "App Ext", "0", "PP", "BC", "Poudre", "6Kg", "2011", "R+20", "Bureau/Entrée", "06/03/24", "CHGE"),
-    Organe("18", "App Ext", "0", "PP", "BC", "Poudre", "6Kg", "2011", "R+20", "Bureau/Entrée", "06/03/24", "CHGE"),
-    Organe("19", "App Ext", "0", "PP", "BC", "Poudre", "6Kg", "2011", "R+20", "Bureau/Entrée", "06/03/24", "CHGE"),
-    Organe("20", "App Ext", "0", "PP", "BC", "Poudre", "6Kg", "2011", "R+20", "Bureau/Entrée", "06/03/24", "CHGE"),
-    Organe("21", "App Ext", "0", "PP", "BC", "Poudre", "6Kg", "2011", "R+20", "Bureau/Entrée", "06/03/24", "CHGE"),
-    Organe("22", "App Ext", "0", "PP", "BC", "Poudre", "6Kg", "2011", "R+20", "Bureau/Entrée", "06/03/24", "CHGE"),
-    Organe("23", "App Ext", "0", "PP", "BC", "Poudre", "6Kg", "2011", "R+20", "Bureau/Entrée", "06/03/24", "CHGE"),
-    Organe("24", "App Ext", "0", "PP", "BC", "Poudre", "6Kg", "2011", "R+20", "Bureau/Entrée", "06/03/24", "CHGE"),
-    Organe("25", "App Ext", "0", "PP", "BC", "Poudre", "6Kg", "2011", "R+20", "Bureau/Entrée", "06/03/24", "CHGE"),
-  ];
-
-  final invoice = Invoice(
-    invoiceNumber: '982347',
-    organes: organes,
-    customerName: 'Abraham Swearegin',
-    customerAddress: '54 rue de Rivoli\n75001 Paris, France',
-    paymentInfo: '4509 Wiseman Street\nKnoxville, Tennessee(TN), 37929\n865-372-0425',
-    tax: .15,
-    baseColor: PdfColors.teal,
-    accentColor: PdfColors.blueGrey900,
-  );
-
+  final bdC = BdC();
   pageFormat = PdfPageFormat.a4.applyMargin(left: 0, top: 0, right: 0, bottom: 0);
-  return await invoice.buildPdf(pageFormat);
+  return await bdC.buildPdf(pageFormat);
 }
 
-class Invoice {
-  Invoice({
-    required this.organes,
-    required this.customerName,
-    required this.customerAddress,
-    required this.invoiceNumber,
-    required this.tax,
-    required this.paymentInfo,
-    required this.baseColor,
-    required this.accentColor,
-  });
+class BdC {
+  final List<Organe> organes = [];
 
-  final List<Organe> organes;
-  final String customerName;
-  final String customerAddress;
-  final String invoiceNumber;
-  final double tax;
-  final String paymentInfo;
-  final PdfColor baseColor;
-  final PdfColor accentColor;
-
-  static const _darkColor = PdfColors.blueGrey800;
-  static const _lightColor = PdfColors.white;
-
-  PdfColor get _baseTextColor => baseColor.isLight ? _lightColor : _darkColor;
-
-  PdfColor get _accentTextColor => baseColor.isLight ? _lightColor : _darkColor;
-
+  final double tax = .20;
   double get _total => 0; //organes.map<double>((p) => p.total).reduce((a, b) => a + b);
   double get _grandTotal => _total * (1 + tax);
 
-  ByteData? _logo_1;
   Uint8List? imageData_1;
+  Uint8List? imageData_Cachet;
+
+  DateTime Parcs_Date_Rev_Min = DateTime.parse("2900-01-01");
+  DateTime Parcs_Date_Rev_Max = DateTime.parse("1900-01-01");
+
+  int wParcs_Intervention_Timer = 0;
+
+  String wIntervenants = "";
 
   Future<Uint8List> buildPdf(PdfPageFormat pageFormat) async {
     // Create a PDF document.
     final doc = pw.Document();
 
-    _logo_1 = await rootBundle.load('assets/Logo_1.jpg');
+    ByteData _logo_1 = await rootBundle.load('assets/Logo_1.jpg');
     imageData_1 = (_logo_1)!.buffer.asUint8List();
 
+    _logo_1 = await rootBundle.load('assets/Cachet.png');
+    imageData_Cachet = (_logo_1)!.buffer.asUint8List();
+
+    for (int i = 0; i < Srv_DbTools.ListUserH.length; i++) {
+      var element = Srv_DbTools.ListUserH[i];
+      print("♠︎♠︎♠︎♠︎ ListUserH <<< ${element.User_Nom} ${element.H}");
+
+      wIntervenants = "$wIntervenants ${wIntervenants.isNotEmpty ? ", " : ""}${element.User_Nom} ${element.User_Prenom} (${element.H}h)";
+    }
+
+
+    await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gSite.SiteId, "SITE");
+
+    for (int i = 0; i < DbTools.glfParcs_Ent.length; i++) {
+      var wParcs_Ent = DbTools.glfParcs_Ent[i];
+
+      String wDESC = "";
+      String wFAB = "";
+      String wPRS = "";
+      String wCLF = "";
+
+      String wPDT = "";
+      String wPOIDS = "";
+
+      for (int j = 0; j < DbTools.glfParcs_Desc.length; j++) {
+        Parc_Desc wParc_Desc = DbTools.glfParcs_Desc[j];
+        if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "DESC") wDESC = gColors.AbrevTxt(wParc_Desc.ParcsDesc_Lib!);
+        if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "FAB") wFAB = gColors.AbrevTxt(wParc_Desc.ParcsDesc_Lib!);
+        if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "PRS") wPRS = gColors.AbrevTxt(wParc_Desc.ParcsDesc_Lib!);
+        if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "CLF") wCLF = gColors.AbrevTxt(wParc_Desc.ParcsDesc_Lib!);
+        if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "PDT") wPDT = gColors.AbrevTxt(wParc_Desc.ParcsDesc_Lib!);
+        if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "POIDS") wPOIDS = gColors.AbrevTxt(wParc_Desc.ParcsDesc_Lib!);
+      }
+
+      DateTime Parcs_Date_Rev = DateTime.now();
+
+      try {
+        Parcs_Date_Rev = DateTime.parse(wParcs_Ent.Parcs_Date_Rev!);
+      } catch (e) {}
+
+      if (Parcs_Date_Rev.isBefore(Parcs_Date_Rev_Min)) Parcs_Date_Rev_Min = Parcs_Date_Rev;
+      if (Parcs_Date_Rev.isAfter(Parcs_Date_Rev_Max)) Parcs_Date_Rev_Max = Parcs_Date_Rev;
+
+      String wParcs_Date_Rev = "";
+      try {
+        wParcs_Date_Rev = DateFormat('dd/MM/yy').format(DateTime.parse(wParcs_Ent.Parcs_Date_Rev!));
+      } catch (e) {}
+
+      print("${wParcs_Ent.Parcs_Intervention_Timer}");
+      if(wParcs_Ent.Parcs_Intervention_Timer != null)
+          wParcs_Intervention_Timer += wParcs_Ent.Parcs_Intervention_Timer!;
+
+
+
+
+
+      Organe wOrgane = Organe("${wParcs_Ent.ParcsId}", "${wDESC}", "$wFAB", "$wPRS", "$wCLF", "$wPDT", "$wPOIDS", "${wParcs_Ent.Parcs_FAB_Label}", "${wParcs_Ent.Parcs_NIV_Label}", "${wParcs_Ent.Parcs_ZNE_Label} / ${wParcs_Ent.Parcs_EMP_Label}", "${wParcs_Date_Rev}", "${wParcs_Ent.Action}");
+      organes.add(wOrgane);
+    }
 
     // Add page to the PDF
     doc.addPage(
@@ -156,8 +161,6 @@ class Invoice {
         ],
       ),
     );
-
-
 
     // Return the PDF file content
     return doc.save();
@@ -268,10 +271,8 @@ class Invoice {
     );
   }
 
-
-
   pw.Widget _buildHeader2(pw.Context context) {
-    return           pw.Column(children: [
+    return pw.Column(children: [
       pw.SizedBox(height: 10),
       pw.Row(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -504,7 +505,6 @@ class Invoice {
         ],
       ),
     ]);
-
   }
 
   pw.Widget _buildHeaderLegende(pw.Context context) {
@@ -545,7 +545,6 @@ class Invoice {
                   child: pw.GridView(
                     crossAxisCount: 1,
                     children: [
-
                       pw.Text(
                         "LEGENDE",
                         textAlign: pw.TextAlign.center,
@@ -608,8 +607,6 @@ class Invoice {
     );
   }
 
-
-
   pw.Widget _buildFooter(pw.Context context) {
     return pw.Row(mainAxisAlignment: pw.MainAxisAlignment.center, crossAxisAlignment: pw.CrossAxisAlignment.center, children: [
       pw.Column(
@@ -646,27 +643,48 @@ class Invoice {
     ]);
   }
 
+  String _printDuration(Duration duration) {
+
+    String negativeSign = duration.isNegative ? '-' : '';
+    String twoDigits(int n) => n.toString().padLeft(2, "0");
+    String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60).abs());
+    String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60).abs());
+    return "$negativeSign${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
+  }
   pw.Widget _contentPage1(pw.Context context) {
+
+    Duration duration = Duration(seconds: wParcs_Intervention_Timer);
+    String sduration = _printDuration(duration);
+
+    String wParcs_Date_Rev_Min = "";
+    try {
+      wParcs_Date_Rev_Min = DateFormat('dd/MM/yy à HH:mm').format(Parcs_Date_Rev_Min);
+    } catch (e) {}
+
+    String wParcs_Date_Rev_Max = "";
+    try {
+      wParcs_Date_Rev_Max = DateFormat('dd/MM/yy à HH:mm').format(Parcs_Date_Rev_Max);
+    } catch (e) {}
+
     return pw.Column(children: [
 // SITE
       PdfTools.Titre(context, "", "SITE D'INTERVENTION", pw.TextAlign.center, PdfColor(54 / 255, 96 / 255, 146 / 255), PdfColors.white),
-
-      PdfTools.C1_L2(context, "Site : ", "Ville de Martigues / Piscine Avantica", "8 Rue de la Mer - ZI de La Valampe - 13500 Martigues", pw.TextAlign.left, PdfColors.white, PdfColors.black),
-      PdfTools.C2_L1(context, "Client : ", "Ville de Martigues", 7, "Compte : ", "A000123", 3, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-      PdfTools.C2_L1(context, "Groupe : ", "Sport", 5, "Zone : ", "Bât. A, Bât. B", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C1_L2(context, "Site : ", "${Srv_DbTools.gSite.Site_Nom}", "${Srv_DbTools.gSite.Site_Adr1} ${Srv_DbTools.gSite.Site_Adr2} ${Srv_DbTools.gSite.Site_CP} ${Srv_DbTools.gSite.Site_Ville}", pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C2_L1(context, "Client : ", "${Srv_DbTools.gClient.Client_Nom}", 7, "Compte : ", "${Srv_DbTools.gClient.Client_CodeGC}", 3, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C2_L1(context, "Groupe : ", "${Srv_DbTools.gGroupe.Groupe_Nom}", 5, "Zone : ", "${Srv_DbTools.gZone.Zone_Nom}", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
       PdfTools.C1_L1(context, "Règlementation technique applicable au site : ", "Code du travail, APSAD R4", pw.TextAlign.left, PdfColors.white, PdfColors.black),
-      PdfTools.C2_L1(context, "Contact Site : ", "Monsieur Albert DUPONT", 5, "Port (Contact Site) : ", "06 25 47 56 12", 5, pw.TextAlign.left, PdfColors.grey200, PdfColors.black),
-      PdfTools.C2_L1(context, "Tél : ", "04 4 2 31 81 23", 5, "Mail : ", "albert.dupont@ville-de-martigues.fr", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C2_L1(context, "Contact Site : ", "${Srv_DbTools.gContact.Contact_Civilite} ${Srv_DbTools.gContact.Contact_Prenom} ${Srv_DbTools.gContact.Contact_Nom}", 5, "Port (Contact Site) : ", "${Srv_DbTools.gContact.Contact_Tel2}", 5, pw.TextAlign.left, PdfColors.grey200, PdfColors.black),
+      PdfTools.C2_L1(context, "Tél : ", "${Srv_DbTools.gContact.Contact_Tel1}", 5, "Mail : ", "${Srv_DbTools.gContact.Contact_eMail}", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
 
       pw.SizedBox(height: 10),
 
-      PdfTools.Titre(context, "", "INTERVENTION", pw.TextAlign.center, PdfColor(146 / 255, 208 / 255, 80 / 255), PdfColors.white),
-      PdfTools.C1_L1(context, "Type d'intervention : ", "Vérification", pw.TextAlign.left, PdfColors.white, PdfColors.black),
-      PdfTools.C2_L1(context, "Début de l'intervention : ", "05/06/2024 - 8h00", 5, "Fin de l'intervention : ", "10/03/2024 - 15h00", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-      PdfTools.C2_L1(context, "Nombre d'organes visités : ", "80", 5, "Temps d'intervention : ", "12h00", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-      PdfTools.C1_L1(context, "Agence de gestion : ", "MONDIALFEU Grand-Sud - Tél : 04 42 318 123 - Mail : info@mondialfeu.fr", pw.TextAlign.left, PdfColors.white, PdfColors.black),
+    PdfTools.Titre(context, "", "INTERVENTION", pw.TextAlign.center, PdfColor(146 / 255, 208 / 255, 80 / 255), PdfColors.white),
+      PdfTools.C1_L1(context, "Type d'intervention : ", "${Srv_DbTools.gIntervention.Intervention_Type}", pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C2_L1(context, "Début de l'intervention : ", "${wParcs_Date_Rev_Min}", 5, "Fin de l'intervention : ", "${wParcs_Date_Rev_Max}", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C2_L1(context, "Nombre d'organes visités : ", "${DbTools.glfParcs_Ent.length}", 5, "Temps d'intervention : ", "${sduration}", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C1_L1(context, "Agence de gestion : ", "${Srv_DbTools.gClient.Client_Depot}", pw.TextAlign.left, PdfColors.white, PdfColors.black),
       PdfTools.C1_L1(context, "Responsable d'intervention : ", "016-Anthony FUNDONI - Port : 06 25 47 56 12 - Mail : a.fundoni@mondialfeu.fr", pw.TextAlign.left, PdfColors.white, PdfColors.black),
-      PdfTools.C1_L1(context, "Technicien : ", "020-Kévin GABET, 021-Santo ESPOSITO, 020-Kévin GABET", pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C1_L1(context, "Technicien : ", "${wIntervenants}", pw.TextAlign.left, PdfColors.white, PdfColors.black),
       PdfTools.C1_L1(context, "Recommandations et Observations Post-Intervention :", "", pw.TextAlign.left, PdfColors.grey200, PdfColors.black),
       PdfTools.C1_L1(
           context, "", "Créer un bon d'intervention efficace est essentiel pour s'assurer que les techniciens sur le terrain disposent de toutes les informations nécessaires pour mener à bien leur mission. Créer un bon d'intervention efficace est essentiel pour s'assurer que les techniciens sur le terrain disposent de toutes les informations nécessaires pour mener à bien leur mission. Créer un bon d'intervention efficace est essentiel pour s'assurer que les techniciens sur le terrain disposent de toutes les informations", pw.TextAlign.left, PdfColors.white, PdfColors.black,
@@ -674,66 +692,53 @@ class Invoice {
       PdfTools.C2_L1(context, "Devis lié à l'intervention : ", "Oui, voir Devis", 5, "Reliquat lié à l'intervention : ", "Oui, voir Bon de Livraison", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
       PdfTools.C1_L1(context, "Plus de détail sur votre intervention : ", "https://verifplus.com", pw.TextAlign.left, PdfColors.white, PdfColors.black),
       PdfTools.C2_L1(context, "Prestations et visite effectuées par (Technicien)", "", 5, "Prestations et visite constatées par (Client)", "", 5, pw.TextAlign.left, PdfColors.grey200, PdfColors.black),
-      PdfTools.C2_L3(context, "Nom : ", "020-Kévin GABET", "Date : ", "06/03/2024", "Signature :", "", 5, "Nom :", "", "Date : ", "06/03/2024", "Signature : ", "(Absent sur site)", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-
+      PdfTools.C2_L3(context, "Nom : ", "${Srv_DbTools.gIntervention.Intervention_Signataire_Tech}", "Date : ", "${Srv_DbTools.gIntervention.Intervention_Signataire_Date}", "Signature :", "", 5, "Nom :", "${Srv_DbTools.gIntervention.Intervention_Signataire_Client}", "Date : ", "${Srv_DbTools.gIntervention.Intervention_Signataire_Date}", "Signature : ", "(Absent sur site)", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black, imageData_Cachet: imageData_Cachet),
     ]);
   }
-
 
   pw.Widget _contentPageLegende(pw.Context context) {
     return pw.Column(children: [
 // SITE
-
-
-      PdfTools.C3_L1(context, "Colonne", "", 3, "Abréviation", "",3, "Signification", "",8, pw.TextAlign.left, PdfColors.grey200, PdfColors.black),
-      PdfTools.C3_L1(context, "Groupe", "", 3, "", 'Ex : "Sud, Nord, ..."',3, "","Regroupement de vos sites dans un ou plusieurs groupes",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-      PdfTools.C3_L1(context, "Site", "", 3, "", 'Ex : "Residence X"',3, "","Site d'intervention",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Zone", "", 3, "", 'Ex : "Bât. A, B, ..."',3, "","Division du site, parc d'organes en une ou polusieurs zones",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "N°", "", 3, "", '1, 2, 3, ...',3, "","Numérotation du parc",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Description", "", 3, "", 'Ext Port',3, "","Extincteur Portatif",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Description", "", 3, "", 'Ext Mob',3, "","Extincteur Mobile",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Description", "", 3, "", 'Douche',3, "","Douche de sécurité portative",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Description", "", 3, "", 'Ext Auto',3, "","Extincteur Automatique",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Description", "", 3, "", 'App Ext',3, "","Appareil d'extinction",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Fabricant", "", 3, "", 'Code',3, "","Code fabricant d'un organe de sécurité",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Pression", "", 3, "", 'PA/PP',3, "","Type de pression : Pression auxilliaire / Pression permanente",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Classes de feu", "", 3, "", 'A/AB/ABC/ABF/..',3, "","Classification par types de feux",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Modèle", "", 3, "", 'Eau',3, "","Extincteur pulvérisée à Eau",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Modèle", "", 3, "", 'Eau + Additif',3, "","Extincteur pulvérisée à Eau + Additif",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Modèle", "", 3, "", 'Poudre',3, "","Extincteur à Poudre",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Modèle", "", 3, "", 'CO2',3, "","Extincteur à Dioxyde de Carbone",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Modèle", "", 3, "", 'Mousse',3, "","Extincteur à Mousse",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Modèle", "", 3, "", 'Douche',3, "","Douche de sécurité portative",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Charge", "", 3, "", "6L, 9L, 6Kg, 9Kg, ...",3, "","Masse ou volume de l'agent extincteur contenu dans l'extincteur",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Année de Fabrication", "", 3, "", 'Ex : 2008',3, "","Date de fabrication d'un organe de sécurité",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Niveau", "", 3, "", 'RDC/R-1/R+1, ...',3, "","Etage distinct d'un bâtiment (RDC : rez-de-chaussée)",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Visite", "", 3, "", "Ex : 01/01/1900", 3, "", "Date à laquelle un organe de sécurité a été visité",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Zone/Emplacement", "", 3, "", 'Ex : Bureaux, entrée',3, "","Zone, emplacement dans lequel est situé un organe de sécurité",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Action", "", 3, "", 'MS',3, "","Mise en service d'un organe de sécurité",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Action", "", 3, "", 'VF',3, "","Vérification d'un organe de sécurité",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Action", "", 3, "", 'RECH',3, "","Recharge d'un organe de sécurité",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Action", "", 3, "", 'MAA',3, "","Maintenance Additionnelle Approfondie d'un organe de sécurité",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Action", "", 3, "", 'CHGE',3, "","Charge de maintenance d'un organe de sécurité",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Action", "", 3, "", 'RA',3, "","Révision en Atelier d'un organe de sécurité",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-    PdfTools.C3_L1(context, "Action", "", 3, "", 'REF',3, "","Réforme, mise au rebut d'un organe de sécurité",8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-
-
-
-
-
-
+      PdfTools.C3_L1(context, "Colonne", "", 3, "Abréviation", "", 3, "Signification", "", 8, pw.TextAlign.left, PdfColors.grey200, PdfColors.black),
+      PdfTools.C3_L1(context, "Groupe", "", 3, "", 'Ex : "Sud, Nord, ..."', 3, "", "Regroupement de vos sites dans un ou plusieurs groupes", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Site", "", 3, "", 'Ex : "Residence X"', 3, "", "Site d'intervention", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Zone", "", 3, "", 'Ex : "Bât. A, B, ..."', 3, "", "Division du site, parc d'organes en une ou polusieurs zones", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "N°", "", 3, "", '1, 2, 3, ...', 3, "", "Numérotation du parc", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Description", "", 3, "", 'Ext Port', 3, "", "Extincteur Portatif", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Description", "", 3, "", 'Ext Mob', 3, "", "Extincteur Mobile", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Description", "", 3, "", 'Douche', 3, "", "Douche de sécurité portative", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Description", "", 3, "", 'Ext Auto', 3, "", "Extincteur Automatique", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Description", "", 3, "", 'App Ext', 3, "", "Appareil d'extinction", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Fabricant", "", 3, "", 'Code', 3, "", "Code fabricant d'un organe de sécurité", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Pression", "", 3, "", 'PA/PP', 3, "", "Type de pression : Pression auxilliaire / Pression permanente", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Classes de feu", "", 3, "", 'A/AB/ABC/ABF/..', 3, "", "Classification par types de feux", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Modèle", "", 3, "", 'Eau', 3, "", "Extincteur pulvérisée à Eau", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Modèle", "", 3, "", 'Eau + Additif', 3, "", "Extincteur pulvérisée à Eau + Additif", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Modèle", "", 3, "", 'Poudre', 3, "", "Extincteur à Poudre", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Modèle", "", 3, "", 'CO2', 3, "", "Extincteur à Dioxyde de Carbone", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Modèle", "", 3, "", 'Mousse', 3, "", "Extincteur à Mousse", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Modèle", "", 3, "", 'Douche', 3, "", "Douche de sécurité portative", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Charge", "", 3, "", "6L, 9L, 6Kg, 9Kg, ...", 3, "", "Masse ou volume de l'agent extincteur contenu dans l'extincteur", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Année de Fabrication", "", 3, "", 'Ex : 2008', 3, "", "Date de fabrication d'un organe de sécurité", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Niveau", "", 3, "", 'RDC/R-1/R+1, ...', 3, "", "Etage distinct d'un bâtiment (RDC : rez-de-chaussée)", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Visite", "", 3, "", "Ex : 01/01/1900", 3, "", "Date à laquelle un organe de sécurité a été visité", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Zone/Emplacement", "", 3, "", 'Ex : Bureaux, entrée', 3, "", "Zone, emplacement dans lequel est situé un organe de sécurité", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Action", "", 3, "", 'MS', 3, "", "Mise en service d'un organe de sécurité", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Action", "", 3, "", 'VF', 3, "", "Vérification d'un organe de sécurité", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Action", "", 3, "", 'RECH', 3, "", "Recharge d'un organe de sécurité", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Action", "", 3, "", 'MAA', 3, "", "Maintenance Additionnelle Approfondie d'un organe de sécurité", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Action", "", 3, "", 'CHGE', 3, "", "Charge de maintenance d'un organe de sécurité", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Action", "", 3, "", 'RA', 3, "", "Révision en Atelier d'un organe de sécurité", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C3_L1(context, "Action", "", 3, "", 'REF', 3, "", "Réforme, mise au rebut d'un organe de sécurité", 8, pw.TextAlign.left, PdfColors.white, PdfColors.black),
     ]);
   }
 
-
-
   pw.Widget _contentTable(pw.Context context) {
-    const tableHeaders = ['N°', 'Description', 'Fabricant', 'Pression', 'Classes de\nfeu',"Modèle",	"Charge",	"Année\nfabrication",	"Niveau",	"Zone/Emplacement",	"Visite",	"Action"];
+    const tableHeaders = ['N°', 'Description', 'Fabricant', 'Pression', 'Classes de\nfeu', "Modèle", "Charge", "Année\nfabrication", "Niveau", "Zone/Emplacement", "Visite", "Action"];
 
     return pw.TableHelper.fromTextArray(
       headerDirection: pw.TextDirection.rtl,
       border: TableBorder.all(),
-
       headerAlignment: pw.Alignment.center,
       cellAlignment: pw.Alignment.centerLeft,
       headerDecoration: pw.BoxDecoration(
@@ -747,7 +752,6 @@ class Invoice {
         2: pw.Alignment.center,
         3: pw.Alignment.center,
         4: pw.Alignment.center,
-
         5: pw.Alignment.center,
         6: pw.Alignment.center,
         7: pw.Alignment.center,
@@ -756,7 +760,6 @@ class Invoice {
         10: pw.Alignment.center,
         11: pw.Alignment.center,
       },
-
       columnWidths: <int, TableColumnWidth>{
         0: const FixedColumnWidth(4),
         1: const FixedColumnWidth(6),
@@ -771,8 +774,8 @@ class Invoice {
         10: const FixedColumnWidth(7),
         11: const FixedColumnWidth(6),
       },
-
-      headerDirections: [ 0,
+      headerDirections: [
+        0,
         1,
         1,
         1,
@@ -785,7 +788,6 @@ class Invoice {
         0,
         1,
       ],
-
       headerStyle: pw.TextStyle(
         color: PdfColors.black,
         fontSize: 9,
@@ -798,7 +800,7 @@ class Invoice {
       rowDecoration: pw.BoxDecoration(
         border: pw.Border(
           bottom: pw.BorderSide(
-            color: accentColor,
+            color: PdfColors.white,
             width: .5,
           ),
         ),

@@ -3,7 +3,7 @@ description: Flutter project.
 
 publish_to: 'none'
 
-version: 1.0.74+74
+version: 1.0.78+78
 
 environment:
   sdk: ">=2.17.6 <3.0.0"
@@ -66,6 +66,7 @@ dependencies:
   connectivity_plus: ^5.0.2
   wifi_iot: ^0.3.19
   fbroadcast: ^2.0.0
+  hand_signature: ^3.0.2
 
 dependency_overrides:
   pdf:

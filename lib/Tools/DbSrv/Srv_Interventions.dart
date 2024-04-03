@@ -1,5 +1,6 @@
-class Intervention {
+import 'dart:typed_data';
 
+class Intervention {
   int InterventionId = 0;
   int Intervention_ZoneId = 0;
 
@@ -15,9 +16,10 @@ class Intervention {
   String Intervention_Intervenants = "";
   String Intervention_Reglementation = "";
   String Intervention_Signataire_Client = "";
+  Uint8List Intervention_Signature_Client = Uint8List.fromList([]);
   String Intervention_Signataire_Tech = "";
+  Uint8List Intervention_Signature_Tech = Uint8List.fromList([]);
   String Intervention_Signataire_Date = "";
-
   String Intervention_Contrat = "";
   String Intervention_TypeContrat = "";
   String Intervention_Duree = "";
@@ -27,16 +29,15 @@ class Intervention {
 
   String Intervention_Remarque = "";
   String Livr = "";
-  bool   Intervention_isUpdate = true;
-
+  bool Intervention_isUpdate = true;
 
   static InterventionInit() {
-    return Intervention(0, 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", true);
+    return Intervention(0, 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", true, Uint8List.fromList([]), Uint8List.fromList([]));
   }
 
   Intervention(
-    int    InterventionId,
-    int    Intervention_ZoneId,
+    int InterventionId,
+    int Intervention_ZoneId,
     String Intervention_Date,
     String Intervention_Type,
     String Intervention_Parcs_Type,
@@ -58,7 +59,9 @@ class Intervention {
     String Intervention_APSAD,
     String Intervention_Remarque,
     String Livr,
-      bool   Intervention_isUpdate,
+    bool Intervention_isUpdate,
+    Uint8List Intervention_Signature_Client,
+    Uint8List Intervention_Signature_Tech,
   ) {
     this.InterventionId = InterventionId;
     this.Intervention_ZoneId = Intervention_ZoneId;
@@ -66,7 +69,6 @@ class Intervention {
     this.Intervention_Type = Intervention_Type;
     this.Intervention_Parcs_Type = Intervention_Parcs_Type;
     this.Intervention_Status = Intervention_Status;
-
     this.Intervention_Histo_Status = Intervention_Histo_Status;
     this.Intervention_Facturation = Intervention_Facturation;
     this.Intervention_Histo_Facturation = Intervention_Histo_Facturation;
@@ -76,17 +78,17 @@ class Intervention {
     this.Intervention_Signataire_Client = Intervention_Signataire_Client;
     this.Intervention_Signataire_Tech = Intervention_Signataire_Tech;
     this.Intervention_Signataire_Date = Intervention_Signataire_Date;
-
     this.Intervention_Contrat = Intervention_Contrat;
     this.Intervention_TypeContrat = Intervention_TypeContrat;
     this.Intervention_Duree = Intervention_Duree;
     this.Intervention_Organes = Intervention_Organes;
     this.Intervention_RT = Intervention_RT;
     this.Intervention_APSAD = Intervention_APSAD;
-
     this.Intervention_Remarque = Intervention_Remarque;
     this.Livr = Livr;
     this.Intervention_isUpdate = Intervention_isUpdate;
+    this.Intervention_Signature_Client = Intervention_Signature_Client;
+    this.Intervention_Signature_Tech = Intervention_Signature_Tech;
   }
 
   Map<String, dynamic> toMap() {
@@ -114,12 +116,41 @@ class Intervention {
       'Intervention_APSAD': Intervention_APSAD,
       'Intervention_Remarque': Intervention_Remarque,
       'Intervention_isUpdate': Intervention_isUpdate,
+      'Intervention_Signature_Client': Intervention_Signature_Client,
+      'Intervention_Signature_Tech': Intervention_Signature_Tech,
     };
   }
 
   factory Intervention.fromJson(Map<String, dynamic> json) {
-//    print("json $json");
-    Intervention wUser = Intervention(
+    print("Intervention.fromJson ${json['InterventionId']}");
+
+    Uint8List wUint8ListTech = Uint8List.fromList([]);
+    if (json['Intervention_Signature_Tech'].toString().isNotEmpty) {
+      String value = json['Intervention_Signature_Tech'];
+      if (value.length > 2) {
+        List<int> list = value.replaceAll('[', '').replaceAll(']', '').split(',').map<int>((e) {
+          return int.tryParse(e)!;
+        }).toList();
+
+        wUint8ListTech = Uint8List.fromList(list);
+      }
+    }
+
+    Uint8List wUint8List = Uint8List.fromList([]);
+    if (json['Intervention_Signature_Client'].toString().isNotEmpty) {
+      String value = json['Intervention_Signature_Client'];
+      if (value.length > 2) {
+        List<int> list = value.replaceAll('[', '').replaceAll(']', '').split(',').map<int>((e) {
+          return int.tryParse(e)!;
+        }).toList();
+
+        wUint8List = Uint8List.fromList(list);
+      }
+    }
+
+//    print("Intervention.fromJson ${json['InterventionId']} wUint8ListTech ${wUint8ListTech.length} wUint8List ${wUint8List.length} ");
+
+    Intervention wIntervention = Intervention(
       int.parse(json['InterventionId']),
       int.parse(json['Intervention_ZoneId']),
       json['Intervention_Date'],
@@ -144,8 +175,13 @@ class Intervention {
       json['Intervention_Remarque'],
       json['Livr'],
       true,
+      wUint8List,
+      wUint8ListTech,
     );
-    return wUser;
+
+    //print("Intervention ${wIntervention.toMap()}");
+
+    return wIntervention;
   }
 
   String Desc() {
@@ -170,7 +206,9 @@ class Intervention {
         '$Intervention_Organes        '
         '$Intervention_RT        '
         '$Intervention_APSAD        '
-        '$Intervention_Remarque'
-        '$Livr';
+        '$Intervention_Remarque    '
+        '$Livr     '
+        '$Intervention_Signature_Client     '
+        '$Intervention_Signature_Tech     ';
   }
 }

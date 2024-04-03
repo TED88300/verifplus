@@ -157,15 +157,16 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
     ListContact.add(
       Expanded(
           child: Container(
-              padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+//            color : Colors.red,
+              padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Text(
                 "${Srv_DbTools.gIntervention.Intervention_Remarque}",
                 textAlign: TextAlign.start,
-                maxLines: 10,
+                maxLines: 4,
                 style: gColors.bodySaisie_B_B,
               ))),
     );
-    ListContact.add(AffBtnInter());
+//    ListContact.add(AffBtnInter());
 
     print("ListContact ${ListContact.length}");
     Reload();
@@ -221,18 +222,26 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
 
   @override
   Widget build(BuildContext context) {
+    print(" build Intervention_Signataire_Tech ${Srv_DbTools.gIntervention.Intervention_Signataire_Tech}");
+
     return Scaffold(
       appBar: appBar(),
-      body: Column(
+      body:
+      Container(
+        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        child:
+      Column(
         children: [
           gObj.InterventionTitleWidget("${Srv_DbTools.gClient.Client_Nom.toUpperCase()}", wTitre2: "${Srv_DbTools.gGroupe.Groupe_Nom} / ${Srv_DbTools.gSite.Site_Nom} / ${Srv_DbTools.gZone.Zone_Nom}", wTimer: 0),
           gColors.wLigne(),
           Expanded(
             child: build_Detail(),
           ),
-        ],
+          AffBtnInter(),
+    ],
       ),
-    );
+    ),);
   }
 
   Widget build_Detail() {
@@ -461,7 +470,8 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
 
   Widget AffBtnInter() {
     return Container(
-      margin: EdgeInsets.only(top : 50,bottom: 50),
+      width: 640,
+      margin: EdgeInsets.only(top : 5,bottom: 0),
       child: ElevatedButton(
           onPressed: () async {
             await HapticFeedback.vibrate();

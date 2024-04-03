@@ -198,6 +198,16 @@ class _CustomBottomNavigationBar3State extends State<CustomBottomNavigationBar3>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
+                _icon("Icon_CR.png"     ,    "CR", _selectedIndex == 0, 0),
+                _icon("Btn_Download.png", "Down", _selectedIndex == 1, 1),
+                _icon("Icon_BL.png"     ,    "BL", _selectedIndex == 2, 2),
+                _icon("Icon_BC.png"     ,    "BC", _selectedIndex ==   3, 3),
+                _icon("Icon_Dev.png"    , "Devis", _selectedIndex ==   4, 4),
+                _icon("Icon_Note.png"    , "Notes", _selectedIndex ==  5, 5),
+                _icon("Icon_Sign.png",  "Signature", _selectedIndex == 6, 6),
+              ],
+/*
+              children: <Widget>[
                 _icon("Icon_CR.png"     , "CR", _selectedIndex == 0, 0),
                 _icon("Icon_Rel.png"    , "Reliq", _selectedIndex == 1, 1),
                 _icon("Icon_BL.png"     , "BL", _selectedIndex == 2, 2),
@@ -206,6 +216,7 @@ class _CustomBottomNavigationBar3State extends State<CustomBottomNavigationBar3>
                 _icon("Icon_Note.png"   , "Note", _selectedIndex == 5, 5),
                 _icon("Icon_Sign.png"   , "Signature", _selectedIndex == 6, 6),
               ],
+*/
             ),
           ),
         ],

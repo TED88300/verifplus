@@ -257,12 +257,53 @@ class Parc_Ent_Srv {
   factory Parc_Ent_Srv.fromJson(Map<String, dynamic> json) {
 //    print("json $json");
 
-    Parc_Ent_Srv wTmp = Parc_Ent_Srv(int.parse(json['ParcsId']), int.parse(json['Parcs_order']),
-        int.parse(json['Parcs_InterventionId']), json['Parcs_Type'], json['Parcs_Date_Rev'], json['Parcs_QRCode'], json['Parcs_FREQ_Id'], json['Parcs_FREQ_Label'],
-        json['Parcs_ANN_Id'], json['Parcs_ANN_Label'],
-        json['Parcs_FAB_Id'], json['Parcs_FAB_Label'],
-        json['Parcs_NIV_Id'], json['Parcs_NIV_Label'], json['Parcs_ZNE_Id'], json['Parcs_ZNE_Label'], json['Parcs_EMP_Id'], json['Parcs_EMP_Label'], json['Parcs_LOT_Id'], json['Parcs_LOT_Label'], json['Parcs_SERIE_Id'], json['Parcs_SERIE_Label'], json['Parcs_Audit_Note'],
-        json['Parcs_Verif_Note'], int.parse(json['Parcs_Intervention_Timer']), json['Parcs_UUID'],json['Parcs_UUID_Parent'], json['Parcs_CodeArticle'], json['Parcs_CODF'],json['Parcs_NCERT'],false, false, false, "", json['Livr'], json['Devis'], json['Action']);
+    int Parcs_Intervention_Timer = 0;
+    try {
+      Parcs_Intervention_Timer = int.parse(json['Parcs_Intervention_Timer']);
+
+    } catch (e) {
+    }
+
+
+    Parc_Ent_Srv wTmp = Parc_Ent_Srv(
+        int.parse(json['ParcsId']),
+        int.parse(json['Parcs_order']),
+        int.parse(json['Parcs_InterventionId']),
+        json['Parcs_Type'],
+        json['Parcs_Date_Rev'],
+        json['Parcs_QRCode'],
+        json['Parcs_FREQ_Id'],
+        json['Parcs_FREQ_Label'],
+        json['Parcs_ANN_Id'],
+        json['Parcs_ANN_Label'],
+        json['Parcs_FAB_Id'],
+        json['Parcs_FAB_Label'],
+        json['Parcs_NIV_Id'],
+        json['Parcs_NIV_Label'],
+        json['Parcs_ZNE_Id'],
+        json['Parcs_ZNE_Label'],
+        json['Parcs_EMP_Id'],
+        json['Parcs_EMP_Label'],
+        json['Parcs_LOT_Id'],
+        json['Parcs_LOT_Label'],
+        json['Parcs_SERIE_Id'],
+        json['Parcs_SERIE_Label'],
+        json['Parcs_Audit_Note'],
+        json['Parcs_Verif_Note'],
+        Parcs_Intervention_Timer,
+        json['Parcs_UUID'],
+        json['Parcs_UUID_Parent'],
+        json['Parcs_CodeArticle'],
+        json['Parcs_CODF'],
+        json['Parcs_NCERT'],
+        false,
+        false,
+        false,
+        "",
+        "",//json['Livr'],
+        "",//json['Devis'],
+    "",//json['Action']
+     );
 
     return wTmp;
   }

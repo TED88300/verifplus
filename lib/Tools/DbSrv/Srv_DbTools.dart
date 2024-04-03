@@ -1455,17 +1455,17 @@ class Srv_DbTools {
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
     request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
 
-//    print("getZone_API_Post " + aSQL);
+    print("getZone_API_Post " + aSQL);
 
     http.StreamedResponse response = await request.send();
-    //    print("getZone_API_Post response ${response.statusCode}" );
+//        print("getZone_API_Post response ${response.statusCode}" );
 
     if (response.statusCode == 200) {
       var parsedJson = json.decode(await response.stream.bytesToString());
       final items = parsedJson['data'];
 
       if (items != null) {
-        List<Zone> ZoneList = await items.map<Zone>((json) {
+          List<Zone> ZoneList = await items.map<Zone>((json) {
           return Zone.fromJson(json);
         }).toList();
         return ZoneList;
@@ -1518,7 +1518,6 @@ class Srv_DbTools {
       if (ListIntervention == null) return false;
       print("getInterventionAll ${ListIntervention.length}");
       if (ListIntervention.length > 0) {
-        print("getInterventionAll return TRUE");
         return true;
       }
       return false;
@@ -1569,6 +1568,9 @@ class Srv_DbTools {
     });
   }
 
+
+
+
   static Future<bool> setIntervention(Intervention Intervention) async {
     String wSlq = "UPDATE Interventions SET "
             "InterventionId     =   ${Intervention.InterventionId}, " +
@@ -1578,9 +1580,19 @@ class Srv_DbTools {
         "Intervention_Parcs_Type      = \"${Intervention.Intervention_Parcs_Type}\", " +
         "Intervention_Status      = \"${Intervention.Intervention_Status}\", " +
         "Livr        = \"${Intervention.Livr}\", " +
+
+        "Intervention_Signataire_Client        = \"${Intervention.Intervention_Signataire_Client}\", " +
+        "Intervention_Signataire_Tech        = \"${Intervention.Intervention_Signataire_Tech}\", " +
+        "Intervention_Signataire_Date        = \"${Intervention.Intervention_Signataire_Date}\", " +
+
+
+
+
+        "Intervention_Signature_Client        = \"${Intervention.Intervention_Signature_Client}\", " +
+        "Intervention_Signature_Tech        = \"${Intervention.Intervention_Signature_Tech}\", " +
         "Intervention_Remarque      = \"${Intervention.Intervention_Remarque}\" " +
         "WHERE InterventionId      = ${Intervention.InterventionId.toString()}";
-    gColors.printWrapped("setIntervention " + wSlq);
+//    gColors.printWrapped("setIntervention " + wSlq);
 
     try {
       bool ret = await add_API_Post("upddel", wSlq);
@@ -1629,16 +1641,17 @@ class Srv_DbTools {
     if (response.statusCode == 200) {
       var parsedJson = json.decode(await response.stream.bytesToString());
       final items = parsedJson['data'];
-
       if (items != null) {
         List<Intervention> InterventionList = await items.map<Intervention>((json) {
           return Intervention.fromJson(json);
         }).toList();
+        print("InterventionList  ${InterventionList.length}");
         return InterventionList;
       }
     } else {
       print(response.reasonPhrase);
     }
+
     return [];
   }
 
@@ -2287,6 +2300,7 @@ class Srv_DbTools {
 
   static Future<List<Parc_Ent_Srv>> getParc_Ent_API_Post(String aType, String aSQL) async {
     setSrvToken();
+    print("getParc_Ent_API_Post aSQL " + aSQL);
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
     request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
@@ -2295,8 +2309,13 @@ class Srv_DbTools {
       var parsedJson = json.decode(await response.stream.bytesToString());
       final items = parsedJson['data'];
 
+      print("getParc_Ent_API_Post items ${items}");
+
       if (items != null) {
         List<Parc_Ent_Srv> Parc_EntList = await items.map<Parc_Ent_Srv>((json) {
+
+          print("getParc_Ent_API_Post json ${json}");
+
           return Parc_Ent_Srv.fromJson(json);
         }).toList();
         return Parc_EntList;

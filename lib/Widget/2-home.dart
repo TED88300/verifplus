@@ -163,7 +163,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   Widget wchildren = Container();
 
-  final pageController = PageController();
+  final pageController = PageController(initialPage : DbTools.gCurrentIndex);
 
 
 

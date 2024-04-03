@@ -82,7 +82,7 @@ class DbTools {
   }
 
 
-  static int gCurrentIndex = 0;
+  static int gCurrentIndex = 3;
   static int gCurrentIndex2 = 0;
   static int gCurrentIndex3 = 0;
 
@@ -191,8 +191,26 @@ class DbTools {
     String wCREATE_Zones =
         "CREATE TABLE `Zones` (`ZoneId` int(11) NOT NULL,`Zone_SiteId` int(11) NOT NULL,`Zone_Code` varchar(24) NOT NULL DEFAULT '',`Zone_Depot` varchar(128) NOT NULL DEFAULT '',`Zone_Nom` varchar(64) NOT NULL DEFAULT '',`Zone_Adr1` varchar(40) NOT NULL DEFAULT '',`Zone_Adr2` varchar(40) NOT NULL DEFAULT '',`Zone_Adr3` varchar(40) NOT NULL DEFAULT '',`Zone_Adr4` varchar(40) NOT NULL,`Zone_CP` varchar(10) NOT NULL DEFAULT '',`Zone_Ville` varchar(40) NOT NULL DEFAULT '',`Zone_Pays` varchar(40) NOT NULL DEFAULT '',`Zone_Acces` varchar(128) NOT NULL,`Zone_Rem` varchar(1024) NOT NULL DEFAULT '',`Livr` varchar(8) NOT NULL, Zone_isUpdate INTEGER NOT NULL DEFAULT 0)";
     String wCREATE_Intervention =
-        "CREATE TABLE `Interventions` (`InterventionId` int(11) NOT NULL,`Intervention_ZoneId` int(11) DEFAULT 0,`Intervention_Date` varchar(32) NOT NULL DEFAULT '',`Intervention_Type` varchar(32) NOT NULL DEFAULT '',`Intervention_Parcs_Type` varchar(32) NOT NULL,`Intervention_Status` varchar(32) NOT NULL DEFAULT 'Planifiée',`Intervention_Histo_Status` longtext NOT NULL DEFAULT '',`Intervention_Facturation` varchar(32) NOT NULL DEFAULT 'Détaillée',`Intervention_Histo_Facturation` longtext NOT NULL DEFAULT '',`Intervention_Responsable` varchar(128) NOT NULL DEFAULT '',`Intervention_Intervenants` mediumtext NOT NULL DEFAULT '',`Intervention_Reglementation` mediumtext NOT NULL DEFAULT '',`Intervention_Signataire_Client` varchar(128) NOT NULL,`Intervention_Signataire_Tech` varchar(128) NOT NULL,`Intervention_Signataire_Date` varchar(32) NOT NULL,`Intervention_Remarque` varchar(1024) NOT NULL DEFAULT '',`Livr` varchar(8) NOT NULL DEFAULT '',`Intervention_Contrat` varchar(64) NOT NULL DEFAULT '',`Intervention_TypeContrat` varchar(128) NOT NULL DEFAULT '',`Intervention_Duree` varchar(128) NOT NULL DEFAULT '',`Intervention_Organes` varchar(1024) NOT NULL DEFAULT '',`Intervention_RT` varchar(1024) NOT NULL DEFAULT '',`Intervention_APSAD` varchar(1024) NOT NULL DEFAULT '', Intervention_isUpdate INTEGER NOT NULL DEFAULT 0)";
-    String wCREATE_InterMissions = "CREATE TABLE `InterMissions` (`InterMissionId` int(11) NOT NULL,`InterMission_InterventionId` int(11) NOT NULL DEFAULT 0,`InterMission_Nom` varchar(512) NOT NULL,`InterMission_Exec` tinyint(1) NOT NULL,`InterMission_Date` varchar(32) NOT NULL,`InterMission_Note` varchar(4096) NOT NULL)";
+        "CREATE TABLE `Interventions` (`InterventionId` int(11) NOT NULL,`Intervention_ZoneId` int(11) DEFAULT 0,"
+        "`Intervention_Date` varchar(32) NOT NULL DEFAULT '',`Intervention_Type` varchar(32) NOT NULL DEFAULT '',`"
+        "Intervention_Parcs_Type` varchar(32) NOT NULL,`Intervention_Status` varchar(32) NOT NULL DEFAULT 'Planifiée',"
+        "`Intervention_Histo_Status` longtext NOT NULL DEFAULT '',`Intervention_Facturation` varchar(32) NOT NULL DEFAULT 'Détaillée',"
+        "`Intervention_Histo_Facturation` longtext NOT NULL DEFAULT '',`Intervention_Responsable` varchar(128) NOT NULL DEFAULT '',"
+        "`Intervention_Intervenants` mediumtext NOT NULL DEFAULT '',`Intervention_Reglementation` mediumtext NOT NULL DEFAULT '',"
+        "`Intervention_Signataire_Client` varchar(128) NOT NULL,`Intervention_Signataire_Tech` varchar(128) NOT NULL,"
+        "`Intervention_Signataire_Date` varchar(32) NOT NULL,`Intervention_Remarque` varchar(1024) NOT NULL DEFAULT '',"
+        "`Livr` varchar(8) NOT NULL DEFAULT '',`Intervention_Contrat` varchar(64) NOT NULL DEFAULT '',"
+        "`Intervention_TypeContrat` varchar(128) NOT NULL DEFAULT '',`Intervention_Duree` varchar(128) NOT NULL DEFAULT '',"
+        "`Intervention_Organes` varchar(1024) NOT NULL DEFAULT '',`Intervention_RT` varchar(1024) NOT NULL DEFAULT '',"
+        "`Intervention_APSAD` varchar(1024) NOT NULL DEFAULT '', Intervention_isUpdate INTEGER NOT NULL DEFAULT 0,"
+        "Intervention_Signature_Client TEXT NOT NULL DEFAULT '',"
+        "Intervention_Signature_Tech TEXT NOT NULL DEFAULT ''"
+        ")";
+
+    String wCREATE_InterMissions = "CREATE TABLE `InterMissions` (`InterMissionId` int(11) NOT NULL,"
+        "`InterMission_InterventionId` int(11) NOT NULL DEFAULT 0,`InterMission_Nom` varchar(512) NOT NULL,"
+        "`InterMission_Exec` tinyint(1) NOT NULL,`InterMission_Date` varchar(32) NOT NULL,`InterMission_Note` varchar(4096) NOT NULL"
+        ")";
 
     String wCREATE_Planning = "CREATE TABLE `Planning` (`PlanningId` int(11) NOT NULL,"
         "`Planning_InterventionId` int(11) NOT NULL DEFAULT 0,"
@@ -324,7 +342,7 @@ class DbTools {
         ")";
 
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
-    String wDbPath = "sAZML233615scot2obao.db";
+    String wDbPath = "kaoledr55codoin.db";
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
 
     database = openDatabase(
@@ -2763,9 +2781,12 @@ class DbTools {
         maps[i]["Intervention_Remarque"],
         maps[i]["Livr"],
         maps[i]["Intervention_isUpdate"] == 1,
+        maps[i]["Intervention_Signature_Client"],
+        maps[i]["Intervention_Signature_Tech"],
       );
     });
   }
+
 
   static Future<List<Intervention>> getInterventions(int ID) async {
     final db = await database;
@@ -2803,6 +2824,8 @@ class DbTools {
         maps[i]["Intervention_Remarque"],
         maps[i]["Livr"],
         maps[i]["Intervention_isUpdate"] ==1,
+        maps[i]["Intervention_Signature_Client"],
+        maps[i]["Intervention_Signature_Tech"],
       );
     });
   }
@@ -2841,6 +2864,9 @@ class DbTools {
         maps[0]["Intervention_Remarque"],
         maps[0]["Livr"],
         maps[0]["Intervention_isUpdate"] ==1,
+        maps[0]["Intervention_Signature_Client"],
+        maps[0]["Intervention_Signature_Tech"],
+
       );
 
 
@@ -2902,11 +2928,7 @@ class DbTools {
     final db = await database;
 
     final List<Map<String, dynamic>> maps = await db.query("InterMissions", where : "InterMission_InterventionId = $ID");
-
-
     print("InterMission ${maps} InterMission_InterventionId = $ID");
-
-
 
     return List.generate(maps.length, (i) {
       return InterMission(
@@ -3498,7 +3520,7 @@ class DbTools {
     final List<Map<String, dynamic>> maps = await db.rawQuery('SELECT Parcs_Desc.* FROM Parcs_Desc, Parcs_Ent  WHERE ParcsDesc_ParcsId = ParcsId AND Parcs_InterventionId = ? ', [Parcs_InterventionId]);
   //  print("♠︎♠︎♠︎♠︎♠︎   getParcs_DescInter Parcs_Desc.length ${maps.length}");
     return List.generate(maps.length, (i) {
-//    print("***********>>>   getParcs_DescInter maps ${maps[i]}");
+//    print("♠︎♠︎♠︎♠︎♠>>>   getParcs_DescInter maps ${maps[i]}");
       return Parc_Desc.fromMap(maps[i]);
     });
   }
@@ -3790,8 +3812,6 @@ class DbTools {
       whereArgs: [parc.ParcsArtId],
     );
     print("☁︎☁︎☁︎☁︎☁︎☁︎☁︎☁︎☁︎☁︎☁︎☁︎>>>> updateParc_Art repid $repid toMap ${parc.toMap()} ");
-
-
 
     gParc_Ent.Livr = parc.ParcsArt_Livr!.substring(0, 1).compareTo("R") == 0 ? "R" : "";
     await updateParc_Ent_Livr(gParc_Ent);

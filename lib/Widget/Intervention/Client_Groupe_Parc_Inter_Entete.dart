@@ -52,29 +52,8 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
     "Synthèse de maintance",
   ];
 
-  List<Widget> wTabs = [
-    Tab(
-      text: "Equip.",
-    ),
-    Tab(
-      text: "Audit",
-    ),
-    Tab(
-      text: "Vérif.",
-    ),
-    Tab(
-      text: "Pièces",
-    ),
-    Tab(
-      text: "Sign.",
-    ),
-    Tab(
-      text: "Serv.",
-    ),
-    Tab(
-      text: "Synth.",
-    ),
-  ];
+
+
 
   int _count = 0;
   List<Widget> widgets = [];
@@ -137,8 +116,6 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
       Client_Groupe_Parc_Inter_Serv(onMaj: onMaj, x_t: "5/6"),
       Client_Groupe_Parc_Inter_Synth(onMaj: onMaj, x_t: "6/6"),
     ];
-
-
 
 /*
     _tabController = TabController(vsync: this, length: widgets.length);

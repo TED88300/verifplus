@@ -31,7 +31,7 @@ class Parc_Ent_Count {
   String? Parcs_Audit_Note = "";
   String? Parcs_Verif_Note = "";
 
-  int?    Parcs_Intervention_Timer = 0;
+  int?   Parcs_Intervention_Timer = 0;
   int?   Parcs_Update = 1;
 
   String? Parcs_UUID = "";
@@ -296,7 +296,11 @@ class Parc_Ent_Count {
 
   @override
   String toString() {
-    return 'Parc_Ent {ParcsId: $ParcsId, Parcs_order $Parcs_order, Parcs_InterventionId : $Parcs_InterventionId, Parcs_QRCode $Parcs_QRCode, '
+    return 'Parc_Ent {ParcsId: $ParcsId, Parcs_order $Parcs_order, Parcs_InterventionId : $Parcs_InterventionId, '
+        'Parcs_Date_Rev ${Parcs_Date_Rev}, '
+        'Parcs_Intervention_Timer ${Parcs_Intervention_Timer}, '
+
+        'Parcs_QRCode $Parcs_QRCode, '
         'Parcs_FREQ_Id $Parcs_FREQ_Id, Parcs_FREQ_Label $Parcs_FREQ_Label, '
         'Parcs_ANN_Id $Parcs_ANN_Id, Parcs_ANN_Label $Parcs_ANN_Label, '
         'Parcs_FAB_Id $Parcs_FAB_Id, Parcs_FAB_Label $Parcs_FAB_Label, '

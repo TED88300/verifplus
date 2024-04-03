@@ -8,17 +8,17 @@ import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Article.d
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
-class Client_Groupe_Parc_Inter_Note extends StatefulWidget {
+class Client_Groupe_Parc_Inter_Devis extends StatefulWidget {
   final VoidCallback onMaj;
   final String x_t;
 
-  const Client_Groupe_Parc_Inter_Note({Key? key, required this.onMaj, required this.x_t}) : super(key: key);
+  const Client_Groupe_Parc_Inter_Devis({Key? key, required this.onMaj, required this.x_t}) : super(key: key);
 
   @override
-  Client_Groupe_Parc_Inter_NoteState createState() => Client_Groupe_Parc_Inter_NoteState();
+  Client_Groupe_Parc_Inter_DevisState createState() => Client_Groupe_Parc_Inter_DevisState();
 }
 
-class Client_Groupe_Parc_Inter_NoteState extends State<Client_Groupe_Parc_Inter_Note> {
+class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter_Devis> {
 
   double IcoWidth = 30;
 
@@ -108,7 +108,7 @@ class Client_Groupe_Parc_Inter_NoteState extends State<Client_Groupe_Parc_Inter_
               height: 20,
               padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
               child: Text(
-                "Notes",
+                "Devis",
                 style: gColors.bodyTitle1_B_Gr,
               ),
             ),
