@@ -202,7 +202,7 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
           ],
         ),
         floatingActionButton: Padding(
-            padding: const EdgeInsets.only(bottom: 50.0),
+            padding: const EdgeInsets.only(right : 60, bottom: 40.0),
             child: FloatingActionButton(
                 elevation: 0.0,
                 child: new Icon(Icons.add),
@@ -368,8 +368,11 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
         ),
         gColors.wLigne(),
         SizedBox(height: 5.0),
+
         Expanded(
-          child: ListView.builder(
+          child:   Container(
+            padding: EdgeInsets.only(bottom: 60),
+            child :ListView.builder(
             itemCount: Srv_DbTools.ListClientsearchresult.length,
             itemBuilder: (BuildContext context, int index) {
               Client client = Srv_DbTools.ListClientsearchresult[index];
@@ -471,6 +474,8 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
             },
           ),
         ),
+    ),
+
       ],
     );
   }

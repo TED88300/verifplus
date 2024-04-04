@@ -194,6 +194,11 @@ class PdfColors {
   static const PdfColor green700 = PdfColor.fromInt(0xff388e3c);
   static const PdfColor green800 = PdfColor.fromInt(0xff2e7d32);
   static const PdfColor green900 = PdfColor.fromInt(0xff1b5e20);
+
+  static const PdfColor green999 = PdfColor.fromInt(0xff014a07);
+
+
+
   static const PdfColor greenAccent = greenAccent200;
   static const PdfColor greenAccent100 = PdfColor.fromInt(0xffb9f6ca);
   static const PdfColor greenAccent200 = PdfColor.fromInt(0xff69f0ae);

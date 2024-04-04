@@ -62,11 +62,14 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
   bool isImage = false;
   List<Widget> imgList = [];
 
-  void Reload() async {
+  Future Reload() async {
 
     print("");
     print(" ENTETE Reload ******************");
     print("");
+
+
+
 
 
       await AffDesc();
@@ -136,37 +139,40 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
 
   Future AffDesc() async {
     DbTools.glfParcs_Desc = await DbTools.getParcs_Desc(DbTools.gParc_Ent.ParcsId!);
+
+
+
     for (int i = 0; i < Srv_DbTools.ListParam_Saisie.length; i++) {
       Param_Saisie element = Srv_DbTools.ListParam_Saisie[i];
       await DbTools.getParcs_Desc_Id_Type_Add(DbTools.gParc_Ent.ParcsId!, element.Param_Saisie_ID);
     }
 
-    DbTools.glfParcs_Desc.forEach((param_Saisie) {
-      switch (param_Saisie.ParcsDesc_Type) {
+    DbTools.glfParcs_Desc.forEach((wParcs_Desc) {
+      switch (wParcs_Desc.ParcsDesc_Type) {
         case "DESC":
-          Srv_DbTools.DESC_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.DESC_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
           break;
         case "FAB":
-          Srv_DbTools.FAB_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.FAB_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
           break;
         case "PRS":
-          Srv_DbTools.PRS_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.PRS_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
           break;
         case "CLF":
-          Srv_DbTools.CLF_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.CLF_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
           break;
         case "MOB":
-          Srv_DbTools.MOB_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.MOB_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
           break;
         case "PDT":
-          Srv_DbTools.PDT_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.PDT_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
           Srv_DbTools.getUser_Hab_PDT(Srv_DbTools.PDT_Lib);
           break;
         case "POIDS":
-          Srv_DbTools.POIDS_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.POIDS_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
           break;
         case "GAM":
-          Srv_DbTools.GAM_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.GAM_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
           Srv_DbTools.getParam_Saisie_ParamMem_REF();
           Srv_DbTools.gArticle_EbpEnt = Srv_DbTools.IMPORT_Article_Ebp(Srv_DbTools.REF_Lib);
           DescAff3 = "${Srv_DbTools.REF_Lib} ${Srv_DbTools.gArticle_EbpEnt.Article_descriptionCommercialeEnClair}";
@@ -174,6 +180,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
           break;
       }
     });
+
 
 //    print("<<<<<<<<<<<<<<<<<<<DESC PDT>>>>>>>>>>>>>>>>>>>>>>>>  ${Srv_DbTools.DESC_Lib}  ${Srv_DbTools.PDT_Lib}");
 

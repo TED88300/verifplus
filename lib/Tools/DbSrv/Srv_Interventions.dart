@@ -20,19 +20,20 @@ class Intervention {
   String Intervention_Signataire_Tech = "";
   Uint8List Intervention_Signature_Tech = Uint8List.fromList([]);
   String Intervention_Signataire_Date = "";
+  String Intervention_Signataire_Date_Client	 = "";
   String Intervention_Contrat = "";
   String Intervention_TypeContrat = "";
   String Intervention_Duree = "";
   String Intervention_Organes = "";
   String Intervention_RT = "";
   String Intervention_APSAD = "";
-
+  int Intervention_Sat = 0;
   String Intervention_Remarque = "";
   String Livr = "";
   bool Intervention_isUpdate = true;
 
   static InterventionInit() {
-    return Intervention(0, 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", true, Uint8List.fromList([]), Uint8List.fromList([]));
+    return Intervention(0, 0, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "","", true, Uint8List.fromList([]), Uint8List.fromList([]));
   }
 
   Intervention(
@@ -51,12 +52,14 @@ class Intervention {
     String Intervention_Signataire_Client,
     String Intervention_Signataire_Tech,
     String Intervention_Signataire_Date,
+      String Intervention_Signataire_Date_Client	,
     String Intervention_Contrat,
     String Intervention_TypeContrat,
     String Intervention_Duree,
     String Intervention_Organes,
     String Intervention_RT,
     String Intervention_APSAD,
+    int Intervention_Sat,
     String Intervention_Remarque,
     String Livr,
     bool Intervention_isUpdate,
@@ -78,12 +81,14 @@ class Intervention {
     this.Intervention_Signataire_Client = Intervention_Signataire_Client;
     this.Intervention_Signataire_Tech = Intervention_Signataire_Tech;
     this.Intervention_Signataire_Date = Intervention_Signataire_Date;
+    this.Intervention_Signataire_Date_Client	 = Intervention_Signataire_Date_Client	;
     this.Intervention_Contrat = Intervention_Contrat;
     this.Intervention_TypeContrat = Intervention_TypeContrat;
     this.Intervention_Duree = Intervention_Duree;
     this.Intervention_Organes = Intervention_Organes;
     this.Intervention_RT = Intervention_RT;
     this.Intervention_APSAD = Intervention_APSAD;
+    this.Intervention_Sat = Intervention_Sat;
     this.Intervention_Remarque = Intervention_Remarque;
     this.Livr = Livr;
     this.Intervention_isUpdate = Intervention_isUpdate;
@@ -108,12 +113,14 @@ class Intervention {
       'Intervention_Signataire_Client': Intervention_Signataire_Client,
       'Intervention_Signataire_Tech': Intervention_Signataire_Tech,
       'Intervention_Signataire_Date': Intervention_Signataire_Date,
+      'Intervention_Signataire_Date_Client	': Intervention_Signataire_Date_Client	,
       'Intervention_Contrat': Intervention_Contrat,
       'Intervention_TypeContrat': Intervention_TypeContrat,
       'Intervention_Duree': Intervention_Duree,
       'Intervention_Organes': Intervention_Organes,
       'Intervention_RT': Intervention_RT,
       'Intervention_APSAD': Intervention_APSAD,
+      'Intervention_Sat': Intervention_Sat,
       'Intervention_Remarque': Intervention_Remarque,
       'Intervention_isUpdate': Intervention_isUpdate,
       'Intervention_Signature_Client': Intervention_Signature_Client,
@@ -166,12 +173,14 @@ class Intervention {
       json['Intervention_Signataire_Client'],
       json['Intervention_Signataire_Tech'],
       json['Intervention_Signataire_Date'],
+      json['Intervention_Signataire_Date_Client'],
       json['Intervention_Contrat'],
       json['Intervention_TypeContrat'],
       json['Intervention_Duree'],
       json['Intervention_Organes'],
       json['Intervention_RT'],
       json['Intervention_APSAD'],
+      int.parse(json['Intervention_Sat']),
       json['Intervention_Remarque'],
       json['Livr'],
       true,
@@ -200,12 +209,14 @@ class Intervention {
         '$Intervention_Signataire_Client     '
         '$Intervention_Signataire_Tech	      '
         '$Intervention_Signataire_Date        '
+        '$Intervention_Signataire_Date_Client	        '
         '$Intervention_Contrat        '
         '$Intervention_TypeContrat        '
         '$Intervention_Duree        '
         '$Intervention_Organes        '
         '$Intervention_RT        '
         '$Intervention_APSAD        '
+        '$Intervention_Sat      '
         '$Intervention_Remarque    '
         '$Livr     '
         '$Intervention_Signature_Client     '

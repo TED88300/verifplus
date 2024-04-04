@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hand_signature/signature.dart';
@@ -46,10 +47,17 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
 
   TextEditingController ctrlTech = new TextEditingController();
   TextEditingController ctrlClient = new TextEditingController();
+  TextEditingController ctrlNote = new TextEditingController();
+
+  int SatClient = 0;
+
 
   void initState() {
     ctrlTech.text = Srv_DbTools.gIntervention.Intervention_Signataire_Tech;
     ctrlClient.text = Srv_DbTools.gIntervention.Intervention_Signataire_Client;
+
+    ctrlNote.text = Srv_DbTools.gIntervention.Intervention_Remarque;
+
     initLib();
     super.initState();
   }
@@ -65,24 +73,57 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
     Srv_DbTools.getParam_Saisie_ParamMem("Fact");
     print("initLib ${Srv_DbTools.ListParam_Saisie_Param.length}");
     return Scaffold(
-      body: Padding(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 50),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+      bottomNavigationBar: Container(
+        color: Colors.white,
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(0, 10, 0, 55),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              InterventionTitleWidget2(),
-              gColors.wLigne(),
-              buildTitreTech(context),
-              gColors.wLigne(),
-              SignTechOpen ? _buildSignTech() : _buildVueSignTech(),
-              buildTitreClient(context),
-              gColors.wLigne(),
-              SignClientOpen ? _buildSign() : _buildVueSign(),
-              Spacer(),
-              _BuildFooter(),
+              new ElevatedButton(
+                onPressed: () async {
+                  await HapticFeedback.vibrate();
+
+                  await Navigator.push(context, MaterialPageRoute(builder: (context) => Aff_Bdc()));
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: gColors.primaryGreen,
+                    side: const BorderSide(
+                      width: 1.0,
+                      color: gColors.primaryGreen,
+                    )),
+                child: Text('Imprimer', style: gColors.bodyTitle1_B_W),
+              ),
             ],
-          )),
+          ),
+        ),
+      ),
+      body: Container(
+        height: MediaQuery.of(context).size.height,
+//        padding: EdgeInsets.fromLTRB(0, 0, 0, 50),
+        child: SingleChildScrollView(
+            physics: ClampingScrollPhysics(),
+            dragStartBehavior: DragStartBehavior.down,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                InterventionTitleWidget2(),
+                gColors.wLigne(),
+                buildTitreTech(context),
+                gColors.wLigne(),
+                SignTechOpen ? _buildSignTech() : _buildVueSignTech(),
+                buildTitreClient(context),
+                gColors.wLigne(),
+                SignClientOpen ? _buildSign() : _buildVueSign(),
+                buildTitreNote(context),
+                _buildNote(),
+                buildTitreSat(context),
+                buildSat(),
+              ],
+            )),
+      ),
     );
   }
 
@@ -181,10 +222,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
                   var now = new DateTime.now();
                   var formatter = new DateFormat('dd/MM/yyyy');
                   String formattedDate = formatter.format(now);
-                  Srv_DbTools.gIntervention.Intervention_Signataire_Date = formattedDate;
-
-
-
+                  Srv_DbTools.gIntervention.Intervention_Signataire_Date_Client = formattedDate;
 
                   await DbTools.updateInterventions(Srv_DbTools.gIntervention);
                   bool wRes = await Srv_DbTools.setIntervention(Srv_DbTools.gIntervention);
@@ -204,6 +242,54 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
               ),
               SizedBox(
                 width: 16.0,
+              ),
+            ],
+          ),
+          SizedBox(
+            height: 16.0,
+          ),
+          gColors.wLigne(),
+        ],
+      ));
+
+  Widget _buildNote() => Container(
+      color: Colors.grey,
+      padding: EdgeInsets.fromLTRB(50, 20, 50, 0),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Text(
+                'Note : ',
+                style: gColors.bodyTitle1_N_Gr,
+              ),
+              Expanded(
+                child: Container(
+                  color: Colors.white,
+                  child: TextField(
+                    scrollPadding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom + 200),
+                    controller: ctrlNote,
+                    minLines: 7,
+                    maxLines: 7,
+                    style: gColors.bodyTitle1_N_Gr,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.only(left: 10, right: 10, bottom: 0, top: 3),
+                    ),
+                    onChanged: (String value) async {
+                      Srv_DbTools.gIntervention.Intervention_Remarque = value;
+                      await DbTools.updateInterventions(Srv_DbTools.gIntervention);
+                      bool wRes = await Srv_DbTools.setIntervention(Srv_DbTools.gIntervention);
+                      Srv_DbTools.gIntervention.Intervention_isUpdate = wRes;
+                      if (!wRes) DbTools.setBoolErrorSync(true);
+                      await DbTools.updateInterventions(Srv_DbTools.gIntervention);
+
+                      setState(() {});
+                    },
+                  ),
+                ),
               ),
             ],
           ),
@@ -445,7 +531,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
       child: Row(
         children: [
           Image.asset(
-            "assets/images/Verif_titre.png",
+            "assets/images/Icon_Cont.png",
             height: IcoWidth,
             width: IcoWidth,
           ),
@@ -493,7 +579,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
       child: Row(
         children: [
           Image.asset(
-            "assets/images/Verif_titre.png",
+            "assets/images/Icon_Cont_2.png",
             height: IcoWidth,
             width: IcoWidth,
           ),
@@ -521,10 +607,150 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
               },
               child: Text(
                 textAlign: TextAlign.right,
-                "${Srv_DbTools.gIntervention.Intervention_Signataire_Client} - ${Srv_DbTools.gIntervention.Intervention_Signataire_Date} >",
+                "${Srv_DbTools.gIntervention.Intervention_Signataire_Client} - ${Srv_DbTools.gIntervention.Intervention_Signataire_Date_Client} >",
                 style: gColors.bodyTitle1_B_Green,
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildTitreNote(BuildContext context) {
+    double IcoWidth = 30;
+    return Container(
+      padding: EdgeInsets.fromLTRB(10, 10, 10, 8),
+      color: gColors.greyLight,
+      child: Row(
+        children: [
+          Image.asset(
+            "assets/images/Icon_Note2.png",
+            height: IcoWidth,
+            width: IcoWidth,
+          ),
+          Container(
+            width: 10,
+          ),
+          Expanded(
+            child: Container(
+              height: 20,
+              padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+              child: Text(
+                "Note",
+                style: gColors.bodyTitle1_B_Gr,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildTitreSat(BuildContext context) {
+    double IcoWidth = 30;
+    return Container(
+      padding: EdgeInsets.fromLTRB(10, 10, 10, 8),
+      color: gColors.white,
+      child: Row(
+        children: [
+          Image.asset(
+            "assets/images/Icon_Sat.png",
+            height: IcoWidth,
+            width: IcoWidth,
+          ),
+          Container(
+            width: 10,
+          ),
+          Expanded(
+            child: Container(
+              height: 20,
+              padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+              child: Text(
+                "Satisfaction client",
+                style: gColors.bodyTitle1_B_Gr,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildSat() {
+    double IcoWidth = 80;
+    return Container(
+      padding: EdgeInsets.fromLTRB(10, 10, 10, 8),
+      color: gColors.greyLight,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          InkWell(
+            onTap: () async {
+              await HapticFeedback.vibrate();
+              SatClient= 1;
+              Srv_DbTools.gIntervention.Intervention_Sat = SatClient;
+              await DbTools.updateInterventions(Srv_DbTools.gIntervention);
+              bool wRes = await Srv_DbTools.setIntervention(Srv_DbTools.gIntervention);
+              Srv_DbTools.gIntervention.Intervention_isUpdate = wRes;
+              if (!wRes) DbTools.setBoolErrorSync(true);
+              await DbTools.updateInterventions(Srv_DbTools.gIntervention);
+              setState(()  {
+              });
+            },
+            child: Image.asset(
+              SatClient == 1 ? "assets/images/Sat_A.png" : "assets/images/Sat_Ans.png",
+              height: IcoWidth,
+              width: IcoWidth,
+            ),
+          ),
+          Container(
+            width: 10,
+          ),
+          InkWell(
+            onTap: () async {
+              await HapticFeedback.vibrate();
+              SatClient= 2;
+              Srv_DbTools.gIntervention.Intervention_Sat = SatClient;
+              await DbTools.updateInterventions(Srv_DbTools.gIntervention);
+              bool wRes = await Srv_DbTools.setIntervention(Srv_DbTools.gIntervention);
+              Srv_DbTools.gIntervention.Intervention_isUpdate = wRes;
+              if (!wRes) DbTools.setBoolErrorSync(true);
+              await DbTools.updateInterventions(Srv_DbTools.gIntervention);
+              setState(() {
+
+              });
+            },
+            child: Image.asset(
+              SatClient == 2 ? "assets/images/Sat_B.png" : "assets/images/Sat_Bns.png",
+              height: IcoWidth,
+              width: IcoWidth,
+            ),
+          ),
+          Container(
+            width: 10,
+          ),
+          InkWell(
+            onTap: () async {
+              await HapticFeedback.vibrate();
+              SatClient= 3;
+              Srv_DbTools.gIntervention.Intervention_Sat = SatClient;
+              await DbTools.updateInterventions(Srv_DbTools.gIntervention);
+              bool wRes = await Srv_DbTools.setIntervention(Srv_DbTools.gIntervention);
+              Srv_DbTools.gIntervention.Intervention_isUpdate = wRes;
+              if (!wRes) DbTools.setBoolErrorSync(true);
+              await DbTools.updateInterventions(Srv_DbTools.gIntervention);
+              setState(() {});
+            },
+            child: Image.asset(
+              SatClient == 3 ? "assets/images/Sat_C.png" : "assets/images/Sat_Cns.png",
+              height: IcoWidth,
+              width: IcoWidth,
+            ),
+          ),
+          Container(
+            width: 10,
           ),
         ],
       ),
@@ -556,42 +782,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
             child: Text('Imprimer', style: gColors.bodyTitle1_B_W),
           ),
 
-/*
 
-          new ElevatedButton(
-            onPressed: () async {
-              await HapticFeedback.vibrate();
-
-              await Client_Interventions_Status.Dialogs_Status(context);
-
-            },
-            style: ElevatedButton.styleFrom(
-                backgroundColor: gColors.primaryGreen,
-                side: const BorderSide(
-                  width: 1.0,
-                  color: gColors.primaryGreen,
-                )),
-            child: Text('Statut', style: gColors.bodyTitle1_B_W),
-          ),
-
-
-          new ElevatedButton(
-            onPressed: () async {
-              await HapticFeedback.vibrate();
-              await Client_Interventions_Add.Dialogs_Add(context,false);
-
-              Navigator.of(context).pop();
-            },
-            style: ElevatedButton.styleFrom(
-                backgroundColor: gColors.primaryGreen,
-                side: const BorderSide(
-                  width: 1.0,
-                  color: gColors.primaryGreen,
-                )),
-            child: Text('Dupliquer', style: gColors.bodyTitle1_B_W),
-          ),
-
-*/
         ],
       ),
     );

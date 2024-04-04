@@ -33,12 +33,12 @@ class Param_Saisie {
         'C : $Param_Saisie_Controle '
         'O : $Param_Saisie_Ordre '
         'Aff : $Param_Saisie_Affichage '
-        ' : $Param_Saisie_Ordre_Affichage '
-        ' : $Param_Saisie_Affichage_Titre '
-        ' : $Param_Saisie_Affichage_L1 '
-        ' : $Param_Saisie_Affichage_L1_Ordre '
-        ' : $Param_Saisie_Affichage_L2 '
-        ' : $Param_Saisie_Affichage_L2_Ordre '
+        'Ordre : $Param_Saisie_Ordre_Affichage '
+        'titre : $Param_Saisie_Affichage_Titre '
+        'L1 : $Param_Saisie_Affichage_L1 '
+        'L1o : $Param_Saisie_Affichage_L1_Ordre '
+        'L2 : $Param_Saisie_Affichage_L2 '
+        'L2o : $Param_Saisie_Affichage_L2_Ordre '
         ' : $Param_Saisie_Icon '
         'Triger : $Param_Saisie_Triger ';
   }

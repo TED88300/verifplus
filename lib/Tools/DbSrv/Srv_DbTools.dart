@@ -1580,16 +1580,13 @@ class Srv_DbTools {
         "Intervention_Parcs_Type      = \"${Intervention.Intervention_Parcs_Type}\", " +
         "Intervention_Status      = \"${Intervention.Intervention_Status}\", " +
         "Livr        = \"${Intervention.Livr}\", " +
-
         "Intervention_Signataire_Client        = \"${Intervention.Intervention_Signataire_Client}\", " +
         "Intervention_Signataire_Tech        = \"${Intervention.Intervention_Signataire_Tech}\", " +
         "Intervention_Signataire_Date        = \"${Intervention.Intervention_Signataire_Date}\", " +
-
-
-
-
+        "Intervention_Signataire_Date_Client	        = \"${Intervention.Intervention_Signataire_Date_Client	}\", " +
         "Intervention_Signature_Client        = \"${Intervention.Intervention_Signature_Client}\", " +
         "Intervention_Signature_Tech        = \"${Intervention.Intervention_Signature_Tech}\", " +
+        "Intervention_Sat        = ${Intervention.Intervention_Sat}, " +
         "Intervention_Remarque      = \"${Intervention.Intervention_Remarque}\" " +
         "WHERE InterventionId      = ${Intervention.InterventionId.toString()}";
 //    gColors.printWrapped("setIntervention " + wSlq);

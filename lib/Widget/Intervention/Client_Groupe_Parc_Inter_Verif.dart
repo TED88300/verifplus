@@ -386,7 +386,7 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                 await HapticFeedback.vibrate();
                 await Client_Groupe_Parc_Inter_Article_Dialog.Dialogs_Saisie(context, onSaisie, "ES");
               } else if (!wParc_Desc.ParcsDesc_Lib!.contains(">")) {
-                print("InkWell Saisie C");
+                print("InkWell Saisie C ${wParc_Desc.toString()}");
                 await Client_Groupe_Parc_Inter_Verif_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, param_Saisie, wParc_Desc);
               }
               setState(() {});
@@ -448,10 +448,26 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
           ));
   }
 
+
+  Future Maj_Result_V() async
+  {
+      Parc_Desc wParc_DescAuto = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, "Result");
+      print(" wParc_DescAuto Result ${wParc_DescAuto.toMap()}");
+      if (wParc_DescAuto.ParcsDesc_Lib == "---" || wParc_DescAuto.ParcsDesc_Lib!.contains("Non") ) {
+        wParc_DescAuto.ParcsDesc_Id = "1002";
+        wParc_DescAuto.ParcsDesc_Lib = "Vérifié";
+        await DbTools.updateParc_Desc_NoRaz(wParc_DescAuto, "");
+        DbTools.gParc_Ent.Parcs_Date_Rev = DateTime.now().toIso8601String();
+        DbTools.updateParc_Ent(DbTools.gParc_Ent);
+      }
+
+  }
+
+
   Widget BtnCard(String? wText, double LargeurCol2, String color, String ico, Param_Saisie param_Saisie) {
     String Param_Saisie_ID = param_Saisie.Param_Saisie_ID;
 
-//    print("♦︎♦︎♦︎♦︎♦︎♦︎ BtnCard param_Saisie ${param_Saisie.DescAuto()}");
+    print("♦︎♦︎♦︎♦︎♦︎♦︎ BtnCard param_Saisie ${param_Saisie.Desc()}");
 
 
     Color wColor = gColors.getColor(color);
@@ -512,6 +528,7 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                             wParc_DescAuto.ParcsDesc_Id = wParam_Saisie_Param.Param_Saisie_Param_Id;
                             wParc_DescAuto.ParcsDesc_Lib = wParam_Saisie_Param.Param_Saisie_Param_Label;
                             await DbTools.updateParc_Desc_NoRaz(wParc_DescAuto, "");
+                            await Maj_Result_V();
                           }
                         });
                         setState(() {});
@@ -538,7 +555,6 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
 
                       print(" GENERATION DES ARTICLES ASSOCIES ");
                       await Client_Groupe_Parc_Tools.Gen_Articles();
-
                       // Proposition Auto si Reformé
                       if (Param_Saisie_ID.compareTo("RES") == 0 && wText.contains("---")) {
                         await Client_Groupe_Parc_Inter_Verif_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, param_Saisie, wParc_Desc);

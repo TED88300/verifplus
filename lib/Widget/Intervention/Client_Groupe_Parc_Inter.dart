@@ -105,6 +105,9 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
   double dxPosition = 0;
   double dyPosition = 0;
 
+  final ScrollController wHScrollController = ScrollController();
+  final ScrollController wVScrollController = ScrollController();
+
   Future Reload() async {
 
     print("♦︎♦︎♦︎♦︎♦︎♦︎ Client_Groupe_Parc_Inter Reload ♦︎♦︎♦︎♦︎♦︎♦︎ ");
@@ -118,7 +121,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     await DbTools.getParam_Saisie_Base("Audit");
     Srv_DbTools.ListParam_Audit_Base.clear();
     Srv_DbTools.ListParam_Audit_Base.addAll(Srv_DbTools.ListParam_Saisie_Base);
-
 
     await DbTools.getParam_Saisie_Base("Verif");
     Srv_DbTools.ListParam_Verif_Base.clear();
@@ -137,7 +139,10 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
           break;
         }
       }
+
     }
+
+
 
     DbTools.glfParcs_Desc = await DbTools.getParcs_DescInter(Srv_DbTools.gIntervention.InterventionId!);
     String DescAff = "";
@@ -178,6 +183,8 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
     for (int jj = 0; jj < DbTools.glfParcs_Ent.length; jj++) {
       Parc_Ent elementEnt = DbTools.glfParcs_Ent[jj];
+
+      print("♦︎♦︎♦︎♦︎♦︎♦ Ordre︎ ${elementEnt.Parcs_order}");
 
       countTot++;
       if (!elementEnt.Parcs_Date_Rev!.isEmpty) countX++;
@@ -1287,7 +1294,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
 //    isKeyBoard = (MediaQuery.of(context).viewInsets.bottom != 0.0);
     Widget wchildren = Container();
-
     if (affAll) {
       if (DbTools.gCurrentIndex3 == 1)
         wchildren = Data();
@@ -1336,9 +1342,24 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
         ]),
         floatingActionButton: (DbTools.gRowisSel)
             ? Container()
-            : (DbTools.gCurrentIndex3 == 0 || DbTools.gCurrentIndex3 > 1 || !affAll)
+            : ( DbTools.gCurrentIndex3 > 1 || !affAll)
                 ? Container()
-                : Import_Export()));
+
+                :
+        DbTools.gCurrentIndex3 == 0 ?
+        Padding(
+            padding: const EdgeInsets.only(bottom: 60.0),
+            child:
+        FloatingActionButton(
+          onPressed: () async {
+            Parc_Ent wParc_Ent = Parc_Ent.Parc_EntInit(Srv_DbTools.gIntervention.InterventionId!, DbTools.gParc_Ent.Parcs_Type!, DbTools.gParc_Ent.Parcs_order!);
+            DbTools.insertParc_Ent(wParc_Ent);
+            await Reload();
+          },
+          child: const Icon(Icons.add, color: Colors.white,),
+          backgroundColor: Colors.red,
+        )) :
+        Import_Export()));
   }
 
   Widget CadreWidget(Widget wWidget, Color Color1, Color Color2, Color ColorTxt) {
@@ -1350,7 +1371,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       child: Container(color: Color2, padding: EdgeInsets.fromLTRB(p, p, p, p), child: wWidget),
     );
   }
-
   bool getParc_Ent(int aId) {
     bool wRet = false;
     if (DbTools.gRowSels.length > 0) {
@@ -1367,7 +1387,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
         }
       }
     }
-
     return wRet;
   }
 
@@ -1438,13 +1457,10 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
             Container(
               width: 10,
             ),
-
             //
             // Fermeture POPUPMOVE
             //
-
             Spacer(),
-
             //
             // MOVE UP
             //
@@ -1477,7 +1493,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
             Container(
               width: 10,
             ),
-
             //
             // MOVE FIRST
             //
@@ -1503,7 +1518,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                 },
               ),
             ),
-
             Container(
               width: 10,
             ),
@@ -1528,7 +1542,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                     if (timer != null) {
                       timer!.cancel();
                     }
-
                     if (iPos > 1) {
                       iPos--;
                       ctrlPos.text = "${iPos}";
@@ -1537,12 +1550,10 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                   },
                   onLongPressStart: (detail) {
                     print("setSt 10");
-
                     setState(() {
                       if (timer != null) {
                         timer!.cancel();
                       }
-
                       timer = Timer.periodic(const Duration(milliseconds: 200), (t) {
                         if (iPos > 1) {
                           iPos--;
@@ -1608,7 +1619,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                 ],
               ),
             ),
-
             Container(
               width: 10,
             ),
@@ -1633,7 +1643,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                     if (timer != null) {
                       timer!.cancel();
                     }
-
                     if (iPos < DbTools.lParcs_Ent.length) {
                       iPos++;
                       ctrlPos.text = "${iPos}";
@@ -2215,9 +2224,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
   Widget ExtGridWidget() {
 //    print(">>>>>>>>>>>>>>>>>>>>>>>>>>> ExtGridWidget ${isKeyBoard}");
 
-
-
-
     List<DaviColumn<Parc_Ent>> wColumns = [
       new DaviColumn(
           name: 'N°',
@@ -2273,7 +2279,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
           },
           width: 60),
 
-      new DaviColumn(name: '${DbTools.ParamTypeOg}', stringValue: (row) => "${row.Parcs_Date_Desc}", width: gColors.MediaQuerysizewidth - 208, cellStyleBuilder: (row) => CellStyle(textStyle: row.data.Livr!.isNotEmpty ? gColors.bodySaisie_B_O : gColors.bodySaisie_B_G)),
+      new DaviColumn(name: '${DbTools.ParamTypeOg}', stringValue: (row) => "${row.Parcs_Date_Desc}", width: gColors.MediaQuerysizewidth - 218, cellStyleBuilder: (row) => CellStyle(textStyle: row.data.Livr!.isNotEmpty ? gColors.bodySaisie_B_O : gColors.bodySaisie_B_G)),
       new DaviColumn(name: 'Visite', stringValue: (row) => "${row.Parcs_Date_Rev!.isEmpty ? '' : DateFormat('dd/MM/yy').format(DateTime.parse(row.Parcs_Date_Rev!))}", width: 75, cellStyleBuilder: (row) => CellStyle(textStyle: row.data.Livr!.isNotEmpty ? gColors.bodySaisie_B_O : gColors.bodySaisie_B_G)),
       new DaviColumn(
           name: 'Action',
@@ -2293,9 +2299,13 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
             );
           },
           width: 65),
+
+
+
+
     ];
 
-    for (int i = 0; i < Parcs_ColsTitle!.length; i++) {
+  /*  for (int i = 0; i < Parcs_ColsTitle!.length; i++) {
       wColumns.add(
         new DaviColumn(
             name: Parcs_ColsTitle![i],
@@ -2309,15 +2319,11 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
             width: 80,
             cellStyleBuilder: (row) => LastSelID == row.data.ParcsId ? CellStyle(textStyle: gColors.bodySaisie_B_G) : CellStyle(textStyle: gColors.bodySaisie_N_G)),
       );
-//          => "A ${i < row.Parcs_Cols!.length ? '' : '${row.Parcs_Cols![i]}'}" ));
-    }
+    }*/
 
-//    print("ExtGridWidget ${DbTools.lParcs_Ent.length}");
     DaviModel<Parc_Ent>? _model;
     _model = DaviModel<Parc_Ent>(rows: DbTools.lParcs_Ent, columns: wColumns);
 
-    final ScrollController wHScrollController = ScrollController();
-    final ScrollController wVScrollController = ScrollController();
 
     Davi wDavi = Davi<Parc_Ent>(
       _model,
@@ -2329,87 +2335,92 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       unpinnedHorizontalScrollController: wHScrollController,
       verticalScrollController: wVScrollController,
     );
+    return Container(
+        padding: EdgeInsets.only(bottom: 60),
+        child :
+        GestureDetector(
+            onPanStart: (d) {
+              dxPosition = 0;
+              dyPosition = 0;
+            },
+            onPanUpdate: (details) {
+              hPosition = 0;
+              vPosition = 0;
+              if (details.delta.dx > 5) {
+                final minposition = wHScrollController.position.minScrollExtent;
+                hPosition = wHScrollController.offset - 5;
+                if (hPosition < minposition) hPosition = minposition;
+                wHScrollController.jumpTo(hPosition);
+                dxPosition = details.delta.dx;
+              } else if (details.delta.dx < -5) {
+                //          print("Dragging in -X ${details.delta.dx} ${wHScrollController.offset}");
+                final Maxposition = wHScrollController.position.maxScrollExtent;
+                hPosition = wHScrollController.offset + 5;
+                if (hPosition > Maxposition) hPosition = Maxposition;
+                wHScrollController.jumpTo(hPosition);
+                dxPosition = details.delta.dx;
+              } else if (details.delta.dy < 0) {
+                final maxposition = wVScrollController.position.maxScrollExtent;
+                vPosition = wVScrollController.offset + 20; //details.delta.dy;
+                if (vPosition > maxposition) vPosition = maxposition;
+                wVScrollController.jumpTo(vPosition);
 
-    return GestureDetector(
-        onPanStart: (d) {
-          dxPosition = 0;
-          dyPosition = 0;
-        },
-        onPanUpdate: (details) {
-          hPosition = 0;
-          vPosition = 0;
-          if (details.delta.dx > 5) {
-            final minposition = wHScrollController.position.minScrollExtent;
-            hPosition = wHScrollController.offset - 5;
-            if (hPosition < minposition) hPosition = minposition;
-            wHScrollController.jumpTo(hPosition);
-            dxPosition = details.delta.dx;
-          } else if (details.delta.dx < -5) {
-            //          print("Dragging in -X ${details.delta.dx} ${wHScrollController.offset}");
-            final Maxposition = wHScrollController.position.maxScrollExtent;
-            hPosition = wHScrollController.offset + 5;
-            if (hPosition > Maxposition) hPosition = Maxposition;
-            wHScrollController.jumpTo(hPosition);
-            dxPosition = details.delta.dx;
-          } else if (details.delta.dy < 0) {
-            final maxposition = wVScrollController.position.maxScrollExtent;
-            vPosition = wVScrollController.offset + 20; //details.delta.dy;
-            if (vPosition > maxposition) vPosition = maxposition;
-            wVScrollController.jumpTo(vPosition);
-
-            dyPosition = details.delta.dy;
+                dyPosition = details.delta.dy;
 //            print(">>>>> Dragging in -Y ${dyPosition} ${details.delta.dy} ${maxposition} ${vPosition}");
-          } else if (details.delta.dy > 0) {
-            final minposition = wVScrollController.position.minScrollExtent;
-            vPosition = wVScrollController.offset - 20; //details.delta.dy;
-            if (vPosition < minposition) vPosition = minposition;
-            wVScrollController.jumpTo(vPosition);
-            dyPosition = details.delta.dy;
-            // print(     ">>>>> Dragging in +Y ${details.delta.dy} ${minposition} ${vPosition}");
-          }
-        },
-        onPanEnd: (d) {
+              } else if (details.delta.dy > 0) {
+                final minposition = wVScrollController.position.minScrollExtent;
+                vPosition = wVScrollController.offset - 20; //details.delta.dy;
+                if (vPosition < minposition) vPosition = minposition;
+                wVScrollController.jumpTo(vPosition);
+                dyPosition = details.delta.dy;
+                // print(     ">>>>> Dragging in +Y ${details.delta.dy} ${minposition} ${vPosition}");
+              }
+            },
+            onPanEnd: (d) {
 //          print(">>>>> dyPosition ${dyPosition} ${vPosition} -- ${d.velocity.pixelsPerSecond.dy} ---- ${dxPosition} ${hPosition}");
-          if (dyPosition < 0) {
-            final maxposition = wVScrollController.position.maxScrollExtent;
-            final delta = d.velocity.pixelsPerSecond.dy / -100;
-            vPosition = wVScrollController.offset + 20 * delta; //details.delta.dy;
-            if (vPosition > maxposition) vPosition = maxposition;
-            if (vPosition <= maxposition) {
+              if (dyPosition < 0) {
+                final maxposition = wVScrollController.position.maxScrollExtent;
+                final delta = d.velocity.pixelsPerSecond.dy / -100;
+                vPosition = wVScrollController.offset + 20 * delta; //details.delta.dy;
+                if (vPosition > maxposition) vPosition = maxposition;
+                if (vPosition <= maxposition) {
 //              print(">>>>> d.velocity.pixelsPerSecond.dy  ${wVScrollController.offset} ----- ${vPosition} ----- ${delta}");
-              wVScrollController.animateTo(vPosition, duration: Duration(milliseconds: 1000), curve: Curves.easeOutCubic);
-            }
-          } else if (dyPosition > 0) {
-            final delta = d.velocity.pixelsPerSecond.dy / -100;
-            vPosition = wVScrollController.offset + 20 * delta; //details.delta.dy;
-            final minposition = wVScrollController.position.minScrollExtent;
-            if (vPosition < minposition) vPosition = minposition;
-            if (vPosition >= minposition) {
+                  wVScrollController.animateTo(vPosition, duration: Duration(milliseconds: 1000), curve: Curves.easeOutCubic);
+                }
+              } else if (dyPosition > 0) {
+                final delta = d.velocity.pixelsPerSecond.dy / -100;
+                vPosition = wVScrollController.offset + 20 * delta; //details.delta.dy;
+                final minposition = wVScrollController.position.minScrollExtent;
+                if (vPosition < minposition) vPosition = minposition;
+                if (vPosition >= minposition) {
 //              print(">>>>> d.velocity.pixelsPerSecond.dy  ${wVScrollController.offset} ----- ${vPosition} ----- ${delta}");
-              wVScrollController.animateTo(vPosition, duration: Duration(milliseconds: 1000), curve: Curves.easeOutCubic);
-            }
-          }
+                  wVScrollController.animateTo(vPosition, duration: Duration(milliseconds: 1000), curve: Curves.easeOutCubic);
+                }
+              }
 //    ctrl!.animateWith(FrictionSimulation(0.05, ctrl!.value, d.velocity.pixelsPerSecond.dx / 100));
-        },
-        child: DaviTheme(
-            child: wDavi,
-            data: DaviThemeData(
-              columnDividerColor: Colors.transparent,
-              header: HeaderThemeData(
-                color: gColors.greyLight,
-                bottomBorderHeight: 2,
-                bottomBorderColor: gColors.greyDark,
-                columnDividerColor: Colors.transparent,
-              ),
-              headerCell: HeaderCellThemeData(height: 40, alignment: Alignment.center, textStyle: gColors.bodySaisie_B_B, resizeAreaWidth: 40, resizeAreaHoverColor: Colors.black, sortIconColors: SortIconColors.all(Colors.black), expandableName: true),
-              row: RowThemeData(
-                hoverBackground: (rowIndex) => Colors.blue[50],
-                dividerColor: gColors.greyDark,
-              ),
-              cell: CellThemeData(
-                contentHeight: 44,
-              ),
-            )));
+            },
+            child: DaviTheme(
+                child: wDavi,
+                data: DaviThemeData(
+                  columnDividerColor: Colors.transparent,
+                  header: HeaderThemeData(
+                    color: gColors.greyLight,
+                    bottomBorderHeight: 2,
+                    bottomBorderColor: gColors.greyDark,
+                    columnDividerColor: Colors.transparent,
+                  ),
+                  headerCell: HeaderCellThemeData(height: 40, alignment: Alignment.center, textStyle: gColors.bodySaisie_B_B, resizeAreaWidth: 40, resizeAreaHoverColor: Colors.black, sortIconColors: SortIconColors.all(Colors.black), expandableName: true),
+                  row: RowThemeData(
+                    hoverBackground: (rowIndex) => Colors.blue[50],
+                    dividerColor: gColors.greyDark,
+                  ),
+                  cell: CellThemeData(
+                    contentHeight: 44,
+                  ),
+                ))),
+
+      );
+
   }
 
   Color? _rowColor(DaviRow<Parc_Ent> row) {

@@ -47,6 +47,7 @@ class PdfTools {
   }
 
   static pw.Widget C1_L1(pw.Context context, String wLbl1, String wTxt1, pw.TextAlign wTextAlign, PdfColor wBackGroundPdfColor, PdfColor wTxtPdfColor, {int wMaxLines = 0}) {
+
     return pw.Row(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
@@ -63,9 +64,9 @@ class PdfTools {
               ),
               color: wBackGroundPdfColor,
             ),
-            padding: const pw.EdgeInsets.only(left: 10, top: 0, bottom: 0, right: 20),
+            padding:  pw.EdgeInsets.only(left: 10, top: 1, bottom: 0, right: 20),
             alignment: pw.Alignment.centerLeft,
-            height: (25.0 + (wMaxLines) * 5),
+            height: (25.0 + (wMaxLines) * 5.2),
             child: pw.Row(children: [
               pw.Text(
                 wLbl1,
@@ -383,31 +384,12 @@ class PdfTools {
                 ]),
               ]),
 
-
               pw.Container(
-                width : 250,
-                child:
-                pw.Row(
-                    mainAxisAlignment: pw.MainAxisAlignment.center,
-                    crossAxisAlignment: pw.CrossAxisAlignment.center,
-                    children: [
-                    pw.Stack(children: [
-//
-                        pw.Container(
-                          width : 160,
-                          padding: const pw.EdgeInsets.only(left: 10, top: 1, bottom: 1),
-                          child: pw.Image(pw.MemoryImage(Srv_DbTools.gIntervention.Intervention_Signature_Tech!)),
-                        ),
-                        pw.Container(
-                          width : 160,
-                          padding: const pw.EdgeInsets.only(left: 10),
-                          child: pw.Image(pw.MemoryImage(imageData_Cachet!)),
-                        ),
-                      ]),
+                width : 160,
+                padding: const pw.EdgeInsets.only(left: 10, top: 1, bottom: 1),
+                child: pw.Image(pw.MemoryImage(Srv_DbTools.gIntervention.Intervention_Signature_Tech!)),
+              ),
 
-
-                    ])
-                  )
             ]),
           ),
         ),

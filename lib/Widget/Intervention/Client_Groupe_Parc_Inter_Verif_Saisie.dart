@@ -59,7 +59,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState extends State<Client_Grou
   String initParcsDesc_Id = "";
 
   Future Reload() async {
-    //print("Parc_Desc ${widget.parc_Desc.toString()}");
+    print("Parc_Desc ${widget.parc_Desc.toString()}");
     Srv_DbTools.getParam_Saisie_ParamMem(widget.param_Saisie.Param_Saisie_ID);
     print("${widget.param_Saisie.Param_Saisie_ID} ListParam_Saisie_Param lenght  ${Srv_DbTools.ListParam_Saisie_Param.length}");
     setState(() {});
@@ -213,14 +213,12 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState extends State<Client_Grou
               }
               print("VERIF VALIDER ${widget.parc_Desc.ParcsDescId} ${widget.parc_Desc.ParcsDesc_Type}  ${widget.parc_Desc.ParcsDesc_Id} ${widget.parc_Desc.ParcsDesc_Lib}");
               await DbTools.updateParc_Desc_NoRaz(widget.parc_Desc, initParcsDesc_Lib);
-
               if (widget.parc_Desc.ParcsDesc_Type!.compareTo("Result") == 0) {
                 if (widget.parc_Desc.ParcsDesc_Lib!.contains("Non"))
                   DbTools.gParc_Ent.Parcs_Date_Rev = "";
                 else
                   DbTools.gParc_Ent.Parcs_Date_Rev = DateTime.now().toIso8601String();
 
-                print(" updateParc_Ent F");
                 DbTools.updateParc_Ent(DbTools.gParc_Ent);
               }
 

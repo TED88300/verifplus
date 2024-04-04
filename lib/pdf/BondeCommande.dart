@@ -28,6 +28,7 @@ class BdC {
   double get _grandTotal => _total * (1 + tax);
 
   Uint8List? imageData_1;
+  Uint8List? imageData_Logo_Pied;
   Uint8List? imageData_Cachet;
 
   DateTime Parcs_Date_Rev_Min = DateTime.parse("2900-01-01");
@@ -36,13 +37,33 @@ class BdC {
   int wParcs_Intervention_Timer = 0;
 
   String wIntervenants = "";
+  String wType = "";
+
+  Uint8List pic = Uint8List.fromList([0]);
+  late pw.Image wImage;
 
   Future<Uint8List> buildPdf(PdfPageFormat pageFormat) async {
     // Create a PDF document.
+
+    String wUserImg = "Site_${Srv_DbTools.gSite.SiteId}.jpg";
+    pic = await gColors.getImage(wUserImg);
+    print("pic $wUserImg"); // ${pic}");
+
+    if (pic.length > 0) {
+      wImage = pw.Image(
+        pw.MemoryImage(
+          pic,
+        ),
+      );
+    }
+
     final doc = pw.Document();
 
     ByteData _logo_1 = await rootBundle.load('assets/Logo_1.jpg');
     imageData_1 = (_logo_1)!.buffer.asUint8List();
+
+    ByteData _logo_Logo_Pied = await rootBundle.load('assets/Logo_Pied.png');
+    imageData_Logo_Pied = (_logo_Logo_Pied)!.buffer.asUint8List();
 
     _logo_1 = await rootBundle.load('assets/Cachet.png');
     imageData_Cachet = (_logo_1)!.buffer.asUint8List();
@@ -53,7 +74,6 @@ class BdC {
 
       wIntervenants = "$wIntervenants ${wIntervenants.isNotEmpty ? ", " : ""}${element.User_Nom} ${element.User_Prenom} (${element.H}h)";
     }
-
 
     await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gSite.SiteId, "SITE");
 
@@ -70,7 +90,13 @@ class BdC {
 
       for (int j = 0; j < DbTools.glfParcs_Desc.length; j++) {
         Parc_Desc wParc_Desc = DbTools.glfParcs_Desc[j];
-        if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "DESC") wDESC = gColors.AbrevTxt(wParc_Desc.ParcsDesc_Lib!);
+        if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "DESC") {
+          wDESC = gColors.AbrevTxt(wParc_Desc.ParcsDesc_Lib!);
+          if (wDESC != "---" && !wType.contains(wDESC)) {
+            if (wType.length > 0) wType = wType + ",";
+            wType = wType + " ${wDESC}";
+          }
+        }
         if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "FAB") wFAB = gColors.AbrevTxt(wParc_Desc.ParcsDesc_Lib!);
         if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "PRS") wPRS = gColors.AbrevTxt(wParc_Desc.ParcsDesc_Lib!);
         if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "CLF") wCLF = gColors.AbrevTxt(wParc_Desc.ParcsDesc_Lib!);
@@ -93,14 +119,9 @@ class BdC {
       } catch (e) {}
 
       print("${wParcs_Ent.Parcs_Intervention_Timer}");
-      if(wParcs_Ent.Parcs_Intervention_Timer != null)
-          wParcs_Intervention_Timer += wParcs_Ent.Parcs_Intervention_Timer!;
+      if (wParcs_Ent.Parcs_Intervention_Timer != null) wParcs_Intervention_Timer += wParcs_Ent.Parcs_Intervention_Timer!;
 
-
-
-
-
-      Organe wOrgane = Organe("${wParcs_Ent.ParcsId}", "${wDESC}", "$wFAB", "$wPRS", "$wCLF", "$wPDT", "$wPOIDS", "${wParcs_Ent.Parcs_FAB_Label}", "${wParcs_Ent.Parcs_NIV_Label}", "${wParcs_Ent.Parcs_ZNE_Label} / ${wParcs_Ent.Parcs_EMP_Label}", "${wParcs_Date_Rev}", "${wParcs_Ent.Action}");
+      Organe wOrgane = Organe("${wParcs_Ent.Parcs_order}", "${wDESC}", "$wFAB", "$wPRS", "$wCLF", "$wPDT", "$wPOIDS", "${wParcs_Ent.Parcs_FAB_Label}", "${wParcs_Ent.Parcs_NIV_Label}", "${wParcs_Ent.Parcs_ZNE_Label} / ${wParcs_Ent.Parcs_EMP_Label}", "${wParcs_Date_Rev}", "${wParcs_Ent.Action}");
       organes.add(wOrgane);
     }
 
@@ -167,6 +188,11 @@ class BdC {
   }
 
   pw.Widget _buildHeader(pw.Context context) {
+    String wParcs_Date_Rev_Max = "";
+    try {
+      wParcs_Date_Rev_Max = DateFormat('dd/MM/yy').format(Parcs_Date_Rev_Max);
+    } catch (e) {}
+
     return pw.Column(
       children: [
         pw.Row(crossAxisAlignment: pw.CrossAxisAlignment.end, children: [
@@ -205,11 +231,11 @@ class BdC {
                     crossAxisCount: 1,
                     children: [
                       pw.Text(
-                        "COMPTE-RENDU N° 123456 DU 06/03/2024",
+                        "COMPTE-RENDU N° ${Srv_DbTools.gIntervention.InterventionId} DU ${wParcs_Date_Rev_Max}",
                         textAlign: pw.TextAlign.center,
                       ),
                       pw.Text(
-                        "> Extincteur, Douche portative, Appareil d'extinction",
+                        "> $wType",
                         textAlign: pw.TextAlign.center,
                       ),
                     ],
@@ -332,7 +358,7 @@ class BdC {
                     ),
                   ),
                   pw.Text(
-                    "Ville de Martigues / Piscine Avantica",
+                    "${Srv_DbTools.gSite.Site_Nom}",
                     textAlign: pw.TextAlign.left,
                     style: pw.TextStyle(
                       color: PdfColors.black,
@@ -342,7 +368,7 @@ class BdC {
                 ]),
                 pw.Row(children: [
                   pw.Text(
-                    "8 Rue de la Mer - ZI de La Valampe - 13500 Martigues",
+                    "${Srv_DbTools.gSite.Site_Adr1} ${Srv_DbTools.gSite.Site_Adr2} ${Srv_DbTools.gSite.Site_CP} ${Srv_DbTools.gSite.Site_Ville}",
                     textAlign: pw.TextAlign.left,
                     style: pw.TextStyle(
                       color: PdfColors.black,
@@ -382,7 +408,7 @@ class BdC {
                     ),
                     pw.Expanded(
                       child: pw.Text(
-                        "Sport",
+                        "${Srv_DbTools.gGroupe.Groupe_Nom}",
                         textAlign: pw.TextAlign.left,
                         maxLines: 1,
                         style: pw.TextStyle(
@@ -419,7 +445,7 @@ class BdC {
                     ),
                     pw.Expanded(
                       child: pw.Text(
-                        "Bâtiment A",
+                        "${Srv_DbTools.gZone.Zone_Nom}",
                         textAlign: pw.TextAlign.left,
                         maxLines: 1,
                         style: pw.TextStyle(
@@ -491,7 +517,7 @@ class BdC {
                     ),
                   ),
                   pw.Text(
-                    "020-Kévin GABET",
+                    "${wIntervenants}",
                     textAlign: pw.TextAlign.left,
                     style: pw.TextStyle(
                       color: PdfColors.black,
@@ -608,51 +634,23 @@ class BdC {
   }
 
   pw.Widget _buildFooter(pw.Context context) {
-    return pw.Row(mainAxisAlignment: pw.MainAxisAlignment.center, crossAxisAlignment: pw.CrossAxisAlignment.center, children: [
-      pw.Column(
-        mainAxisAlignment: pw.MainAxisAlignment.center,
-        crossAxisAlignment: pw.CrossAxisAlignment.center,
-        children: [
-          pw.Text(
-            "Tél : 04 42 318 123 - Mail : info@mondialfeu.fr - www.mondialfeu.fr",
-            textAlign: pw.TextAlign.center,
-            style: const pw.TextStyle(
-              fontSize: 12,
-              color: PdfColors.grey,
-            ),
-          ),
-          pw.Text(
-            "S.A.S.U au Capital de 200 000 euros - R.C.S. Aix-en-Provence - Siret : 509 401 568 00019 - NAF : 4669B",
-            textAlign: pw.TextAlign.center,
-            style: const pw.TextStyle(
-              fontSize: 10,
-              color: PdfColors.grey,
-            ),
-          ),
-          pw.Text(
-            "Certifié APSAD sous le n° 615/04-285 (Référentiel I4 - NF 285)",
-            textAlign: pw.TextAlign.center,
-            style: const pw.TextStyle(
-              fontSize: 10,
-              color: PdfColors.grey,
-            ),
-          ),
-          pw.SizedBox(height: 10),
-        ],
-      )
+    return pw.Row(crossAxisAlignment: pw.CrossAxisAlignment.end, children: [
+      pw.Container(
+        width: 590,
+        child: pw.Image(pw.MemoryImage(imageData_Logo_Pied!)),
+      ),
     ]);
   }
 
   String _printDuration(Duration duration) {
-
     String negativeSign = duration.isNegative ? '-' : '';
     String twoDigits(int n) => n.toString().padLeft(2, "0");
     String twoDigitMinutes = twoDigits(duration.inMinutes.remainder(60).abs());
     String twoDigitSeconds = twoDigits(duration.inSeconds.remainder(60).abs());
     return "$negativeSign${twoDigits(duration.inHours)}:$twoDigitMinutes:$twoDigitSeconds";
   }
-  pw.Widget _contentPage1(pw.Context context) {
 
+  pw.Widget _contentPage1(pw.Context context) {
     Duration duration = Duration(seconds: wParcs_Intervention_Timer);
     String sduration = _printDuration(duration);
 
@@ -669,8 +667,24 @@ class BdC {
     return pw.Column(children: [
 // SITE
       PdfTools.Titre(context, "", "SITE D'INTERVENTION", pw.TextAlign.center, PdfColor(54 / 255, 96 / 255, 146 / 255), PdfColors.white),
-      PdfTools.C1_L2(context, "Site : ", "${Srv_DbTools.gSite.Site_Nom}", "${Srv_DbTools.gSite.Site_Adr1} ${Srv_DbTools.gSite.Site_Adr2} ${Srv_DbTools.gSite.Site_CP} ${Srv_DbTools.gSite.Site_Ville}", pw.TextAlign.left, PdfColors.white, PdfColors.black),
-      PdfTools.C2_L1(context, "Client : ", "${Srv_DbTools.gClient.Client_Nom}", 7, "Compte : ", "${Srv_DbTools.gClient.Client_CodeGC}", 3, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      pw.Row(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
+        Container(
+          width : 500,
+          child: pw.Column(children: [
+            PdfTools.C1_L2(context, "Site : ", "${Srv_DbTools.gSite.Site_Nom}", "${Srv_DbTools.gSite.Site_Adr1} ${Srv_DbTools.gSite.Site_Adr2} ${Srv_DbTools.gSite.Site_CP} ${Srv_DbTools.gSite.Site_Ville}", pw.TextAlign.left, PdfColors.white, PdfColors.black),
+            PdfTools.C2_L1(context, "Client : ", "${Srv_DbTools.gClient.Client_Nom}", 7, "Compte : ", "${Srv_DbTools.gClient.Client_CodeGC}", 3, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+          ]),
+        ),
+
+        Container(
+          padding: const pw.EdgeInsets.only(left: 1, top: 1, bottom: 0, right: 0),
+         height :61,
+          width :120,
+          child: wImage,)
+      ]),
+
+
+
       PdfTools.C2_L1(context, "Groupe : ", "${Srv_DbTools.gGroupe.Groupe_Nom}", 5, "Zone : ", "${Srv_DbTools.gZone.Zone_Nom}", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
       PdfTools.C1_L1(context, "Règlementation technique applicable au site : ", "Code du travail, APSAD R4", pw.TextAlign.left, PdfColors.white, PdfColors.black),
       PdfTools.C2_L1(context, "Contact Site : ", "${Srv_DbTools.gContact.Contact_Civilite} ${Srv_DbTools.gContact.Contact_Prenom} ${Srv_DbTools.gContact.Contact_Nom}", 5, "Port (Contact Site) : ", "${Srv_DbTools.gContact.Contact_Tel2}", 5, pw.TextAlign.left, PdfColors.grey200, PdfColors.black),
@@ -678,7 +692,7 @@ class BdC {
 
       pw.SizedBox(height: 10),
 
-    PdfTools.Titre(context, "", "INTERVENTION", pw.TextAlign.center, PdfColor(146 / 255, 208 / 255, 80 / 255), PdfColors.white),
+      PdfTools.Titre(context, "", "INTERVENTION", pw.TextAlign.center, PdfColor(146 / 255, 208 / 255, 80 / 255), PdfColors.white),
       PdfTools.C1_L1(context, "Type d'intervention : ", "${Srv_DbTools.gIntervention.Intervention_Type}", pw.TextAlign.left, PdfColors.white, PdfColors.black),
       PdfTools.C2_L1(context, "Début de l'intervention : ", "${wParcs_Date_Rev_Min}", 5, "Fin de l'intervention : ", "${wParcs_Date_Rev_Max}", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
       PdfTools.C2_L1(context, "Nombre d'organes visités : ", "${DbTools.glfParcs_Ent.length}", 5, "Temps d'intervention : ", "${sduration}", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
@@ -686,13 +700,11 @@ class BdC {
       PdfTools.C1_L1(context, "Responsable d'intervention : ", "016-Anthony FUNDONI - Port : 06 25 47 56 12 - Mail : a.fundoni@mondialfeu.fr", pw.TextAlign.left, PdfColors.white, PdfColors.black),
       PdfTools.C1_L1(context, "Technicien : ", "${wIntervenants}", pw.TextAlign.left, PdfColors.white, PdfColors.black),
       PdfTools.C1_L1(context, "Recommandations et Observations Post-Intervention :", "", pw.TextAlign.left, PdfColors.grey200, PdfColors.black),
-      PdfTools.C1_L1(
-          context, "", "Créer un bon d'intervention efficace est essentiel pour s'assurer que les techniciens sur le terrain disposent de toutes les informations nécessaires pour mener à bien leur mission. Créer un bon d'intervention efficace est essentiel pour s'assurer que les techniciens sur le terrain disposent de toutes les informations nécessaires pour mener à bien leur mission. Créer un bon d'intervention efficace est essentiel pour s'assurer que les techniciens sur le terrain disposent de toutes les informations", pw.TextAlign.left, PdfColors.white, PdfColors.black,
-          wMaxLines: 10),
+      PdfTools.C1_L1(context, "", "${Srv_DbTools.gIntervention.Intervention_Remarque}", pw.TextAlign.left, PdfColors.white, PdfColors.black, wMaxLines: 13),
       PdfTools.C2_L1(context, "Devis lié à l'intervention : ", "Oui, voir Devis", 5, "Reliquat lié à l'intervention : ", "Oui, voir Bon de Livraison", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
       PdfTools.C1_L1(context, "Plus de détail sur votre intervention : ", "https://verifplus.com", pw.TextAlign.left, PdfColors.white, PdfColors.black),
       PdfTools.C2_L1(context, "Prestations et visite effectuées par (Technicien)", "", 5, "Prestations et visite constatées par (Client)", "", 5, pw.TextAlign.left, PdfColors.grey200, PdfColors.black),
-      PdfTools.C2_L3(context, "Nom : ", "${Srv_DbTools.gIntervention.Intervention_Signataire_Tech}", "Date : ", "${Srv_DbTools.gIntervention.Intervention_Signataire_Date}", "Signature :", "", 5, "Nom :", "${Srv_DbTools.gIntervention.Intervention_Signataire_Client}", "Date : ", "${Srv_DbTools.gIntervention.Intervention_Signataire_Date}", "Signature : ", "(Absent sur site)", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black, imageData_Cachet: imageData_Cachet),
+      PdfTools.C2_L3(context, "Nom : ", "${Srv_DbTools.gIntervention.Intervention_Signataire_Tech}", "Date : ", "${Srv_DbTools.gIntervention.Intervention_Signataire_Date}", "Signature :", "", 5, "Nom :", "${Srv_DbTools.gIntervention.Intervention_Signataire_Client}", "Date : ", "${Srv_DbTools.gIntervention.Intervention_Signataire_Date_Client}", "Signature : ", "(Absent sur site)", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black, imageData_Cachet: imageData_Cachet),
     ]);
   }
 

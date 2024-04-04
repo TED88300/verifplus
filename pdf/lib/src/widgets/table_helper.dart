@@ -203,7 +203,7 @@ mixin TableHelper {
                       cellFormat == null
                           ? cell.toString()
                           : cellFormat(tableRow.length, cell),
-                      style: tableRow.length !=11 ? cellStyle : cellStyle!.copyWith(color : PdfColors.green, fontWeight : FontWeight.bold),
+                      style: tableRow.length !=11 ? cellStyle : cellStyle!.copyWith(color : PdfColors.green999, fontWeight : FontWeight.bold),
                       textAlign: _textAlign(align.resolve(textDirection)),
                       textDirection: tableDirection,
                     ),
