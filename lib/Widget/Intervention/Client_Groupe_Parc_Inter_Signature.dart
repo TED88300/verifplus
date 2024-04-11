@@ -55,8 +55,8 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
   void initState() {
     ctrlTech.text = Srv_DbTools.gIntervention.Intervention_Signataire_Tech;
     ctrlClient.text = Srv_DbTools.gIntervention.Intervention_Signataire_Client;
-
     ctrlNote.text = Srv_DbTools.gIntervention.Intervention_Remarque;
+    SatClient = Srv_DbTools.gIntervention.Intervention_Sat;
 
     initLib();
     super.initState();

@@ -78,14 +78,11 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
   List<String> ListParam_ParamFamID = [];
 
   List<String> ListParam_ParamDepot = [];
-  List<String> ListParam_ParamDepotID = [];
   String selectedValueDepot = "";
-  String selectedValueDepotID = "";
 
   List<String> ListParam_ParamRglt = [];
-  List<String> ListParam_ParamRgltID = [];
   String selectedValueRglt = "";
-  String selectedValueRgltID = "";
+
 
   List<String> ListParam_ParamUser = [];
   List<String> ListParam_ParamUserFam = [];
@@ -112,37 +109,36 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
 
     print("wClient_Famille ${wClient_Famille}");
     if (wClient_Famille.isNotEmpty) {
-      selectedValueFamID = wClient_Famille;
-      selectedValueFam = ListParam_ParamFam[ListParam_ParamFamID.indexOf(selectedValueFamID!)];
+      selectedValueFam = wClient_Famille;
     }
 
-    await Srv_DbTools.getParam_ParamFam("Type_Depot");
+    await DbTools.getAdresseType( "AGENCE");
     ListParam_ParamDepot.clear();
-    ListParam_ParamDepot.addAll(Srv_DbTools.ListParam_ParamFam);
-    ListParam_ParamDepotID.clear();
-    ListParam_ParamDepotID.addAll(Srv_DbTools.ListParam_ParamFamID);
+    Srv_DbTools.ListAdressesearchresult.forEach((wAdresse) {
+      ListParam_ParamDepot.add(wAdresse.Adresse_Nom);
+    });
 
     selectedValueDepot = ListParam_ParamDepot[0];
-    selectedValueDepotID = ListParam_ParamDepotID[0];
     for (int i = 0; i < ListParam_ParamDepot.length; i++) {
       String element = ListParam_ParamDepot[i];
       if (element.compareTo("${wClient_Depot}") == 0) {
         selectedValueDepot = element;
-        selectedValueDepotID = ListParam_ParamDepotID[i];
       }
     }
 
     await Srv_DbTools.getParam_ParamFam("RgltClient");
     ListParam_ParamRglt.clear();
     ListParam_ParamRglt.addAll(Srv_DbTools.ListParam_ParamFam);
-    ListParam_ParamRgltID.clear();
-    ListParam_ParamRgltID.addAll(Srv_DbTools.ListParam_ParamFamID);
+
+
+    print("wClient_Rglt ${wClient_Rglt}");
 
     selectedValueRglt = ListParam_ParamRglt[0];
-    selectedValueRgltID = ListParam_ParamRgltID[0];
-    if (wClient_Rglt.isNotEmpty) {
-      selectedValueRgltID = wClient_Rglt;
-      selectedValueRglt = ListParam_ParamRglt[ListParam_ParamRgltID.indexOf(selectedValueRgltID!)];
+    for (int i = 0; i < ListParam_ParamRglt.length; i++) {
+      String element = ListParam_ParamRglt[i];
+      if (element.compareTo("${wClient_Rglt}") == 0) {
+        selectedValueRglt = element;
+      }
     }
 
     ListParam_ParamUser.clear();
@@ -1028,17 +1024,13 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
 
     if (wChamps.compareTo("Client_Depot") == 0) {
       ListParam_Param = ListParam_ParamDepot;
-      ListParam_ParamID = ListParam_ParamDepotID;
       selectedValue = selectedValueDepot;
-      selectedValueID = selectedValueDepotID;
       wLabel = "Rattaché à l'Agence";
     }
 
     if (wChamps.compareTo("Client_Rglt") == 0) {
       ListParam_Param = ListParam_ParamRglt;
-      ListParam_ParamID = ListParam_ParamRgltID;
       selectedValue = selectedValueRglt;
-      selectedValueID = selectedValueRgltID;
       wLabel = "Condition de réglements";
     }
 
@@ -1079,13 +1071,13 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
               onChanged: (value) {
                 setState(() {
                   selectedValue = value as String;
-                  selectedValueID = ListParam_ParamID[ListParam_Param.indexOf(selectedValue!)];
                   selectedValue = value as String;
 
                   print("onChanged selectedValue ${selectedValue}");
                   print("onChanged selectedValueID ${selectedValueID}");
 
                   if (wChamps.compareTo("Client_Commercial") == 0) {
+                    selectedValueID = ListParam_ParamID[ListParam_Param.indexOf(selectedValue!)];
                     selectedValueUser = selectedValue;
                     selectedValueUserID = selectedValueID;
                     wClient_Commercial = selectedValue;
@@ -1093,18 +1085,15 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
 
                   if (wChamps.compareTo("Client_Famille") == 0) {
                     selectedValueFam = selectedValue;
-                    selectedValueFamID = selectedValueID;
-                    wClient_Famille = selectedValueFamID;
+                    wClient_Famille = selectedValueFam;
                   }
                   if (wChamps.compareTo("Client_Depot") == 0) {
                     selectedValueDepot = selectedValue;
-                    selectedValueDepotID = selectedValueID;
-                    wClient_Depot = selectedValueDepotID;
+                    wClient_Depot = selectedValueDepot;
                   }
                   if (wChamps.compareTo("Client_Rglt") == 0) {
                     selectedValueRglt = selectedValue;
-                    selectedValueDepotID = selectedValueID;
-                    wClient_Rglt = selectedValueDepotID;
+                    wClient_Rglt = selectedValueRglt;
                   }
                   setState(() {});
                 });

@@ -173,7 +173,7 @@ class DbTools {
         "User_TypeUserID INTEGER NOT NULL);";
 
     String wCREATE_Clients =
-        "CREATE TABLE Clients (ClientId INTEGER NOT NULL, Client_CodeGC TEXT NOT NULL DEFAULT '', Client_CL_Pr INTEGER NOT NULL, Client_Famille TEXT NOT NULL, Client_Rglt TEXT NOT NULL, Client_Depot TEXT NOT NULL DEFAULT '', Client_PersPhys INTEGER NOT NULL, Client_OK_DataPerso INTEGER NOT NULL, Client_Civilite TEXT NOT NULL DEFAULT '', Client_Nom TEXT NOT NULL DEFAULT '', Client_Siret TEXT NOT NULL DEFAULT '', Client_NAF TEXT NOT NULL DEFAULT '', Client_TVA TEXT NOT NULL DEFAULT '', Client_Commercial TEXT NOT NULL DEFAULT '', Client_Createur TEXT NOT NULL DEFAULT '', Client_Contrat INTEGER NOT NULL, Client_TypeContrat TEXT NOT NULL DEFAULT '', Client_Ct_Debut TEXT NOT NULL, Client_Ct_Fin TEXT NOT NULL, Client_Organes TEXT NOT NULL DEFAULT '', Livr TEXT NOT NULL,Client_isUpdate INTEGER NOT NULL DEFAULT 0 DEFAULT 0);";
+        "CREATE TABLE Clients (ClientId INTEGER NOT NULL, Client_CodeGC TEXT NOT NULL DEFAULT '', Client_CL_Pr INTEGER NOT NULL, Client_Famille TEXT NOT NULL, Client_Rglt TEXT NOT NULL, Client_Depot TEXT NOT NULL DEFAULT '', Client_PersPhys INTEGER NOT NULL, Client_OK_DataPerso INTEGER NOT NULL, Client_Civilite TEXT NOT NULL DEFAULT '', Client_Nom TEXT NOT NULL DEFAULT '', Client_Siret TEXT NOT NULL DEFAULT '', Client_NAF TEXT NOT NULL DEFAULT '', Client_TVA TEXT NOT NULL DEFAULT '', Client_Commercial TEXT NOT NULL DEFAULT '', Client_Createur TEXT NOT NULL DEFAULT '', Client_Contrat INTEGER NOT NULL, Client_TypeContrat TEXT NOT NULL DEFAULT '', Client_Ct_Debut TEXT NOT NULL, Client_Ct_Fin TEXT NOT NULL, Client_Organes TEXT NOT NULL DEFAULT '', Users_Nom TEXT NOT NULL DEFAULT '', Livr TEXT NOT NULL,Client_isUpdate INTEGER NOT NULL DEFAULT 0 DEFAULT 0);";
     String wCREATE_Adresses =
         "CREATE TABLE `Adresses` (`AdresseId` int(11) NOT NULL,`Adresse_ClientId` int(11) NOT NULL,`Adresse_Code` varchar(24) NOT NULL DEFAULT '',`Adresse_Type` varchar(24) NOT NULL DEFAULT '',`Adresse_Nom` varchar(64) NOT NULL DEFAULT '',`Adresse_Adr1` varchar(40) NOT NULL DEFAULT '',`Adresse_Adr2` varchar(40) NOT NULL DEFAULT '',`Adresse_Adr3` varchar(40) NOT NULL DEFAULT '',`Adresse_Adr4` varchar(40) NOT NULL,`Adresse_CP` varchar(10) NOT NULL DEFAULT '',`Adresse_Ville` varchar(35) NOT NULL,`Adresse_Pays` varchar(40) NOT NULL DEFAULT '',`Adresse_Acces` varchar(128) NOT NULL,`Adresse_Rem` varchar(1024) NOT NULL DEFAULT '', Adresse_isUpdate INTEGER NOT NULL DEFAULT 0)";
     String wCREATE_Contacts =
@@ -333,7 +333,7 @@ class DbTools {
         ")";
 
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
-    String wDbPath = "kaqasedr55cGulloin.db";
+    String wDbPath = "kaqagaselloin.db";
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
 
     database = openDatabase(
@@ -735,6 +735,22 @@ class DbTools {
   static NF074_Gammes gNF074_Gammes = NF074_Gammes.NF074_GammesInit();
   static NF074_Gammes_Date gNF074_Gammes_Date = NF074_Gammes_Date.NF074_Gammes_DateInit();
 
+
+  static Future getNF074_Gammes_Decs_Test() async {
+    Srv_DbTools.ListParam_Saisie_Param.clear();
+    final db = await database;
+    String wRef = "NF074_Gammes_DESC";
+    String wSql = "SELECT  *FROM `NF074_Gammes` Where NF074_Gammes_DESC = 'Extincteur automatique'";
+
+    print("***********>>>   getNF074_Gammes_Decs_Test wSql ${wSql}");
+
+    final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
+    return List.generate(maps.length, (i) {
+      print("***********>>>   getNF074_Gammes_Decs_Test maps ${maps[i]}");
+
+    });
+  }
+
   static Future getNF074_Gammes_Decs() async {
     Srv_DbTools.ListParam_Saisie_Param.clear();
     final db = await database;
@@ -745,7 +761,7 @@ class DbTools {
 
     final List<Map<String, dynamic>> maps = await db.rawQuery('SELECT ${wRef}  FROM `NF074_Gammes` GROUP BY ${wRef}  ORDER BY count(${wRef} ) DESC;');
     return List.generate(maps.length, (i) {
-//     print("***********>>>   getNF074_Gammes_Decs maps ${maps[i]["NF074_Gammes_DESC"]}");
+     print("***********>>>   getNF074_Gammes_Decs maps ${maps[i]["NF074_Gammes_DESC"]}");
       Srv_DbTools.ListParam_Saisie_Param.add(Param_Saisie_Param(i, "DESC", i, maps[i]["NF074_Gammes_DESC"], maps[i]["NF074_Gammes_DESC"], maps[i]["NF074_Gammes_DESC"], false, false, SizedBox(), "Noir"));
     });
   }
@@ -1860,6 +1876,7 @@ class DbTools {
         maps[i]["Client_Ct_Debut"],
         maps[i]["Client_Ct_Fin"],
         maps[i]["Client_Organes"],
+        maps[i]["Users_Nom"],
         maps[i]["Client_isUpdate"] == 1,
       );
     });
@@ -1893,6 +1910,7 @@ class DbTools {
         maps[0]["Client_Ct_Debut"],
         maps[0]["Client_Ct_Fin"],
         maps[0]["Client_Organes"],
+        maps[0]["Users_Nom"],
         maps[0]["Client_isUpdate"] == 1,
       );
   }
@@ -2028,6 +2046,44 @@ class DbTools {
 
     return true;
   }
+
+
+  static Future<bool> getAdresseType(String Type) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query("Adresses", orderBy: "AdresseId ASC", where: "Adresse_Type = '$Type' ");
+    Srv_DbTools.ListAdressesearchresult = List.generate(maps.length, (i) {
+      return Adresse(
+        maps[i]["AdresseId"],
+        maps[i]["Adresse_ClientId"],
+        maps[i]["Adresse_Code"],
+        maps[i]["Adresse_Type"],
+        maps[i]["Adresse_Nom"],
+        maps[i]["Adresse_Adr1"],
+        maps[i]["Adresse_Adr2"],
+        maps[i]["Adresse_Adr3"],
+        maps[i]["Adresse_Adr4"],
+        maps[i]["Adresse_CP"],
+        maps[i]["Adresse_Ville"],
+        maps[i]["Adresse_Pays"],
+        maps[i]["Adresse_Acces"],
+        maps[i]["Adresse_Rem"],
+        maps[i]["Adresse_isUpdate"] == 1,
+      );
+    });
+
+    if (Srv_DbTools.ListAdressesearchresult.length > 0) {
+      Srv_DbTools.gAdresse = Srv_DbTools.ListAdressesearchresult[0];
+      print("getAdresseClientType return TRUE");
+      return true;
+    }
+
+    return false;
+
+    return true;
+  }
+
+
+
 
   static Future<void> inserAdresse(Adresse wAdresse) async {
     final db = await DbTools.database;
@@ -2429,7 +2485,7 @@ class DbTools {
     final db = await DbTools.database;
     int? repid = await db.insert("Groupes", wGroupe.toMap());
     gLastID = repid!;
-    print("inserGroupes gLastID ${gLastID} ${wGroupe.Groupe_ClientId}");
+//    print("inserGroupes gLastID ${gLastID} ${wGroupe.Groupe_ClientId}");
   }
 
   static Future<void> updateGroupes(Groupe wGroupe) async {

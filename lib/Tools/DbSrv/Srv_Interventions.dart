@@ -129,7 +129,7 @@ class Intervention {
   }
 
   factory Intervention.fromJson(Map<String, dynamic> json) {
-    print("Intervention.fromJson ${json['InterventionId']}");
+    //print("Intervention.fromJson ${json['InterventionId']}");
 
     Uint8List wUint8ListTech = Uint8List.fromList([]);
     if (json['Intervention_Signature_Tech'].toString().isNotEmpty) {

@@ -908,12 +908,19 @@ class Srv_ImportExport {
   }
 
   static Future<bool> ImportClient() async {
-    bool wResult = await Srv_DbTools.IMPORT_ClientAll();
+//    bool wResult = await Srv_DbTools.IMPORT_ClientAll();
+    bool wResult = await Srv_DbTools.getClient_User_CSIP(Srv_DbTools.gLoginID);
+
+
     print("ImportClient wResult ${wResult}");
     if (wResult) {
       await DbTools.TrunckClients();
       for (int i = 0; i < Srv_DbTools.ListClient.length; i++) {
         Client wClient = Srv_DbTools.ListClient[i];
+
+
+        print("••••• ImportClient wClient ${wClient.Client_Nom}");
+
         await DbTools.inserClients(wClient);
       }
       Srv_DbTools.ListClient = await DbTools.getClientsAll();
@@ -1001,7 +1008,7 @@ class Srv_ImportExport {
   }
 
   static Future<bool> ImportInterMission() async {
-    bool wResult = await Srv_DbTools.getInterMissionAll();
+    bool wResult = await Srv_DbTools.getInterMissionUID(Srv_DbTools.gUserLogin.UserID);
     print("Import_DataDialog ListInterMissions ${Srv_DbTools.ListInterMission.length}");
 
     if (wResult) {
@@ -1020,8 +1027,11 @@ class Srv_ImportExport {
     return false;
   }
 
+
+
+
   static Future<bool> ImportIntervention() async {
-    bool wResult = await Srv_DbTools.getInterventionAll();
+    bool wResult = await Srv_DbTools.getInterventionUID(Srv_DbTools.gUserLogin.UserID);
     print("Import_DataDialog ListInterventions ${Srv_DbTools.ListIntervention.length}");
 
     if (wResult) {

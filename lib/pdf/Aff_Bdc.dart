@@ -60,7 +60,7 @@ class Aff_BdcState extends State<Aff_Bdc> with SingleTickerProviderStateMixin {
         child:
         Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
           AutoSizeText(
-            "BON DE COMMANDE",
+            "COMPTE-RENDU",
             maxLines: 1,
             style: TextStyle(
               color: Colors.black87,

@@ -6,6 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Contacts.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
+import 'package:verifplus/Tools/Upload.dart';
 import 'package:verifplus/Widget/Client/Vue_Site_Popup.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
@@ -27,7 +28,27 @@ class _Site_VueState extends State<Site_Vue> {
 
   List<Widget> wAff = [];
 
+  Uint8List pic = Uint8List.fromList([0]);
+  late Image wImage;
+  bool imageisload = false;
+
   void Reload() async {
+
+
+    imageisload = false;
+    String wUserImg = "Site_${Srv_DbTools.gSite.SiteId}.jpg";
+    pic =      await gColors.getImage(wUserImg);
+    print("pic $wUserImg");// ${pic}");
+    if (pic.length > 0) {
+      wImage = Image.memory(
+        pic,
+        fit: BoxFit.scaleDown,
+        height :63 * 3,
+        width :94 * 3,
+      );
+    }
+
+    imageisload = true;
     await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gSite.SiteId, "SITE");
 
     String Dep = "";
@@ -57,6 +78,7 @@ class _Site_VueState extends State<Site_Vue> {
       !affAdresseAll ? Container() : AffLigne("Département", "${Dep}", gColors.white, "", "", "", "", ""),
       !affAdresseAll ? Container() : AffBtn("Adresse", "Pays", "${Srv_DbTools.gSite.Site_Pays} "),
       AffLigne("", "", gColors.white, "", "", "", "", wAdr),
+      Photo(),
       AffLigne("Contact du Site", "", gColors.greyLight, "Icon_Cont", "", !affContactAll ? "Icon_circle_down" : "Icon_circle_up", "", ""),
       !affContactAll ? AffBtn("Contact", "Nom", "${Srv_DbTools.gContact.Contact_Civilite} ${Srv_DbTools.gContact.Contact_Prenom} ${Srv_DbTools.gContact.Contact_Nom} ") : AffBtn("Contact", "Civilité", "${Srv_DbTools.gContact.Contact_Civilite}"),
       !affContactAll ? Container() : AffBtn("Contact", "Prénom", "${Srv_DbTools.gContact.Contact_Prenom} "),
@@ -88,6 +110,8 @@ class _Site_VueState extends State<Site_Vue> {
       }
     }
 
+
+
     setState(() {});
   }
 
@@ -98,9 +122,58 @@ class _Site_VueState extends State<Site_Vue> {
 
   @override
   void initState() {
+    print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> Client_Sit");
+    wImage = Image(
+      image: AssetImage('assets/images/Avatar.png'),
+      height: 50,
+    );
     Srv_DbTools.gContact = Contact.ContactInit();
     initLib();
   }
+
+  Widget Photo() {
+    String wImgPath = "${Srv_DbTools.SrvImg}Site_${Srv_DbTools.gSite.SiteId}.jpg";
+    print("wImgPath $wImgPath");
+    return
+
+      Container(
+        padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+
+          children: [
+            IconButton(
+              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              icon: Image.asset("assets/images/Photo.png"),
+              onPressed: () async {
+                print(">>>>>>>> _startFilePicker");
+                await _startFilePicker();
+                print("<<<<<<<< _startFilePicker");
+
+              },
+            ),
+            Container(width: 10),
+            wImage ,
+            Container(width: 10),
+
+          ],
+        ));
+  }
+
+  void onSetState() async {
+    print("Parent onMaj() Relaod()");
+    Reload();
+  }
+
+
+  _startFilePicker() async {
+    print("UploadFilePicker > Site_${Srv_DbTools.gSite.SiteId}.jpg");
+    await Upload.pickerCamera("Site_${Srv_DbTools.gSite.SiteId}.jpg", onSetState);
+    print("UploadFilePicker <");
+
+  }
+
 
   @override
   Widget build(BuildContext context) {

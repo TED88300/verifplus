@@ -41,6 +41,8 @@ class BdC {
 
   Uint8List pic = Uint8List.fromList([0]);
   late pw.Image wImage;
+  int wImage_W = 0;
+  int wImage_H = 0;
 
   Future<Uint8List> buildPdf(PdfPageFormat pageFormat) async {
     // Create a PDF document.
@@ -49,13 +51,28 @@ class BdC {
     pic = await gColors.getImage(wUserImg);
     print("pic $wUserImg"); // ${pic}");
 
+    pw.MemoryImage wMemoryImage =    pw.MemoryImage(
+      pic,
+    );
+
+
+
+
+    print("♠︎♠︎♠︎♠︎ wMemoryImage <<< ${wMemoryImage.width} ${wMemoryImage.height}");
+    wImage_W = wMemoryImage.width!;
+    wImage_H = wMemoryImage.height!;
+
     if (pic.length > 0) {
-      wImage = pw.Image(
-        pw.MemoryImage(
-          pic,
-        ),
+      wImage = await pw.Image(
+        fit : BoxFit.cover,
+//width : double.parse(wImage_W.toString()),
+//        height : double.parse(wImage_H.toString()),
+        wMemoryImage,
       );
     }
+
+
+
 
     final doc = pw.Document();
 
@@ -666,7 +683,8 @@ class BdC {
 
     return pw.Column(children: [
 // SITE
-      PdfTools.Titre(context, "", "SITE D'INTERVENTION", pw.TextAlign.center, PdfColor(54 / 255, 96 / 255, 146 / 255), PdfColors.white),
+
+    PdfTools.Titre(context, "", "SITE D'INTERVENTION", pw.TextAlign.center, PdfColor(54 / 255, 96 / 255, 146 / 255), PdfColors.white),
       pw.Row(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
         Container(
           width : 500,
@@ -676,14 +694,23 @@ class BdC {
           ]),
         ),
 
-        Container(
-          padding: const pw.EdgeInsets.only(left: 1, top: 1, bottom: 0, right: 0),
-         height :61,
-          width :120,
-          child: wImage,)
+        pw.Container(
+          decoration: pw.BoxDecoration(
+            border: pw.Border.all(
+              width: 1,
+              color: PdfColors.black,
+            ),
+            borderRadius: const pw.BorderRadius.all(
+              pw.Radius.circular(1),
+            ),
+            color: PdfColors.grey,
+          ),          padding: const pw.EdgeInsets.only(left: 1, top: 1, bottom: 0, right: 0),
+
+          height :63,
+          width :94,
+          child: wImage,
+        )
       ]),
-
-
 
       PdfTools.C2_L1(context, "Groupe : ", "${Srv_DbTools.gGroupe.Groupe_Nom}", 5, "Zone : ", "${Srv_DbTools.gZone.Zone_Nom}", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
       PdfTools.C1_L1(context, "Règlementation technique applicable au site : ", "Code du travail, APSAD R4", pw.TextAlign.left, PdfColors.white, PdfColors.black),

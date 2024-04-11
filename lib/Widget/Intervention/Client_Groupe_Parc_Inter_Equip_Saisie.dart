@@ -100,6 +100,7 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState extends State<Client_Grou
         if (Srv_DbTools.ListParam_Saisie_Param.length == 0) Srv_DbTools.getParam_Saisie_ParamMem(widget.param_Saisie.Param_Saisie_ID);
         break;
       case "DESC":
+        await DbTools.getNF074_Gammes_Decs_Test();
         await DbTools.getNF074_Gammes_Decs();
         if (Srv_DbTools.ListParam_Saisie_Param.length == 0) Srv_DbTools.getParam_Saisie_ParamMem(widget.param_Saisie.Param_Saisie_ID);
         break;

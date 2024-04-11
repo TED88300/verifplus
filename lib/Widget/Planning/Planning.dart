@@ -28,7 +28,6 @@ class PlanningState extends State<Planning> {
     await Srv_ImportExport.ImportAll();
     sectionList = getDateSection();
     print("sectionList length ${sectionList.length}");
-
     Filtre();
   }
 
