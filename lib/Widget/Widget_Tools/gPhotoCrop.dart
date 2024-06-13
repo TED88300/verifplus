@@ -141,7 +141,7 @@ class gPhotoCropState extends State<gPhotoCrop> {
                     Navigator.pop(context);
                     Navigator.pop(context);
                   },
-                  style: OutlinedButton.styleFrom(primary: Colors.black, side: BorderSide(width: 0, color: Colors.transparent)),
+                  style: OutlinedButton.styleFrom(backgroundColor: Colors.black, side: BorderSide(width: 0, color: Colors.transparent)),
                   child: Text(
                     "Ternimer",
                     textAlign: TextAlign.center,

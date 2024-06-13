@@ -162,50 +162,7 @@ class Parc_Ent_Srv {
   }
 
   static Parc_EntInit(int Parcs_InterventionId, String Parcs_Type, int Parcs_order) {
-    Parc_Ent_Srv wParc_Ent = Parc_Ent_Srv.Parc_EntInit(0, "", 0);
-    wParc_Ent.ParcsId = null;
-    wParc_Ent.Parcs_InterventionId = Parcs_InterventionId;
-    wParc_Ent.Parcs_Type = Parcs_Type;
-    wParc_Ent.Parcs_order = Parcs_order;
-    wParc_Ent.Parcs_Date_Rev = "";
-    wParc_Ent.Parcs_QRCode = "";
-    wParc_Ent.Parcs_FREQ_Id = "";
-    wParc_Ent.Parcs_FREQ_Label = "";
-    wParc_Ent.Parcs_ANN_Id = "";
-    wParc_Ent.Parcs_ANN_Label = "";
-    wParc_Ent.Parcs_FAB_Id = "";
-    wParc_Ent.Parcs_FAB_Label = "";
-    wParc_Ent.Parcs_NIV_Id = "";
-    wParc_Ent.Parcs_NIV_Label = "";
-    wParc_Ent.Parcs_ZNE_Id = "";
-    wParc_Ent.Parcs_ZNE_Label = "";
-    wParc_Ent.Parcs_EMP_Id = "";
-    wParc_Ent.Parcs_EMP_Label = "";
-    wParc_Ent.Parcs_LOT_Id = "";
-    wParc_Ent.Parcs_LOT_Label = "";
-    wParc_Ent.Parcs_SERIE_Id = "";
-    wParc_Ent.Parcs_SERIE_Label = "";
-    wParc_Ent.Parcs_Audit_Note = "";
-    wParc_Ent.Parcs_Verif_Note = "";
-    wParc_Ent.Parcs_Intervention_Timer = 0;
-    wParc_Ent.Parcs_UUID = "";
-    wParc_Ent.Parcs_UUID_Parent = "";
-    wParc_Ent.Parcs_CodeArticle = "";
-    wParc_Ent.Parcs_CODF = "";
-    wParc_Ent.Parcs_NCERT = "";
-
-    wParc_Ent.Parcs_Date_Desc = "";
-    wParc_Ent.Parcs_Install = false;
-    wParc_Ent.Parcs_MaintCorrect = false;
-    wParc_Ent.Parcs_MaintPrev = false;
-
-    wParc_Ent.Parcs_Cols = [];
-
-
-    wParc_Ent.Livr = "";
-    wParc_Ent.Devis = "";
-    wParc_Ent.Action = "";
-
+    Parc_Ent_Srv wParc_Ent = Parc_Ent_Srv(0 , Parcs_order, Parcs_InterventionId, Parcs_Type,"","","","","","","","","","","","","","","","","","","","",0,"","","","","",false,false,false,"","","","");
     return wParc_Ent;
   }
 

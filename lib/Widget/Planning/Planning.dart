@@ -25,6 +25,8 @@ class PlanningState extends State<Planning> {
   List<DateSection> sectionList = [];
 
   Future Reload() async {
+    print(" Reload ");
+
     await Srv_ImportExport.ImportAll();
     sectionList = getDateSection();
     print("sectionList length ${sectionList.length}");
@@ -63,17 +65,14 @@ class PlanningState extends State<Planning> {
               itemBuilder: (context, sectionIndex, itemIndex, index) {
                 String item = sectionList[sectionIndex].items[itemIndex];
                 String item2 = sectionList[sectionIndex].items2[itemIndex];
+                String item3 = sectionList[sectionIndex].items3[itemIndex];
                 Planning_Intervention wPlanning_Intervention = sectionList[sectionIndex].Planning_Interventions[itemIndex];
-                double rowh = 24;
+                double rowh = 18;
 
                 return Column(children: [
                   new GestureDetector(
                       onTap: () async {
-
-
                         print("wPlanning_Intervention.Planning_Interv_InterventionId ${wPlanning_Intervention.Planning_Interv_InterventionId}");
-
-
                         await HapticFeedback.vibrate();
                         await DbTools.getClient(wPlanning_Intervention.Planning_Interv_ClientId!);
                         Srv_DbTools.ListGroupe = await DbTools.getGroupes(wPlanning_Intervention.Planning_Interv_ClientId!);
@@ -81,36 +80,75 @@ class PlanningState extends State<Planning> {
                         Srv_DbTools.ListSite = await DbTools.getSiteGroupe(Srv_DbTools.gGroupe.GroupeId);
                         await Srv_DbTools.getSiteID(wPlanning_Intervention.Planning_Interv_SiteId!);
                         Srv_DbTools.ListZone =  await DbTools.getZones(wPlanning_Intervention.Planning_Interv_SiteId!);
-
                         print("wPlanning_Intervention.Planning_Interv_InterventionId ${wPlanning_Intervention.Planning_Interv_InterventionId}");
-
-
-
                         await Srv_DbTools.getZoneID(wPlanning_Intervention.Planning_Interv_ZoneId!);
                         await DbTools.getInterventions(wPlanning_Intervention.Planning_Interv_ZoneId!);
-
                         await DbTools.getIntervention(wPlanning_Intervention.Planning_Interv_InterventionId!);
 
-                        await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Groupe_Inter_Det()));
-                      },
-                      child: Container(
-                        padding: EdgeInsets.only(left: 5, right: 5,top: 5),
+                        Srv_DbTools.gIntervention.Client_Nom = Srv_DbTools.gClient.Client_Nom;
+                        Srv_DbTools.gIntervention.Site_Nom = Srv_DbTools.gSite.Site_Nom;
+                        Srv_DbTools.gIntervention.Groupe_Nom = Srv_DbTools.gGroupe.Groupe_Nom;
+                        Srv_DbTools.gIntervention.Zone_Nom = Srv_DbTools.gZone.Zone_Nom;
 
+
+                        print(" •••••••••••  gIntervention ${Srv_DbTools.gIntervention.Desc()}");
+                        await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Groupe_Inter_Det()));
+                        Reload();
+
+                      },
+                      child:
+
+
+                      Dismissible(
+                      key: Key(item),
+                      onDismissed: (direction) {
+/*
+                      setState(() {
+
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('$item dismissed')));
+*/
+                      },
+                      child:
+
+                      Container(
+                        padding: EdgeInsets.only(left: 5, right: 5,top: 5),
                         height: 57,
                         color: Colors.white,
                         child: Row(
                           children: <Widget>[
                             Expanded(
                                 flex: 10,
-                                child: Container(
-                                    padding: EdgeInsets.only(left: 5),
-                                    height: rowh,
-                                    child: Text(
-                                      "${item}",
-                                      maxLines: 1,
-                                      textAlign: TextAlign.left,
-                                      style: gColors.bodySaisie_B_B,
-                                    ))),
+                                child:
+                                Container(
+                                    height: 50,
+                                  child:
+                                Column(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                        padding: EdgeInsets.only(left: 5),
+                                        height: rowh,
+                                        child: Text(
+                                          "${item}",
+                                          maxLines: 1,
+                                          textAlign: TextAlign.left,
+                                          style: gColors.bodySaisie_B_B,
+                                        )),
+                                    Container(
+                                        padding: EdgeInsets.only(left: 50),
+                                        height: rowh,
+                                        child: Text(
+                                          "${item3}",
+                                          maxLines: 1,
+                                          textAlign: TextAlign.left,
+                                          style: gColors.bodySaisie_B_B,
+                                        )),
+                                  ],
+                                )),
+
+                  ),
 
                             Expanded(
                                 flex: 2,
@@ -124,7 +162,7 @@ class PlanningState extends State<Planning> {
                                     ))),
                           ],
                         ),
-                      )),
+                      ))),
                   gColors.wLigne(),
                 ]);
               },
@@ -282,6 +320,7 @@ class PlanningState extends State<Planning> {
     var section = DateSection();
     for (int i = 0; i < Srv_DbTools.ListPlanning_Intervention.length; i++) {
       Planning_Intervention wPlanning_Intervention = Srv_DbTools.ListPlanning_Intervention[i];
+
       String formattedDate = DateFormat('dd/MMM/yyyy').format(wPlanning_Intervention.Planning_Interv_InterventionstartTime);
       String formattedDateLib = DateFormat('EEEE dd/MM/yy', 'fr').format(wPlanning_Intervention.Planning_Interv_InterventionstartTime);
 
@@ -298,16 +337,22 @@ class PlanningState extends State<Planning> {
         section..expanded = true;
         section..items = [];
         section..items2 = [];
+        section..items3 = [];
         section..Planning_Interventions = [];
         Rupt = formattedDate;
         print("Header ${formattedDate}");
       }
-
-
       section..Planning_Interventions.add(wPlanning_Intervention);
-      String wLib = "[${wPlanning_Intervention.Planning_Interv_InterventionId}] ${wPlanning_Intervention.Planning_Interv_Client_Nom} / ${wPlanning_Intervention.Planning_Interv_Groupe_Nom} / ${wPlanning_Intervention.Planning_Interv_Site_Nom} / ${wPlanning_Intervention.Planning_Interv_Zone_Nom}";
+      String wLib = "[${wPlanning_Intervention.Planning_Interv_InterventionId}] ${wPlanning_Intervention.Planning_Interv_Client_Nom} / ${wPlanning_Intervention.Planning_Interv_Site_Nom}";
       print("wLib ${wLib}");
       section..items.add(wLib);
+
+      String wLib3 = "${wPlanning_Intervention.Planning_Interv_Intervention_Parcs_Type} - ${wPlanning_Intervention.Planning_Interv_Intervention_Type} - ${wPlanning_Intervention.Planning_Interv_Intervention_Status}";
+      print("wLib3 ${wLib3}");
+      section..items3.add(wLib3);
+
+
+
       String wLibH = "${formattedDeb}/${formattedFin}";
       print("wLibH ${wLibH}");
       section..items2.add(wLibH);
@@ -323,6 +368,7 @@ class DateSection implements ExpandableListSection<String> {
   late bool expanded;
   late List<String> items;
   late List<String> items2;
+  late List<String> items3;
   late List<Planning_Intervention> Planning_Interventions;
 
 

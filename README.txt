@@ -47,9 +47,7 @@ Janvier  : 6,5 + 2,5
 Ecran Saisie V3: 1/2j + 1/2j + 1/2j + 1j + 1j + 1/2 + 1J + 1J + 1/2j = 6,5
 Refonte BD : 2,5j
 
-
 Février : 14,5J
-
 IONOS param: 1j
 BackOff Base : 1j
 Param Saisie : 1j + 1J
@@ -148,9 +146,28 @@ Sem 04/03 : 1j + 1j + 1j + 1/2j + 1J = 4 1/2
 Sem 11/03 : 1/2j + 1J + 1/2j + -- + 1J = 3J
 Sem 18/03 : 1J + + 1J + 1J + 1/2j + 1J = 4 1/2
 
-Avril = 7J
+Avril = 20 J
 Sem 25/03 :1J + 1/2j + 1J + -- + -- + 1/2 J =  3J
-Sem 01/04 :-- + 1j + 1j + 1j + 1j =  4J
-Sem 08/04 :1j + 1j + 1j + 1j =
+Sem 01/04 :-- + 1j + 1j + 1j + 1j = 4J
+Sem 08/04 :1j + 1j + 1j + 1j + 1J = 5J
+Sem 15/04 :1j + 1J + 1j + 1j + 1J = 5J
+Sem 22/04 :1j + 1J + 1j = 3J
 
+*** Indice Sintex ***
+Janvier 23: 293,9
+Février 24 : 311,1
+Taux 1,0585
+Nouveau Tarif = 350 * 1,0585 = 370
+
+Mai = 19,5J
+Sem 22/04 : 1j + 1J = 2J
+Sem 29/04 : 1J + 1J + 1J + 1J + 1J = 5J
+Sem 06/05 : 1j + 1J + 1/2J = 2J + 1/2J
+Sem 13/05 : 1J + 1J + 1J + 1J + 1J = 5J
+Sem 20/05 : 1J + 1J + 1J + 1J + 1J = 5J
+
+Juin
+Sem 27/05 : 1J + 1J + 1J + 1J + -- = 4J + 1/2j (journée Paris 7-20 )
+Sem 03/06 : -- + 1J + 1J + 1J + 1J = 4J
+Sem 10/06 : 1J + 1J
 

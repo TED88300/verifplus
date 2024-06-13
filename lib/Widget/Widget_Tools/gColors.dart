@@ -4,20 +4,19 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 import 'package:http/http.dart' as http;
 
 class gColors {
 
-
+  static late ThemeData wTheme;
 
   static double MediaQuerysizewidth = 0;
 
   static const Color primary = Color(0xFF000000);
   static const Color secondary = Color(0xFFf80013);
-
-
 
   static const Color primaryGreen = Color(0xFF2e942b);
   static const Color primaryRed = Color(0xFFb33333);
@@ -45,6 +44,7 @@ class gColors {
   static const Color LinearGradient1 = Color(0xFFaaaaaa);
   static const Color LinearGradient2 = Color(0xFFf6f6f6);
   static const Color LinearGradient3 = Color(0xFFe6e6e6);
+
   static const Color TextColor1 = Color(0xFF222222);
   static const Color TextColor2 = Color(0xFF555555);
   static const Color TextColor3 = Color(0xFFFFFFFF);
@@ -102,6 +102,9 @@ class gColors {
       ),
     );
   }
+
+
+
   static Widget wBoxDecoration(BuildContext context)
   {
     return  Container(
@@ -660,7 +663,7 @@ class gColors {
                 Padding(
                   padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                   child: Text(
-                    "Utilisateur",
+                    "Utilisateur ${Srv_DbTools.gUserLogin.UserID}",
                     style: TextStyle(
                       fontSize: 22,
                     ),
@@ -747,7 +750,49 @@ class gColors {
     pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
 
-static Color getColor(String color)
+  static InputDecoration wRechInputDecorationSelPlanning = InputDecoration(
+    filled: true,
+    fillColor: gColors.LinearGradient2,
+    enabledBorder: OutlineInputBorder(
+      borderRadius: BorderRadius.circular(1.0),
+      borderSide: BorderSide(
+        color: gColors.primary,
+        width: 0.5,
+      ),
+    ),
+    hintText: 'Recherche',
+    isDense: true,
+    contentPadding: EdgeInsets.fromLTRB(8, 12, 0, 12),
+  );
+
+
+
+  static Widget gCircle(Color wColor)  {
+    return  Container(
+        width: 15,
+        height: 15,
+        decoration: BoxDecoration(
+            color: wColor,
+            shape: BoxShape.circle
+        ));
+  }
+
+  static Color getColorStatus(String Status) {
+    Color wColor = Colors.transparent;
+    print("Status $Status");
+    print("Srv_DbTools.ListParam_Param_Status_Interv ${Srv_DbTools.ListParam_Param_Status_Interv}");
+    for (int p = 0; p < Srv_DbTools.ListParam_Param_Status_Interv.length; p++) {
+      Param_Param wParam_Param = Srv_DbTools.ListParam_Param_Status_Interv[p];
+      if (wParam_Param.Param_Param_ID == Status)
+      {
+        wColor = gColors.getColor(wParam_Param.Param_Param_Color);
+        break;
+      }
+    }
+   return wColor;
+  }
+
+  static Color getColor(String color)
 {
   Color wColor = Colors.green;
   switch (color) {

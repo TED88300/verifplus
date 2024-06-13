@@ -41,10 +41,14 @@ class Client_SitesState extends State<Client_Sites> {
     await Srv_ImportExport.getErrorSync();
 
     Srv_DbTools.gSelGroupe = Srv_DbTools.gSelGroupeBase;
-    bool wRes = await Srv_DbTools.getGroupeSites(Srv_DbTools.gGroupe.GroupeId);
+//    bool wRes = await Srv_DbTools.getGroupeSites(Srv_DbTools.gGroupe.GroupeId);
+    bool wRes = await Srv_DbTools.getClientSites(Srv_DbTools.gClient.ClientId);
+
+
+
 
     if (!wRes) Srv_DbTools.ListSite = await DbTools.getSiteGroupe(Srv_DbTools.gGroupe.GroupeId);
-    print("getSiteGroupe A ${Srv_DbTools.ListSite.length} ");
+
 
     if (Srv_DbTools.ListSite.isEmpty) {
       Srv_DbTools.gSite = Site.SiteInit();
@@ -65,7 +69,7 @@ class Client_SitesState extends State<Client_Sites> {
       if (wRet)   await Srv_DbTools.setSite(Srv_DbTools.gSite);
       Srv_DbTools.ListSite.add(Srv_DbTools.gSite);
 
-      print("getSiteGroupe B ${Srv_DbTools.ListSite.length} ");
+
     }
     print("getSiteGroupe B2 ${Srv_DbTools.ListSite.length} ");
 

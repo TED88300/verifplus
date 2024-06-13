@@ -5,6 +5,7 @@ import 'package:image_painter/image_painter.dart';
 import 'package:open_file/open_file.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 
+/*
 
 class ImagePainterTools extends StatefulWidget {
   final String imagePath;
@@ -19,19 +20,12 @@ class _ImagePainterToolsState extends State<ImagePainterTools> {
   final _key = GlobalKey<ScaffoldState>();
 
   Future saveImage() async {
+//    final image = await _imageKey.currentState!.exportImage();
     final image = await _imageKey.currentState!.exportImage();
-
-
-
     DbTools.gImageEdtFile = File(widget.imagePath);
     print("writeAsBytesSync wWidget > ${widget.imagePath}");
     DbTools.gImageEdtFile.writeAsBytesSync(image!, flush: true);
     print("writeAsBytesSync wWidget >");
-
-
-
-
-
 
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -81,3 +75,4 @@ class _ImagePainterToolsState extends State<ImagePainterTools> {
     );
   }
 }
+*/

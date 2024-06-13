@@ -71,6 +71,11 @@ class Srv_DbTools {
 
   static String simCountryCode = "";
 
+
+  static List<String> List_UserInter = [];
+  static List<String> List_UserInterID = [];
+
+
   //******************************************
   //************   NF074_Gammes   ************
   //******************************************
@@ -700,9 +705,6 @@ class Srv_DbTools {
   //*****************************
   //*****************************
 
-
-
-
   static List<Client> ListClient_CSIP = [];
   static List<Client> ListClient_CSIP_Total = [];
 
@@ -733,32 +735,32 @@ class Srv_DbTools {
     ListClient_CSIP_Total.clear();
     await getClient_User_C(wUserID);
     ListClient_CSIP.forEach((wClient) {
-      print("getClient_User_C ${wClient.Client_Nom}");
+      //print("getClient_User_C ${wClient.Client_Nom}");
       ListClient_CSIP_Total_Insert(wClient);
     });
 
 
     await getClient_User_S(wUserID);
     ListClient_CSIP.forEach((wClient) {
-      print("getClient_User_S ${wClient.Client_Nom}");
+      //print("getClient_User_S ${wClient.Client_Nom}");
       ListClient_CSIP_Total_Insert(wClient);
     });
 
     await getClient_User_I(wUserID);
     ListClient_CSIP.forEach((wClient) {
-      print("getClient_User_I ${wClient.Client_Nom}");
+      //print("getClient_User_I ${wClient.Client_Nom}");
       ListClient_CSIP_Total_Insert(wClient);
     });
 
     await getClient_User_I2(wUserID);
     ListClient_CSIP.forEach((wClient) {
-      print("getClient_User_I2 ${wClient.Client_Nom}");
+      //print("getClient_User_I2 ${wClient.Client_Nom}");
       ListClient_CSIP_Total_Insert(wClient);
     });
 
     await getClient_User_P(wUserID);
     ListClient_CSIP.forEach((wClient) {
-      print("getClient_User_P ${wClient.Client_Nom}");
+      //print("getClient_User_P ${wClient.Client_Nom}");
       ListClient_CSIP_Total_Insert(wClient);
     });
 
@@ -766,7 +768,7 @@ class Srv_DbTools {
     ListClient.clear();
     ListClient.addAll(ListClient_CSIP_Total);
 
-    print("getClient_User_CSIP ListClient ${ListClient.length}");
+    //print("getClient_User_CSIP ListClient ${ListClient.length}");
     ListClient_CSIP_Total.clear();
     return true;
 
@@ -873,6 +875,38 @@ class Srv_DbTools {
   }
 
 
+  static Future<bool> getClientRech(String wRech) async {
+    String wSlq = 'SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays, CONCAT(Users.User_Nom, " " , Users.User_Prenom) as Users_Nom FROM Clients LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = "FACT" JOIN Users ON Clients.Client_Commercial = Users.UserID'
+        ' WHERE Clients.Client_Nom LIKE "%' +
+        '${wRech}' +
+        '%" OR Adresse_CP LIKE "%' +
+        '${wRech}' +
+        '%" OR Adresse_Ville LIKE "%' +
+        '${wRech}' +
+        '%" ORDER BY Client_Nom;';
+    print("getClient wSlq $wSlq");
+    ListClient = await getClient_API_Post("select", wSlq);
+    if (ListClient == null) return false;
+    if (ListClient.length > 0) {
+      gClient = ListClient[0];
+      return true;
+    }
+    return false;
+  }
+
+  static Future<bool> getClientDepotp(String wDepot) async {
+    String wSlq = "SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays FROM Clients LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = 'FACT'  WHERE Clients.Client_Depot = '$wDepot'  ORDER BY Client_Nom;";
+    print("getClientDepot wSlq $wSlq");
+    ListClient = await getClient_API_Post("select", wSlq);
+
+    if (ListClient == null) return false;
+    print("getClientDepot ${ListClient.length}");
+    if (ListClient.length > 0) {
+      print("getClientDepot return TRUE");
+      return true;
+    }
+    return false;
+  }
 
 
   //*****************************
@@ -1150,6 +1184,8 @@ class Srv_DbTools {
   static List<Groupe> ListGroupesearchresult = [];
   static Groupe gGroupe = Groupe.GroupeInit();
 
+
+
   static Future<bool> getGroupeAll() async {
     try {
       ListGroupe = await getGroupe_API_Post("select", "select * from Groupes ORDER BY Groupe_Nom");
@@ -1277,13 +1313,29 @@ class Srv_DbTools {
   static String gSelGroupe = "";
   static String gSelGroupeBase = "Tous les groupes";
 
+  static Future<bool> getSiteRech(String wRech) async {
+    String wSlq = 'select * from Sites WHERE Site_Nom LIKE "%' + '${wRech}' + '%" OR Site_CP LIKE "%' + '${wRech}' + '%" OR Site_Ville LIKE "%' + '${wRech}' + '%" ORDER BY Site_Nom;';
+    print("getSiteRech wSlq $wSlq");
+    ListSite = await getSite_API_Post("select", wSlq);
+    if (ListSite == null) return false;
+    if (ListSite.length > 0) {
+      gSite = ListSite[0];
+      return true;
+    }
+    return false;
+  }
+
+
+
   static Future<bool> getSiteAll() async {
     try {
-      ListSite = await getSite_API_Post("select", "select * from Sites ORDER BY Site_Nom");
+      String wTmp = "select * from Sites ORDER BY Site_Nom";
+      print("wTmp getSiteAll ${wTmp}");
+      ListSite = await getSite_API_Post("select", wTmp);
       if (ListSite == null) return false;
-      print("getSitesGroupe ${ListSite.length}");
+      print("getSiteAll ${ListSite.length}");
       if (ListSite.length > 0) {
-        print("getSitesGroupe return TRUE");
+        print("getSiteAll return TRUE");
         return true;
       }
       return false;
@@ -1308,6 +1360,25 @@ class Srv_DbTools {
       return false;
     }
   }
+
+
+  static Future<bool> getClientSites(int ID) async {
+    String wTmp = "SELECT Groupe_Nom , Sites.* FROM Sites , Groupes, Clients where Site_GroupeId = GroupeId AND Groupe_ClientId = ClientId AND Groupe_ClientId = $ID ORDER BY Site_Nom ASC;";
+    print("SRV_DbTools getSitesGroupe ${wTmp}");
+    try {
+      ListSite = await getSite_API_Post("select", wTmp);
+      if (ListSite == null) return false;
+      print("getSitesGroupe ${ListSite.length}");
+      if (ListSite.length > 0) {
+        print("getSitesGroupe return TRUE");
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
 
   static Future<bool> getGroupeSites(int ID) async {
     String wTmp = "SELECT Groupe_Nom , Sites.* FROM Sites , Groupes where Site_GroupeId = GroupeId AND Site_GroupeId = ${ID} ORDER BY Groupe_Nom ASC, Site_Nom ASC;";
@@ -1390,13 +1461,12 @@ class Srv_DbTools {
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
     request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
 
-//    print("getSite_API_Post " + aSQL);
 
     http.StreamedResponse response = await request.send();
-    //    print("getSite_API_Post response ${response.statusCode}" );
 
     if (response.statusCode == 200) {
-      var parsedJson = json.decode(await response.stream.bytesToString());
+      String wRep = await response.stream.bytesToString();
+      var parsedJson = json.decode(wRep);
       final items = parsedJson['data'];
 
       if (items != null) {
@@ -1418,6 +1488,22 @@ class Srv_DbTools {
   static List<Zone> ListZone = [];
   static List<Zone> ListZonesearchresult = [];
   static Zone gZone = Zone.ZoneInit();
+
+  static Future<bool> getZonesSite(int ID) async {
+    String wTmp = "select * from Zones WHERE Zone_SiteId = $ID ORDER BY Zone_Nom";
+
+    print("wTmp getZonesClient ${wTmp}");
+    ListZone = await getZone_API_Post("select", wTmp);
+
+    if (ListZone == null) return false;
+    print("getZonesClient ${ListZone.length}");
+    if (ListZone.length > 0) {
+      gZone = ListZone[0];
+      print("getZonesClient return TRUE");
+      return true;
+    }
+    return false;
+  }
 
   static Future<bool> getZoneAll() async {
     try {
@@ -1561,6 +1647,14 @@ class Srv_DbTools {
   static List<Intervention> ListInterventionsearchresult = [];
   static Intervention gIntervention = Intervention.InterventionInit();
 
+  static String selectedUserInter = "";
+  static String selectedUserInter2 = "";
+  static String selectedUserInter3 = "";
+  static String selectedUserInter4 = "";
+  static String selectedUserInter4RC = "";
+
+
+
   static String gSelIntervention = "";
   static String gSelInterventionBase = "Tous les types d'organe";
 
@@ -1589,11 +1683,47 @@ class Srv_DbTools {
     }
   }
 
+  static Future<bool> getInterventionClientAll() async {
+    String wTmp = "SELECT Clients.ClientId, Clients.Client_Nom, Groupes.GroupeId ,Groupes.Groupe_Nom, Sites.SiteId,Sites.Site_Nom, Zones.ZoneID, Zones.Zone_Nom,a.*, IFNULL(c.Cnt,0) as Cnt FROM Interventions a LEFT JOIN (SELECT Parcs_InterventionId, count(1) Cnt FROM Parcs_Ent GROUP BY Parcs_InterventionId) as c ON c.Parcs_InterventionId=a.InterventionId LEFT JOIN Zones ON ZoneId = Intervention_ZoneId LEFT JOIN Sites ON SiteId = Zone_SiteId LEFT JOIN Groupes ON GroupeId = Site_GroupeId LEFT JOIN Clients ON ClientId = Groupe_ClientId";
+
+    ListIntervention = await getIntervention_API_Post_Client("select", wTmp);
+    if (ListIntervention == null) return false;
+    print("getInterventionAll ${ListIntervention.length}");
+    if (ListIntervention.length > 0) {
+      print("getInterventionAll return TRUE");
+      return true;
+    }
+    return false;
+  }
+  static Future<List<Intervention>> getIntervention_API_Post_Client(String aType, String aSQL) async {
+    setSrvToken();
+    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
+    var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+
+    http.StreamedResponse response = await request.send();
+
+    if (response.statusCode == 200) {
+      var parsedJson = json.decode(await response.stream.bytesToString());
+      final items = parsedJson['data'];
+
+      if (items != null) {
+        List<Intervention> InterventionList = await items.map<Intervention>((json) {
+          return Intervention.fromJsonClient(json);
+        }).toList();
+        return InterventionList;
+      }
+    } else {
+      print(response.reasonPhrase);
+    }
+    return [];
+  }
+
+
+
   static Future<bool> getInterventionAll() async {
     try {
       ListIntervention = await getIntervention_API_Post("select", "select * from Interventions");
-
-
       if (ListIntervention == null) return false;
       print("getInterventionAll ${ListIntervention.length}");
       if (ListIntervention.length > 0) {
@@ -1669,6 +1799,7 @@ class Srv_DbTools {
             "InterventionId     =   ${Intervention.InterventionId}, " +
         "Intervention_ZoneId      = \"${Intervention.Intervention_ZoneId}\", " +
         "Intervention_Date      = \"${Intervention.Intervention_Date}\", " +
+        "Intervention_Date_Visite      = \"${Intervention.Intervention_Date_Visite}\", " +
         "Intervention_Type      = \"${Intervention.Intervention_Type}\", " +
         "Intervention_Parcs_Type      = \"${Intervention.Intervention_Parcs_Type}\", " +
         "Intervention_Status      = \"${Intervention.Intervention_Status}\", " +
@@ -1906,8 +2037,7 @@ class Srv_DbTools {
 
   static Future getPlanning_InterventionRes(int ResourceId) async {
     try {
-      String wTmp =
-          "SELECT PlanningId, Planning_InterventionId, Planning_ResourceId,Planning_InterventionstartTime, Planning_InterventionendTime, Planning_Libelle, InterventionId,Intervention_Type,Intervention_Parcs_Type,Intervention_Status, ZoneId, Zone_Nom, SiteId, Site_Nom, GroupeId, Groupe_Nom, ClientId, Client_Nom FROM Planning, Interventions, Zones, Sites, Groupes, Clients WHERE Planning_InterventionId = InterventionId AND Intervention_ZoneId = ZoneId AND Zone_SiteId = SiteId AND Site_GroupeId = GroupeId AND Groupe_ClientId = ClientId AND Planning_ResourceId = $ResourceId ORDER BY Planning_InterventionstartTime";
+      String wTmp = "SELECT PlanningId, Planning_InterventionId, Planning_ResourceId,Planning_InterventionstartTime, Planning_InterventionendTime, Planning_Libelle, InterventionId,Intervention_Type,Intervention_Parcs_Type,Intervention_Status, ZoneId, Zone_Nom, SiteId, Site_Nom, GroupeId, Groupe_Nom, ClientId, Client_Nom FROM Planning, Interventions, Zones, Sites, Groupes, Clients WHERE Planning_InterventionId = InterventionId AND Intervention_ZoneId = ZoneId AND Zone_SiteId = SiteId AND Site_GroupeId = GroupeId AND Groupe_ClientId = ClientId AND Planning_ResourceId = $ResourceId ORDER BY Planning_InterventionstartTime";
       print("getPlanning_InterventionRes $wTmp");
       ListPlanning_Intervention = await getPlanning_Intervention_API_Post("select", wTmp);
       if (ListPlanning_Intervention == null) return false;
@@ -1926,10 +2056,10 @@ class Srv_DbTools {
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
     request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
 
-    print("getPlanning_Intervention_API_Post " + aSQL);
+//    print("getPlanning_Intervention_API_Post " + aSQL);
 
     http.StreamedResponse response = await request.send();
-    print("getPlanning_Intervention_API_Post response ${response.statusCode}");
+  //  print("getPlanning_Intervention_API_Post response ${response.statusCode}");
 
     if (response.statusCode == 200) {
       var parsedJson = json.decode(await response.stream.bytesToString());
@@ -2066,10 +2196,12 @@ class Srv_DbTools {
 
   static Future<bool> getInterMissionUID(int ResourceId) async {
     try {
-      ListIntervention = await getIntervention_API_Post("select", "SELECT InterMissions.* FROM Planning,  InterMissions WHERE Planning_InterventionId = Planning_InterventionId AND Planning_ResourceId = $ResourceId GROUP BY InterMissionId ASC;");
-      if (ListIntervention == null) return false;
-      print("getInterventionAll ${ListIntervention.length}");
-      if (ListIntervention.length > 0) {
+      String wSql = "SELECT InterMissions.* FROM Planning,  InterMissions WHERE Planning_InterventionId = Planning_InterventionId AND Planning_ResourceId = $ResourceId GROUP BY InterMissionId ASC;";
+      print("getInterMissionUID ${wSql}");
+      ListInterMission = await getInterMission_API_Post("select",wSql);
+      if (ListInterMission == null) return false;
+      print("getInterMissionUID ${ListInterMission.length}");
+      if (ListInterMission.length > 0) {
         return true;
       }
       return false;
@@ -3204,8 +3336,8 @@ class Srv_DbTools {
     }
   }
 
-  static Future<bool> getUserid(int id) async {
-    print(">>>>> getUserid");
+  static Future<bool> getUserid(String id) async {
+    print(">>>>> getUserid $id");
     List<User> ListUser = await getUser_API_Post("select", "select * from Users where UserID = $id ");
     print("<<<<< getUserid");
 
@@ -3641,6 +3773,11 @@ class Srv_DbTools {
   static List<Param_Param> ListParam_ParamAll = [];
   static List<Param_Param> ListParam_Param = [];
   static List<Param_Param> ListParam_Param_Abrev = [];
+  static List<Param_Param> ListParam_Param_Civ = [];
+  static List<String> ListParam_ParamCiv = [];
+  static List<String> ListParam_ParamForme = [];
+  static List<Param_Param> ListParam_Param_Status_Interv = [];
+
   static List<Param_Param> ListParam_Paramsearchresult = [];
 
   static Param_Param gParam_Param = Param_Param.Param_ParamInit();
@@ -3665,6 +3802,8 @@ class Srv_DbTools {
   static List<String> ListParam_ParamFamID = [];
   static List<String> ListParam_FiltreFam = [];
   static List<String> ListParam_FiltreFamID = [];
+
+
 
   static Future<bool> getParam_ParamFam(String wFam) async {
     ListParam_ParamFam.clear();
@@ -4445,4 +4584,7 @@ class Srv_DbTools {
 
     //   print("VERIF $rR35");
   }
+
+
+
 }

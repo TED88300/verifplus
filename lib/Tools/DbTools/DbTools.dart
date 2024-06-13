@@ -78,7 +78,7 @@ class DbTools {
     FBroadcast.instance().broadcast("MAJHOME");
   }
 
-  static int gCurrentIndex = 3;
+  static int gCurrentIndex = 1;
   static int gCurrentIndex2 = 0;
   static int gCurrentIndex3 = 0;
 
@@ -138,7 +138,7 @@ class DbTools {
     var wgetDatabasesPath = await getDatabasesPath();
 //    print("getDatabasesPath() $wgetDatabasesPath");
 
-    String wCREATE_Param_Param = "CREATE TABLE Param_Param (Param_ParamId INTEGER NOT NULL, Param_Param_Type TEXT NOT NULL, Param_Param_ID TEXT NOT NULL, Param_Param_Text TEXT NOT NULL DEFAULT '', Param_Param_Int INTEGER NOT NULL DEFAULT 0, Param_Param_Double REAL NOT NULL DEFAULT 0, Param_Param_Ordre INTEGER NOT NULL DEFAULT 0);";
+    String wCREATE_Param_Param = "CREATE TABLE Param_Param (Param_ParamId INTEGER NOT NULL, Param_Param_Type TEXT NOT NULL, Param_Param_ID TEXT NOT NULL, Param_Param_Text TEXT NOT NULL DEFAULT '', Param_Param_Int INTEGER NOT NULL DEFAULT 0, Param_Param_Double REAL NOT NULL DEFAULT 0, Param_Param_Ordre INTEGER NOT NULL DEFAULT 0, Param_Param_Color TEXT NOT NULL DEFAULT '');";
     String wCREATE_Param_Saisie =
         "CREATE TABLE Param_Saisie (Param_SaisieId INTEGER NOT NULL, Param_Saisie_Organe TEXT NOT NULL DEFAULT '', Param_Saisie_Type TEXT NOT NULL DEFAULT '', Param_Saisie_ID TEXT NOT NULL DEFAULT '', Param_Saisie_Label TEXT NOT NULL DEFAULT '', Param_Saisie_Aide TEXT NOT NULL DEFAULT '', Param_Saisie_Controle TEXT NOT NULL DEFAULT '', Param_Saisie_Ordre INTEGER NOT NULL DEFAULT 0, Param_Saisie_Affichage TEXT NOT NULL DEFAULT '', Param_Saisie_Ordre_Affichage INTEGER NOT NULL DEFAULT 0, Param_Saisie_Affichage_Titre TEXT NOT NULL DEFAULT '', Param_Saisie_Affichage_L1 INTEGER NOT NULL DEFAULT 0, Param_Saisie_Affichage_L1_Ordre INTEGER NOT NULL DEFAULT 0, Param_Saisie_Affichage_L2 INTEGER NOT NULL DEFAULT 0, Param_Saisie_Affichage_L2_Ordre INTEGER NOT NULL DEFAULT 0, Param_Saisie_Icon TEXT NOT NULL DEFAULT '', Param_Saisie_Triger TEXT NOT NULL DEFAULT '');";
     String wCREATE_Param_Saisie_Param = "CREATE TABLE Param_Saisie_Param (Param_Saisie_ParamId INTEGER NOT NULL, "
@@ -186,10 +186,13 @@ class DbTools {
     String wCREATE_Zones =
         "CREATE TABLE `Zones` (`ZoneId` int(11) NOT NULL,`Zone_SiteId` int(11) NOT NULL,`Zone_Code` varchar(24) NOT NULL DEFAULT '',`Zone_Depot` varchar(128) NOT NULL DEFAULT '',`Zone_Nom` varchar(64) NOT NULL DEFAULT '',`Zone_Adr1` varchar(40) NOT NULL DEFAULT '',`Zone_Adr2` varchar(40) NOT NULL DEFAULT '',`Zone_Adr3` varchar(40) NOT NULL DEFAULT '',`Zone_Adr4` varchar(40) NOT NULL,`Zone_CP` varchar(10) NOT NULL DEFAULT '',`Zone_Ville` varchar(40) NOT NULL DEFAULT '',`Zone_Pays` varchar(40) NOT NULL DEFAULT '',`Zone_Acces` varchar(128) NOT NULL,`Zone_Rem` varchar(1024) NOT NULL DEFAULT '',`Livr` varchar(8) NOT NULL, Zone_isUpdate INTEGER NOT NULL DEFAULT 0)";
     String wCREATE_Intervention = "CREATE TABLE `Interventions` (`InterventionId` int(11) NOT NULL,`Intervention_ZoneId` int(11) DEFAULT 0,"
-        "`Intervention_Date` varchar(32) NOT NULL DEFAULT '',`Intervention_Type` varchar(32) NOT NULL DEFAULT '',`"
+        "`Intervention_Date` varchar(32) NOT NULL DEFAULT '',`Intervention_Date_Visite` varchar(32) NOT NULL DEFAULT '',`Intervention_Type` varchar(32) NOT NULL DEFAULT '',`"
         "Intervention_Parcs_Type` varchar(32) NOT NULL,`Intervention_Status` varchar(32) NOT NULL DEFAULT 'Planifiée',"
         "`Intervention_Histo_Status` longtext NOT NULL DEFAULT '',`Intervention_Facturation` varchar(32) NOT NULL DEFAULT 'Détaillée',"
         "`Intervention_Histo_Facturation` longtext NOT NULL DEFAULT '',`Intervention_Responsable` varchar(128) NOT NULL DEFAULT '',"
+        "`Intervention_Responsable2` varchar(128) NOT NULL DEFAULT '',"
+        "`Intervention_Responsable3` varchar(128) NOT NULL DEFAULT '',"
+        "`Intervention_Responsable4` varchar(128) NOT NULL DEFAULT '',"
         "`Intervention_Intervenants` mediumtext NOT NULL DEFAULT '',`Intervention_Reglementation` mediumtext NOT NULL DEFAULT '',"
         "`Intervention_Signataire_Client` varchar(128) NOT NULL,`Intervention_Signataire_Tech` varchar(128) NOT NULL,"
         "Intervention_Signataire_Date varchar(32) NOT NULL,Intervention_Signataire_Date_Client varchar(32) NOT NULL,`Intervention_Remarque` varchar(1024) NOT NULL DEFAULT '',"
@@ -333,15 +336,12 @@ class DbTools {
         ")";
 
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
-    String wDbPath = "kaqagaselloin.db";
+    String wDbPath = "kaqpavmasella2n.db";
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
 
     database = openDatabase(
       join(await getDatabasesPath(), wDbPath),
       onCreate: (db, version) async {
-        print("♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎");
-        print("♦︎♦︎♦︎♦︎♦︎♦︎♦︎ onCreate $version ♦︎♦︎♦︎♦︎");
-        print("♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎");
 
         await db.execute(wCREATE_Users_Desc);
         await db.execute(wCREATE_Users_Hab);
@@ -382,12 +382,14 @@ class DbTools {
       version: 1,
     );
 
+/*
     final db = await database;
     final tables = await db.rawQuery('SELECT * FROM sqlite_master ORDER BY name;');
     print("-------------------> onOpen Liste des table ${tables.length}");
     tables.forEach((element) {
       print("-------------------> tables ${element}");
     });
+*/
   }
 
   //************************************************
@@ -500,6 +502,7 @@ class DbTools {
         maps[i]["Param_Param_Int"],
         maps[i]["Param_Param_Double"],
         maps[i]["Param_Param_Ordre"],
+        maps[i]["Param_Param_Color"],
       );
     });
   }
@@ -807,7 +810,7 @@ class DbTools {
     final db = await database;
     String wRef = "NF074_Gammes_MOB";
     String wSql = "SELECT ${wRef} FROM `NF074_Gammes` WHERE NF074_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND NF074_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND NF074_Gammes_PRS = '${Srv_DbTools.PRS_Lib}' AND NF074_Gammes_CLF = '${Srv_DbTools.CLF_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
-//    print("***********>>>   getNF074_Gammes_MOB wSql ${wSql}");
+    print("***********>>>   getNF074_Gammes_MOB wSql ${wSql}");
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
     print("***********>>>   getNF074_Gammes_MOB maps.length ${maps.length}");
     return List.generate(maps.length, (i) {
@@ -2406,7 +2409,7 @@ class DbTools {
 
   static Future<void> inserPlanning_Intervention(Planning_Intervention wPlanning_Intervention) async {
     final db = await DbTools.database;
-    print("wPlanning_Intervention.toMap() ${wPlanning_Intervention.toMap()}");
+//    print("wPlanning_Intervention.toMap() ${wPlanning_Intervention.toMap()}");
     int? repid = await db.insert("Planning_Intervention", wPlanning_Intervention.toMap());
     gLastID = repid!;
   }
@@ -2444,6 +2447,41 @@ class DbTools {
         maps[i]["Groupe_isUpdate"] == 1,
       );
     });
+  }
+
+  static Future<List<Groupe>> getGroupe(int ID) async {
+    final db = await database;
+
+    String wTmp = "SELECT * FROM Groupes WHERE GroupeId = $ID";
+    print("getGroupes ClientID ${ID} ${wTmp}");
+
+    final List<Map<String, dynamic>> maps = await db.rawQuery(wTmp);
+
+    print("getGroupes ClientID maps ${maps.length}");
+
+    List<Groupe> wListGroup = List.generate(maps.length, (i) {
+      return Groupe(
+        maps[i]["GroupeId"],
+        maps[i]["Groupe_ClientId"],
+        maps[i]["Groupe_Code"],
+        maps[i]["Groupe_Nom"],
+        maps[i]["Groupe_Adr1"],
+        maps[i]["Groupe_Adr2"],
+        maps[i]["Groupe_Adr3"],
+        maps[i]["Groupe_Adr4"],
+        maps[i]["Groupe_CP"],
+        maps[i]["Groupe_Ville"],
+        maps[i]["Groupe_Pays"],
+        maps[i]["Groupe_Acces"],
+        maps[i]["Groupe_Rem"],
+        maps[i]["Livr"],
+        maps[i]["Groupe_isUpdate"] == 1,
+      );
+    });
+
+    print("getGroupes ClientID wListGroup ${wListGroup.length}");
+
+    return wListGroup;
   }
 
   static Future<List<Groupe>> getGroupes(int ClientID) async {
@@ -2576,6 +2614,50 @@ class DbTools {
     return -1;
   }
 
+  static Future<List<Site>> getSite(int ID) async {
+    final db = await database;
+
+    String wTmp = "SELECT * FROM Sites where SiteId = ${ID} ORDER BY  Site_Nom ASC;";
+    print("rawQuery ${wTmp}");
+    final List<Map<String, dynamic>> maps = await db.rawQuery(wTmp);
+    print("maps length ${maps.length}");
+
+    return List.generate(maps.length, (i) {
+      String wSite_Code = "";
+
+      try {
+        wSite_Code = maps[i]['Site_Code'];
+      } catch (e) {
+        print(e);
+      }
+      return Site(
+        maps[i]["SiteId"],
+        maps[i]["Site_GroupeId"],
+        wSite_Code,
+        maps[i]["Site_Depot"],
+        maps[i]["Site_Nom"],
+        maps[i]["Site_Adr1"],
+        maps[i]["Site_Adr2"],
+        maps[i]["Site_Adr3"],
+        maps[i]["Site_Adr4"],
+        maps[i]["Site_CP"],
+        maps[i]["Site_Ville"],
+        maps[i]["Site_Pays"],
+        maps[i]["Site_Acces"],
+        maps[i]["Site_RT"],
+        maps[i]["Site_APSAD"],
+        maps[i]["Site_Rem"],
+        maps[i]["Site_ResourceId"],
+        maps[i]["Livr"],
+        "",
+//        maps[i]["Groupe_Nom"],
+        maps[i]["Site_isUpdate"] == 1,
+//maps[i]["Groupe_Nom"],
+      );
+    });
+  }
+
+
   static Future<List<Site>> getSiteGroupe(int ID) async {
     final db = await database;
 
@@ -2694,6 +2776,43 @@ class DbTools {
     });
   }
 
+
+
+  static Future<List<Zone>> getZone(int ID) async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> maps = await db.query("Zones", orderBy: "Zone_Nom ASC", where: "ZoneId = $ID");
+
+    return List.generate(maps.length, (i) {
+      String wZone_Code = "";
+
+      try {
+        wZone_Code = maps[i]['Zone_Code'];
+      } catch (e) {
+        print(e);
+      }
+      return Zone(
+        maps[i]["ZoneId"],
+        maps[i]["Zone_SiteId"],
+        wZone_Code,
+        maps[i]["Zone_Depot"],
+        maps[i]["Zone_Nom"],
+        maps[i]["Zone_Adr1"],
+        maps[i]["Zone_Adr2"],
+        maps[i]["Zone_Adr3"],
+        maps[i]["Zone_Adr4"],
+        maps[i]["Zone_CP"],
+        maps[i]["Zone_Ville"],
+        maps[i]["Zone_Pays"],
+        maps[i]["Zone_Acces"],
+        maps[i]["Zone_Rem"],
+        maps[i]["Livr"],
+        maps[i]["Zone_isUpdate"] == 1,
+      );
+    });
+  }
+
+
   static Future<List<Zone>> getZones(int ID) async {
     final db = await database;
 
@@ -2763,6 +2882,7 @@ class DbTools {
         maps[i]["InterventionId"],
         maps[i]["Intervention_ZoneId"],
         maps[i]["Intervention_Date"],
+        maps[i]["Intervention_Date_Visite"],
         maps[i]["Intervention_Type"],
         maps[i]["Intervention_Parcs_Type"],
         maps[i]["Intervention_Status"],
@@ -2770,6 +2890,9 @@ class DbTools {
         maps[i]["Intervention_Facturation"],
         maps[i]["Intervention_Histo_Facturation"],
         maps[i]["Intervention_Responsable"],
+        maps[i]["Intervention_Responsable2"],
+        maps[i]["Intervention_Responsable3"],
+        maps[i]["Intervention_Responsable4"],
         maps[i]["Intervention_Intervenants"],
         maps[i]["Intervention_Reglementation"],
         maps[i]["Intervention_Signataire_Client"],
@@ -2804,6 +2927,7 @@ class DbTools {
         maps[i]["InterventionId"],
         maps[i]["Intervention_ZoneId"],
         maps[i]["Intervention_Date"],
+        maps[i]["Intervention_Date_Visite"],
         maps[i]["Intervention_Type"],
         maps[i]["Intervention_Parcs_Type"],
         maps[i]["Intervention_Status"],
@@ -2811,6 +2935,9 @@ class DbTools {
         maps[i]["Intervention_Facturation"],
         maps[i]["Intervention_Histo_Facturation"],
         maps[i]["Intervention_Responsable"],
+        maps[i]["Intervention_Responsable2"],
+        maps[i]["Intervention_Responsable3"],
+        maps[i]["Intervention_Responsable4"],
         maps[i]["Intervention_Intervenants"],
         maps[i]["Intervention_Reglementation"],
         maps[i]["Intervention_Signataire_Client"],
@@ -2846,6 +2973,7 @@ class DbTools {
         maps[0]["InterventionId"],
         maps[0]["Intervention_ZoneId"],
         maps[0]["Intervention_Date"],
+        maps[0]["Intervention_Date_Visite"],
         maps[0]["Intervention_Type"],
         maps[0]["Intervention_Parcs_Type"],
         maps[0]["Intervention_Status"],
@@ -2853,6 +2981,9 @@ class DbTools {
         maps[0]["Intervention_Facturation"],
         maps[0]["Intervention_Histo_Facturation"],
         maps[0]["Intervention_Responsable"],
+        maps[0]["Intervention_Responsable2"],
+        maps[0]["Intervention_Responsable3"],
+        maps[0]["Intervention_Responsable4"],
         maps[0]["Intervention_Intervenants"],
         maps[0]["Intervention_Reglementation"],
         maps[0]["Intervention_Signataire_Client"],
@@ -2872,6 +3003,8 @@ class DbTools {
         maps[0]["Intervention_Signature_Client"],
         maps[0]["Intervention_Signature_Tech"],
       );
+
+
 
     return Srv_DbTools.gIntervention;
   }

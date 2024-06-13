@@ -11,6 +11,7 @@ import 'package:verifplus/Widget/Client/Client_Dialog.dart';
 import 'package:verifplus/Widget/Client/Client_Intervention_Type_Dialog.dart';
 import 'package:verifplus/Widget/Client/Client_Interventions_Add.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter.dart';
+import 'package:verifplus/Widget/Planning/Client_Groupe_Inter_Det.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
@@ -27,15 +28,12 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
   TextEditingController ctrlFilter = new TextEditingController();
   String filterText = '';
   bool isAll = true;
-
   int PastilleType = 0;
-
   double textSize = 14.0;
 
   int SelCol = -1;
   int SelID = -1;
   bool onCellTap = false;
-
   String wAction = "";
 
   void Reload() async {
@@ -299,7 +297,6 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
               backgroundColor: gColors.secondary,
               onPressed: () async {
                 await Client_Interventions_Add.Dialogs_Add(context, true);
-
                 Reload();
               }),
     );
@@ -376,9 +373,18 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
                     onTap: () async {
                       await HapticFeedback.vibrate();
                       Srv_DbTools.gIntervention = intervention;
-                      await HapticFeedback.vibrate();
 
-                      await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Groupe_Parc_Inter()));
+                      Srv_DbTools.gIntervention.Client_Nom = Srv_DbTools.gClient.Client_Nom;
+                      Srv_DbTools.gIntervention.Site_Nom = Srv_DbTools.gSite.Site_Nom;
+                      Srv_DbTools.gIntervention.Groupe_Nom = Srv_DbTools.gGroupe.Groupe_Nom;
+                      Srv_DbTools.gIntervention.Zone_Nom = Srv_DbTools.gZone.Zone_Nom;
+
+
+
+                      await HapticFeedback.vibrate();
+                      await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Groupe_Inter_Det()));
+
+//                      await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Groupe_Parc_Inter()));
                       Reload();
                     },
                     child: Container(

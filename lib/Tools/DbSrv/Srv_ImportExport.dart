@@ -882,8 +882,11 @@ class Srv_ImportExport {
     await Srv_ImportExport.ImportClient();
     await Srv_ImportExport.ImportAdresse();
     await Srv_ImportExport.ImportContact();
+    print(" ImportPlanning");
     await Srv_ImportExport.ImportPlanning();
+    print(" ImportPlanning_Intervention");
     await Srv_ImportExport.ImportPlanning_Intervention();
+    print(" ImportInterMission");
     await Srv_ImportExport.ImportInterMission();
     await Srv_ImportExport.ImportIntervention();
     return true;
@@ -899,11 +902,11 @@ class Srv_ImportExport {
         await DbTools.inserUser(wUser);
       }
       Srv_DbTools.ListUser = await DbTools.getUsers();
-      print("Import_DataDialog ON LINE Srv_DbTools.ListUser ${Srv_DbTools.ListUser}");
+ //     print("Import_DataDialog ON LINE Srv_DbTools.ListUser ${Srv_DbTools.ListUser}");
       return true;
     }
     Srv_DbTools.ListUser = await DbTools.getUsers();
-    print("Import_DataDialog OFF LINE Srv_DbTools.ListUser ${Srv_DbTools.ListUser}");
+ //   print("Import_DataDialog OFF LINE Srv_DbTools.ListUser ${Srv_DbTools.ListUser}");
     return false;
   }
 
@@ -917,10 +920,6 @@ class Srv_ImportExport {
       await DbTools.TrunckClients();
       for (int i = 0; i < Srv_DbTools.ListClient.length; i++) {
         Client wClient = Srv_DbTools.ListClient[i];
-
-
-        print("••••• ImportClient wClient ${wClient.Client_Nom}");
-
         await DbTools.inserClients(wClient);
       }
       Srv_DbTools.ListClient = await DbTools.getClientsAll();
@@ -988,14 +987,17 @@ class Srv_ImportExport {
 
   static Future<bool> ImportPlanning_Intervention() async {
     bool wResult = await Srv_DbTools.getPlanning_InterventionRes(Srv_DbTools.gUserLogin.UserID);
-    print("ImportPlanning_Intervention wResult ${wResult}");
-    print("ImportPlanning_Intervention Import ${Srv_DbTools.ListPlanning_Intervention.length}");
+//    print("ImportPlanning_Intervention wResult ${wResult}");
+//    print("ImportPlanning_Intervention Import ${Srv_DbTools.ListPlanning_Intervention.length}");
 
     if (wResult) {
       await DbTools.TrunckPlanning_Intervention();
 
       for (int i = 0; i < Srv_DbTools.ListPlanning_Intervention.length; i++) {
         Planning_Intervention wPlanning_Intervention = Srv_DbTools.ListPlanning_Intervention[i];
+  //      print("ImportPlanning_Intervention wPlanning_Intervention ${wPlanning_Intervention.Desc()}");
+
+
         await DbTools.inserPlanning_Intervention(wPlanning_Intervention);
       }
       Srv_DbTools.ListPlanning_Intervention = await DbTools.getPlanning_InterventionAll();
@@ -1009,23 +1011,27 @@ class Srv_ImportExport {
 
   static Future<bool> ImportInterMission() async {
     bool wResult = await Srv_DbTools.getInterMissionUID(Srv_DbTools.gUserLogin.UserID);
-    print("Import_DataDialog ListInterMissions ${Srv_DbTools.ListInterMission.length}");
+    print("••••••••••••• Import_DataDialog  ${Srv_DbTools.gUserLogin.UserID} ListInterMissions ${Srv_DbTools.ListInterMission.length}");
 
     if (wResult) {
       await DbTools.TrunckInterMissions();
+
+
+
       for (int i = 0; i < Srv_DbTools.ListInterMission.length; i++) {
         InterMission wInterMissions = Srv_DbTools.ListInterMission[i];
         await DbTools.inserInterMissions(wInterMissions);
       }
       Srv_DbTools.ListInterMission = await DbTools.getInterMissions();
-      print("Import_DataDialog Srv_DbTools.ListInterMissions ${Srv_DbTools.ListInterMission.length}");
+      print("••••••••••••• Import_DataDialog Srv_DbTools.ListInterMissions ${Srv_DbTools.ListInterMission.length}");
       return true;
     }
 
     Srv_DbTools.ListInterMission = await DbTools.getInterMissions();
-    print("Import_DataDialog Srv_DbTools.ListInterMissions ${Srv_DbTools.ListInterMission.length}");
+    print("••••••••••••• Import_DataDialog Srv_DbTools.ListInterMissions ${Srv_DbTools.ListInterMission.length}");
     return false;
   }
+
 
 
 

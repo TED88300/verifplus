@@ -5,9 +5,10 @@ import 'package:intl/intl.dart';
 import 'package:maps_launcher/maps_launcher.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
+import 'package:verifplus/Tools/DbTools/Db_Parcs_Ent.dart';
 import 'package:verifplus/Widget/Client/Client_Dialog.dart';
+import 'package:verifplus/Widget/Client/Client_Interventions_Status.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter.dart';
-import 'package:verifplus/Widget/Planning/Client_Groupe_Inter_Det_Popup.dart';
 import 'package:verifplus/Widget/Planning/Missions_Dialog.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
@@ -34,6 +35,11 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
 
   List<Widget> ListContact = [];
 
+  int countTot = 0;
+  int countX = 0;
+  int wTimer = 0;
+
+
   void onMaj() async {
     print("Parent onMaj() Relaod()");
   }
@@ -46,25 +52,45 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
     setState(() {});
   }
 
-
   @override
-  void initLib() async {
+  Future initLib() async {
+
+
+
+    if (Srv_DbTools.gIntervention.Intervention_Responsable!.isNotEmpty) {
+      await Srv_DbTools.getUserid(Srv_DbTools.gIntervention.Intervention_Responsable!);
+      Srv_DbTools.selectedUserInter = "${Srv_DbTools.gUser.User_Nom} ${Srv_DbTools.gUser.User_Prenom}";
+    }
+    if (Srv_DbTools.gIntervention.Intervention_Responsable2!.isNotEmpty) {
+      await Srv_DbTools.getUserid(Srv_DbTools.gIntervention.Intervention_Responsable2!);
+      Srv_DbTools.selectedUserInter2 = "${Srv_DbTools.gUser.User_Nom} ${Srv_DbTools.gUser.User_Prenom}";
+
+    }
+    if (Srv_DbTools.gIntervention.Intervention_Responsable3!.isNotEmpty) {
+      await Srv_DbTools.getUserid(Srv_DbTools.gIntervention.Intervention_Responsable3!);
+      Srv_DbTools.selectedUserInter3 = "${Srv_DbTools.gUser.User_Nom} ${Srv_DbTools.gUser.User_Prenom}";
+    }
+    if (Srv_DbTools.gIntervention.Intervention_Responsable4!.isNotEmpty) {
+      await Srv_DbTools.getUserid(Srv_DbTools.gIntervention.Intervention_Responsable4!);
+      Srv_DbTools.selectedUserInter4 = "${Srv_DbTools.gUser.User_Nom} ${Srv_DbTools.gUser.User_Prenom}";
+    }
+
 
     Srv_DbTools.ListPlanning = await DbTools.getPlanning_InterventionId(Srv_DbTools.gIntervention.InterventionId!);
-    await DbTools.getPlanning_InterventionIdRes(Srv_DbTools.gIntervention.InterventionId!);
+    await Srv_DbTools.getPlanning_InterventionIdRes(Srv_DbTools.gIntervention.InterventionId!);
+
+
+    print("ListInterMission > ${Srv_DbTools.ListInterMission.length}");
     Srv_DbTools.ListInterMission = await DbTools.getInterMissionsIntervention(Srv_DbTools.gIntervention.InterventionId!);
+    print("ListInterMission < ${Srv_DbTools.ListInterMission.length}");
 
     bool wMin = false, wMax = false;
 
     print("Srv_DbTools.ListInterMission! ${Srv_DbTools.ListInterMission}");
 
-
     for (int i = 0; i < Srv_DbTools.ListPlanning.length; i++) {
-
-
       var element = Srv_DbTools.ListPlanning[i];
       print("element ${element.Desc()}");
-
 
       if (element.Planning_InterventionstartTime.isBefore(minStartTime)) {
         minStartTime = element.Planning_InterventionstartTime;
@@ -87,17 +113,35 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
       Plannification = "Plannifiée $formattedDateDeb - $formattedDateFin";
     }
 
+    wIntervenants = "";
     for (int i = 0; i < Srv_DbTools.ListUserH.length; i++) {
       var element = Srv_DbTools.ListUserH[i];
       wIntervenants = "$wIntervenants ${wIntervenants.isNotEmpty ? ", " : ""}${element.User_Nom} ${element.User_Prenom} (${element.H}h)";
     }
 
+
+    wInterMission = "";
     for (int i = 0; i < Srv_DbTools.ListInterMission.length; i++) {
       var element = Srv_DbTools.ListInterMission[i];
+      wInterMission = "$wInterMission ${element.InterMission_Nom}";
 
-      if (i == 0)
-        wInterMission = "$wInterMission ${element.InterMission_Nom}";
-      else if (i == 1) wInterMission = "$wInterMission +";
+    }
+
+    countTot = 0;
+    wTimer = 0;
+    countX = 0;
+    DbTools.glfParcs_Ent = await DbTools.getParcs_Ent(Srv_DbTools.gIntervention.InterventionId!);
+
+    for (int jj = 0; jj < DbTools.glfParcs_Ent.length; jj++) {
+      Parc_Ent elementEnt = DbTools.glfParcs_Ent[jj];
+      countTot++;
+      if (!elementEnt.Parcs_Date_Rev!.isEmpty) countX++;
+
+      try {
+        wTimer += elementEnt.Parcs_Intervention_Timer!;
+      } catch (e) {
+        print(e);
+      }
     }
 
     if (Srv_DbTools.gZone.Zone_Adr1.isNotEmpty) wAdresse = wAdresse + " " + Srv_DbTools.gZone.Zone_Adr1;
@@ -107,10 +151,22 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
     if (Srv_DbTools.gZone.Zone_CP.isNotEmpty) wAdresse = wAdresse + " " + Srv_DbTools.gZone.Zone_CP;
     if (Srv_DbTools.gZone.Zone_Ville.isNotEmpty) wAdresse = wAdresse + " " + Srv_DbTools.gZone.Zone_Ville;
 
+    final wDur = Duration(seconds: wTimer);
+
     ListContact = [
-      AffLigne("Type d'intervention", "${Srv_DbTools.gIntervention.Intervention_Type}", gColors.greyLight, "Icon_Inter", Colors.black),
+      AffBtnStatus("", "Type d'intervention", "${Srv_DbTools.gIntervention.Intervention_Parcs_Type} - ${Srv_DbTools.gIntervention.Intervention_Type} - ${Srv_DbTools.gIntervention.Intervention_Status}", "", gColors.white, gColors.primaryBlue),
       AffLigne("Plannification", "${Plannification}", gColors.white, "", gColors.primaryOrange),
+      AffLigne("Date Programmation", "${Srv_DbTools.gIntervention.Intervention_Date}", gColors.white, "", gColors.black),
+      AffLigne("Détail", ">>>>> Vérifications : ${countX} / ${countTot} <<<<<                    >>>>> Temps Passé : ${gObj.printDurationHHMM(wDur)} <<<<<", gColors.white, "", gColors.primaryOrange),
+      AffBtnDate("", "Dernière Visite", "${Srv_DbTools.gIntervention.Intervention_Date_Visite}", "", gColors.white, gColors.primaryBlue),
+
+      AffLigne("Ressources Techniques : ", "", gColors.greyLight, "Icon_Interv", gColors.primaryBlue),
+      AffLigne("Commercial intervention", "${Srv_DbTools.selectedUserInter}", gColors.white, "", gColors.black),
+      AffLigne("Manager commercial", "${Srv_DbTools.selectedUserInter2}", gColors.white, "", gColors.black),
+      AffLigne("Manager Technique", "${Srv_DbTools.selectedUserInter3}", gColors.white, "", gColors.black),
+      AffLigne("Référent technique", "${Srv_DbTools.selectedUserInter4}", gColors.white, "", gColors.black),
       AffLigne("Tech Affectés", "${wIntervenants}", gColors.white, "", Colors.black),
+
       AffLigneCercle("Ordre de mission", "${Srv_DbTools.ListInterMission.length}", gColors.greyLight, "Icon_Mission", gColors.primaryBlue),
       AffBtn("", "", "${wInterMission}", "", gColors.white, gColors.primaryBlue),
       AffLigne("Adresse", "", gColors.greyLight, "Icon_Adr2", gColors.primaryBlue),
@@ -120,7 +176,7 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
 
     await DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gZone.ZoneId, "ZONE");
 
-   for (int i = 0; i < Srv_DbTools.ListContact.length; i++) {
+    for (int i = 0; i < Srv_DbTools.ListContact.length; i++) {
       var element = Srv_DbTools.ListContact[i];
       print("Srv_DbTools.ListContact ZONE ${element.Desc()}");
 
@@ -136,14 +192,9 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
 
     await DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gSite.SiteId, "SITE");
 
-
-
     for (int i = 0; i < Srv_DbTools.ListContact.length; i++) {
       var element = Srv_DbTools.ListContact[i];
-
       print("Srv_DbTools.ListContact SITE ${element.Desc()}");
-
-
       String wNom = "${element.Contact_Prenom} ${element.Contact_Nom}";
       if (element.Contact_Tel1.isNotEmpty) wNom = wNom + " - ${element.Contact_Tel1}";
       if (element.Contact_Tel2.isNotEmpty) wNom = wNom + " - ${element.Contact_Tel2}";
@@ -202,8 +253,8 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
           padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
           child: DbTools.gBoolErrorSync
               ? Image.asset(
-            "assets/images/IcoWErr.png",
-          )
+                  "assets/images/IcoWErr.png",
+                )
               : Image.asset("assets/images/IcoW.png"),
         ),
       ),
@@ -222,27 +273,25 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
 
   @override
   Widget build(BuildContext context) {
-    print(" build Intervention_Signataire_Tech ${Srv_DbTools.gIntervention.Intervention_Signataire_Tech}");
-
     return Scaffold(
       appBar: appBar(),
-      body:
-      Container(
+      body: Container(
         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
         margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-        child:
-      Column(
-        children: [
-          gObj.InterventionTitleWidget("${Srv_DbTools.gClient.Client_Nom.toUpperCase()}", wTitre2: "${Srv_DbTools.gGroupe.Groupe_Nom} / ${Srv_DbTools.gSite.Site_Nom} / ${Srv_DbTools.gZone.Zone_Nom}", wTimer: 0),
-          gColors.wLigne(),
-          Expanded(
-            child: build_Detail(),
-          ),
-          AffBtnInter(),
-    ],
+        child: Column(
+          children: [
+            gObj.InterventionTitleWidget("${Srv_DbTools.gIntervention.Client_Nom!.toUpperCase()}", wTitre2: "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}", wTimer: 0),
+            gColors.wLigne(),
+            Expanded(
+              child: build_Detail(),
+            ),
+            AffBtnInter(),
+          ],
+        ),
       ),
-    ),);
+    );
   }
+
 
   Widget build_Detail() {
     print("Srv_DbTools.gContact.Contact_Nom ${Srv_DbTools.gContact.Contact_Nom}");
@@ -375,6 +424,8 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
                         height: wHeight,
                         child: Text(
                           "${wTextR}",
+                          overflow: TextOverflow.ellipsis,
+                          softWrap: false,
                           textAlign: TextAlign.end,
                           maxLines: 1,
                           style: gColors.bodySaisie_B_B.copyWith(color: ForeGrd),
@@ -471,12 +522,12 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
   Widget AffBtnInter() {
     return Container(
       width: 640,
-      margin: EdgeInsets.only(top : 5,bottom: 0),
+      margin: EdgeInsets.only(top: 5, bottom: 0),
       child: ElevatedButton(
           onPressed: () async {
             await HapticFeedback.vibrate();
             await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Groupe_Parc_Inter()));
-
+            await initLib();
           },
           style: ElevatedButton.styleFrom(
               backgroundColor: gColors.primaryRed,
@@ -485,7 +536,7 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
                 color: gColors.primaryRed,
               )),
           child: Container(
-            margin: EdgeInsets.only(top : 30,bottom: 30),
+            margin: EdgeInsets.only(top: 30, bottom: 30),
             child: Text('Démarrage Intervention', style: gColors.bodyTitle1_B_W),
           )),
     );
@@ -509,16 +560,94 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
           print("onPressed");
 
           await Missions_Dialog.Missions_dialog(context);
-
-          //            await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Vue_Edit()));
-/*
-          await showDialog(
-              context: context,
-              builder: (BuildContext context) {
-                return Container(padding: EdgeInsets.fromLTRB(30, 0, 30, 30), child: Client_Groupe_Inter_Det_Popup(bFact: true, wChamps: wChamps));
-              });
-*/
+          await initLib();
           setState(() {});
+        },
+        child: Column(
+          children: [
+            AffLigne(wTitle, "$wValue >", BckGrd, ImgL, ForeGrd),
+          ],
+        ));
+  }
+
+  Widget AffBtnStatus(
+    String wChamps,
+    String wTitle,
+    String wValue,
+    String ImgL,
+    Color BckGrd,
+    Color ForeGrd,
+  ) {
+    return TextButton(
+        style: TextButton.styleFrom(
+          minimumSize: Size.zero,
+          padding: EdgeInsets.zero,
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        ),
+        onPressed: () async {
+          print("onPressed");
+          await HapticFeedback.vibrate();
+          await Client_Intervention_Status_Dialog.Dialogs_Intervention_Status(context);
+          await initLib();
+          setState(() {});
+        },
+        child: Column(
+          children: [
+            AffLigne(wTitle, "$wValue >", BckGrd, ImgL, ForeGrd),
+          ],
+        ));
+  }
+
+  Widget AffBtnDate(
+    String wChamps,
+    String wTitle,
+    String wValue,
+    String ImgL,
+    Color BckGrd,
+    Color ForeGrd,
+  ) {
+    return TextButton(
+        style: TextButton.styleFrom(
+          minimumSize: Size.zero,
+          padding: EdgeInsets.zero,
+          tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        ),
+        onPressed: () async {
+          print("onPressed ${wValue}");
+
+          var inputFormat = DateFormat('dd/MM/yyyy');
+          var wDate = DateTime.now();
+
+          try {
+            wDate = inputFormat.parse(wValue);
+          } catch (e) {}
+          final DateTime? date = await showDatePicker(
+              context: context,
+              initialDate: wDate,
+              firstDate: DateTime(1900),
+              lastDate: DateTime(2100),
+              builder: (BuildContext context, Widget? child) {
+                return Theme(
+                  data: ThemeData(brightness: Brightness.light, primaryColor: gColors.primary),
+                  child: child!,
+                );
+              });
+
+          print("NEW DATE ${date}");
+          String newDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
+
+          try {
+            newDate = DateFormat('dd/MM/yyyy').format(date!);
+          } catch (e) {}
+
+          print("NEW DATE ${date} / ${newDate}");
+          Srv_DbTools.gIntervention.Intervention_Date_Visite = newDate;
+          await DbTools.updateInterventions(Srv_DbTools.gIntervention);
+          bool wRes = await Srv_DbTools.setIntervention(Srv_DbTools.gIntervention);
+          print("•••• setIntervention ${wRes}");
+          Srv_DbTools.gIntervention.Intervention_isUpdate = wRes;
+          await DbTools.updateInterventions(Srv_DbTools.gIntervention);
+          initLib();
         },
         child: Column(
           children: [

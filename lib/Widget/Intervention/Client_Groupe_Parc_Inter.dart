@@ -110,11 +110,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
   Future Reload() async {
 
-    print("♦︎♦︎♦︎♦︎♦︎♦︎ Client_Groupe_Parc_Inter Reload ♦︎♦︎♦︎♦︎♦︎♦︎ ");
-    print("♦︎♦︎♦︎♦︎♦︎♦︎ Client_Groupe_Parc_Inter Reload ♦︎♦︎♦︎♦︎♦︎♦︎ ");
-    print("♦︎♦︎♦︎♦︎♦︎♦︎ Client_Groupe_Parc_Inter Reload ♦︎♦︎♦︎♦︎♦︎♦︎ ");
-    print("♦︎♦︎♦︎♦︎♦︎♦︎ Client_Groupe_Parc_Inter Reload ♦︎♦︎♦︎♦︎♦︎♦︎ ");
-    print("♦︎♦︎♦︎♦︎♦︎♦︎ Client_Groupe_Parc_Inter Reload ♦︎♦︎♦︎♦︎♦︎♦︎ ");
 
     await Srv_ImportExport.getErrorSync();
     await DbTools.Parc_Ent_GetOrder();
@@ -423,7 +418,10 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     if (Srv_DbTools.gIntervention.Intervention_Status!.contains("Planifiée")) {
       if (wTimer > 0) Srv_DbTools.gIntervention.Intervention_Status = "En cours";
     }
-    await Srv_DbTools.setIntervention(Srv_DbTools.gIntervention);
+
+
+
+    await Srv_ImportExport.Intervention_Export_Update(Srv_DbTools.gIntervention);
 
     print("Filter >>>>"
         "");
@@ -740,47 +738,9 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
   //********************************************
   //********************************************
   //********************************************
-/*
 
-  Widget GrpBtn(BuildContext context, List<GrdBtn> alGrdBtn, int nbCol, double aAspectRatio) {
-    return GridView.builder(
-      shrinkWrap: true,
-      physics: BouncingScrollPhysics(),
-      itemCount: alGrdBtn.length,
-      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(childAspectRatio: aAspectRatio, crossAxisCount: nbCol, crossAxisSpacing: 1.0, mainAxisSpacing: 1.0),
-      itemBuilder: (BuildContext context, int index) {
-        GrdBtn wGrdBtn = alGrdBtn[index];
-        GrdBtnGrp wGrdBtnGrp = getGrdBtnGrp(wGrdBtn.GrdBtn_GroupeId!);
-        return Container(
-          color: wGrdBtnGrp.GrdBtnGrpSelId!.contains(wGrdBtn.GrdBtnId) ? wGrdBtnGrp.GrdBtnGrp_ColorSel : wGrdBtnGrp.GrdBtnGrp_Color,
-          child: InkWell(
-            onTap: () {
-              selGrdBtnGrp(wGrdBtn.GrdBtn_GroupeId!, wGrdBtn.GrdBtnId!);
-              _tabController.index = wGrdBtn.GrdBtnId!;
-              Filtre();
-              print("setSt 3");
-              setState(() {});
-            },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: <Widget>[
-                Text(
-                  wGrdBtn.GrdBtn_Label!,
-                  textAlign: TextAlign.center,
-                  style: gColors.bodySaisie_B_W.copyWith(
-                    color: wGrdBtnGrp.GrdBtnGrpSelId!.contains(wGrdBtn.GrdBtnId) ? wGrdBtnGrp.GrdBtnGrp_Txt_ColorSel : wGrdBtnGrp.GrdBtnGrp_Txt_Color,
-                  ),
-                )
-              ],
-            ),
-          ),
-        );
-      },
-    );
-  }
 
-*/
+
   void onMaj() async {
     print("•••••••••• Parent onMaj() Relaod()");
 
@@ -848,13 +808,10 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
 
                     await Srv_DbTools.getParcs_ArtInter(Srv_DbTools.gIntervention.InterventionId!);
-                    print("♦︎♦︎ IMPORT ♦︎♦︎ ListParc_Art lenght ${Srv_DbTools.ListParc_Art.length}");
+
 
                     for (int i = 0; i < Srv_DbTools.ListParc_Art.length; i++) {
                       Parc_Art_Srv element = Srv_DbTools.ListParc_Art[i];
-
-
-                      print("¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶ Srv_DbTools ${element.toString()}");
                     }
 
 
@@ -1057,7 +1014,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     return Padding(
         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: Column(children: [
-          gObj.InterventionTitleWidget("${Srv_DbTools.gClient.Client_Nom.toUpperCase()}", wTitre2 : "${Srv_DbTools.gGroupe.Groupe_Nom} / ${Srv_DbTools.gSite.Site_Nom} / ${Srv_DbTools.gZone.Zone_Nom}", wTimer : wTimer),
+          gObj.InterventionTitleWidget("${Srv_DbTools.gIntervention.Client_Nom!.toUpperCase()}", wTitre2: "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}", wTimer: 0),
 
 
         ]));
@@ -1069,7 +1026,8 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: Column(
           children: [
-            gObj.InterventionTitleWidget("${Srv_DbTools.gClient.Client_Nom.toUpperCase()}", wTitre2 : "${Srv_DbTools.gGroupe.Groupe_Nom} / ${Srv_DbTools.gSite.Site_Nom} / ${Srv_DbTools.gZone.Zone_Nom}", wTimer : wTimer),
+
+            gObj.InterventionTitleWidget("${Srv_DbTools.gIntervention.Client_Nom!.toUpperCase()}", wTitre2: "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}", wTimer: wTimer),
             Entete_Btn_Search(),
             Expanded(
               child: ExtGridWidget(),
@@ -1086,11 +1044,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
         child: Column(
           children: [
             gObj.InterventionTitleWidget("${Srv_DbTools.gClient.Client_Nom.toUpperCase()}", wTitre2 : "${Srv_DbTools.gGroupe.Groupe_Nom} / ${Srv_DbTools.gSite.Site_Nom} / ${Srv_DbTools.gZone.Zone_Nom}", wTimer : wTimer),
-
-
-
-
-
           ],
         ));
   }
@@ -1304,8 +1257,10 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       else if (DbTools.gCurrentIndex3 == 4)
         wchildren = Client_Groupe_Parc_Inter_Devis(onMaj: onMaj, x_t: "");
       else if (DbTools.gCurrentIndex3 == 5)
+/*
         wchildren = Client_Groupe_Parc_Inter_Note(onMaj: onMaj, x_t: "");
       else if (DbTools.gCurrentIndex3 == 6)
+*/
         wchildren = Client_Groupe_Parc_Inter_Signature(onMaj: onMaj, x_t: "");
       else
         wchildren = Organes();
@@ -1352,7 +1307,12 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
             child:
         FloatingActionButton(
           onPressed: () async {
-            Parc_Ent wParc_Ent = Parc_Ent.Parc_EntInit(Srv_DbTools.gIntervention.InterventionId!, DbTools.gParc_Ent.Parcs_Type!, DbTools.gParc_Ent.Parcs_order!);
+
+            print("Parc_EntInit Parcs_InterventionId ${Srv_DbTools.gIntervention.InterventionId}");
+            print("Parc_EntInit Parcs_Type ${DbTools.gParc_Ent.Parcs_Type}");
+            print("Parc_EntInit Parcs_order ${DbTools.gParc_Ent.Parcs_order}");
+
+            Parc_Ent wParc_Ent = Parc_Ent.Parc_EntInit(Srv_DbTools.gIntervention.InterventionId!, Srv_DbTools.gIntervention.Intervention_Parcs_Type, 0);
             DbTools.insertParc_Ent(wParc_Ent);
             await Reload();
           },

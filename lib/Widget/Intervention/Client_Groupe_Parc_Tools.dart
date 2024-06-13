@@ -581,18 +581,13 @@ A REMPLACER
 
 //    print(" BBB Gen_Articles >> Call getVerifLink");
     listResult_Article_Link_Verif_Fin = await getVerifLink();
-    print("¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶ BBB DbTools.lParcs_Art ${DbTools.lParcs_Art.length}");
     for (int i = 0; i < DbTools.lParcs_Art.length; i++) {
       Parc_Art element = DbTools.lParcs_Art[i];
-      print("¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶ BBB getParcs_Art_AllType ${element.Desc()}");
     }
 
 
-    print("\nπππππππππππππππππππππ CCC listResult_Article_Link_Verif_Fin");
     for (int i = 0; i < listResult_Article_Link_Verif_Fin.length; i++) {
       Result_Article_Link_Verif wLink = listResult_Article_Link_Verif_Fin[i];
-      print("πππππππππππππππππππππ CCC listResult_Article_Link_Verif_Fin ${wLink.Desc()}");
-
     }
 
     for (int i = 0; i < listResult_Article_Link_Verif_Deb.length; i++) {
@@ -627,7 +622,6 @@ A REMPLACER
     DbTools.lParcs_Art = await DbTools.getParcs_Art_AllType(DbTools.gParc_Ent.ParcsId!);
     for (int i = 0; i < DbTools.lParcs_Art.length; i++) {
       Parc_Art element = DbTools.lParcs_Art[i];
-     print("¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶ EEE getParcs_Art_AllType ${element.Desc()}");
     }
 
     listResult_Article_Link_Verif_Deb = listResult_Article_Link_Verif_Fin;

@@ -8,7 +8,6 @@ import 'package:verifplus/Widget/0-splashScreen.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 late CameraDescription firstCamera;
 
-
 void main() async {
   DbTools.gTED = kDebugMode;
   Widget _defaultHome = new SplashScreen();

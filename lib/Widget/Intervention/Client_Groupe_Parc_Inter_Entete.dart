@@ -52,9 +52,6 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
     "Synthèse de maintance",
   ];
 
-
-
-
   int _count = 0;
   List<Widget> widgets = [];
   final pageController = PageController(keepPage: false, initialPage: DbTools.gCurrentIndex2);
@@ -67,10 +64,6 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
     print("");
     print(" ENTETE Reload ******************");
     print("");
-
-
-
-
 
       await AffDesc();
       print(" Call InitArt() ******************");
@@ -137,10 +130,14 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
   String DescAff2 = "";
   String DescAff3 = "";
 
+  String StrTimer = "";
+
+
   Future AffDesc() async {
+
+
+
     DbTools.glfParcs_Desc = await DbTools.getParcs_Desc(DbTools.gParc_Ent.ParcsId!);
-
-
 
     for (int i = 0; i < Srv_DbTools.ListParam_Saisie.length; i++) {
       Param_Saisie element = Srv_DbTools.ListParam_Saisie[i];
@@ -189,6 +186,10 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
     ListParam_Saisie_Tmp.addAll(Srv_DbTools.ListParam_Saisie_Base);
 
     DescAff = "N° ${DbTools.gParc_Ent.Parcs_order}";
+
+    print("<<<<<<<<<<<<<<<<<<< StrTimer A ${DbTools.gParc_Ent.Parcs_Intervention_Timer}");
+    StrTimer = gObj.printDuration(Duration(seconds: DbTools.gParc_Ent.Parcs_Intervention_Timer!));
+    print("<<<<<<<<<<<<<<<<<<< StrTimer B ${StrTimer}");
 
 //    PDT POIDS PRS MOB ANN FAB
 
@@ -338,10 +339,8 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                 child: Column(
                   children: [
                     Client_Groupe_Parc_Inter_Entete_affAll ? Container() : gObj.InfoWidget(context, false),
-
                     Material(
                       color: Colors.white,
-
                       elevation: 10,
                       child: Container(
                         padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
@@ -373,12 +372,12 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                             style: gColors.bodyTitle1_B_Gr,
                             ),
                           ),
-
-
-
                           Container(
                             width: 60,
-                            child: CounterScreen(),
+                            child:
+                            (Srv_DbTools.gIntervention.Intervention_Status == "En cours")
+                            ?
+                            CounterScreen() : Text("${StrTimer}"),
                           ),
                         ]),
                       ),

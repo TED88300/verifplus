@@ -7,9 +7,10 @@ import 'package:hand_signature/signature.dart';
 import 'package:intl/intl.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
-import 'package:verifplus/Widget/Client/Client_Interventions_Status.dart';
+
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/pdf/Aff_Bdc.dart';
+import 'package:verifplus/pdf/Aff_CR.dart';
 
 class Client_Groupe_Parc_Inter_Signature extends StatefulWidget {
   final VoidCallback onMaj;
@@ -71,7 +72,14 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
   Widget build(BuildContext context) {
     print("build BL $SignTechOpen");
     Srv_DbTools.getParam_Saisie_ParamMem("Fact");
-    print("initLib ${Srv_DbTools.ListParam_Saisie_Param.length}");
+
+
+
+
+
+
+
+
     return Scaffold(
       bottomNavigationBar: Container(
         color: Colors.white,
@@ -85,7 +93,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
                 onPressed: () async {
                   await HapticFeedback.vibrate();
 
-                  await Navigator.push(context, MaterialPageRoute(builder: (context) => Aff_Bdc()));
+                  await Navigator.push(context, MaterialPageRoute(builder: (context) => Aff_CR()));
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: gColors.primaryGreen,
@@ -214,9 +222,10 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
                   );
 
                   final json = control.toMap();
-                  print("json ${json}");
+                  print("Client rawImageFit.value ${json} ${rawImageFit.value}");
 
-                  if (rawImageFitTech.value != null) {
+                  if (rawImageFit.value != null) {
+                    print("SET Intervention_Signature_Client");
                     Srv_DbTools.gIntervention.Intervention_Signature_Client = rawImageFit.value!.buffer.asUint8List();
                   }
                   var now = new DateTime.now();
@@ -470,7 +479,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
           border: Border.all(),
           color: Colors.white30,
         ),
-        child: Srv_DbTools.gIntervention.Intervention_Signature_Client == null
+        child: Srv_DbTools.gIntervention.Intervention_Signature_Client == null || Srv_DbTools.gIntervention.Intervention_Signature_Client.length == 0
             ? Container(
                 color: Colors.white,
                 child: Center(
@@ -491,7 +500,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
           border: Border.all(),
           color: Colors.white30,
         ),
-        child: Srv_DbTools.gIntervention.Intervention_Signature_Tech == null
+        child: Srv_DbTools.gIntervention.Intervention_Signature_Tech == null || Srv_DbTools.gIntervention.Intervention_Signature_Tech.length == 0
             ? Container(
                 color: Colors.white,
                 child: Center(
@@ -752,37 +761,6 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
           Container(
             width: 10,
           ),
-        ],
-      ),
-    );
-  }
-
-  Widget _BuildFooter() {
-    return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-      alignment: Alignment.centerRight,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
-        children: <Widget>[
-          new ElevatedButton(
-            onPressed: () async {
-              await HapticFeedback.vibrate();
-
-              await Navigator.push(context, MaterialPageRoute(builder: (context) => Aff_Bdc()));
-            },
-            style: ElevatedButton.styleFrom(
-                backgroundColor: gColors.primaryGreen,
-                side: const BorderSide(
-                  width: 1.0,
-                  color: gColors.primaryGreen,
-                )),
-            child: Text('Imprimer', style: gColors.bodyTitle1_B_W),
-          ),
-
-
         ],
       ),
     );

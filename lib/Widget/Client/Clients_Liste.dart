@@ -84,11 +84,7 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
   }
 
   void initState() {
-    print("");
-    print("");
-    print(" CLIENT LISTE ");
-    print("");
-    print("");
+
     initLib();
     super.initState();
 
@@ -294,7 +290,8 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
       await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Sites()));
     } else {
       print(" OpenGroupe() Client_Sites ListGroupe > 1");
-      await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Groupes()));
+//      await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Groupes()));
+      await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Sites()));
     }
     setState(() {});
   }

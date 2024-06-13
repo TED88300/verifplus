@@ -74,6 +74,7 @@ class Site {
 
   Map<String, dynamic> toMap() {
     return {
+      'Groupe_Nom': Groupe_Nom,
       'SiteId': SiteId,
       'Site_GroupeId': Site_GroupeId,
       'Site_Code': Site_Code,
@@ -99,7 +100,12 @@ class Site {
     };
   }
   factory Site.fromJson(Map<String, dynamic> json) {
-//    print("json $json");
+
+    String wGroupe_Nom = "";
+    if (json['Groupe_Nom'] != null)
+      {
+        wGroupe_Nom = json['Groupe_Nom']   ;
+      }
 
 
     Site wSite = Site(int.parse(json['SiteId']),
@@ -120,9 +126,11 @@ class Site {
         json['Site_Rem'],
         int.parse(json['Site_ResourceId']),
         json['Livr'],
-      "",
-        true,//json['Groupe_Nom'],
+        wGroupe_Nom,
+        true,
         );
+
+print("wSite $wSite");
     return wSite;
   }
 

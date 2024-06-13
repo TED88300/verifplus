@@ -218,8 +218,10 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState extends State<Client_Grou
                   DbTools.gParc_Ent.Parcs_Date_Rev = "";
                 else
                   DbTools.gParc_Ent.Parcs_Date_Rev = DateTime.now().toIso8601String();
-
                 DbTools.updateParc_Ent(DbTools.gParc_Ent);
+
+                print("VERIF SAISIE gIntervention ${Srv_DbTools.gIntervention.Desc()}");
+
               }
 
               widget.onSaisie();

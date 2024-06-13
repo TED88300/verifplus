@@ -48,6 +48,39 @@ class Parc_Art {
     this.Qte,
   });
 
+
+  static String getIndex(Parc_Art wParc_Art, int index) {
+    int wQteLivr = 0;
+    int wQteRel = 0;
+
+    String ParcsArt_Livr = wParc_Art.ParcsArt_Livr!.substring(0,1);
+    if (ParcsArt_Livr.compareTo("R") == 0)
+      {
+        wQteRel = wParc_Art.ParcsArt_Qte!;
+      }
+      else
+        {
+          wQteLivr = wParc_Art.ParcsArt_Qte!;
+
+        }
+
+
+    switch (index) {
+      case 0:
+        return wParc_Art.ParcsArt_Id.toString();
+      case 1:
+        return wParc_Art.ParcsArt_Lib.toString();
+      case 2:
+        return wQteLivr.toStringAsFixed(2).toString();
+      case 3:
+        return "";
+      case 4:
+        return wQteRel.toStringAsFixed(2).toString();
+
+    }
+    return '';
+  }
+
 static  Parc_Art fromMap(Map<String, dynamic> map) {
     return new Parc_Art(
         ParcsArtId: map["ParcsArtId"],

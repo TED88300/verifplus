@@ -774,17 +774,30 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                   Filtre();
                 });
               },
-              buttonPadding: const EdgeInsets.only(left: 14, right: 14),
-              buttonDecoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.orange,
-                ),
-                color: Colors.white,
-              ),
-              buttonHeight: 34,
-              buttonWidth: wDropdown,
-              dropdownMaxHeight: 750,
-              itemHeight: 32,
+
+                  buttonStyleData:  ButtonStyleData(
+                    padding: const EdgeInsets.only(left: 14, right: 14),
+                    height: 34,
+                    width:  wDropdown,
+                  ),
+                  menuItemStyleData: const MenuItemStyleData(
+                    height: 32,
+                  ),
+                  dropdownStyleData: DropdownStyleData(
+                    maxHeight: 750,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: Colors.orange,
+                      ),
+                      color: Colors.white,
+                    ),
+                  ),
+
+
+
+
+
             )),
           ),
         ]));
@@ -836,18 +849,26 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
 
                 Filtre();
               },
-              buttonPadding: const EdgeInsets.only(left: 14, right: 14),
-              buttonDecoration: BoxDecoration(
-                border: Border.all(
-                  color: Colors.orange,
-                ),
-                color: Colors.white,
-              ),
-              buttonHeight: 34,
-              buttonWidth: wDropdown,
-              dropdownMaxHeight: 850,
-              itemHeight: 32,
-            )),
+                  buttonStyleData:  ButtonStyleData(
+                    padding: const EdgeInsets.only(left: 14, right: 14),
+                    height: 34,
+                    width:  wDropdown,
+                  ),
+                  menuItemStyleData: const MenuItemStyleData(
+                    height: 32,
+                  ),
+                  dropdownStyleData: DropdownStyleData(
+                    maxHeight: 750,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(
+                        color: Colors.orange,
+                      ),
+                      color: Colors.white,
+                    ),
+                  ),
+
+                )),
           ),
         ]));
   }

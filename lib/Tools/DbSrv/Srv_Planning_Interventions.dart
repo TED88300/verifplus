@@ -52,8 +52,8 @@ class Planning_Intervention {
     this.Planning_Libelle   = Planning_Libelle;
 
     this.Planning_Interv_Intervention_Type = Planning_Interv_Intervention_Type;
-    this.Planning_Interv_Intervention_Parcs_Type = Planning_Interv_Intervention_Parcs_Type;
-    this.Planning_Interv_Intervention_Status = Planning_Interv_Intervention_Status;
+    this.Planning_Interv_Intervention_Parcs_Type = Planning_Interv_Intervention_Parc;
+    this.Planning_Interv_Intervention_Status = Planning_Interv_Intervention_Stat;
 
     this.Planning_Interv_ZoneId = Planning_Interv_ZoneId;
     this.Planning_Interv_Zone_Nom = Planning_Interv_Zone_Nom;
@@ -74,7 +74,6 @@ class Planning_Intervention {
       'Planning_Interv_InterventionstartTime': '${Planning_Interv_InterventionstartTime}',
       'Planning_Interv_InterventionendTime': '${Planning_Interv_InterventionendTime}',
       'Planning_Libelle': Planning_Libelle,
-
       'Planning_Interv_Intervention_Type': Planning_Interv_Intervention_Type,
       'Planning_Interv_Intervention_Parcs_Type': Planning_Interv_Intervention_Parcs_Type,
       'Planning_Interv_Intervention_Status': Planning_Interv_Intervention_Status,
@@ -91,6 +90,10 @@ class Planning_Intervention {
   }
 
   factory Planning_Intervention.fromJson(Map<String, dynamic> json) {
+
+
+//    print("json >>> ${json}");
+
     Planning_Intervention wPlanning_Intervention = Planning_Intervention(
       int.parse(json['PlanningId']),
       int.parse(json['Planning_InterventionId']),
@@ -142,19 +145,4 @@ class Planning_Intervention {
         '$Planning_Interv_Groupe_Nom, '
         '$Planning_Interv_ClientId, '
         '$Planning_Interv_Client_Nom,  ';}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

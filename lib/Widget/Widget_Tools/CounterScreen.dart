@@ -49,7 +49,6 @@ class _CounterScreenState extends State<CounterScreen> {
   @override
   Widget build(BuildContext context) {
     final now = Duration(seconds: count);
-
     return Text("${gObj.printDuration(now)}");
   }
 }

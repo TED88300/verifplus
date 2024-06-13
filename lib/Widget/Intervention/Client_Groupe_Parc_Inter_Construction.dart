@@ -135,14 +135,14 @@ class DisplayImageScreen extends StatelessWidget {
                     color: Colors.white,
                   ),
                   onPressed: () async {
-                    await Navigator.of(context).push(
+                   /* await Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (context) => ImagePainterTools(
                           imagePath: DbTools.gImagePath!,
                         ),
                       ),
                     );
-
+*/
                     Navigator.pop(context);
                   },
                 ),

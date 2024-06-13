@@ -107,15 +107,8 @@ class Zone {
 
 
   factory Zone.fromJson(Map<String, dynamic> json) {
-    print("json $json");
+//    print("json $json");
 
-    String wGroupe_Nom = "";
-
-    try {
-      wGroupe_Nom = json['Groupe_Nom'];
-    } catch (e) {
-      print(e);
-    }
 
     Zone wZone = Zone(
     int.parse(json['ZoneId']),
@@ -135,6 +128,7 @@ class Zone {
     json['Livr'],
       true,
     );
+
     return wZone;
   }
 

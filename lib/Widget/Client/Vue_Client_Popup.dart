@@ -99,18 +99,34 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
   @override
   void initLib() async {
     await Srv_DbTools.getParam_ParamFam("FamClient");
+
     ListParam_ParamFam.clear();
     ListParam_ParamFam.addAll(Srv_DbTools.ListParam_ParamFam);
     ListParam_ParamFamID.clear();
     ListParam_ParamFamID.addAll(Srv_DbTools.ListParam_ParamFamID);
 
+
+
     selectedValueFam = ListParam_ParamFam[0];
     selectedValueFamID = ListParam_ParamFamID[0];
 
+/*
     print("wClient_Famille ${wClient_Famille}");
     if (wClient_Famille.isNotEmpty) {
       selectedValueFam = wClient_Famille;
     }
+*/
+
+    for (int i = 0; i < ListParam_ParamFam.length; i++) {
+      String element = ListParam_ParamFam[i];
+      if (element.compareTo("${wClient_Famille}") == 0) {
+        selectedValueFam = element;
+        selectedValueFamID = ListParam_ParamFamID[i];
+      }
+    }
+
+
+
 
     await DbTools.getAdresseType( "AGENCE");
     ListParam_ParamDepot.clear();
@@ -130,9 +146,6 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
     ListParam_ParamRglt.clear();
     ListParam_ParamRglt.addAll(Srv_DbTools.ListParam_ParamFam);
 
-
-    print("wClient_Rglt ${wClient_Rglt}");
-
     selectedValueRglt = ListParam_ParamRglt[0];
     for (int i = 0; i < ListParam_ParamRglt.length; i++) {
       String element = ListParam_ParamRglt[i];
@@ -140,6 +153,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
         selectedValueRglt = element;
       }
     }
+
 
     ListParam_ParamUser.clear();
     ListParam_ParamUserFam.clear();
@@ -161,6 +175,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
         selectedValueUserID = ListParam_ParamUserID[i];
       }
     }
+
 
     Reload();
   }
@@ -220,6 +235,11 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
     Widget Ctrl = Container();
 
     double wDialogHeight = 450;
+
+    print("widget.wChamps ${widget.wChamps}");
+
+    print("ListParam_ParamFam BBB ${ListParam_ParamFam.length}");
+
 
     if (widget.wChamps.compareTo("Client_Nom") == 0) {
       wTitle = "Nom";
@@ -345,7 +365,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
       Ctrl = Column(
         children: [
           gColors.wLigne(),
-          EdtTxt("Contact_Civilite"),
+          DropdownButtonCivFact(),
           gColors.wLigne(),
           EdtTxt("Contact_Prenom"),
           gColors.wLigne(),
@@ -372,7 +392,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
       Ctrl = Column(
         children: [
           gColors.wLigne(),
-          EdtTxt("Livr_Contact_Civilite"),
+          DropdownButtonCivLivr(),
           gColors.wLigne(),
           EdtTxt("Livr_Contact_Prenom"),
           gColors.wLigne(),
@@ -986,13 +1006,18 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
                   }
                   setState(() {});
                 },
-                child: Container(
+                child:
+
+                Container(
                     padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                     child: Image.asset(
                       wSel ? "assets/images/Plus_Sel.png" : "assets/images/Plus_No_Sel.png",
                       width: IcoWidth,
                       height: IcoWidth,
-                    ))),
+                    ))
+            
+
+            ),
           ],
         ),
       ),
@@ -1005,6 +1030,9 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
     String selectedValue = "";
     String selectedValueID = "";
     String wLabel = "";
+
+    print("wChamps ${wChamps}");
+
 
     if (wChamps.compareTo("Client_Commercial") == 0) {
       ListParam_Param = ListParam_ParamUser;
@@ -1049,8 +1077,8 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
             child: DropdownButtonHideUnderline(
                 child: DropdownButton2(
               alignment: AlignmentDirectional.centerEnd,
-              itemHighlightColor: Colors.green,
-              selectedItemHighlightColor: Colors.green,
+//              itemHighlightColor: Colors.green,
+  //            selectedItemHighlightColor: Colors.green,
               items: ListParam_Param.map((item) => DropdownMenuItem<String>(
                     alignment: AlignmentDirectional.centerEnd,
                     value: item,
@@ -1084,7 +1112,9 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
                   }
 
                   if (wChamps.compareTo("Client_Famille") == 0) {
+                    selectedValueID = ListParam_ParamID[ListParam_Param.indexOf(selectedValue!)];
                     selectedValueFam = selectedValue;
+                    selectedValueUserID = selectedValueID;
                     wClient_Famille = selectedValueFam;
                   }
                   if (wChamps.compareTo("Client_Depot") == 0) {
@@ -1098,10 +1128,16 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
                   setState(() {});
                 });
               },
-              buttonPadding: const EdgeInsets.only(left: 5, right: 5),
-              buttonHeight: 30,
-              dropdownMaxHeight: 800,
-              itemHeight: 44,
+                  buttonStyleData: const ButtonStyleData(
+                      padding: const EdgeInsets.only(left: 5, right: 5),
+                      height: 30,
+                  ),
+                  menuItemStyleData: const MenuItemStyleData(
+                    height: 44,
+                  ),
+                  dropdownStyleData: DropdownStyleData(
+                    maxHeight: 800,
+                  ),
             )),
           ),
         ]));
@@ -1407,5 +1443,136 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
     wLivr_Adresse_Ville = Api_Gouv.gProperties.city!;
     wLivr_Adresse_Pays = "France";
     setState(() {});
+  }
+
+  Widget DropdownButtonCivFact() {
+    return
+
+      Container(
+        height: 50,
+        width: 450,
+        margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+        padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+        decoration: BoxDecoration(
+          color: gColors.white,
+          border: Border.all(
+            /**/
+            color: Colors.grey,
+          ),
+          borderRadius: BorderRadius.all(
+            Radius.circular(12.0),
+          ),
+        ),
+        child: Row(children: [
+          Container(
+            width: 74,
+            child: Text("Civilité",
+              style: gColors.bodyTitle1_B_Gr,),
+          ),
+
+          Container(
+            child: DropdownButtonHideUnderline(
+                child: DropdownButton2(
+                  hint: Text(
+                    'Séléctionner une civilité',
+                    style: gColors.bodyTitle1_N_Gr,
+                  ),
+                  items: Srv_DbTools.ListParam_ParamCiv.map((item) => DropdownMenuItem<String>(
+                    value: item,
+                    child: Text(
+                      "$item",
+                      style: gColors.bodySaisie_B_G,
+                    ),
+                  )).toList(),
+                  value: wContact_Civilite,
+                  onChanged: (value) {
+                    setState(() {
+                      wContact_Civilite = value as String;
+                      print("textController_Contact_Civilite $wContact_Civilite");
+                      setState(() {});
+                    });
+                  },
+                  buttonStyleData: const ButtonStyleData(
+                    padding: const EdgeInsets.only(left: 5, right: 5),
+                    height: 30,
+                  ),
+                  menuItemStyleData: const MenuItemStyleData(
+                    height: 32,
+                  ),
+                  dropdownStyleData: DropdownStyleData(
+                    maxHeight: 800,
+                  ),
+
+                )),
+          ),
+        ])
+      );
+  }
+
+
+  Widget DropdownButtonCivLivr() {
+    return
+
+      Container(
+          height: 50,
+          width: 450,
+          margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+          padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+          decoration: BoxDecoration(
+            color: gColors.white,
+            border: Border.all(
+              /**/
+              color: Colors.grey,
+            ),
+            borderRadius: BorderRadius.all(
+              Radius.circular(12.0),
+            ),
+          ),
+          child: Row(children: [
+            Container(
+              width: 74,
+              child: Text("Civilité",
+                style: gColors.bodyTitle1_B_Gr,),
+            ),
+
+            Container(
+              child: DropdownButtonHideUnderline(
+                  child: DropdownButton2(
+                    hint: Text(
+                      'Séléctionner une civilité',
+                      style: gColors.bodyTitle1_N_Gr,
+                    ),
+                    items: Srv_DbTools.ListParam_ParamCiv.map((item) => DropdownMenuItem<String>(
+                      value: item,
+                      child: Text(
+                        "$item",
+                        style: gColors.bodySaisie_B_G,
+                      ),
+                    )).toList(),
+                    value: wContact_Civilite,
+                    onChanged: (value) {
+                      setState(() {
+                        wContact_Civilite = value as String;
+                        print("textController_Contact_Civilite $wContact_Civilite");
+                        setState(() {});
+                      });
+                    },
+
+
+                    buttonStyleData: const ButtonStyleData(
+                      padding: const EdgeInsets.only(left: 14, right: 14),
+                      height: 30,
+                    ),
+                    menuItemStyleData: const MenuItemStyleData(
+                      height: 32,
+                    ),
+                    dropdownStyleData: DropdownStyleData(
+                      maxHeight: 800,
+                    ),
+
+                  )),
+            ),
+          ])
+      );
   }
 }

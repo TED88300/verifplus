@@ -1,4 +1,3 @@
-import 'dart:math';
 import 'dart:typed_data';
 
 import 'package:flutter/services.dart' show rootBundle;
@@ -49,14 +48,22 @@ class BdC {
 
     String wUserImg = "Site_${Srv_DbTools.gSite.SiteId}.jpg";
     pic = await gColors.getImage(wUserImg);
-    print("pic $wUserImg"); // ${pic}");
+    print("pic $wUserImg ${pic.length}");
+
+    if (pic.length == 0)
+    {
+      ByteData _logo_a = await rootBundle.load('assets/images/Blank.png');
+      pic = (_logo_a)!.buffer.asUint8List();
+    }
 
     pw.MemoryImage wMemoryImage =    pw.MemoryImage(
       pic,
     );
 
-
-
+    wImage = await pw.Image(
+      fit : BoxFit.cover,
+      wMemoryImage,
+    );
 
     print("♠︎♠︎♠︎♠︎ wMemoryImage <<< ${wMemoryImage.width} ${wMemoryImage.height}");
     wImage_W = wMemoryImage.width!;
@@ -71,11 +78,7 @@ class BdC {
       );
     }
 
-
-
-
     final doc = pw.Document();
-
     ByteData _logo_1 = await rootBundle.load('assets/Logo_1.jpg');
     imageData_1 = (_logo_1)!.buffer.asUint8List();
 

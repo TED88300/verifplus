@@ -5,8 +5,7 @@ import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:verifplus/Tools/Api_Gouv.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_NF074.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/shared_pref.dart';
 import 'package:verifplus/Widget/1-login.dart';
@@ -72,13 +71,38 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
 
     print("Srv_DbTools.ListIntervention.length ${Srv_DbTools.ListIntervention.length}");
     Srv_DbTools.ListParam_ParamAll = await  DbTools.getParam_Param();
+    print("Srv_DbTools.ListParam_ParamAll.length ${Srv_DbTools.ListParam_ParamAll.length}");
 
-    Srv_DbTools.ListParam_Param_Abrev.clear();
+    Srv_DbTools.ListParam_Param_Civ.clear();
     Srv_DbTools.ListParam_ParamAll.forEach((element) {
-      if (element.Param_Param_Type.compareTo("Abrev") == 0) {
-        Srv_DbTools.ListParam_Param_Abrev.add(element);
+      if (element.Param_Param_Type.compareTo("Civ") == 0) {
+        Srv_DbTools.ListParam_Param_Civ.add(element);
       }
     });
+
+    Srv_DbTools.ListParam_Param_Status_Interv.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Civ") == 0) {
+        Srv_DbTools.ListParam_Param_Civ.add(element);
+      }
+    });
+
+    Srv_DbTools.ListParam_ParamCiv.clear();
+    Srv_DbTools.ListParam_ParamCiv.add("");
+    for (int i = 0; i < Srv_DbTools.ListParam_Param_Civ.length; i++) {
+      Param_Param wParam_Param = Srv_DbTools.ListParam_Param_Civ[i];
+      if (wParam_Param.Param_Param_Text == "C")
+        Srv_DbTools.ListParam_ParamCiv.add(wParam_Param.Param_Param_ID);
+    }
+
+    Srv_DbTools.ListParam_ParamForme.clear();
+    Srv_DbTools.ListParam_ParamForme.add("");
+    for (int i = 0; i < Srv_DbTools.ListParam_Param_Civ.length; i++) {
+      Param_Param wParam_Param = Srv_DbTools.ListParam_Param_Civ[i];
+      if (wParam_Param.Param_Param_Text != "C")
+        Srv_DbTools.ListParam_ParamForme.add(wParam_Param.Param_Param_ID);
+    }
+
 
     Srv_DbTools.ListParam_Saisie = await  DbTools.getParam_SaisieAll();
     Srv_DbTools.ListParam_Saisie_ParamAll = await  DbTools.getParam_Saisie_ParamAll();

@@ -100,7 +100,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
             style: isOutLine ? BorderStyle.solid : BorderStyle.none),
         borderRadius: BorderRadius.all(Radius.circular(13)),
         color:
-            isOutLine ? Colors.transparent : Theme.of(context).backgroundColor,
+            isOutLine ? Colors.transparent : Theme.of(context).primaryColor,
         boxShadow: <BoxShadow>[
           BoxShadow(
               color: Color(0xfff8f8f8),

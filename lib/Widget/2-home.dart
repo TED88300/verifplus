@@ -1,7 +1,4 @@
 import 'dart:async';
-import 'dart:io';
-
-
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
@@ -17,8 +14,8 @@ import 'package:verifplus/Widget/Client/Clients_Liste.dart';
 import 'package:verifplus/Widget/Import_ASync.dart';
 import 'package:verifplus/Widget/Import_Data.dart';
 import 'package:verifplus/Widget/Import_Menu.dart';
+import 'package:verifplus/Widget/Intervention/Intervention_Liste.dart';
 import 'package:verifplus/Widget/P_Notifications.dart';
-import 'package:verifplus/Widget/P_Synthese.dart';
 import 'package:verifplus/Widget/Planning/Planning.dart';
 import 'package:verifplus/Widget/Widget_Tools/bottom_navigation_bar.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
@@ -42,7 +39,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   List<String> P_itemsTitre = <String>[
     "",
-    "SYNTHESE",
+    "INTERVENTION",
     "CATALOGUE",
     "PLANNING",
     "NOTIFICATIONS",
@@ -112,7 +109,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
     P_children = [
       Liste_Clients(onSaisie: onSaisie),
-      P_Synthese(),
+      Interventions_Liste(),
       Catalogue_Grid(),
       Planning(),
       P_Notifications(),
@@ -162,11 +159,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   }
 
   Widget wchildren = Container();
-
   final pageController = PageController(initialPage : DbTools.gCurrentIndex);
-
-
-
 
   @override
   Widget Block_MenuApp(BuildContext context) {
@@ -276,6 +269,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
             PageView(
               children: P_children,
               controller: pageController,
+
+              physics: NeverScrollableScrollPhysics(),
               onPageChanged: onBottomIconPressed,
             ),
             Positioned(

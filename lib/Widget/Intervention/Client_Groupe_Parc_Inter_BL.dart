@@ -7,6 +7,8 @@ import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Article.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
+import 'package:verifplus/pdf/Aff_BL.dart';
+import 'package:verifplus/pdf/Aff_Bdc.dart';
 
 class Client_Groupe_Parc_Inter_BL extends StatefulWidget {
   final VoidCallback onMaj;
@@ -50,6 +52,32 @@ class Client_Groupe_Parc_Inter_BLState extends State<Client_Groupe_Parc_Inter_BL
     print("initLib ${Srv_DbTools.ListParam_Saisie_Param.length}");
 
     return Scaffold(
+      bottomNavigationBar: Container(
+        color: Colors.white,
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(0, 10, 0, 55),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              new ElevatedButton(
+                onPressed: () async {
+                  await HapticFeedback.vibrate();
+
+                  await Navigator.push(context, MaterialPageRoute(builder: (context) => Aff_BL()));
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: gColors.primaryGreen,
+                    side: const BorderSide(
+                      width: 1.0,
+                      color: gColors.primaryGreen,
+                    )),
+                child: Text('Imprimer', style: gColors.bodyTitle1_B_W),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: Padding(
           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Column(

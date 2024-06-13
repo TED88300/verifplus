@@ -25,7 +25,7 @@ class _Catalogue_GridState extends State<Catalogue_Grid> {
   Widget _icon(IconData icon, {Color color = LightColor.iconColor}) {
     return Container(
       padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(13)), color: Theme.of(context).backgroundColor, boxShadow: AppTheme.shadow),
+      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(13)), color: Theme.of(context).primaryColor, boxShadow: AppTheme.shadow),
       child: Icon(
         icon,
         color: color,
@@ -86,7 +86,7 @@ class _Catalogue_GridState extends State<Catalogue_Grid> {
       decoration: BoxDecoration(
         border: Border.all(color: LightColor.iconColor, style: isOutLine ? BorderStyle.solid : BorderStyle.none),
         borderRadius: BorderRadius.all(Radius.circular(13)),
-        color: isOutLine ? Colors.transparent : Theme.of(context).backgroundColor,
+        color: isOutLine ? Colors.transparent : Theme.of(context).primaryColor,
         boxShadow: <BoxShadow>[
           BoxShadow(color: Color(0xfff8f8f8), blurRadius: 5, spreadRadius: 10, offset: Offset(5, 5)),
         ],

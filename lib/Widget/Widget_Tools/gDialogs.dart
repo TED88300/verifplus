@@ -420,14 +420,14 @@ class _PhotoDialogState extends State<PhotoDialog> {
                         //final wimgFile = File(DbTools.glfParc_Imgs[Itemindex].Parc_Imgs_Path!);
                         print("DbTools.gImagePath ${DbTools.gImagePath}");
 
-                        await Navigator.of(context).push(
+                       /* await Navigator.of(context).push(
                           MaterialPageRoute(
                             builder: (context) => DisplayImageScreen(
                               imagePath: DbTools.glfParc_Imgs[Itemindex].Parc_Imgs_Path!,
                             ),
                           ),
                         );
-
+*/
                         if (DbTools.gImagePath == "") {
                           if (DbTools.glfParc_Imgs[Itemindex].Parc_Imgs_Type == null) DbTools.glfParc_Imgs[Itemindex].Parc_Imgs_Type = 0;
                           print("DbTools.glfParc_Imgs[Itemindex].Parc_Imgs_Type ${DbTools.glfParc_Imgs[Itemindex].Parc_Imgs_Type}");
@@ -522,10 +522,11 @@ class _PhotoDialogState extends State<PhotoDialog> {
 //**********************************
 //**********************************
 //**********************************
+/*
 
-class DisplayImageScreen extends StatelessWidget {
+class DisplayImageScreenz extends StatelessWidget {
   final String imagePath;
-  const DisplayImageScreen({super.key, required this.imagePath});
+  const DisplayImageScreenz({super.key, required this.imagePath});
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size.width;
@@ -622,3 +623,6 @@ class DisplayImageScreen extends StatelessWidget {
     );
   }
 }
+
+
+*/

@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Articles_Link_Verif_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
@@ -113,11 +114,11 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
   @override
   Widget build(BuildContext context) {
 
-    print("πππππππππππππππππππππ build VERIF  >> listResult_Article_Link_Verif_Deb ${Client_Groupe_Parc_Tools.listResult_Article_Link_Verif_Deb.length}");
+
 
     for (int i = 0; i < Client_Groupe_Parc_Tools.listResult_Article_Link_Verif_Deb.length; i++) {
       Result_Article_Link_Verif wLink = Client_Groupe_Parc_Tools.listResult_Article_Link_Verif_Deb[i];
-      print("πππππππππππππππππππππ build PIECE listResult_Article_Link_Verif_Deb ${wLink.Desc()}");
+
     }
 
 
@@ -234,6 +235,7 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
     Srv_DbTools.ListParam_Verif_Base.sort(Srv_DbTools.affSortComparison);
 
     isRes = true;
+    bool isEmpty = true;
 
     for (int i = 0; i < Srv_DbTools.ListParam_Verif_Base.length; i++) {
       Param_Saisie element = Srv_DbTools.ListParam_Verif_Base[i];
@@ -246,7 +248,11 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
         isRes = false;
       }
 
-      bool Indispo = false;
+      if (element.Param_Saisie_ID.compareTo("Result") != 0) {
+        if (wParc_Desc.ParcsDesc_Lib != "---") isEmpty = false;
+      }
+
+
       /*for (int i = 0; i < Srv_DbTools.ListResult_Article_Link_Verif_Indisp.length; i++) {
         Result_Article_Link_Verif_Indisp wResult_Article_Link_Verif_Indisp = Srv_DbTools.ListResult_Article_Link_Verif_Indisp[i];
         if (element.Param_Saisie_ID.compareTo(wResult_Article_Link_Verif_Indisp.Articles_Link_Verif_TypeVerif) == 0) {
@@ -257,9 +263,9 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
         }
       }*/
 
-      if (Indispo) {
-        RowSaisies.add(RowSaisie(element, LargeurCol, LargeurCol2, H2, Indispo: true));
-      } else if (element.Param_Saisie_ID.compareTo("Ech") == 0) {
+
+
+      if (element.Param_Saisie_ID.compareTo("Ech") == 0) {
         if (isRes) {
           RowSaisies.add(RowSaisie(element, LargeurCol, LargeurCol2, H2));
         }
@@ -273,6 +279,15 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
         RowSaisies.add(RowSaisie(element, LargeurCol, LargeurCol2, H2));
       }
     }
+
+
+    if (isEmpty)
+    {
+      Maj_Result_NV();
+
+    }
+
+
 
     return
         //Expanded(child:
@@ -452,14 +467,43 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
   Future Maj_Result_V() async
   {
       Parc_Desc wParc_DescAuto = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, "Result");
-      print(" wParc_DescAuto Result ${wParc_DescAuto.toMap()}");
-      if (wParc_DescAuto.ParcsDesc_Lib == "---" || wParc_DescAuto.ParcsDesc_Lib!.contains("Non") ) {
+      print(" Maj_Result_V Result ${wParc_DescAuto.toMap()}");
+      if (wParc_DescAuto.ParcsDesc_Lib == "---" || wParc_DescAuto.ParcsDesc_Lib!.contains("Non") )
+      {
         wParc_DescAuto.ParcsDesc_Id = "1002";
         wParc_DescAuto.ParcsDesc_Lib = "Vérifié";
         await DbTools.updateParc_Desc_NoRaz(wParc_DescAuto, "");
         DbTools.gParc_Ent.Parcs_Date_Rev = DateTime.now().toIso8601String();
         DbTools.updateParc_Ent(DbTools.gParc_Ent);
+        print("•••••••••••••••• VERIF gIntervention ${Srv_DbTools.gIntervention.Desc()}");
+
+
+        String formattedDateDeb = DateFormat('dd/MM/yyyy').format(DateTime.now());
+
+
+        Srv_DbTools.gIntervention.Intervention_Date_Visite = formattedDateDeb;
+        await DbTools.updateInterventions(Srv_DbTools.gIntervention);
+        bool wRes = await Srv_DbTools.setIntervention(Srv_DbTools.gIntervention);
+  //    print("•••• setIntervention ${wRes}");
+        Srv_DbTools.gIntervention.Intervention_isUpdate = wRes;
+        if (!wRes) DbTools.setBoolErrorSync(true);
+        await DbTools.updateInterventions(Srv_DbTools.gIntervention);
+
       }
+
+
+  }
+
+  Future Maj_Result_NV() async
+  {
+    Parc_Desc wParc_DescAuto = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, "Result");
+    print(" Maj_Result_NV Result ${wParc_DescAuto.toMap()}");
+      wParc_DescAuto.ParcsDesc_Id = "1003";
+      wParc_DescAuto.ParcsDesc_Lib = "Non vérifié";
+      await DbTools.updateParc_Desc_NoRaz(wParc_DescAuto, "");
+      DbTools.gParc_Ent.Parcs_Date_Rev = "";
+      DbTools.updateParc_Ent(DbTools.gParc_Ent);
+//      print("•••••••••••••••• NV VERIF gIntervention ${Srv_DbTools.gIntervention.Desc()}");
 
   }
 
@@ -467,7 +511,6 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
   Widget BtnCard(String? wText, double LargeurCol2, String color, String ico, Param_Saisie param_Saisie) {
     String Param_Saisie_ID = param_Saisie.Param_Saisie_ID;
 
-    print("♦︎♦︎♦︎♦︎♦︎♦︎ BtnCard param_Saisie ${param_Saisie.Desc()}");
 
 
     Color wColor = gColors.getColor(color);
@@ -542,7 +585,6 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                             await DbTools.deleteParc_Art(parc_Art.ParcsArtId!);
                           }
                         }
-
                         Parc_Ent wParc_Ent = await DbTools.getParcs_Ent_Parcs_UUID_Child(DbTools.gParc_Ent.Parcs_UUID!);
                         print("Saisie Article ESESESESESES  deleteParc_EntTrigger ${wParc_Ent.toString()}");
                         if (wParc_Ent.Parcs_InterventionId != -1) {
@@ -550,6 +592,18 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                         }
                         wParc_Desc.ParcsDesc_Lib = "---";
                         await DbTools.updateParc_Desc_NoRaz(wParc_Desc, "");
+                        bool isEmpty = true;
+                        for (int i = 0; i < Srv_DbTools.ListParam_Verif_Base.length; i++) {
+                          Param_Saisie element = Srv_DbTools.ListParam_Verif_Base[i];
+                          Parc_Desc wParc_Desc = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, element.Param_Saisie_ID);
+                          if (element.Param_Saisie_ID.compareTo("Result") != 0) {
+                            if (wParc_Desc.ParcsDesc_Lib != "---") isEmpty = false;
+                          }
+                        }
+                        if (isEmpty)
+                        {
+                          Maj_Result_NV();
+                        }
                         setState(() {});
                       }
 

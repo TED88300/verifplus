@@ -30,28 +30,24 @@ class Parc_Ent_Count {
   String? Parcs_SERIE_Label = "";
   String? Parcs_Audit_Note = "";
   String? Parcs_Verif_Note = "";
-
   int?   Parcs_Intervention_Timer = 0;
-  int?   Parcs_Update = 1;
-
   String? Parcs_UUID = "";
   String? Parcs_UUID_Parent = "";
   String? Parcs_CodeArticle = "";
   String? Parcs_CODF = "";
   String? Parcs_NCERT = "";
+  String? Livr = "";
+  String? Devis = "";
+  String? Action = "";
 
-
+  int?   Parcs_Update = 1;
   bool? Parcs_MaintPrev = true;
   bool? Parcs_Install = true;
   bool? Parcs_MaintCorrect = true;
 
-
   String? Parcs_Date_Desc = "";
   String? Parcs_VRMC = "";
   List<String?>? Parcs_Cols = [];
-  String? Livr = "";
-  String? Devis = "";
-  String? Action = "";
 
 
 
@@ -82,12 +78,16 @@ class Parc_Ent_Count {
     this.Parcs_Audit_Note,
     this.Parcs_Verif_Note,
     this.Parcs_Intervention_Timer,
-    this.Parcs_Update,
     this.Parcs_UUID,
     this.Parcs_UUID_Parent,
     this.Parcs_CodeArticle,
     this.Parcs_CODF,
     this.Parcs_NCERT,
+    this.Livr,
+    this.Devis,
+    this.Action,
+
+    this.Parcs_Update,
 
 
     this.Parcs_MaintPrev,
@@ -96,18 +96,24 @@ class Parc_Ent_Count {
 
     this.Parcs_Date_Desc,
     this.Parcs_Cols,
-    this.Livr,
-    this.Devis,
-    this.Action,
+
+
+
   });
 
   static Parc_EntInit(int Parcs_InterventionId, String Parcs_Type, int Parcs_order) {
+
+
+    print("Parc_EntInit Parcs_InterventionId ${Parcs_InterventionId}");
+    print("Parc_EntInit Parcs_Type ${Parcs_Type}");
+    print("Parc_EntInit Parcs_order ${Parcs_order}");
+
+
 
     Parc_Ent wParc_Ent = Parc_Ent();
     wParc_Ent.ParcsId = null;
     wParc_Ent.Parcs_InterventionId = Parcs_InterventionId;
 
-    print("Parc_EntInit ${wParc_Ent.Parcs_InterventionId} ${Parcs_InterventionId}");
 
 
     wParc_Ent.Parcs_Type = Parcs_Type;
