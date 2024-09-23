@@ -220,8 +220,6 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
             ),
             onPressed: () async {
               await Import_ASync_Dialog.Dialogs_ASync(context, onSaisie);
-
-
             },
           ),
 
@@ -269,7 +267,6 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
             PageView(
               children: P_children,
               controller: pageController,
-
               physics: NeverScrollableScrollPhysics(),
               onPageChanged: onBottomIconPressed,
             ),

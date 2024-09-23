@@ -8,7 +8,7 @@ import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 import 'package:http/http.dart' as http;
-
+import 'dart:developer' as LogDbg;
 class gColors {
 
   static late ThemeData wTheme;
@@ -650,6 +650,22 @@ class gColors {
     );
   }
 
+  static AffZoomImage(BuildContext context, Image wImageArt) async {
+
+    return showDialog(
+        context: context,
+        builder: (_) => new AlertDialog(
+          contentPadding : EdgeInsets.fromLTRB(0, 0, 0, 0),
+          content: Container(
+            child: wImageArt!,
+            width: 700,
+          ),
+        ));
+  }
+
+
+
+
   static AffUser(BuildContext context) {
     return showDialog(
         context: context,
@@ -660,13 +676,16 @@ class gColors {
                 SizedBox(height: 8.0),
                 Container(color: Colors.grey, height: 1.0),
                 SizedBox(height: 8.0),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                  child: Text(
+                Text(
                     "Utilisateur ${Srv_DbTools.gUserLogin.UserID}",
                     style: TextStyle(
                       fontSize: 22,
                     ),
+                  ),
+                Text(
+                  "${Srv_DbTools.gUserLogin.User_TypeUser}",
+                  style: TextStyle(
+                    fontSize: 12,
                   ),
                 ),
               ]),
@@ -695,6 +714,7 @@ class gColors {
                         Text(Srv_DbTools.gUserLogin.User_Nom),
                       ],
                     ),
+
                   ],
                 ),
               ),
@@ -746,8 +766,11 @@ class gColors {
   }
 
   static void printWrapped(String text) {
-    final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
-    pattern.allMatches(text).forEach((match) => print(match.group(0)));
+
+    LogDbg.log(text);
+
+//    final pattern = RegExp('.{1,800}'); // 800 is the size of each chunk
+//    pattern.allMatches(text).forEach((match) => print(match.group(0)));
   }
 
   static InputDecoration wRechInputDecorationSelPlanning = InputDecoration(
@@ -779,8 +802,7 @@ class gColors {
 
   static Color getColorStatus(String Status) {
     Color wColor = Colors.transparent;
-    print("Status $Status");
-    print("Srv_DbTools.ListParam_Param_Status_Interv ${Srv_DbTools.ListParam_Param_Status_Interv}");
+
     for (int p = 0; p < Srv_DbTools.ListParam_Param_Status_Interv.length; p++) {
       Param_Param wParam_Param = Srv_DbTools.ListParam_Param_Status_Interv[p];
       if (wParam_Param.Param_Param_ID == Status)
@@ -845,4 +867,23 @@ class gColors {
       return new Uint8List(0);
     }
   }
+
+  static Future<Uint8List> getDoc(String url) async {
+    try {
+      var request = http.MultipartRequest('POST', Uri.parse(Srv_DbTools.SrvUrl.toString()));
+      request.fields.addAll({'zasq': 'getDoc', 'doc': '$url'});
+      http.StreamedResponse response = await request.send();
+
+      if (response.statusCode == 200) {
+        return await response.stream.toBytes();
+      } else {
+        return new Uint8List(0);
+      }
+    } catch (e) {
+      return new Uint8List(0);
+    }
+  }
+
+
+
 }

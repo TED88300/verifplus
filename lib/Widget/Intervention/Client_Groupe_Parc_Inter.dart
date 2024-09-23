@@ -11,6 +11,7 @@ import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie_Param.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Art.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Desc.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Ent.dart';
@@ -30,6 +31,9 @@ import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Tools.dart';
 import 'package:verifplus/Widget/Widget_Tools/bottom_navigation_bar3.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
+
+
+
 
 class Client_Groupe_Parc_Inter extends StatefulWidget {
   @override
@@ -109,24 +113,42 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
   final ScrollController wVScrollController = ScrollController();
 
   Future Reload() async {
-
-
     await Srv_ImportExport.getErrorSync();
     await DbTools.Parc_Ent_GetOrder();
+
     await DbTools.getParam_Saisie_Base("Audit");
     Srv_DbTools.ListParam_Audit_Base.clear();
     Srv_DbTools.ListParam_Audit_Base.addAll(Srv_DbTools.ListParam_Saisie_Base);
+    print("♦︎♦︎♦︎♦︎♦︎♦ Audit ${Srv_DbTools.ListParam_Audit_Base.length}");
+
+    await DbTools.getParam_Saisie(Srv_DbTools.gIntervention.Intervention_Parcs_Type, "Audit");
+    Srv_DbTools.ListParam_Audit_Base.addAll(Srv_DbTools.ListParam_Saisie);
+    print("♦︎♦︎♦︎♦︎♦︎♦ Audit ${Srv_DbTools.ListParam_Audit_Base.length}");
 
     await DbTools.getParam_Saisie_Base("Verif");
     Srv_DbTools.ListParam_Verif_Base.clear();
     Srv_DbTools.ListParam_Verif_Base.addAll(Srv_DbTools.ListParam_Saisie_Base);
+    print("♦︎♦︎♦︎♦︎♦︎♦ Verif ${Srv_DbTools.ListParam_Verif_Base.length}");
+
+    await DbTools.getParam_Saisie(Srv_DbTools.gIntervention.Intervention_Parcs_Type, "Verif");
+    Srv_DbTools.ListParam_Verif_Base.addAll(Srv_DbTools.ListParam_Saisie);
+    print("♦︎♦︎♦︎♦︎♦︎♦ Verif ${Srv_DbTools.ListParam_Verif_Base.length}");
+
+
+
 
     await DbTools.getParam_Saisie_Base("Interv");
     Srv_DbTools.ListParam_Interv_Base.clear();
     Srv_DbTools.ListParam_Interv_Base.addAll(Srv_DbTools.ListParam_Saisie_Base);
+    print("♦︎♦︎♦︎♦︎♦︎♦ Interv ${Srv_DbTools.ListParam_Interv_Base.length}");
 
     await DbTools.getParam_Saisie_Base("Desc");
+    print("♦︎♦︎♦︎♦︎♦︎♦ Desc ${Srv_DbTools.ListParam_Saisie_Base.length}");
+
     DbTools.glfParcs_Ent = await DbTools.getParcs_Ent(Srv_DbTools.gIntervention.InterventionId!);
+    print("♦︎♦︎♦︎♦︎♦︎♦ DbTools.glfParcs_Ent A ${DbTools.glfParcs_Ent .length}");
+
+
     for (int i = 0; i < DbTools.gRowSels.length; i++) {
       for (int j = 0; j < DbTools.lParcs_Ent.length; j++) {
         if (DbTools.lParcs_Ent[j].ParcsId == DbTools.gRowSels[i].Id) {
@@ -134,12 +156,12 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
           break;
         }
       }
-
     }
 
-
-
     DbTools.glfParcs_Desc = await DbTools.getParcs_DescInter(Srv_DbTools.gIntervention.InterventionId!);
+    print("♦︎♦︎♦︎♦︎♦︎♦ DbTools.glfParcs_Ent B ${DbTools.glfParcs_Ent .length}");
+
+
     String DescAff = "";
 
     Srv_DbTools.ListParam_Saisie.sort(Srv_DbTools.affSort2Comparison);
@@ -157,16 +179,37 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     int index = subLibArray.indexWhere((element) => element.compareTo(DbTools.ParamTypeOg) == 0);
     DbTools.OrgLib = subLibArray[index];
 
-    await DbTools.getParam_Saisie(subTitleArray[index], "Desc");
+    print("♦︎♦︎♦︎♦︎♦︎♦ DbTools.ParamTypeOg ${DbTools.ParamTypeOg}");
+    print("♦︎♦︎♦︎♦︎♦︎♦ DbTools.OrgLib ${DbTools.OrgLib}");
+    print("♦︎♦︎♦︎♦︎♦︎♦ Intervention_Parcs_Type ${Srv_DbTools.gIntervention.Intervention_Parcs_Type}");
+
+
+
+
+
+    await DbTools.getParam_Saisie(Srv_DbTools.gIntervention.Intervention_Parcs_Type, "Desc");
+    for (int i = 0; i < Srv_DbTools.ListParam_Saisie.length; i++) {
+      Param_Saisie eP = Srv_DbTools.ListParam_Saisie[i];
+      print("♦︎♦︎♦︎♦︎♦︎♦ eP ${eP.Param_Saisie_Organe} ${eP.Param_Saisie_ID} ${eP.Param_Saisie_Label}");
+    }
+
 
     String DescAffnewParam = "";
-    Srv_DbTools.getParam_ParamMemDet("Param_Div", "${subTitleArray[index]}_Desc");
+    Srv_DbTools.getParam_ParamMemDet("Param_Div", "${Srv_DbTools.gIntervention.Intervention_Parcs_Type}_Desc");
     if (Srv_DbTools.ListParam_Param.length > 0) DescAffnewParam = Srv_DbTools.ListParam_Param[0].Param_Param_Text;
 
     //DescAffnewParam PDT POIDS PRS MOB / ZNE EMP NIV / ANN / FAB
     List<Param_Saisie> ListParam_Saisie_Tmp = [];
     ListParam_Saisie_Tmp.addAll(Srv_DbTools.ListParam_Saisie);
     ListParam_Saisie_Tmp.addAll(Srv_DbTools.ListParam_Saisie_Base);
+
+
+    for (int i = 0; i < ListParam_Saisie_Tmp.length; i++) {
+      Param_Saisie eP = ListParam_Saisie_Tmp[i];
+      print(" eP ${eP.Param_Saisie_Organe} ${eP.Param_Saisie_ID} ${eP.Param_Saisie_Label}");
+    }
+
+
 
 //    Parcs_Date_VRMC
 
@@ -179,7 +222,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     for (int jj = 0; jj < DbTools.glfParcs_Ent.length; jj++) {
       Parc_Ent elementEnt = DbTools.glfParcs_Ent[jj];
 
-      print("♦︎♦︎♦︎♦︎♦︎♦ Ordre︎ ${elementEnt.Parcs_order}");
+      print("♦︎♦︎♦︎♦︎♦︎♦ Ordre︎ ${elementEnt.toMap()}");
 
       countTot++;
       if (!elementEnt.Parcs_Date_Rev!.isEmpty) countX++;
@@ -191,60 +234,68 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       }
 
       DescAff = DescAffnewParam;
+      print("♦︎♦︎♦︎♦︎♦︎♦ DescAffnewParam ${DescAff}");
+
+
       List<String?>? Parcs_Cols = [];
 
       for (int j = 0; j < ListParam_Saisie_Tmp.length; j++) {
-        Param_Saisie element = ListParam_Saisie_Tmp[j];
+        Param_Saisie param_Saisie = ListParam_Saisie_Tmp[j];
 
-        if (element.Param_Saisie_Affichage.compareTo("DESC") == 0) {
-          if (element.Param_Saisie_ID.compareTo("FREQ") == 0) {
-            DescAff = DescAff.replaceAll("${element.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(elementEnt.Parcs_FREQ_Label!, element.Param_Saisie_ID)}");
-          } else if (element.Param_Saisie_ID.compareTo("ANN") == 0) {
-            //print(">>>>>>>>> ANN ${elementEnt.Parcs_ANN_Id!} ---> ${elementEnt.Parcs_ANN_Label!}");
-            String s = gColors.AbrevTxt_Param_Param(elementEnt.Parcs_ANN_Label!, element.Param_Saisie_ID);
+        if (param_Saisie.Param_Saisie_Affichage.compareTo("DESC") == 0) {
+          if (param_Saisie.Param_Saisie_ID.compareTo("FREQ") == 0) {
+            DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(elementEnt.Parcs_FREQ_Label!, param_Saisie.Param_Saisie_ID)}");
+          } else if (param_Saisie.Param_Saisie_ID.compareTo("ANN") == 0) {
+            DbTools.gDateMS = elementEnt.Parcs_ANN_Label!;
+            String s = gColors.AbrevTxt_Param_Param(elementEnt.Parcs_ANN_Label!, param_Saisie.Param_Saisie_ID);
             int pos = s.indexOf('-');
             String ws = (pos != -1) ? s.substring(pos + 1) : s;
-            DescAff = DescAff.replaceAll("${element.Param_Saisie_ID}", "${ws}");
-          } else if (element.Param_Saisie_ID.compareTo("AFAB") == 0) {
+            DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${ws}");
+          } else if (param_Saisie.Param_Saisie_ID.compareTo("AFAB") == 0) {
             //print(">>>>>>>>> FAB ${elementEnt.Parcs_FAB_Id!} ---> ${elementEnt.Parcs_FAB_Label!}");
-            DescAff = DescAff.replaceAll("${element.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(elementEnt.Parcs_FAB_Label!, element.Param_Saisie_ID)}");
-          } else if (element.Param_Saisie_ID.compareTo("NIV") == 0) {
-            DescAff = DescAff.replaceAll("${element.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(elementEnt.Parcs_NIV_Label!, element.Param_Saisie_ID)}");
-          } else if (element.Param_Saisie_ID.compareTo("ZNE") == 0) {
-            DescAff = DescAff.replaceAll("${element.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(elementEnt.Parcs_ZNE_Label!, element.Param_Saisie_ID)}");
-          } else if (element.Param_Saisie_ID.compareTo("EMP") == 0) {
-            DescAff = DescAff.replaceAll("${element.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(elementEnt.Parcs_EMP_Label!, element.Param_Saisie_ID)}");
-          } else if (element.Param_Saisie_ID.compareTo("LOT") == 0) {
-            DescAff = DescAff.replaceAll("${element.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(elementEnt.Parcs_LOT_Label!, element.Param_Saisie_ID)}");
-          } else if (element.Param_Saisie_ID.compareTo("SERIE") == 0) {
-            DescAff = DescAff.replaceAll("${element.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(elementEnt.Parcs_SERIE_Label!, element.Param_Saisie_ID)}");
+            DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(elementEnt.Parcs_FAB_Label!, param_Saisie.Param_Saisie_ID)}");
+          } else if (param_Saisie.Param_Saisie_ID.compareTo("NIV") == 0) {
+            DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(elementEnt.Parcs_NIV_Label!, param_Saisie.Param_Saisie_ID)}");
+          } else if (param_Saisie.Param_Saisie_ID.compareTo("ZNE") == 0) {
+            DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(elementEnt.Parcs_ZNE_Label!, param_Saisie.Param_Saisie_ID)}");
+          } else if (param_Saisie.Param_Saisie_ID.compareTo("EMP") == 0) {
+            DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(elementEnt.Parcs_EMP_Label!, param_Saisie.Param_Saisie_ID)}");
+          } else if (param_Saisie.Param_Saisie_ID.compareTo("LOT") == 0) {
+            DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(elementEnt.Parcs_LOT_Label!, param_Saisie.Param_Saisie_ID)}");
+          } else if (param_Saisie.Param_Saisie_ID.compareTo("SERIE") == 0) {
+            DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(elementEnt.Parcs_SERIE_Label!, param_Saisie.Param_Saisie_ID)}");
           } else {
             bool trv = false;
-//            print("ELSE element.Param_Saisie_ID ${element.Param_Saisie_ID} ${DescAff} l ${DbTools.glfParcs_Desc.length}");
+            print("ELSE param_Saisie.Param_Saisie_ID ${param_Saisie.Param_Saisie_ID} ${DescAff} l ${DbTools.glfParcs_Desc.length}");
 
             for (int j = 0; j < DbTools.glfParcs_Desc.length; j++) {
               Parc_Desc element2 = DbTools.glfParcs_Desc[j];
-              if (elementEnt.ParcsId == element2.ParcsDesc_ParcsId && element.Param_Saisie_ID == element2.ParcsDesc_Type) {
-                //            print("element.Param_Saisie_Affichage ${elementEnt.ParcsId} ${element.Param_Saisie_ID}");
-                //          print("element.Param_Saisie_Affichage2 ${element2.ParcsDesc_ParcsId} ${element2.ParcsDesc_Type}");
-                DescAff = DescAff.replaceAll("${element.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, element.Param_Saisie_ID)}");
+              if (elementEnt.ParcsId == element2.ParcsDesc_ParcsId && param_Saisie.Param_Saisie_ID == element2.ParcsDesc_Type) {
+                //            print("param_Saisie.Param_Saisie_Affichage ${elementEnt.ParcsId} ${param_Saisie.Param_Saisie_ID}");
+                //          print("param_Saisie.Param_Saisie_Affichage2 ${element2.ParcsDesc_ParcsId} ${element2.ParcsDesc_Type}");
+                DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, param_Saisie.Param_Saisie_ID)}");
                 trv = true;
               }
             }
-            if (!trv) DescAff = DescAff.replaceAll("${element.Param_Saisie_ID}", "");
+            if (!trv) DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "");
           }
         }
 
-        if (element.Param_Saisie_Affichage.compareTo("COL") == 0) {
+
+        print("♦︎♦︎♦︎♦︎♦︎♦ DescAff ${DescAff}");
+
+
+        if (param_Saisie.Param_Saisie_Affichage.compareTo("COL") == 0) {
           for (int j = 0; j < DbTools.glfParcs_Desc.length; j++) {
             Parc_Desc element2 = DbTools.glfParcs_Desc[j];
-            if (elementEnt.ParcsId == element2.ParcsDesc_ParcsId && element.Param_Saisie_ID == element2.ParcsDesc_Type) {
+            if (elementEnt.ParcsId == element2.ParcsDesc_ParcsId && param_Saisie.Param_Saisie_ID == element2.ParcsDesc_Type) {
               Parcs_Cols.add(element2.ParcsDesc_Lib);
             }
-          };
+          }
+          ;
         }
       }
-      ;
+
 
       if (DescAff.compareTo(DescAffnewParam) == 0) DescAff = "";
       String wTmp = DescAff;
@@ -255,6 +306,22 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       if (wTmp.length == 0) DescAff = "";
       elementEnt.Parcs_Date_Desc = DescAff;
       elementEnt.Parcs_Cols = Parcs_Cols;
+
+
+
+      String ParcsDesc_Type_VerifTrim2 = "";
+      Parc_Desc Parc_Desc_VerifTrim2 = Parc_Desc();
+      String ParcsDesc_Type_VerifAnn2 = "";
+      Parc_Desc Parc_Desc_VerifAnn2 = Parc_Desc();
+      String ParcsDesc_Type_VerifQuin2 = "";
+      Parc_Desc Parc_Desc_VerifQuin2 = Parc_Desc();
+      String ParcsDesc_Type_VerifDec2 = "";
+      Parc_Desc Parc_Desc_VerifDec2 = Parc_Desc();
+
+
+
+
+
 
       String ParcsDesc_Type_DESC = "";
       String ParcsDesc_Type_PDT = "";
@@ -278,12 +345,33 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
         Parc_Desc element2 = DbTools.glfParcs_Desc[jjj];
 
         if (elementEnt.ParcsId == element2.ParcsDesc_ParcsId) {
+
+
+          if (element2.ParcsDesc_Type!.compareTo("VerifTrim2") == 0) {
+            ParcsDesc_Type_VerifTrim2 = element2.ParcsDesc_Lib!;
+            Parc_Desc_VerifTrim2 = element2;
+          }
+          if (element2.ParcsDesc_Type!.compareTo("VerifAnn2") == 0) {
+            ParcsDesc_Type_VerifAnn2 = element2.ParcsDesc_Lib!;
+            Parc_Desc_VerifAnn2 = element2;
+          }
+          if (element2.ParcsDesc_Type!.compareTo("VerifQuin2") == 0) {
+            ParcsDesc_Type_VerifQuin2 = element2.ParcsDesc_Lib!;
+            Parc_Desc_VerifQuin2 = element2;
+          }
+          if (element2.ParcsDesc_Type!.compareTo("VerifDec2") == 0) {
+            ParcsDesc_Type_VerifDec2 = element2.ParcsDesc_Lib!;
+            Parc_Desc_VerifDec2 = element2;
+          }
           if (element2.ParcsDesc_Type!.compareTo("PDT") == 0) {
             ParcsDesc_Type_PDT = element2.ParcsDesc_Lib!;
             Parc_Desc_PDT = element2;
           }
 
           if (element2.ParcsDesc_Type!.compareTo("Inst") == 0) {
+            ParcsDesc_Type_Inst = element2.ParcsDesc_Lib!;
+          }
+          if (element2.ParcsDesc_Type!.compareTo("Inst2") == 0) {
             ParcsDesc_Type_Inst = element2.ParcsDesc_Lib!;
           }
           if (element2.ParcsDesc_Type!.compareTo("VerifAnn") == 0) {
@@ -302,6 +390,9 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
             ParcsDesc_Type_RA = element2.ParcsDesc_Lib!;
           }
           if (element2.ParcsDesc_Type!.compareTo("RES") == 0) {
+            ParcsDesc_Type_RES = element2.ParcsDesc_Lib!;
+          }
+          if (element2.ParcsDesc_Type!.compareTo("RES2") == 0) {
             ParcsDesc_Type_RES = element2.ParcsDesc_Lib!;
           }
           if (element2.ParcsDesc_Type!.compareTo("Ech") == 0) {
@@ -355,7 +446,17 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
         if (ParcsDesc_Type_Ech.compareTo("---") == 0) elementEnt.Parcs_VRMC = "REFO";
       } else if (ParcsDesc_Type_RA.compareTo("---") != 0 && ParcsDesc_Type_RA.isNotEmpty)
         elementEnt.Parcs_VRMC = "RA";
-      else if (ParcsDesc_Type_MAA.compareTo("---") != 0 && ParcsDesc_Type_MAA.isNotEmpty)
+
+      else if (ParcsDesc_Type_VerifDec2.compareTo("---") != 0 && ParcsDesc_Type_VerifDec2.isNotEmpty)
+        elementEnt.Parcs_VRMC = "VD";
+      else if (ParcsDesc_Type_VerifQuin2.compareTo("---") != 0 && ParcsDesc_Type_VerifQuin2.isNotEmpty)
+        elementEnt.Parcs_VRMC = "VQ";
+      else if (ParcsDesc_Type_VerifAnn2.compareTo("---") != 0 && ParcsDesc_Type_VerifAnn2.isNotEmpty)
+        elementEnt.Parcs_VRMC = "VA";
+      else if (ParcsDesc_Type_VerifTrim2.compareTo("---") != 0 && ParcsDesc_Type_VerifTrim2.isNotEmpty)
+        elementEnt.Parcs_VRMC = "VT";
+
+    else if (ParcsDesc_Type_MAA.compareTo("---") != 0 && ParcsDesc_Type_MAA.isNotEmpty)
         elementEnt.Parcs_VRMC = "MAA";
       else if (ParcsDesc_Type_Charge.compareTo("---") != 0 && ParcsDesc_Type_Charge.isNotEmpty)
         elementEnt.Parcs_VRMC = "CHGE";
@@ -419,8 +520,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       if (wTimer > 0) Srv_DbTools.gIntervention.Intervention_Status = "En cours";
     }
 
-
-
     await Srv_ImportExport.Intervention_Export_Update(Srv_DbTools.gIntervention);
 
     print("Filter >>>>"
@@ -430,14 +529,31 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
   }
 
   Future Filtre() async {
+
+
+    print("♦︎♦︎♦︎♦︎♦︎♦ Filtre subLibArray ${subLibArray.length}");
+    print("♦︎♦︎♦︎♦︎♦︎♦ Filtre DbTools.ParamTypeOg ${DbTools.ParamTypeOg}");
+
+
     int index = subLibArray.indexWhere((element) => element.compareTo(DbTools.ParamTypeOg) == 0);
 
     List<Parc_Ent> wParcs_Ent = [];
     List<Parc_Ent> wParcs_Ent2 = [];
     DbTools.lParcs_Ent.clear();
+
+
+    print("♦︎♦︎♦︎♦︎♦︎♦ DbTools.glfParcs_Ent Filtre ${DbTools.glfParcs_Ent.length}");
+
+
     for (int i = 0; i < DbTools.glfParcs_Ent.length; i++) {
       Parc_Ent element = DbTools.glfParcs_Ent[i];
-      if (subTitleArray[index].toUpperCase().contains(element.Parcs_Type!.toUpperCase())) {
+
+      print("♦︎♦︎♦︎♦︎♦︎♦ Filtre subTitleArray ${subTitleArray[index]}");
+      print("♦︎♦︎♦︎♦︎♦︎♦ Filtre Parcs_Type ${element.Parcs_Type!}");
+
+
+//      if (subTitleArray[index].toUpperCase().contains(element.Parcs_Type!.toUpperCase())) {
+
         if (filterText.isEmpty)
           wParcs_Ent.add(element);
         else {
@@ -445,7 +561,10 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
             wParcs_Ent.add(element);
           }
         }
-      }
+
+
+
+  //    }
     }
 
     DbTools.gCountRel = 0;
@@ -475,8 +594,10 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       }
     }
 
-//
-    print("setSt 1");
+    print("♦︎♦︎♦︎♦︎♦︎♦ DbTools.lParcs_Ent Filtre ${DbTools.lParcs_Ent.length}");
+
+
+
     setState(() {});
   }
 
@@ -500,17 +621,14 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       return Future.value(null);
     }
 
-    setState(() {
-
-});  }
+    setState(() {});
+  }
 
   Future<void> _updateConnectionStatus(ConnectivityResult result) async {
     print("HOME _updateConnectionStatus");
     await DbTools.checkConnection();
     setState(() {});
   }
-
-
 
   void initState() {
     DbTools.gRowisSel = false;
@@ -523,10 +641,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     ListParam_ParamTypeOg.clear();
 
     int i = 0;
-
-    print("element ${Srv_DbTools.ListParam_ParamAll}");
-
-
     Srv_DbTools.ListParam_ParamAll.forEach((element) {
       if (element.Param_Param_Type.compareTo("Type_Organe") == 0) {
         print("element ${element.Param_Param_ID}  ${element.Param_Param_Text}");
@@ -622,7 +736,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
   @override
   Widget Entete_Btn_Search() {
     return Container(
-
         height: 57,
         child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
           Container(
@@ -682,34 +795,34 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
   Widget EdtFilterWidget() {
     return !affEdtFilter
         ? InkWell(
-        child: Padding(
-          padding: EdgeInsets.only(right: 8),
-          child: Image.asset(
-            "assets/images/Btn_Loupe.png",
-            height: icoWidth,
-            width: icoWidth,
-          ),
-        ),
-        onTap: () async {
-          affEdtFilter = !affEdtFilter;
-          setState(() {});
-        })
+            child: Padding(
+              padding: EdgeInsets.only(right: 8),
+              child: Image.asset(
+                "assets/images/Btn_Loupe.png",
+                height: icoWidth,
+                width: icoWidth,
+              ),
+            ),
+            onTap: () async {
+              affEdtFilter = !affEdtFilter;
+              setState(() {});
+            })
         : Container(
-        width: 320,
-        child: Row(
-          children: [
-            InkWell(
-                child: Image.asset(
-                  "assets/images/Btn_Loupe.png",
-                  height: icoWidth,
-                  width: icoWidth,
-                ),
-                onTap: () async {
-                  affEdtFilter = !affEdtFilter;
-                  setState(() {});
-                }),
-            Expanded(
-                child: TextField(
+            width: 320,
+            child: Row(
+              children: [
+                InkWell(
+                    child: Image.asset(
+                      "assets/images/Btn_Loupe.png",
+                      height: icoWidth,
+                      width: icoWidth,
+                    ),
+                    onTap: () async {
+                      affEdtFilter = !affEdtFilter;
+                      setState(() {});
+                    }),
+                Expanded(
+                    child: TextField(
                   onChanged: (text) {
                     filterText = text;
                     Filtre();
@@ -730,25 +843,20 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                     ),
                   ),
                 ))
-          ],
-        ));
+              ],
+            ));
   }
 
-
   //********************************************
   //********************************************
   //********************************************
-
-
 
   void onMaj() async {
     print("•••••••••• Parent onMaj() Relaod()");
-
   }
 
   @override
   Widget Import_Export() {
-
     return Padding(
       padding: const EdgeInsets.only(left: 70, right: 30.0, bottom: 40.0),
       child: Row(
@@ -768,16 +876,14 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                     height: icoWidth,
                     width: icoWidth,
                   ),
-
                   backgroundColor: DbTools.hasConnection ? gColors.primaryGreen : Colors.black26,
                   onPressed: () async {
-                    if (!DbTools.hasConnection)
-                      {
-                        await OffLine();
-                        await Srv_ImportExport.getErrorSync();
-                        setState(() {});
-                        return;
-                      }
+                    if (!DbTools.hasConnection) {
+                      await OffLine();
+                      await Srv_ImportExport.getErrorSync();
+                      setState(() {});
+                      return;
+                    }
 
                     List<Parc_Ent> lParcs_Ent = await DbTools.getParcs_Ent_Upd(Srv_DbTools.gIntervention.InterventionId!);
                     print("lParcs_Ent lenght ${lParcs_Ent.length}");
@@ -805,15 +911,11 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                     await Srv_DbTools.getParcs_DescInter(Srv_DbTools.gIntervention.InterventionId!);
                     print("♦︎♦︎ IMPORT ♦︎♦︎ ListParc_Desc lenght ${Srv_DbTools.ListParc_Desc.length}");
 
-
-
                     await Srv_DbTools.getParcs_ArtInter(Srv_DbTools.gIntervention.InterventionId!);
-
 
                     for (int i = 0; i < Srv_DbTools.ListParc_Art.length; i++) {
                       Parc_Art_Srv element = Srv_DbTools.ListParc_Art[i];
                     }
-
 
                     print("***************** DELETE ****************");
 
@@ -881,8 +983,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
                     await gObj.AffMessageInfo(context, "Verif Plus", wStr);
 
-                    if (DbTools.glfParcs_Ent.length == 0)
-                    {
+                    if (DbTools.glfParcs_Ent.length == 0) {
                       print("Client_Groupe_Parc_Inter <<<<<<<<<<<<<<<<<<< AAA ${Srv_DbTools.gIntervention.InterventionId} ${Srv_DbTools.gIntervention.Intervention_Type} >>>>>>>>>>>>>>>>>>>>>");
                       Parc_Ent wParc_Ent = Parc_Ent.Parc_EntInit(Srv_DbTools.gIntervention.InterventionId!, Srv_DbTools.gIntervention.Intervention_Parcs_Type!, 0);
                       print("Client_Groupe_Parc_Inter <<<<<<<<<<<<<<<<<<< BBB>>>>>>>>>>>>>>>>>>>>>");
@@ -892,9 +993,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                       print("Client_Groupe_Parc_Inter <<<<<<<<<<<<<<<<<<< DDD ${DbTools.glfParcs_Ent.length}>>>>>>>>>>>>>>>>>>>>>");
                     }
                     await Srv_ImportExport.getErrorSync();
-
-
-
                   }),
           Spacer(),
           iStrfExp
@@ -910,10 +1008,9 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                     height: icoWidth,
                     width: icoWidth,
                   ),
-              backgroundColor: DbTools.hasConnection ? gColors.primaryRed : Colors.black26,
+                  backgroundColor: DbTools.hasConnection ? gColors.primaryRed : Colors.black26,
                   onPressed: () async {
-                    if (!DbTools.hasConnection)
-                    {
+                    if (!DbTools.hasConnection) {
                       await OffLine();
                       await Srv_ImportExport.getErrorSync();
                       setState(() {});
@@ -942,11 +1039,10 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 //                    await Srv_DbTools.delParc_Ent_Srv(Srv_DbTools.gIntervention.InterventionId!);
                     await Srv_DbTools.delParc_Ent_Srv_Upd();
 
-                    print("Export A glfParcs_Ent lenght ${  DbTools.glfParcs_Ent.length}");
+                    print("Export A glfParcs_Ent lenght ${DbTools.glfParcs_Ent.length}");
 
                     for (int i = 0; i < DbTools.glfParcs_Ent.length; i++) {
                       print("glfParcs_Ent ${i}");
-
 
                       var element = DbTools.glfParcs_Ent[i];
                       await Srv_DbTools.InsertUpdateParc_Ent_Srv(element);
@@ -992,9 +1088,9 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                       acontroller.stop();
                       iStrfExp = false;
                     });
-                    print("Export B glfParcs_Ent lenght ${  DbTools.glfParcs_Ent.length}");
+                    print("Export B glfParcs_Ent lenght ${DbTools.glfParcs_Ent.length}");
                     await Reload();
-                    print("Export C glfParcs_Ent lenght ${  DbTools.glfParcs_Ent.length}");
+                    print("Export C glfParcs_Ent lenght ${DbTools.glfParcs_Ent.length}");
 
                     String wStr = "Export => Transfert de ${DbTools.glfParcs_Ent.length} organes terminé \n\n"
                         "- ${NbDesc} descriptions\n"
@@ -1002,7 +1098,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
                     await gObj.AffMessageInfo(context, "Verif Plus", wStr);
                     await Srv_ImportExport.getErrorSync();
-
                   })
         ],
       ),
@@ -1015,19 +1110,24 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: Column(children: [
           gObj.InterventionTitleWidget("${Srv_DbTools.gIntervention.Client_Nom!.toUpperCase()}", wTitre2: "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}", wTimer: 0),
-
-
         ]));
   }
 
   @override
   Widget Organes() {
+
+    String wTitre2 = "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}";
+    if (Srv_DbTools.gIntervention.Groupe_Nom == Srv_DbTools.gIntervention.Site_Nom)
+      wTitre2 = "${Srv_DbTools.gIntervention.Site_Nom}";
+
+    print(" Client_Groupe_Parc_Inter Organes() ${wTitre2}");
+
+
     return Padding(
         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: Column(
           children: [
-
-            gObj.InterventionTitleWidget("${Srv_DbTools.gIntervention.Client_Nom!.toUpperCase()}", wTitre2: "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}", wTimer: wTimer),
+            gObj.InterventionTitleWidget("${Srv_DbTools.gIntervention.Client_Nom!.toUpperCase()}", wTitre2: wTitre2, wTimer: wTimer),
             Entete_Btn_Search(),
             Expanded(
               child: ExtGridWidget(),
@@ -1039,16 +1139,18 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
   @override
   Widget Data() {
+    String wTitre2 = "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}";
+    if (Srv_DbTools.gIntervention.Groupe_Nom == Srv_DbTools.gIntervention.Site_Nom)
+      wTitre2 = "${Srv_DbTools.gIntervention.Site_Nom}";
+
     return Padding(
         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: Column(
           children: [
-            gObj.InterventionTitleWidget("${Srv_DbTools.gClient.Client_Nom.toUpperCase()}", wTitre2 : "${Srv_DbTools.gGroupe.Groupe_Nom} / ${Srv_DbTools.gSite.Site_Nom} / ${Srv_DbTools.gZone.Zone_Nom}", wTimer : wTimer),
+            gObj.InterventionTitleWidget("${Srv_DbTools.gClient.Client_Nom.toUpperCase()}", wTitre2: wTitre2, wTimer: wTimer),
           ],
         ));
   }
-
-
 
   @override
   AppBar appBar() {
@@ -1058,16 +1160,13 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
           await HapticFeedback.vibrate();
           await Client_Dialog.Dialogs_Client(context);
         },
-        child:
-        Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
           AutoSizeText(
             affAll ? "COMPTE-RENDU / VÉRIFICATION" : "INFOS PRATIQUES",
             maxLines: 1,
             style: gColors.bodyTitle1_B_G24,
           ),
         ]),
-
-
       ),
       leading: InkWell(
         onTap: () async {
@@ -1075,18 +1174,16 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
           print("LOGO Popop ${canClose}");
           await Popop();
           print("return  Popop  canClose ${canClose}");
-          if (canClose)
-          {
+          if (canClose) {
             Navigator.of(context).pop();
           }
-
         },
         child: Padding(
           padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
           child: DbTools.gBoolErrorSync
               ? Image.asset(
-            "assets/images/IcoWErr.png",
-          )
+                  "assets/images/IcoWErr.png",
+                )
               : Image.asset("assets/images/IcoW.png"),
         ),
       ),
@@ -1105,7 +1202,12 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
           ),
           onPressed: () async {
             print("setSt 4");
-            await Navigator.push(context, MaterialPageRoute(builder: (context) => Intervention_Vue(onMaj: onMaj,)));
+            await Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) => Intervention_Vue(
+                          onMaj: onMaj,
+                        )));
             // setState(() {affAll = !affAll;});
           },
         ),
@@ -1114,61 +1216,52 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     );
   }
 
-  Future  OffLine() async
-  {
+  Future OffLine() async {
     List<Parc_Ent> lParcs_Ent = await DbTools.getParcs_Ent_Upd(Srv_DbTools.gIntervention.InterventionId!);
     if (lParcs_Ent.length > 0) {
       await showDialog(
           context: context,
-          builder: (context) =>
-          new AlertDialog(
-            surfaceTintColor: Colors.white,
-            title: Column(
-              //Slide3
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image(
-                    image: AssetImage('assets/images/AppIco.png'),
-                    height: 50,
-                  ),
-                  SizedBox(height: 8.0),
-                  Container(color: Colors.grey, height: 1.0),
-                  SizedBox(height: 8.0),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    child: Text(
-                      "Mode Off Line",
-                      style: TextStyle(
-                        fontSize: 22,
+          builder: (context) => new AlertDialog(
+                surfaceTintColor: Colors.white,
+                title: Column(
+                    //Slide3
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image(
+                        image: AssetImage('assets/images/AppIco.png'),
+                        height: 50,
                       ),
-                    ),
+                      SizedBox(height: 8.0),
+                      Container(color: Colors.grey, height: 1.0),
+                      SizedBox(height: 8.0),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: Text(
+                          "Mode Off Line",
+                          style: TextStyle(
+                            fontSize: 22,
+                          ),
+                        ),
+                      ),
+                    ]),
+                content: Text("Vous n'avez pas de connexion : Import/Export impossible!!!"),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      Navigator.of(context).pop(false);
+                    },
+                    child: new Text('Ok'),
                   ),
-                ]),
-            content: Text("Vous n'avez pas de connexion : Import/Export impossible!!!"),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  Navigator.of(context).pop(false);
-                },
-                child: new Text('Ok'),
-              ),
-
-            ],
-          )
-
-
-      );
-    }
-    else
+                ],
+              ));
+    } else
       Navigator.of(context).pop();
   }
 
-  Future  Popop() async
-  {
+  Future Popop() async {
     print("Popop() ${canClose}");
 
-
-    if(!DbTools.hasConnection) {
+    if (!DbTools.hasConnection) {
       canClose = true;
       print("Popop OFFLINE ${canClose}");
 
@@ -1179,71 +1272,65 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     if (lParcs_Ent.length > 0) {
       await showDialog(
           context: context,
-          builder: (context) =>
-          new AlertDialog(
-            surfaceTintColor: Colors.white,
-            title: Column(
-              //Slide3
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image(
-                    image: AssetImage('assets/images/AppIco.png'),
-                    height: 50,
-                  ),
-                  SizedBox(height: 8.0),
-                  Container(color: Colors.grey, height: 1.0),
-                  SizedBox(height: 8.0),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    child: Text(
-                      "Vous avez des enregistrements à remonter sur le serveur !!!",
-                      style: TextStyle(
-                        fontSize: 22,
+          builder: (context) => new AlertDialog(
+                surfaceTintColor: Colors.white,
+                title: Column(
+                    //Slide3
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Image(
+                        image: AssetImage('assets/images/AppIco.png'),
+                        height: 50,
                       ),
-                    ),
+                      SizedBox(height: 8.0),
+                      Container(color: Colors.grey, height: 1.0),
+                      SizedBox(height: 8.0),
+                      Padding(
+                        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                        child: Text(
+                          "Vous avez des enregistrements à remonter sur le serveur !!!",
+                          style: TextStyle(
+                            fontSize: 22,
+                          ),
+                        ),
+                      ),
+                    ]),
+                content: Text("Êtes-vous sûre de vouloir quitter cette fenêtre ?"),
+                actions: <Widget>[
+                  TextButton(
+                    onPressed: () {
+                      print("Popop NO ${canClose}");
+                      Navigator.of(context).pop(false);
+                    },
+                    child: new Text('Non'),
                   ),
-                ]),
-            content: Text("Êtes-vous sûre de vouloir quitter cette fenêtre ?"),
-            actions: <Widget>[
-              TextButton(
-                onPressed: () {
-                  print("Popop NO ${canClose}");
-                  Navigator.of(context).pop(false);
-                },
-                child: new Text('Non'),
-              ),
-              TextButton(
-                onPressed: () {
-                  canClose = true;
-                  print("Popop YES ${canClose}");
-                  Navigator.of(context).pop(false);
-                },
-                child: new Text('Oui'),
-              ),
-            ],
-          )
+                  TextButton(
+                    onPressed: () {
+                      canClose = true;
+                      print("Popop YES ${canClose}");
+                      Navigator.of(context).pop(false);
+                    },
+                    child: new Text('Oui'),
+                  ),
+                ],
+              ));
+    } else {
+      canClose = true;
 
+      print("Popop NO MAJ ${canClose}");
 
-      );
+      return;
     }
-    else
-      {
-        canClose = true;
-
-        print("Popop NO MAJ ${canClose}");
-
-        return;
-      }
-
-
   }
-
 
   @override
   Widget build(BuildContext context) {
 //    print("build");
     double LargeurLabel = 120;
     double h = 60;
+
+
+
 
 //    isKeyBoard = (MediaQuery.of(context).viewInsets.bottom != 0.0);
     Widget wchildren = Container();
@@ -1257,69 +1344,62 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       else if (DbTools.gCurrentIndex3 == 4)
         wchildren = Client_Groupe_Parc_Inter_Devis(onMaj: onMaj, x_t: "");
       else if (DbTools.gCurrentIndex3 == 5)
-/*
-        wchildren = Client_Groupe_Parc_Inter_Note(onMaj: onMaj, x_t: "");
-      else if (DbTools.gCurrentIndex3 == 6)
-*/
         wchildren = Client_Groupe_Parc_Inter_Signature(onMaj: onMaj, x_t: "");
       else
         wchildren = Organes();
     } else
       wchildren = Enntete_Inter();
 
-    return
-      WillPopScope(
-          onWillPop: () async {
-            print("LOGO Popop ${canClose}");
-            await Popop();
-            print("return  Popop  canClose ${canClose}");
-            if (canClose)
-            {
-              return true;
-            }
-            return false;
-          },        child:
+    print(" Client_Groupe_Parc_Inter Build ${affAll} ${DbTools.gCurrentIndex3}");
 
-    Scaffold(
-        backgroundColor: Colors.white,
-        appBar: appBar(),
-        body: Stack(fit: StackFit.expand, children: <Widget>[
-          wchildren,
-          (DbTools.gRowisSel || !affAll)
-              ? Container()
-              : Positioned(
-                  bottom: 0,
-                  right: 0,
-                  child: CustomBottomNavigationBar3(
-                    onIconPresedCallback: onBottomIconPressed,
-                  ),
-                ),
-        ]),
-        floatingActionButton: (DbTools.gRowisSel)
-            ? Container()
-            : ( DbTools.gCurrentIndex3 > 1 || !affAll)
+
+    return WillPopScope(
+        onWillPop: () async {
+          await Popop();
+          if (canClose) {
+            return true;
+          }
+          return false;
+        },
+        child: Scaffold(
+            backgroundColor: Colors.white,
+            appBar: appBar(),
+            body: Stack(fit: StackFit.expand, children: <Widget>[
+              wchildren,
+              (DbTools.gRowisSel || !affAll)
+                  ? Container()
+                  : Positioned(
+                      bottom: 0,
+                      right: 0,
+                      child: CustomBottomNavigationBar3(
+                        onIconPresedCallback: onBottomIconPressed,
+                      ),
+                    ),
+            ]),
+            floatingActionButton: (DbTools.gRowisSel)
                 ? Container()
+                : (DbTools.gCurrentIndex3 > 1 || !affAll)
+                    ? Container()
+                    : DbTools.gCurrentIndex3 == 0
+                        ? Padding(
+                            padding: const EdgeInsets.only(bottom: 60.0),
+                            child: FloatingActionButton(
+                              onPressed: () async {
+                                print("Client_Groupe_Parc_Inter Parcs_InterventionId ${Srv_DbTools.gIntervention.InterventionId}");
+                                print("Client_Groupe_Parc_Inter Parcs_Type ${DbTools.gParc_Ent.Parcs_Type}");
+                                print("Client_Groupe_Parc_Inter Parcs_order ${DbTools.gParc_Ent.Parcs_order}");
 
-                :
-        DbTools.gCurrentIndex3 == 0 ?
-        Padding(
-            padding: const EdgeInsets.only(bottom: 60.0),
-            child:
-        FloatingActionButton(
-          onPressed: () async {
-
-            print("Parc_EntInit Parcs_InterventionId ${Srv_DbTools.gIntervention.InterventionId}");
-            print("Parc_EntInit Parcs_Type ${DbTools.gParc_Ent.Parcs_Type}");
-            print("Parc_EntInit Parcs_order ${DbTools.gParc_Ent.Parcs_order}");
-
-            Parc_Ent wParc_Ent = Parc_Ent.Parc_EntInit(Srv_DbTools.gIntervention.InterventionId!, Srv_DbTools.gIntervention.Intervention_Parcs_Type, 0);
-            DbTools.insertParc_Ent(wParc_Ent);
-            await Reload();
-          },
-          child: const Icon(Icons.add, color: Colors.white,),
-          backgroundColor: Colors.red,
-        )) :
-        Import_Export()));
+                                Parc_Ent wParc_Ent = Parc_Ent.Parc_EntInit(Srv_DbTools.gIntervention.InterventionId!, Srv_DbTools.gIntervention.Intervention_Parcs_Type, 0);
+                                DbTools.insertParc_Ent(wParc_Ent);
+                                await Reload();
+                              },
+                              child: const Icon(
+                                Icons.add,
+                                color: Colors.white,
+                              ),
+                              backgroundColor: Colors.red,
+                            ))
+                        : Import_Export()));
   }
 
   Widget CadreWidget(Widget wWidget, Color Color1, Color Color2, Color ColorTxt) {
@@ -1331,6 +1411,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       child: Container(color: Color2, padding: EdgeInsets.fromLTRB(p, p, p, p), child: wWidget),
     );
   }
+
   bool getParc_Ent(int aId) {
     bool wRet = false;
     if (DbTools.gRowSels.length > 0) {
@@ -1339,7 +1420,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
         for (int i = 0; i < DbTools.lParcs_Ent.length; i++) {
           Parc_Ent element = DbTools.lParcs_Ent[i];
           if (element.ParcsId! == wId) {
-//            print("getParc_Ent Sels $aId Id $wId Ordre ${element.Parcs_order}");
+            print(" getParc_Ent Parc_Ent REF ${element.Parcs_CodeArticle}");
             DbTools.gParc_Ent = element;
             wRet = true;
             break;
@@ -2182,17 +2263,18 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
   }
 
   Widget ExtGridWidget() {
-//    print(">>>>>>>>>>>>>>>>>>>>>>>>>>> ExtGridWidget ${isKeyBoard}");
+
+    print(" Client_Groupe_Parc_Inter ExtGridWidget ${DbTools.lParcs_Ent.length}");
+
 
     List<DaviColumn<Parc_Ent>> wColumns = [
       new DaviColumn(
           name: 'N°',
-          cellStyleBuilder: (row) =>
-              DbTools.gRowisSel && isInSels(row.data.ParcsId!)
-                  ? CellStyle(background: gColors.GrdBtn_Colors1Sel, alignment: Alignment.center, textStyle: gColors.bodySaisie_B_W)
-                  : LastClickID == row.data.ParcsId
-                      ? CellStyle(background: gColors.greyLight, alignment: Alignment.center, textStyle: gColors.bodySaisie_B_G)
-                      : CellStyle(background: Colors.white, alignment: Alignment.center, textStyle: gColors.bodySaisie_N_G),
+          cellStyleBuilder: (row) => DbTools.gRowisSel && isInSels(row.data.ParcsId!)
+              ? CellStyle(background: gColors.GrdBtn_Colors1Sel, alignment: Alignment.center, textStyle: gColors.bodySaisie_B_W)
+              : LastClickID == row.data.ParcsId
+                  ? CellStyle(background: gColors.greyLight, alignment: Alignment.center, textStyle: gColors.bodySaisie_B_G)
+                  : CellStyle(background: Colors.white, alignment: Alignment.center, textStyle: gColors.bodySaisie_N_G),
           cellBuilder: (BuildContext context, DaviRow<Parc_Ent> row) {
             int hab = 0;
             bool upd = false;
@@ -2216,8 +2298,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                                   color: Colors.orange,
                                   size: 10,
                                 ))
-                            :
-                        Container(
+                            : Container(
                                 width: 15,
                               ),
                         Text(
@@ -2238,7 +2319,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                 onLongPress: () => _onSelMove(row.data));
           },
           width: 60),
-
       new DaviColumn(name: '${DbTools.ParamTypeOg}', stringValue: (row) => "${row.Parcs_Date_Desc}", width: gColors.MediaQuerysizewidth - 218, cellStyleBuilder: (row) => CellStyle(textStyle: row.data.Livr!.isNotEmpty ? gColors.bodySaisie_B_O : gColors.bodySaisie_B_G)),
       new DaviColumn(name: 'Visite', stringValue: (row) => "${row.Parcs_Date_Rev!.isEmpty ? '' : DateFormat('dd/MM/yy').format(DateTime.parse(row.Parcs_Date_Rev!))}", width: 75, cellStyleBuilder: (row) => CellStyle(textStyle: row.data.Livr!.isNotEmpty ? gColors.bodySaisie_B_O : gColors.bodySaisie_B_G)),
       new DaviColumn(
@@ -2259,13 +2339,9 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
             );
           },
           width: 65),
-
-
-
-
     ];
 
-  /*  for (int i = 0; i < Parcs_ColsTitle!.length; i++) {
+    /*  for (int i = 0; i < Parcs_ColsTitle!.length; i++) {
       wColumns.add(
         new DaviColumn(
             name: Parcs_ColsTitle![i],
@@ -2284,7 +2360,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     DaviModel<Parc_Ent>? _model;
     _model = DaviModel<Parc_Ent>(rows: DbTools.lParcs_Ent, columns: wColumns);
 
-
     Davi wDavi = Davi<Parc_Ent>(
       _model,
 //      visibleRowsCount: 16,
@@ -2296,91 +2371,88 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       verticalScrollController: wVScrollController,
     );
     return Container(
-        padding: EdgeInsets.only(bottom: 60),
-        child :
-        GestureDetector(
-            onPanStart: (d) {
-              dxPosition = 0;
-              dyPosition = 0;
-            },
-            onPanUpdate: (details) {
-              hPosition = 0;
-              vPosition = 0;
-              if (details.delta.dx > 5) {
-                final minposition = wHScrollController.position.minScrollExtent;
-                hPosition = wHScrollController.offset - 5;
-                if (hPosition < minposition) hPosition = minposition;
-                wHScrollController.jumpTo(hPosition);
-                dxPosition = details.delta.dx;
-              } else if (details.delta.dx < -5) {
-                //          print("Dragging in -X ${details.delta.dx} ${wHScrollController.offset}");
-                final Maxposition = wHScrollController.position.maxScrollExtent;
-                hPosition = wHScrollController.offset + 5;
-                if (hPosition > Maxposition) hPosition = Maxposition;
-                wHScrollController.jumpTo(hPosition);
-                dxPosition = details.delta.dx;
-              } else if (details.delta.dy < 0) {
-                final maxposition = wVScrollController.position.maxScrollExtent;
-                vPosition = wVScrollController.offset + 20; //details.delta.dy;
-                if (vPosition > maxposition) vPosition = maxposition;
-                wVScrollController.jumpTo(vPosition);
+      padding: EdgeInsets.only(bottom: 60),
+      child: GestureDetector(
+          onPanStart: (d) {
+            dxPosition = 0;
+            dyPosition = 0;
+          },
+          onPanUpdate: (details) {
+            hPosition = 0;
+            vPosition = 0;
+            if (details.delta.dx > 5) {
+              final minposition = wHScrollController.position.minScrollExtent;
+              hPosition = wHScrollController.offset - 5;
+              if (hPosition < minposition) hPosition = minposition;
+              wHScrollController.jumpTo(hPosition);
+              dxPosition = details.delta.dx;
+            } else if (details.delta.dx < -5) {
+              //          print("Dragging in -X ${details.delta.dx} ${wHScrollController.offset}");
+              final Maxposition = wHScrollController.position.maxScrollExtent;
+              hPosition = wHScrollController.offset + 5;
+              if (hPosition > Maxposition) hPosition = Maxposition;
+              wHScrollController.jumpTo(hPosition);
+              dxPosition = details.delta.dx;
+            } else if (details.delta.dy < 0) {
+              final maxposition = wVScrollController.position.maxScrollExtent;
+              vPosition = wVScrollController.offset + 20; //details.delta.dy;
+              if (vPosition > maxposition) vPosition = maxposition;
+              wVScrollController.jumpTo(vPosition);
 
-                dyPosition = details.delta.dy;
+              dyPosition = details.delta.dy;
 //            print(">>>>> Dragging in -Y ${dyPosition} ${details.delta.dy} ${maxposition} ${vPosition}");
-              } else if (details.delta.dy > 0) {
-                final minposition = wVScrollController.position.minScrollExtent;
-                vPosition = wVScrollController.offset - 20; //details.delta.dy;
-                if (vPosition < minposition) vPosition = minposition;
-                wVScrollController.jumpTo(vPosition);
-                dyPosition = details.delta.dy;
-                // print(     ">>>>> Dragging in +Y ${details.delta.dy} ${minposition} ${vPosition}");
-              }
-            },
-            onPanEnd: (d) {
+            } else if (details.delta.dy > 0) {
+              final minposition = wVScrollController.position.minScrollExtent;
+              vPosition = wVScrollController.offset - 20; //details.delta.dy;
+              if (vPosition < minposition) vPosition = minposition;
+              wVScrollController.jumpTo(vPosition);
+              dyPosition = details.delta.dy;
+              // print(     ">>>>> Dragging in +Y ${details.delta.dy} ${minposition} ${vPosition}");
+            }
+          },
+          onPanEnd: (d) {
 //          print(">>>>> dyPosition ${dyPosition} ${vPosition} -- ${d.velocity.pixelsPerSecond.dy} ---- ${dxPosition} ${hPosition}");
-              if (dyPosition < 0) {
-                final maxposition = wVScrollController.position.maxScrollExtent;
-                final delta = d.velocity.pixelsPerSecond.dy / -100;
-                vPosition = wVScrollController.offset + 20 * delta; //details.delta.dy;
-                if (vPosition > maxposition) vPosition = maxposition;
-                if (vPosition <= maxposition) {
+            if (dyPosition < 0) {
+              final maxposition = wVScrollController.position.maxScrollExtent;
+              final delta = d.velocity.pixelsPerSecond.dy / -100;
+              vPosition = wVScrollController.offset + 20 * delta; //details.delta.dy;
+              if (vPosition > maxposition) vPosition = maxposition;
+              if (vPosition <= maxposition) {
 //              print(">>>>> d.velocity.pixelsPerSecond.dy  ${wVScrollController.offset} ----- ${vPosition} ----- ${delta}");
-                  wVScrollController.animateTo(vPosition, duration: Duration(milliseconds: 1000), curve: Curves.easeOutCubic);
-                }
-              } else if (dyPosition > 0) {
-                final delta = d.velocity.pixelsPerSecond.dy / -100;
-                vPosition = wVScrollController.offset + 20 * delta; //details.delta.dy;
-                final minposition = wVScrollController.position.minScrollExtent;
-                if (vPosition < minposition) vPosition = minposition;
-                if (vPosition >= minposition) {
-//              print(">>>>> d.velocity.pixelsPerSecond.dy  ${wVScrollController.offset} ----- ${vPosition} ----- ${delta}");
-                  wVScrollController.animateTo(vPosition, duration: Duration(milliseconds: 1000), curve: Curves.easeOutCubic);
-                }
+                wVScrollController.animateTo(vPosition, duration: Duration(milliseconds: 1000), curve: Curves.easeOutCubic);
               }
+            } else if (dyPosition > 0) {
+              final delta = d.velocity.pixelsPerSecond.dy / -100;
+              vPosition = wVScrollController.offset + 20 * delta; //details.delta.dy;
+              final minposition = wVScrollController.position.minScrollExtent;
+              if (vPosition < minposition) vPosition = minposition;
+              if (vPosition >= minposition) {
+//              print(">>>>> d.velocity.pixelsPerSecond.dy  ${wVScrollController.offset} ----- ${vPosition} ----- ${delta}");
+                wVScrollController.animateTo(vPosition, duration: Duration(milliseconds: 1000), curve: Curves.easeOutCubic);
+              }
+            }
 //    ctrl!.animateWith(FrictionSimulation(0.05, ctrl!.value, d.velocity.pixelsPerSecond.dx / 100));
-            },
-            child: DaviTheme(
-                child: wDavi,
-                data: DaviThemeData(
+          },
+          child: DaviTheme(
+              child: wDavi,
+              data: DaviThemeData(
+                columnDividerColor: Colors.transparent,
+                header: HeaderThemeData(
+                  color: gColors.greyLight,
+                  bottomBorderHeight: 2,
+                  bottomBorderColor: gColors.greyDark,
                   columnDividerColor: Colors.transparent,
-                  header: HeaderThemeData(
-                    color: gColors.greyLight,
-                    bottomBorderHeight: 2,
-                    bottomBorderColor: gColors.greyDark,
-                    columnDividerColor: Colors.transparent,
-                  ),
-                  headerCell: HeaderCellThemeData(height: 40, alignment: Alignment.center, textStyle: gColors.bodySaisie_B_B, resizeAreaWidth: 40, resizeAreaHoverColor: Colors.black, sortIconColors: SortIconColors.all(Colors.black), expandableName: true),
-                  row: RowThemeData(
-                    hoverBackground: (rowIndex) => Colors.blue[50],
-                    dividerColor: gColors.greyDark,
-                  ),
-                  cell: CellThemeData(
-                    contentHeight: 44,
-                  ),
-                ))),
-
-      );
-
+                ),
+                headerCell: HeaderCellThemeData(height: 40, alignment: Alignment.center, textStyle: gColors.bodySaisie_B_B, resizeAreaWidth: 40, resizeAreaHoverColor: Colors.black, sortIconColors: SortIconColors.all(Colors.black), expandableName: true),
+                row: RowThemeData(
+                  hoverBackground: (rowIndex) => Colors.blue[50],
+                  dividerColor: gColors.greyDark,
+                ),
+                cell: CellThemeData(
+                  contentHeight: 44,
+                ),
+              ))),
+    );
   }
 
   Color? _rowColor(DaviRow<Parc_Ent> row) {
@@ -2419,8 +2491,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
       if (DbTools.gRowSels.length == 0) DbTools.gRowisSel = false;
     } else if (DbTools.gRowSels.length == 0) {
-      print(">>>>>>>>>>>>>>>> _onSelMove FIRST");
-
+      print(" _onSelMove Parc_Ent REF ${Parc_Ent.Parcs_CodeArticle}");
       DbTools.gParc_Ent = Parc_Ent;
       DbTools.gRowIndex = Parc_Ent.ParcsId!;
 
@@ -2544,11 +2615,11 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       return;
     }
 
+    print(" _onRowDoubleTap Parc_Ent REF ${Parc_Ent.Parcs_CodeArticle}");
     DbTools.gParc_Ent = Parc_Ent;
     LastSelID = DbTools.gParc_Ent.ParcsId!;
 
     print("DbTools.gParc_Ent.ParcsId! ${DbTools.gParc_Ent.ParcsId!}");
-
 
     Client_Groupe_Parc_Tools.listResult_Article_Link_Verif_Deb.clear();
 
@@ -2571,8 +2642,8 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     }
 
     DbTools.glfParcs_Desc = await DbTools.getParcs_Desc(DbTools.gParc_Ent.ParcsId!);
-
     Srv_DbTools.FAB_Lib = "";
+    Srv_DbTools.TYPE_Lib = "";
     Srv_DbTools.PRS_Lib = "";
     Srv_DbTools.CLF_Lib = "";
     Srv_DbTools.GAM_Lib = "";
@@ -2588,7 +2659,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       Parc_Art element = DbTools.lParcs_Art[i];
 //      print("¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶ Client_Groupe_Parc_Inter_Entete ${element.Desc()}");
     }
-
 
     Reload();
   }

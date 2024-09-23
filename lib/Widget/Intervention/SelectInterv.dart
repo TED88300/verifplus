@@ -70,7 +70,7 @@ class SelectInterState extends State<SelectInter> {
     ListZone.clear();
     ListIntervention.clear();
 
-    await Srv_DbTools.getClientRech(Search_Client_TextController.text);
+    await Srv_DbTools.getClientRech(Search_Client_TextController.text, selDepot);
     print(">>>>>> ${Srv_DbTools.ListClient.length}");
     ListClient.addAll(Srv_DbTools.ListClient);
 
@@ -86,7 +86,7 @@ class SelectInterState extends State<SelectInter> {
 
     print(">>>>>> FlitreSite");
 
-    await Srv_DbTools.getSiteRech(Search_Site_TextController.text);
+    await Srv_DbTools.getSiteRech(0, Search_Site_TextController.text);
     print(">>>>>> ${Srv_DbTools.ListSite.length}");
     ListSite.addAll(Srv_DbTools.ListSite);
     print(">>>>>> ${ListSite.length}");
@@ -141,10 +141,7 @@ class SelectInterState extends State<SelectInter> {
   }
 
   void initLib() async {
-//    await DbTools.initListFam();
     await DbTools.getAdresseType("AGENCE");
-    print("initLib >>>>>> ${Srv_DbTools.ListAdressesearchresult.length}");
-
     ListDepot.clear();
     Srv_DbTools.ListAdressesearchresult.forEach((wAdresse) {
       ListDepot.add(wAdresse.Adresse_Nom);

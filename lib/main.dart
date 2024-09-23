@@ -9,9 +9,10 @@ import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 late CameraDescription firstCamera;
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   DbTools.gTED = kDebugMode;
   Widget _defaultHome = new SplashScreen();
-  WidgetsFlutterBinding.ensureInitialized();
   final cameras = await availableCameras();
   firstCamera = cameras.first;
 

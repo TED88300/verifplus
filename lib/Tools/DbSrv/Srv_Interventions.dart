@@ -17,6 +17,8 @@ class Intervention {
   String Intervention_Responsable2 = "";
   String Intervention_Responsable3 = "";
   String Intervention_Responsable4 = "";
+  String Intervention_Responsable5 = "";
+  String Intervention_Responsable6 = "";
   String Intervention_Intervenants = "";
   String Intervention_Reglementation = "";
   String Intervention_Signataire_Client = "";
@@ -49,7 +51,7 @@ class Intervention {
 
 
   static InterventionInit() {
-    return Intervention(0, 0, "", "", "","","",  "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, "","", true, Uint8List.fromList([]), Uint8List.fromList([]));
+    return Intervention(0, 0, "", "", "","","",  "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", "","", "", "", 0, "","", true, Uint8List.fromList([]), Uint8List.fromList([]));
   }
 
   Intervention(
@@ -67,6 +69,8 @@ class Intervention {
       String Intervention_Responsable2,
       String Intervention_Responsable3,
       String Intervention_Responsable4,
+      String Intervention_Responsable5,
+      String Intervention_Responsable6,
     String Intervention_Intervenants,
     String Intervention_Reglementation,
     String Intervention_Signataire_Client,
@@ -104,6 +108,8 @@ class Intervention {
     this.Intervention_Responsable2 = Intervention_Responsable2;
     this.Intervention_Responsable3 = Intervention_Responsable3;
     this.Intervention_Responsable4 = Intervention_Responsable4;
+    this.Intervention_Responsable5 = Intervention_Responsable5;
+    this.Intervention_Responsable6 = Intervention_Responsable6;
     this.Intervention_Intervenants = Intervention_Intervenants;
     this.Intervention_Reglementation = Intervention_Reglementation;
     this.Intervention_Signataire_Client = Intervention_Signataire_Client;
@@ -140,6 +146,8 @@ class Intervention {
       'Intervention_Responsable2': Intervention_Responsable2,
       'Intervention_Responsable3': Intervention_Responsable3,
       'Intervention_Responsable4': Intervention_Responsable4,
+      'Intervention_Responsable5': Intervention_Responsable5,
+      'Intervention_Responsable6': Intervention_Responsable6,
       'Intervention_Intervenants': Intervention_Intervenants,
       'Intervention_Reglementation': Intervention_Reglementation,
       'Intervention_Signataire_Client': Intervention_Signataire_Client,
@@ -204,6 +212,8 @@ class Intervention {
       json['Intervention_Responsable2'],
       json['Intervention_Responsable3'],
       json['Intervention_Responsable4'],
+      json['Intervention_Responsable5'],
+      json['Intervention_Responsable6'],
       json['Intervention_Intervenants'],
       json['Intervention_Reglementation'],
       json['Intervention_Signataire_Client'],
@@ -276,6 +286,8 @@ class Intervention {
       json['Intervention_Responsable2'],
       json['Intervention_Responsable3'],
       json['Intervention_Responsable4'],
+      json['Intervention_Responsable5'],
+      json['Intervention_Responsable6'],
       json['Intervention_Intervenants'],
       json['Intervention_Reglementation'],
       json['Intervention_Signataire_Client'],
@@ -328,6 +340,8 @@ class Intervention {
         '$Intervention_Responsable2	          '
         '$Intervention_Responsable3	          '
         '$Intervention_Responsable4	          '
+        '$Intervention_Responsable5	          '
+        '$Intervention_Responsable6	          '
         '$Intervention_Intervenants	          '
         '$Intervention_Reglementation	        '
         '$Intervention_Signataire_Client     '

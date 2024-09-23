@@ -166,8 +166,27 @@ Sem 06/05 : 1j + 1J + 1/2J = 2J + 1/2J
 Sem 13/05 : 1J + 1J + 1J + 1J + 1J = 5J
 Sem 20/05 : 1J + 1J + 1J + 1J + 1J = 5J
 
-Juin
-Sem 27/05 : 1J + 1J + 1J + 1J + -- = 4J + 1/2j (journée Paris 7-20 )
+Juin 19,5 J
+Sem 27/05 : 1J + 1J + 1J + 1J + 1/2j = 4J + 1/2j
 Sem 03/06 : -- + 1J + 1J + 1J + 1J = 4J
-Sem 10/06 : 1J + 1J
+Sem 10/06 : 1J + 1J + 1J + 1J + 1J = 5j
+Sem 17/06 : 1J + 1J + 1J + 1J + 1J = 5j
+Sem 24/06 : 1J  = 1j
 
+Juillet 26J
+Sem 24/06 : -- + 1J + 1J + 1J + 1J = 4j
+Sem 01/07 : 1J + 1J + 1J +1J +1J = 5J
+Sem 08/07 : 1J + 1J + 1J +1J +1J = 5J
+Sem 15/07 : 1/2J + 1/2J + 1J +1J +1J = 4J
+Sem 16/07 : 1J + 1/2J + 1/2J + 1J + 1J (1J + 1J)= 6J
+Sem 22/07 : 1J + 1J = 2J
+
+Aout : 5J
+Sem 22/07 : 1/2J + 1J + 1/2 j + (1/2 j + 1/2 j) = 3J
+Sem 29/07 : 1/2J + 1/2J + 1J = 2J
+
+Septembre : 12J
+Sem 26/08 : 1J + 1J = 2
+Sem 05/09 : 1J + 1J + 1/2J + 1J + 1J = 4,5
+Sem 09/09 : 1J + 1J + 1J + + 1/2J + 1/2J = 4
+Sem 16/09 : 1/2J + 1J = 1,5 J

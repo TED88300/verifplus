@@ -35,9 +35,12 @@ class Client_Groupe_Parc_Inter_PieceState extends State<Client_Groupe_Parc_Inter
     List<Parc_Art> wlParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "P");
     lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "V");
     lParcs_Art.addAll(wlParcs_Art);
-
-    print("lParcs_Art ${lParcs_Art.length}");
+    print("initLib lParcs_Art A ${lParcs_Art.length}");
     Client_Groupe_Parc_Tools.DebtoArt();
+
+    print("initLib lParcs_Art B ${lParcs_Art.length}");
+
+
     for (int i = 0; i < lParcs_Art.length; i++) {
       Parc_Art element = lParcs_Art[i];
       print("♣︎♣︎♣︎ initLib PIECES Parc_Art ${element.Desc()}");
@@ -65,8 +68,6 @@ class Client_Groupe_Parc_Inter_PieceState extends State<Client_Groupe_Parc_Inter
         initLib();
         }
     });
-
-
   }
 
   void onSaisie() async {
@@ -75,14 +76,16 @@ class Client_Groupe_Parc_Inter_PieceState extends State<Client_Groupe_Parc_Inter
     await initLib();
   }
 
-
+  void onDelete() async {
+    initLibRun = true;
+    await initLib();
+  }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
     Srv_DbTools.getParam_Saisie_ParamMem("Fact");
     print("build PIECE");
-
 
     return Scaffold(
       body: Padding(
@@ -150,6 +153,7 @@ class Client_Groupe_Parc_Inter_PieceState extends State<Client_Groupe_Parc_Inter
           new ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
+              print("onTap PPPPPPP");
               await Client_Groupe_Parc_Inter_Article_Dialog.Dialogs_Saisie(context, onSaisie, "P");
             },
             style: ElevatedButton.styleFrom(
@@ -168,13 +172,19 @@ class Client_Groupe_Parc_Inter_PieceState extends State<Client_Groupe_Parc_Inter
     double H2 = 4;
 
     List<Widget> RowSaisies = [];
+    print("♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠ buildDesc ${lParcs_Art.length}");
+
 
     for (int i = 0; i < lParcs_Art.length; i++) {
       Parc_Art element = lParcs_Art[i];
  //     print("♠ buildDesc element ${element.Desc()}");
-
       RowSaisies.add(RowSaisie(element, H2));
     }
+
+    print("♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠ buildDesc RowSaisies ${RowSaisies.length}");
+
+
+
 
     return
 //      Expanded(child:
@@ -261,7 +271,7 @@ class Client_Groupe_Parc_Inter_PieceState extends State<Client_Groupe_Parc_Inter
             await HapticFeedback.vibrate();
             print("onTap ");
             print("onTap ${parc_Art.toString()} ");
-            await Client_Groupe_Parc_Inter_Piece_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, parc_Art);
+            await Client_Groupe_Parc_Inter_Piece_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, onDelete, parc_Art);
 
             setState(() {});
           },

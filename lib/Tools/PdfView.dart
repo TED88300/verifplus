@@ -1,4 +1,6 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 
@@ -23,49 +25,55 @@ class _PdfViewState extends State<PdfView> {
   }
 
   @override
+  AppBar appBar() {
+    return AppBar(
+      title: InkWell(
+        onTap: () async {
+          await HapticFeedback.vibrate();
+          Navigator.pop(context);
+        },
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+          AutoSizeText(
+            "Vérif+ : Documents",
+            maxLines: 1,
+            style: gColors.bodyTitle1_B_G24,
+          ),
+        ]),
+      ),
+      leading: InkWell(
+        onTap: () async {
+          await HapticFeedback.vibrate();
+          Navigator.of(context).pop();
+        },
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
+          child: DbTools.gBoolErrorSync
+              ? Image.asset(
+            "assets/images/IcoWErr.png",
+          )
+              : Image.asset("assets/images/IcoW.png"),
+        ),
+      ),
+      actions: <Widget>[
+        IconButton(
+          iconSize: 40,
+          icon: gColors.wBoxDecoration(context),
+          onPressed: () async {
+            gColors.AffUser(context);
+          },
+        ),
+      ],
+      backgroundColor: gColors.white,
+    );
+  }
+
+  @override
   Widget build(BuildContext context) {
 
     double width = MediaQuery.of(context).size.width;
-    double height = MediaQuery.of(context).size.height - 56;
+    double height = MediaQuery.of(context).size.height - 80;
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: gColors.primary,
-        automaticallyImplyLeading: false,
-        title: Container(
-            color: gColors.primary,
-            child: Row(
-              children: [
-                Container(
-                  width: 5,
-                ),
-                InkWell(
-                  child: SizedBox(
-                      height: 100.0,
-                      width: 100.0, // fixed width and height
-                      child: new Image.asset(
-                        'assets/images/AppIcow.png',
-                      )),
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                ),
-                Spacer(),
-                Text(
-                  "Vérif+ : Documents",
-                  textAlign: TextAlign.center,
-                  style: gColors.bodyTitle1_B_Wr,
-                ),
-                Spacer(),
-                Container(
-                  width: 100,
-                  child: Text(
-                    "Version : ${DbTools.gVersion}",
-                    style: gColors.bodySaisie_N_W,
-                  ),
-                ),
-              ],
-            )),
-      ),
+      appBar: appBar(),
       backgroundColor: gColors.primary,
       body: Container(
         padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),

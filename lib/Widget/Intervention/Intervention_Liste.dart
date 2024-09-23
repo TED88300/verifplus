@@ -7,6 +7,7 @@ import 'package:verifplus/Tools/DbSrv/Srv_Sites.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Client/Client_Interventions.dart';
 import 'package:verifplus/Widget/Intervention/SelectInterv.dart';
+import 'package:verifplus/Widget/Intervention/Select_Interventions_Add.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 
 //class Intervention_Liste extends StatefulWidget {
@@ -73,16 +74,13 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
   void Reload() async {
     await Srv_ImportExport.getErrorSync();
     bool wRes = await Srv_DbTools.getInterventionClientAll();
+    Srv_DbTools.ListIntervention.sort(Srv_DbTools.affSortComparisonData);
     List<String> lIntervention = [];
     for (int i = 0; i < Srv_DbTools.ListIntervention.length; i++) {
-
-
-
       Intervention wIntervention = Srv_DbTools.ListIntervention[i];
       if (lIntervention.indexOf(wIntervention.Intervention_Parcs_Type!) == -1) {
         lIntervention.add(wIntervention.Intervention_Parcs_Type!);
       }
-
     }
 
     PastilleType = lIntervention.length;
@@ -295,13 +293,10 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
             child: new Icon(Icons.add),
             backgroundColor: gColors.secondary,
             onPressed: () async {
-              await Client_Interventions_Add.Dialogs_Add(context, true);
-//                await Select_Inter.Dialogs_Sel(context);
+              await Select_Interventions_Add.Dialogs_Add(context, true);
+              Reload();
 
-
-//              await SelectInter(onChanged: (selChangedDetails details) async {
               }
-//              Reload();
             ),
       ),
     );
@@ -386,11 +381,8 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
             itemCount: Srv_DbTools.ListInterventionsearchresult.length,
             itemBuilder: (BuildContext context, int index) {
               Intervention intervention = Srv_DbTools.ListInterventionsearchresult[index];
-
-
               Color wColor = Colors.transparent;
               wColor = gColors.getColorStatus(intervention.Intervention_Status);
-
 
               double rowh = 24;
 
@@ -400,18 +392,10 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
                       await HapticFeedback.vibrate();
                       Srv_DbTools.gIntervention = intervention;
 
-/*
-                      await DbTools.getClient(Srv_DbTools.gIntervention.ClientId!);
-                      await DbTools.getGroupe(Srv_DbTools.gIntervention.GroupeId!);
-                      await DbTools.getSite(Srv_DbTools.gIntervention.SiteId!);
-                      await DbTools.getZone(Srv_DbTools.gIntervention.ZoneId!);
-*/
-
+                      print("Selection");
 
                       await HapticFeedback.vibrate();
                       await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Groupe_Inter_Det()));
-
-//                      await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Groupe_Parc_Inter()));
                       Reload();
                     },
                     child: Container(
@@ -442,7 +426,7 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
                                   ))),
 
                           Expanded(
-                              flex: 7,
+                              flex: 10,
                               child:
 
                               Row(

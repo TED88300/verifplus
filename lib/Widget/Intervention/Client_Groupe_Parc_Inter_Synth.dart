@@ -49,6 +49,11 @@ class Client_Groupe_Parc_Inter_SynthState extends State<Client_Groupe_Parc_Inter
     await initLib();
   }
 
+  void onDelete() async {
+    await initLib();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -227,7 +232,7 @@ class Client_Groupe_Parc_Inter_SynthState extends State<Client_Groupe_Parc_Inter
         child: InkWell(
           onTap: () async {
             await HapticFeedback.vibrate();
-            await Client_Groupe_Parc_Inter_Piece_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, parc_Art);
+            await Client_Groupe_Parc_Inter_Piece_Saisie_Dialog.Dialogs_Saisie(context, onSaisie,  onDelete, parc_Art);
             print("Retour Saisie SYNTH");
 
           },

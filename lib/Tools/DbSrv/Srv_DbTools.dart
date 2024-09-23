@@ -15,6 +15,7 @@ import 'package:verifplus/Tools/DbSrv/Srv_Articles_Link_Verif_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Contacts.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_InterMissions.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_InterMissions_Document.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Interventions.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_NF074.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
@@ -75,7 +76,60 @@ class Srv_DbTools {
   static List<String> List_UserInter = [];
   static List<String> List_UserInterID = [];
 
+  //******************************************
+  //************   RIA_Gammes   ************
+  //******************************************
 
+  static List<RIA_Gammes> ListRIA_Gammes = [];
+  static List<RIA_Gammes> ListRIA_Gammessearchresult = [];
+  static RIA_Gammes gRIA_Gammes = RIA_Gammes.RIA_GammesInit();
+
+  static Future<bool> IMPORT_Srv_RIA_Gammes() async {
+    String wSlq = "select * from RIA_Gammes ORDER BY RIA_GammesId";
+    print("IMPORT_Srv_RIA_Gammes " + wSlq);
+
+    try {
+      ListRIA_Gammes = await getRIA_Gammes_API_Post("select", wSlq);
+      if (ListRIA_Gammes == null) return false;
+      if (ListRIA_Gammes.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<List<RIA_Gammes>> getRIA_Gammes_API_Post(String aType, String aSQL) async {
+    setSrvToken();
+    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
+    var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
+
+    print("getRIA_Gammes_API_Post " + aSQL);
+
+    http.StreamedResponse response = await request.send();
+    print("getRIA_Gammes_API_Post response ${response.statusCode}");
+
+    if (response.statusCode == 200) {
+      var parsedJson = json.decode(await response.stream.bytesToString());
+      final items = parsedJson['data'];
+
+      if (items != null) {
+        List<RIA_Gammes> RIA_GammesList = await items.map<RIA_Gammes>((json) {
+          return RIA_Gammes.fromJson(json);
+        }).toList();
+        return RIA_GammesList;
+      }
+    } else {
+      print(response.reasonPhrase);
+    }
+    return [];
+  }
+
+  
+  
+  
   //******************************************
   //************   NF074_Gammes   ************
   //******************************************
@@ -102,7 +156,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
 
     //print("getNF074_Gammes_API_Post " + aSQL);
 
@@ -151,7 +205,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
 
     //print("getNF074_Histo_Normes_API_Post " + aSQL);
 
@@ -200,7 +254,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
     //print("getNF074_Pieces_Det_API_Post " + aSQL);
     http.StreamedResponse response = await request.send();
     //print("getNF074_Pieces_Det_API_Post response ${response.statusCode}");
@@ -246,7 +300,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
     //print("getNF074_Pieces_Det_Inc_API_Post " + aSQL);
     http.StreamedResponse response = await request.send();
     //print("getNF074_Pieces_Det_Inc_API_Post response ${response.statusCode}");
@@ -292,7 +346,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
     //print("getNF074_Mixte_Produit_API_Post " + aSQL);
     http.StreamedResponse response = await request.send();
     //print("getNF074_Mixte_Produit_API_Post response ${response.statusCode}");
@@ -338,7 +392,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
     //print("getNF074_Pieces_Actions_API_Post " + aSQL);
     http.StreamedResponse response = await request.send();
     //print("getNF074_Pieces_Actions_API_Post response ${response.statusCode}");
@@ -413,7 +467,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
 
     http.StreamedResponse response = await request.send();
 
@@ -462,7 +516,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
 
     http.StreamedResponse response = await request.send();
 
@@ -482,210 +536,12 @@ class Srv_DbTools {
     return [];
   }
 
-  //*****************************
-  //*****************************
-  //*****************************
 
-/*
-  static List<Article_Link_Ebp> ListArticle_Link_Ebp = [];
-  static List<Article_Link_Ebp> ListArticle_Link_Ebpsearchresult = [];
-  //static Article_Link_Ebp gArticle_Link_Ebp = Article_Link_Ebp.Article_Link_EbpInit();
 
-  static Future<bool> getArticle_Link_EbpParent(String wParent, String wType) async {
-    String wTmp = "select * from Articles_Link_Ebp WHERE Articles_Link_ParentID = '$wParent' AND Articles_Link_TypeChildID = '$wType' ORDER BY Articles_Link_ChildID";
-
-    print("getArticle_Link_EbpParent $wTmp");
-
-    ListArticle_Link_Ebp = await getArticle_Link_Ebp_API_Post("select", wTmp);
-    if (ListArticle_Link_Ebp == null) return false;
-    if (ListArticle_Link_Ebp.length > 0) {
-      return true;
-    }
-    return false;
-  }
-
-  static Future<bool> getArticle_Link_EbpParentAll(String wParent) async {
-    String wTmp = "select * from Articles_Link_Ebp WHERE Articles_Link_ParentID = '$wParent' ORDER BY Articles_Link_ChildID";
-
-    print("getArticle_Link_EbpParent $wTmp");
-
-    ListArticle_Link_Ebp = await getArticle_Link_Ebp_API_Post("select", wTmp);
-    if (ListArticle_Link_Ebp == null) return false;
-    if (ListArticle_Link_Ebp.length > 0) {
-      for (var i = 0; i < Srv_DbTools.ListArticle_Link_Ebp.length; i++) {
-        var Article_Link_Ebp = Srv_DbTools.ListArticle_Link_Ebp[i];
-      }
-
-      return true;
-    }
-    return false;
-  }
-
-  static Future<List<Article_Link_Ebp>> getArticle_Link_Ebp_API_Post(String aType, String aSQL) async {
-    setSrvToken();
-    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
-    var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      var parsedJson = json.decode(await response.stream.bytesToString());
-      final items = parsedJson['data'];
-
-      if (items != null) {
-        List<Article_Link_Ebp> Article_Link_EbpList = await items.map<Article_Link_Ebp>((json) {
-          return Article_Link_Ebp.fromJson(json);
-        }).toList();
-        return Article_Link_EbpList;
-      }
-    } else {
-      print(response.reasonPhrase);
-    }
-    return [];
-  }
-*/
-
-  //*****************************
-  //*****************************
-  //*****************************
-
-/*
-  static List<Article_Link_Verif_Ebp> ListArticle_Link_Verif_Ebp = [];
-  static List<Article_Link_Verif_Ebp> ListArticle_Link_Verif_Ebpsearchresult = [];
-  static Article_Link_Verif_Ebp gArticle_Link_Verif_Ebp = Article_Link_Verif_Ebp.Article_Link_Verif_EbpInit();
-*/
-/*
-
-  static Future<bool> getArticle_Link_Verif_EbpParent(String wParent, String wType) async {
-    String wTmp = "select * from Articles_Link_Verif_Ebp WHERE Articles_Link_Verif_ParentID = '$wParent' AND Articles_Link_Verif_TypeVerif = '$wType' ORDER BY Articles_Link_ChildID";
-    print("getArticle_Link_Verif_EbpParent $wTmp");
-    ListArticle_Link_Verif_Ebp = await getArticle_Link_Verif_Ebp_API_Post("select", wTmp);
-    if (ListArticle_Link_Verif_Ebp == null) return false;
-    if (ListArticle_Link_Verif_Ebp.length > 0) {
-      return true;
-    }
-    return false;
-  }
-
-*/
-/*
-
-  static Future<List<Article_Link_Verif_Ebp>> getArticle_Link_Verif_Ebp_API_Post(String aType, String aSQL) async {
-    setSrvToken();
-    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
-    var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      var parsedJson = json.decode(await response.stream.bytesToString());
-      final items = parsedJson['data'];
-
-      if (items != null) {
-        List<Article_Link_Verif_Ebp> Article_Link_Verif_EbpList = await items.map<Article_Link_Verif_Ebp>((json) {
-          return Article_Link_Verif_Ebp.fromJson(json);
-        }).toList();
-        return Article_Link_Verif_EbpList;
-      }
-    } else {
-      print(response.reasonPhrase);
-    }
-    return [];
-  }
-*/
   static List<Result_Article_Link_Verif> ListResult_Article_Link_Verif = [];
   static List<Result_Article_Link_Verif> ListResult_Article_Link_Verif_PROP = [];
   static List<Result_Article_Link_Verif> ListResult_Article_Link_Verif_PROP_Mixte = [];
 
-/*
-  static List<Result_Article_Link_Verif_Indisp> ListResult_Article_Link_Verif_Indisp = [];
-  static Future<bool> getArticle_Link_Verif_Indisp(String wParent) async {
-    String wTmp = "select Articles_Link_Verif_TypeVerif from Articles_Link_Verif_Ebp WHERE Articles_Link_Verif_ParentID = '$wParent'  AND Articles_Link_Verif_Indisponible != ''";
-    ListResult_Article_Link_Verif_Indisp = await getArticle_Link_Verif_Indisp_API_Post("select", wTmp);
-    if (ListResult_Article_Link_Verif_Indisp == null) return false;
-    if (ListResult_Article_Link_Verif_Indisp.length > 0) {
-      return true;
-    }
-    return false;
-  }
-
-  static Future<List<Result_Article_Link_Verif_Indisp>> getArticle_Link_Verif_Indisp_API_Post(String aType, String aSQL) async {
-    setSrvToken();
-    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
-    var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
-    http.StreamedResponse response = await request.send();
-    if (response.statusCode == 200) {
-      var parsedJson = json.decode(await response.stream.bytesToString());
-      final items = parsedJson['data'];
-      if (items != null) {
-        List<Result_Article_Link_Verif_Indisp> wResult_Article_Link_Verif_Indisp = await items.map<Result_Article_Link_Verif_Indisp>((json) {
-          return Result_Article_Link_Verif_Indisp.fromJson(json);
-        }).toList();
-        return wResult_Article_Link_Verif_Indisp;
-      }
-    } else {
-      print(response.reasonPhrase);
-    }
-    return [];
-  }
-
-  static Future<bool> getArticle_Link_Verif_All(String wParent) async {
-    String wTmp = "select Articles_Link_Verif_ParentID ParentID, Articles_Link_Verif_TypeChildID TypeChildID,Articles_Link_Verif_ChildID ChildID, MAX(Articles_Link_Verif_Qte) Qte from Articles_Link_Verif_Ebp WHERE Articles_Link_Verif_ParentID = '$wParent' GROUP BY Articles_Link_Verif_ChildID;";
-    //  print ("getArticle_Link_Verif_EbpParent $wTmp");
-    ListResult_Article_Link_Verif = await getArticle_Link_Verif_In_API_Post("select", wTmp);
-    if (ListResult_Article_Link_Verif == null) return false;
-    if (ListResult_Article_Link_Verif.length > 0) {
-      for (int i = 0; i < ListResult_Article_Link_Verif.length; i++) {
-        Result_Article_Link_Verif wResult_Article_Link_Verif = ListResult_Article_Link_Verif[i];
-        //    print("> ${wResult_Article_Link_Verif.Desc()}");
-      }
-      return true;
-    }
-    return false;
-  }
-
-  static Future<bool> getArticle_Link_Verif_In(String wParent, String wType) async {
-    String wTmp = "select Articles_Link_Verif_ParentID ParentID,Articles_Link_Verif_TypeChildID TypeChildID, Articles_Link_Verif_ChildID ChildID, SUM(Articles_Link_Verif_Qte) Qte from Articles_Link_Verif_Ebp WHERE Articles_Link_Verif_ParentID = '$wParent' AND Articles_Link_Verif_TypeVerif IN ($wType)  GROUP BY Articles_Link_Verif_ChildID;";
-    print("getArticle_Link_Verif_In SQL ${wTmp}");
-
-    ListResult_Article_Link_Verif = await getArticle_Link_Verif_In_API_Post("select", wTmp);
-    if (ListResult_Article_Link_Verif == null) return false;
-    if (ListResult_Article_Link_Verif.length > 0) {
-      print("ListResult_Article_Link_Verif length ${ListResult_Article_Link_Verif.length}");
-      return true;
-    }
-    return false;
-  }
-
-  static Future<List<Result_Article_Link_Verif>> getArticle_Link_Verif_In_API_Post(String aType, String aSQL) async {
-    setSrvToken();
-    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
-    var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
-
-    http.StreamedResponse response = await request.send();
-
-    if (response.statusCode == 200) {
-      var parsedJson = json.decode(await response.stream.bytesToString());
-      final items = parsedJson['data'];
-
-      if (items != null) {
-        List<Result_Article_Link_Verif> Result_Article_Link_VerifList = await items.map<Result_Article_Link_Verif>((json) {
-          return Result_Article_Link_Verif.fromJson(json);
-        }).toList();
-        return Result_Article_Link_VerifList;
-      }
-    } else {
-      print(response.reasonPhrase);
-    }
-    return [];
-  }
-
-
-*/
 
   //
   //
@@ -708,6 +564,7 @@ class Srv_DbTools {
   static List<Client> ListClient_CSIP = [];
   static List<Client> ListClient_CSIP_Total = [];
 
+
   static Future<bool> ListClient_CSIP_Total_Insert(Client wClient) async {
     bool wTrv = false;
     for (int i = 0; i < Srv_DbTools.ListClient_CSIP_Total.length; i++) {
@@ -726,39 +583,71 @@ class Srv_DbTools {
     }
 
 
-
     return true;
 
   }
-  static Future<bool> getClient_User_CSIP(int wUserID) async {
+
+
+
+  static Future<bool> getClient_ALL() async {
+    ListClient_CSIP_Total.clear();
+    await getClient_All();
+    ListClient_CSIP.forEach((wClient) {
+      //print("getClient_User_C ${wClient.Client_Nom}");
+      ListClient_CSIP_Total_Insert(wClient);
+    });
+
+    ListClient.clear();
+    ListClient.addAll(ListClient_CSIP_Total);
+
 
     ListClient_CSIP_Total.clear();
-    await getClient_User_C(wUserID);
+    return true;
+  }
+
+    static Future<bool> getClient_All() async {
+    String wSlq = "SELECT Clients.* FROM Clients, Groupes, Sites where  Groupe_ClientId = ClientId And Site_GroupeId = GroupeId";
+    //print("getClient_User_S ${wSlq}");
+    ListClient_CSIP = await getClient_CSIP_API_Post("select", wSlq);
+    if (ListClient_CSIP == null) return false;
+    //print("getClient_User_S ${ListClient_CSIP.length}");
+    if (ListClient_CSIP.length > 0) {
+      //print("getClient_User_S return TRUE");
+      return true;
+    }
+    return false;
+  }
+
+
+  static Future<bool> getClient_User_CSIP(String User_Matricule) async {
+
+    ListClient_CSIP_Total.clear();
+    await getClient_User_C(User_Matricule);
     ListClient_CSIP.forEach((wClient) {
       //print("getClient_User_C ${wClient.Client_Nom}");
       ListClient_CSIP_Total_Insert(wClient);
     });
 
 
-    await getClient_User_S(wUserID);
+    await getClient_User_S(User_Matricule);
     ListClient_CSIP.forEach((wClient) {
       //print("getClient_User_S ${wClient.Client_Nom}");
       ListClient_CSIP_Total_Insert(wClient);
     });
 
-    await getClient_User_I(wUserID);
+    await getClient_User_I(User_Matricule);
     ListClient_CSIP.forEach((wClient) {
       //print("getClient_User_I ${wClient.Client_Nom}");
       ListClient_CSIP_Total_Insert(wClient);
     });
 
-    await getClient_User_I2(wUserID);
+    await getClient_User_I2(User_Matricule);
     ListClient_CSIP.forEach((wClient) {
       //print("getClient_User_I2 ${wClient.Client_Nom}");
       ListClient_CSIP_Total_Insert(wClient);
     });
 
-    await getClient_User_P(wUserID);
+    await getClient_User_P(User_Matricule);
     ListClient_CSIP.forEach((wClient) {
       //print("getClient_User_P ${wClient.Client_Nom}");
       ListClient_CSIP_Total_Insert(wClient);
@@ -768,7 +657,7 @@ class Srv_DbTools {
     ListClient.clear();
     ListClient.addAll(ListClient_CSIP_Total);
 
-    //print("getClient_User_CSIP ListClient ${ListClient.length}");
+
     ListClient_CSIP_Total.clear();
     return true;
 
@@ -786,8 +675,8 @@ class Srv_DbTools {
   SELECT Clients.* FROM Clients, Groupes, Sites, Zones, Interventions, Planning where  Groupe_ClientId = ClientId And Site_GroupeId = GroupeId And Zones.Zone_SiteId = Sites.SiteId AND Interventions.Intervention_ZoneId = Zones.ZoneId AND Planning.Planning_InterventionId = Interventions.InterventionId AND Planning.Planning_ResourceId = 11;
 */
 
-  static Future<bool> getClient_User_C(int wUserID) async {
-    String wSlq = "SELECT Clients.* FROM Clients Where Clients.Client_Commercial = $wUserID";
+  static Future<bool> getClient_User_C(String User_Matricule) async {
+    String wSlq = "SELECT Clients.* FROM Clients Where Clients.Client_Commercial = \"$User_Matricule\"";
     //print("getClient_User_C ${wSlq}");
     ListClient_CSIP = await getClient_CSIP_API_Post("select", wSlq);
     if (ListClient_CSIP == null) return false;
@@ -799,8 +688,8 @@ class Srv_DbTools {
     return false;
   }
 
-  static Future<bool> getClient_User_S(int wUserID) async {
-    String wSlq = "SELECT Clients.* FROM Clients, Groupes, Sites where  Groupe_ClientId = ClientId And Site_GroupeId = GroupeId AND Sites.Site_ResourceId = $wUserID";
+  static Future<bool> getClient_User_S(String User_Matricule) async {
+    String wSlq = "SELECT Clients.* FROM Clients, Groupes, Sites where  Groupe_ClientId = ClientId And Site_GroupeId = GroupeId AND Sites.Site_ResourceId = \"$User_Matricule\"";
     //print("getClient_User_S ${wSlq}");
     ListClient_CSIP = await getClient_CSIP_API_Post("select", wSlq);
     if (ListClient_CSIP == null) return false;
@@ -812,8 +701,8 @@ class Srv_DbTools {
     return false;
   }
 
-  static Future<bool> getClient_User_I(int wUserID) async {
-    String wSlq = "SELECT Clients.* FROM Clients, Groupes, Sites, Zones, Interventions where Groupe_ClientId = ClientId And Site_GroupeId = GroupeId And Zones.Zone_SiteId = Sites.SiteId AND Interventions.Intervention_ZoneId = Zones.ZoneId AND Interventions.Intervention_Responsable = $wUserID";
+  static Future<bool> getClient_User_I(String User_Matricule) async {
+    String wSlq = "SELECT Clients.* FROM Clients, Groupes, Sites, Zones, Interventions where Groupe_ClientId = ClientId And Site_GroupeId = GroupeId And Zones.Zone_SiteId = Sites.SiteId AND Interventions.Intervention_ZoneId = Zones.ZoneId AND Interventions.Intervention_Responsable = \"$User_Matricule\"";
     //print("getClient_User_S ${wSlq}");
     ListClient_CSIP = await getClient_CSIP_API_Post("select", wSlq);
     if (ListClient_CSIP == null) return false;
@@ -825,8 +714,8 @@ class Srv_DbTools {
     return false;
   }
 
-  static Future<bool> getClient_User_I2(int wUserID) async {
-    String wSlq = "SELECT Clients.* FROM Clients, Groupes, Sites, Zones, Interventions where Groupe_ClientId = ClientId And Site_GroupeId = GroupeId And Zones.Zone_SiteId = Sites.SiteId AND Interventions.Intervention_ZoneId = Zones.ZoneId AND Interventions.Intervention_Responsable2 = $wUserID";
+  static Future<bool> getClient_User_I2(String User_Matricule) async {
+    String wSlq = "SELECT Clients.* FROM Clients, Groupes, Sites, Zones, Interventions where Groupe_ClientId = ClientId And Site_GroupeId = GroupeId And Zones.Zone_SiteId = Sites.SiteId AND Interventions.Intervention_ZoneId = Zones.ZoneId AND Interventions.Intervention_Responsable2 = \"$User_Matricule\"";
     //print("getClient_User_S ${wSlq}");
     ListClient_CSIP = await getClient_CSIP_API_Post("select", wSlq);
     if (ListClient_CSIP == null) return false;
@@ -838,8 +727,8 @@ class Srv_DbTools {
     return false;
   }
 
-  static Future<bool> getClient_User_P(int wUserID) async {
-    String wSlq = "SELECT Clients.*, Planning_ResourceId FROM Clients, Groupes, Sites, Zones, Interventions, Planning where  Groupe_ClientId = ClientId And Site_GroupeId = GroupeId And Zones.Zone_SiteId = Sites.SiteId AND Interventions.Intervention_ZoneId = Zones.ZoneId AND Planning.Planning_InterventionId = Interventions.InterventionId AND Planning.Planning_ResourceId = $wUserID";
+  static Future<bool> getClient_User_P(String User_Matricule) async {
+    String wSlq = "SELECT Clients.*, Planning_ResourceId FROM Clients, Groupes, Sites, Zones, Interventions, Planning where  Groupe_ClientId = ClientId And Site_GroupeId = GroupeId And Zones.Zone_SiteId = Sites.SiteId AND Interventions.Intervention_ZoneId = Zones.ZoneId AND Planning.Planning_InterventionId = Interventions.InterventionId AND Planning.Planning_ResourceId = \"$User_Matricule\"";
     //print("getClient_User_S ${wSlq}");
     ListClient_CSIP = await getClient_CSIP_API_Post("select", wSlq);
     if (ListClient_CSIP == null) return false;
@@ -855,7 +744,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
 
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
@@ -875,15 +764,33 @@ class Srv_DbTools {
   }
 
 
-  static Future<bool> getClientRech(String wRech) async {
-    String wSlq = 'SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays, CONCAT(Users.User_Nom, " " , Users.User_Prenom) as Users_Nom FROM Clients LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = "FACT" JOIN Users ON Clients.Client_Commercial = Users.UserID'
-        ' WHERE Clients.Client_Nom LIKE "%' +
-        '${wRech}' +
-        '%" OR Adresse_CP LIKE "%' +
-        '${wRech}' +
-        '%" OR Adresse_Ville LIKE "%' +
-        '${wRech}' +
-        '%" ORDER BY Client_Nom;';
+  static Future<bool> getClientRech(String wRech, String wDepot) async {
+
+    
+    String wSlq = 'SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays, CONCAT(Users.User_Nom, " " , Users.User_Prenom) as Users_Nom FROM Clients LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = "FACT" JOIN Users ON Clients.Client_Commercial = \"User_Matricule\"';
+
+    
+    if (wRech.isNotEmpty)
+      {
+        wSlq = 'SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays, CONCAT(Users.User_Nom, " " , Users.User_Prenom) as Users_Nom FROM Clients LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = "FACT" JOIN Users ON Clients.Client_Commercial = \"User_Matricule\"'
+            ' WHERE Clients.Client_Nom LIKE "%' +
+            '${wRech}' +
+            '%" OR Adresse_CP LIKE "%' +
+            '${wRech}' +
+            '%" OR Adresse_Ville LIKE "%' +
+            '${wRech}' +
+            '%" ORDER BY Client_Nom;';
+
+      }
+    else
+    if (wDepot.isNotEmpty)
+    {
+       wSlq = 'SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays, CONCAT(Users.User_Nom, " " , Users.User_Prenom) as Users_Nom FROM Clients LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = "FACT" JOIN Users ON Clients.Client_Commercial = \"User_Matricule\" WHERE Clients.Client_Depot = "$wDepot"' ;
+
+    }
+
+
+
     print("getClient wSlq $wSlq");
     ListClient = await getClient_API_Post("select", wSlq);
     if (ListClient == null) return false;
@@ -914,7 +821,7 @@ class Srv_DbTools {
   //*****************************
 
   static Future<bool> IMPORT_ClientAll() async {
-    String wSlq = "SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays, CONCAT(Users.User_Nom, ' ' , Users.User_Prenom) as Users_Nom  FROM Clients LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = 'FACT'  JOIN Users ON Clients.Client_Commercial = Users.UserID ORDER BY Client_Nom;";
+    String wSlq = "SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays, CONCAT(Users.User_Nom, ' ' , Users.User_Prenom) as Users_Nom  FROM Clients LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = 'FACT'  JOIN Users ON Clients.Client_Commercial = \"User_Matricule\" ORDER BY Client_Nom;";
     try {
       print("IMPORT_ClientAll wSlq ${wSlq}");
       ListClient = await getClient_API_Post("select", wSlq);
@@ -1001,7 +908,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       var parsedJson = json.decode(await response.stream.bytesToString());
@@ -1156,7 +1063,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
 
     http.StreamedResponse response = await request.send();
 
@@ -1280,7 +1187,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
 
     print("getGroupe_API_Post " + aSQL);
 
@@ -1313,8 +1220,13 @@ class Srv_DbTools {
   static String gSelGroupe = "";
   static String gSelGroupeBase = "Tous les groupes";
 
-  static Future<bool> getSiteRech(String wRech) async {
-    String wSlq = 'select * from Sites WHERE Site_Nom LIKE "%' + '${wRech}' + '%" OR Site_CP LIKE "%' + '${wRech}' + '%" OR Site_Ville LIKE "%' + '${wRech}' + '%" ORDER BY Site_Nom;';
+
+
+
+  static Future<bool> getSiteRech(int ID, String wRech) async {
+    String wSlq = 'SELECT Groupe_Nom , Sites.* FROM Sites , Groupes, Clients WHERE (Site_Nom LIKE "%' + '${wRech}' + '%" OR Site_CP LIKE "%' + '${wRech}' + '%" OR Site_Ville LIKE "%' + '${wRech}' + '%" ) AND Site_GroupeId = GroupeId AND Groupe_ClientId = ClientId AND Groupe_ClientId = $ID ORDER BY Site_Nom ASC;';
+
+//    String wSlq = 'select * from Sites WHERE Site_Nom LIKE "%' + '${wRech}' + '%" OR Site_CP LIKE "%' + '${wRech}' + '%" OR Site_Ville LIKE "%' + '${wRech}' + '%" ORDER BY Site_Nom;';
     print("getSiteRech wSlq $wSlq");
     ListSite = await getSite_API_Post("select", wSlq);
     if (ListSite == null) return false;
@@ -1459,7 +1371,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
 
 
     http.StreamedResponse response = await request.send();
@@ -1616,7 +1528,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
 
     print("getZone_API_Post " + aSQL);
 
@@ -1651,6 +1563,8 @@ class Srv_DbTools {
   static String selectedUserInter2 = "";
   static String selectedUserInter3 = "";
   static String selectedUserInter4 = "";
+  static String selectedUserInter5 = "";
+  static String selectedUserInter6 = "";
   static String selectedUserInter4RC = "";
 
 
@@ -1664,6 +1578,8 @@ class Srv_DbTools {
 
     int wInterventionIdA = a.InterventionId!;
     int wInterventionIdB = b.InterventionId!;
+
+
 
     var inputFormat = DateFormat('dd/MM/yyyy');
     var inputDateA = inputFormat.parse(wInterventionDateA!);
@@ -1691,6 +1607,8 @@ class Srv_DbTools {
     print("getInterventionAll ${ListIntervention.length}");
     if (ListIntervention.length > 0) {
       print("getInterventionAll return TRUE");
+
+
       return true;
     }
     return false;
@@ -1699,7 +1617,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
 
     http.StreamedResponse response = await request.send();
 
@@ -1720,7 +1638,6 @@ class Srv_DbTools {
   }
 
 
-
   static Future<bool> getInterventionAll() async {
     try {
       ListIntervention = await getIntervention_API_Post("select", "select * from Interventions");
@@ -1735,9 +1652,9 @@ class Srv_DbTools {
     }
   }
 
-  static Future<bool> getInterventionUID(int ResourceId) async {
+  static Future<bool> getInterventionUID(String ResourceId) async {
     try {
-      ListIntervention = await getIntervention_API_Post("select", "SELECT Interventions.* FROM Planning, Interventions WHERE Planning_InterventionId = InterventionId AND Planning_ResourceId = $ResourceId GROUP BY Interventions.InterventionId;");
+      ListIntervention = await getIntervention_API_Post("select", "SELECT Interventions.* FROM Planning, Interventions WHERE Planning_InterventionId = InterventionId AND Planning_ResourceId = \"$ResourceId\" GROUP BY Interventions.InterventionId;");
     if (ListIntervention == null) return false;
     print("getInterventionAll ${ListIntervention.length}");
     if (ListIntervention.length > 0) {
@@ -1852,7 +1769,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
 
     print("getIntervention_API_Post " + aSQL);
 
@@ -1888,7 +1805,13 @@ class Srv_DbTools {
   static Future getPlanning_InterventionIdRes(int InterventionId) async {
     ListUserH.clear();
     try {
-      ListUserH = await getPlanningH_API_Post("select", "SELECT Users.User_Nom , Users.User_Prenom, SUM(TIMEDIFF( Planning.Planning_InterventionendTime,Planning.Planning_InterventionstartTime) / 10000) as H FROM Planning , Users where `Planning_ResourceId` = Users.UserID AND   Planning_InterventionId = $InterventionId GROUP BY Planning.Planning_ResourceId ORDER BY H DESC;");
+      String wSql = "SELECT Users.User_Nom , Users.User_Prenom, SUM(TIMEDIFF( Planning.Planning_InterventionendTime,Planning.Planning_InterventionstartTime) / 10000) as H FROM Planning , Users where Planning_ResourceId = Users.User_Matricule AND   Planning_InterventionId = $InterventionId GROUP BY Planning.Planning_ResourceId ORDER BY H DESC;";
+
+      print(" Srv_DbTools getPlanning_InterventionIdRes ${wSql}");
+
+
+
+      ListUserH = await getPlanningH_API_Post("select", wSql);
       if (ListPlanning == null) return false;
       if (ListPlanning.length > 0) {
         return true;
@@ -1924,9 +1847,9 @@ class Srv_DbTools {
     }
   }
 
-  static Future getPlanning_ResourceId(int ResourceId) async {
+  static Future getPlanning_ResourceId(String ResourceId) async {
     try {
-      ListPlanning = await getPlanning_API_Post("select", "select * from Planning where Planning_ResourceId = $ResourceId");
+      ListPlanning = await getPlanning_API_Post("select", "select * from Planning where Planning_ResourceId = \"$ResourceId\"");
       if (ListPlanning == null) return false;
       if (ListPlanning.length > 0) {
         return true;
@@ -1973,7 +1896,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
 
     print("getIntervention_API_Post " + aSQL);
 
@@ -2003,7 +1926,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
 
     print("getPlanningH_API_Post " + aSQL);
 
@@ -2035,13 +1958,29 @@ class Srv_DbTools {
   static List<Planning_Intervention> ListPlanning_Intervention = [];
   static Planning_Intervention gPlanning_Intervention = Planning_Intervention.Planning_InterventionInit();
 
-  static Future getPlanning_InterventionRes(int ResourceId) async {
+  static int affSortComparisonData_Planning_Intervention(Planning_Intervention a, Planning_Intervention b) {
+    final inputDateA = a.Planning_Interv_InterventionstartTime;
+    final inputDateB = b.Planning_Interv_InterventionstartTime;
+    if (inputDateA.isBefore(inputDateB)) {
+      return -1;
+    } else if (inputDateA.isAfter(inputDateB)) {
+      return 1;
+    } else {
+      return 0;
+    }
+  }
+
+
+
+  static Future getPlanning_InterventionRes(String ResourceId) async {
     try {
-      String wTmp = "SELECT PlanningId, Planning_InterventionId, Planning_ResourceId,Planning_InterventionstartTime, Planning_InterventionendTime, Planning_Libelle, InterventionId,Intervention_Type,Intervention_Parcs_Type,Intervention_Status, ZoneId, Zone_Nom, SiteId, Site_Nom, GroupeId, Groupe_Nom, ClientId, Client_Nom FROM Planning, Interventions, Zones, Sites, Groupes, Clients WHERE Planning_InterventionId = InterventionId AND Intervention_ZoneId = ZoneId AND Zone_SiteId = SiteId AND Site_GroupeId = GroupeId AND Groupe_ClientId = ClientId AND Planning_ResourceId = $ResourceId ORDER BY Planning_InterventionstartTime";
+      String wTmp = "SELECT PlanningId, Planning_InterventionId, Planning_ResourceId,Planning_InterventionstartTime, Planning_InterventionendTime, Planning_Libelle, InterventionId,Intervention_Type,Intervention_Parcs_Type,Intervention_Status, ZoneId, Zone_Nom, SiteId, Site_Nom, GroupeId, Groupe_Nom, ClientId, Client_Nom FROM Planning, Interventions, Zones, Sites, Groupes, Clients WHERE Planning_InterventionId = InterventionId AND Intervention_ZoneId = ZoneId AND Zone_SiteId = SiteId AND Site_GroupeId = GroupeId AND Groupe_ClientId = ClientId AND Planning_ResourceId = \"$ResourceId\" ORDER BY Planning_InterventionstartTime";
       print("getPlanning_InterventionRes $wTmp");
       ListPlanning_Intervention = await getPlanning_Intervention_API_Post("select", wTmp);
       if (ListPlanning_Intervention == null) return false;
       if (ListPlanning_Intervention.length > 0) {
+
+
         return true;
       }
       return false;
@@ -2054,7 +1993,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
 
 //    print("getPlanning_Intervention_API_Post " + aSQL);
 
@@ -2080,78 +2019,64 @@ class Srv_DbTools {
     return [];
   }
 
-  //***************************************************
-  //************   PLANNING INTERVENTIONS   ***********
-  //***************************************************
+  //******************************************
+  //***************   InterMissions_Document   *****
+  //******************************************
 
-  /*
-  static List<Planning_Interv> ListPlanning_Interv = [];
-  static Planning_Interv gPlanning_Interv = Planning_Interv.Planning_RdvInit();
+  static List<InterMissions_Document> ListInterMissions_Document = [];
+  static List<InterMissions_Document> ListInterMissions_Documentsearchresult = [];
+  static InterMissions_Document gInterMissions_Document = InterMissions_Document();
 
-  static Future getPlanning_IntervAll() async {
-    String wTmp = "SELECT InterventionId,Intervention_Type,Intervention_Parcs_Type,Intervention_Status, ZoneId, Zone_Nom, SiteId, Site_Nom, GroupeId, Groupe_Nom, ClientId, Client_Nom FROM Interventions, Zones, Sites, Groupes, Clients WHERE Intervention_ZoneId = ZoneId AND Zone_SiteId = SiteId AND Site_GroupeId = GroupeId AND Groupe_ClientId = ClientId ORDER BY InterventionId DESC";
+
+
+  static Future<bool> getInterMissions_Document_MissonID(int ID) async {
+    String wTmp = "select InterMissionsDocInterMissionId ,Documents.* from InterMissions_Doc join Documents where InterMissions_Doc.InterMissionsDocDocID = DocID AND InterMissionsDocInterMissionId = $ID";
     print("wTmp $wTmp");
 
-    ListPlanning_Interv = await getPlanning_Interv_API_Post("select", wTmp);
+    ListInterMissions_Document = await getInterMissions_Document_API_Post("select", wTmp);
+    if (ListInterMissions_Document == null) return false;
+    print("getInterMissions_Document_MissonID ListInterMissions_Document.length ${ListInterMissions_Document.length}");
+    if (ListInterMissions_Document.length > 0) {
 
-    if (ListPlanning_Interv == null) return false;
-    if (ListPlanning_Interv.length > 0) {
+      gInterMissions_Document = ListInterMissions_Document[0];
+      print("gInterMissions_Document ${gInterMissions_Document.DocID}");
+      print("ListInterMissions_Document return TRUE");
       return true;
     }
     return false;
   }
 
-  static Future getPlanning_IntervID(int ID) async {
-    String wTmp = "SELECT InterventionId,Intervention_Type,Intervention_Parcs_Type,Intervention_Status, ZoneId, Zone_Nom, SiteId, Site_Nom, GroupeId, Groupe_Nom, ClientId, Client_Nom FROM Interventions, Zones, Sites, Groupes, Clients WHERE Intervention_ZoneId = ZoneId AND Zone_SiteId = SiteId AND Site_GroupeId = GroupeId AND Groupe_ClientId = ClientId AND InterventionId = $ID";
-    print("wTmp $wTmp");
 
-    ListPlanning_Interv = await getPlanning_Interv_API_Post("select", wTmp);
 
-    if (ListPlanning_Interv == null) return false;
-    if (ListPlanning_Interv.length > 0) {
-      return true;
-    }
-    return false;
-  }
-
-  static Future getPlanning_Interv_ID(int ID) async {
-    ListPlanning_Interv.forEach((element) {
-      if (element.Planning_Interv_InterventionId == ID) {
-        gPlanning_Interv = element;
-        return;
-      }
-    });
-  }
-
-  static Future<List<Planning_Interv>> getPlanning_Interv_API_Post(String aType, String aSQL) async {
+  static Future<List<InterMissions_Document>> getInterMissions_Document_API_Post(String aType, String aSQL) async {
     setSrvToken();
-    String eSQL = base64.encode(utf8.encode(aSQL));
+    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
 
-    print("getIntervention_API_Post " + aSQL);
+
 
     http.StreamedResponse response = await request.send();
-    print("getIntervention_API_Post response ${response.statusCode}");
+    print("getInterMissions_Document_API_Post response ${response.statusCode}" );
 
     if (response.statusCode == 200) {
       var parsedJson = json.decode(await response.stream.bytesToString());
       final items = parsedJson['data'];
 
+      print("getInterMissions_Document_API_Post items ${items}" );
+
       if (items != null) {
-        List<Planning_Interv> planningIntervlist = await items.map<Planning_Interv>((json) {
-          return Planning_Interv.fromJson(json);
+        List<InterMissions_Document> InterMissions_DocumentList = await items.map<InterMissions_Document>((json) {
+          return InterMissions_Document.fromJson(json);
         }).toList();
-
-        print("Planning_Interv length ${planningIntervlist.length}");
-
-        return planningIntervlist;
+        return InterMissions_DocumentList;
       }
     } else {
       print(response.reasonPhrase);
     }
     return [];
-  }*/
+  }
+
 
   //******************************************
   //************   InterMissionS   ***********
@@ -2194,9 +2119,9 @@ class Srv_DbTools {
   }
 
 
-  static Future<bool> getInterMissionUID(int ResourceId) async {
+  static Future<bool> getInterMissionUID(String ResourceId) async {
     try {
-      String wSql = "SELECT InterMissions.* FROM Planning,  InterMissions WHERE Planning_InterventionId = Planning_InterventionId AND Planning_ResourceId = $ResourceId GROUP BY InterMissionId ASC;";
+      String wSql = "SELECT InterMissions.* FROM Planning,  InterMissions WHERE Planning_InterventionId = Planning_InterventionId AND Planning_ResourceId = \"$ResourceId\" GROUP BY InterMissionId ASC;";
       print("getInterMissionUID ${wSql}");
       ListInterMission = await getInterMission_API_Post("select",wSql);
       if (ListInterMission == null) return false;
@@ -2214,7 +2139,7 @@ class Srv_DbTools {
 
 
   static Future<bool> getInterMissionsIntervention(int ID) async {
-    String wTmp = "SELECT * FROM InterMissions WHERE InterMission_InterventionId = $ID ORDER BY InterMission_Nom";
+    String wTmp = "SELECT * FROM InterMissions WHERE InterMission_InterventionId = $ID";
     print("wTmp $wTmp");
 
     ListInterMission = await getInterMission_API_Post("select", wTmp);
@@ -2272,7 +2197,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
 
 //    print("getInterMission_API_Post " + aSQL);
 
@@ -2363,7 +2288,7 @@ class Srv_DbTools {
         "Action        = \"${Parc_Ent.Action}\", " +
         "Parcs_Verif_Note  = \"${Parc_Ent.Parcs_Verif_Note}\"";
 
-    gColors.printWrapped("setParc_Ent " + wSlq);
+    gColors.printWrapped("setParc_Ent A " + wSlq);
     bool ret = await add_API_Post("upddel", wSlq);
     print("setParc_Ent ret " + ret.toString());
     return ret;
@@ -2400,6 +2325,9 @@ class Srv_DbTools {
     if (aParc_Ent.Parcs_NCERT == null) aParc_Ent.Parcs_NCERT = "";
     if (aParc_Ent.Parcs_CodeArticle == null) aParc_Ent.Parcs_CodeArticle = "";
     if (aParc_Ent.Parcs_CODF == null) aParc_Ent.Parcs_CODF = "";
+
+    if (aParc_Ent.Parcs_Intervention_Timer == null) aParc_Ent.Parcs_Intervention_Timer= 0;
+
 
     String wSql = "INSERT INTO Parcs_Ent(ParcsId, Parcs_order, Parcs_InterventionId, "
         "Parcs_Type, "
@@ -2453,13 +2381,20 @@ class Srv_DbTools {
         "'${aParc_Ent.Action!.replaceAll("'", "‘")}',"
         "${aParc_Ent.Parcs_Intervention_Timer})";
 
-    gColors.printWrapped("setParc_Ent " + wSql);
+
+    gColors.printWrapped("setParc_Ent B " + wSql);
+
+
     bool ret = await add_API_Post("insert", wSql);
     print("setParc_Ent ret " + ret.toString());
     return ret;
   }
 
   static Future<bool> InsertUpdateParc_Ent_Srv_Srv(Parc_Ent_Srv aParc_Ent) async {
+
+if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervention_Timer= 0;
+
+
     String wSql = "INSERT INTO Parcs_Ent(ParcsId, Parcs_order, Parcs_InterventionId, "
         "Parcs_Type, "
         "Parcs_Date_Rev, "
@@ -2510,7 +2445,7 @@ class Srv_DbTools {
         "'${aParc_Ent.Action!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Parcs_Intervention_Timer}')";
 
-    gColors.printWrapped("setParc_Ent " + wSql);
+    gColors.printWrapped("setParc_Ent C " + wSql);
     bool ret = await add_API_Post("insert", wSql);
     print("setParc_Ent ret " + ret.toString());
     return ret;
@@ -2547,7 +2482,7 @@ class Srv_DbTools {
     print("getParc_Ent_API_Post aSQL " + aSQL);
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       var parsedJson = json.decode(await response.stream.bytesToString());
@@ -2696,7 +2631,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       var parsedJson = json.decode(await response.stream.bytesToString());
@@ -2863,7 +2798,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       var parsedJson = json.decode(await response.stream.bytesToString());
@@ -3054,7 +2989,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       var parsedJson = json.decode(await response.stream.bytesToString());
@@ -3181,7 +3116,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
 
     http.StreamedResponse response = await request.send();
 
@@ -3264,7 +3199,7 @@ class Srv_DbTools {
 
       print("gUserLogin ${gUserLogin.User_Actif}");
 
-      String wImgPath = "${SrvImg}User_${gUserLogin.UserID}.jpg";
+      String wImgPath = "${SrvImg}User_${gUserLogin.User_Matricule}.jpg";
 
       print("wImgPath ${wImgPath}");
       gObj.picUser = await gObj.networkImageToByte(wImgPath);
@@ -3283,7 +3218,7 @@ class Srv_DbTools {
         );
       }
 
-      await Srv_DbTools.getUser_Hab(Srv_DbTools.gUserLogin.UserID);
+      await Srv_DbTools.getUser_Hab(Srv_DbTools.gLoginID);
       print("Import_DataDialog ListUser_Hab ${Srv_DbTools.ListUser_Hab.length}");
       await DbTools.TrunckUser_Hab();
       for (int i = 0; i < Srv_DbTools.ListUser_Hab.length; i++) {
@@ -3292,7 +3227,7 @@ class Srv_DbTools {
       }
       Srv_DbTools.ListUser_Hab = await DbTools.getUser_Hab();
 
-      await Srv_DbTools.getUser_Desc(Srv_DbTools.gUserLogin.UserID);
+      await Srv_DbTools.getUser_Desc(Srv_DbTools.gLoginID);
       print("Import_DataDialog ListUser_Desc ${Srv_DbTools.ListUser_Desc.length}");
       await DbTools.TrunckUser_Desc();
       for (int i = 0; i < Srv_DbTools.ListUser_Desc.length; i++) {
@@ -3352,20 +3287,31 @@ class Srv_DbTools {
     return false;
   }
 
+
+  static Future<bool> getUserMat(String id) async {
+    print(">>>>> getUserid $id");
+    List<User> ListUser = await getUser_API_Post("select", "select * from Users where User_Matricule = $id ");
+    print("<<<<< getUserid");
+
+    print(">>>>>>>>>>>>>> ListPost ${ListUser.length}");
+
+    if (ListUser == null) return false;
+
+    if (ListUser.length == 1) {
+      gUser = ListUser[0];
+      return true;
+    }
+    return false;
+  }
+
+
+
   static Future<List<User>> getUser_API_Post(String aType, String aSQL) async {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
 
-/*
-        print("getUser_API_Post SrvUrl $SrvUrl");
-        print("getUser_API_Post tic12z $SrvToken");
-        print("getUser_API_Post zasq $aType");
-        print("getUser_API_Post resza12 $eSQL");
-        print("getUser_API_Post uid ${Srv_DbTools.gUserLogin.UserID}");
-*/
-
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
 
     http.StreamedResponse response = await request.send();
 
@@ -3373,7 +3319,6 @@ class Srv_DbTools {
       var parsedJson = json.decode(await response.stream.bytesToString());
 
       final items = parsedJson['data'];
-
       if (items != null) {
         List<User> UserList = await items.map<User>((json) {
           return User.fromJson(json);
@@ -3497,7 +3442,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${gLoginID}"});
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       var parsedJson = json.decode(await response.stream.bytesToString());
@@ -3559,7 +3504,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${gLoginID}"});
     http.StreamedResponse response = await request.send();
     if (response.statusCode == 200) {
       var parsedJson = json.decode(await response.stream.bytesToString());
@@ -3705,7 +3650,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${gLoginID}"});
 
     http.StreamedResponse response = await request.send();
     print("response ${response.statusCode}");
@@ -3927,7 +3872,7 @@ class Srv_DbTools {
 
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${gLoginID}"});
 
     http.StreamedResponse response = await request.send();
 
@@ -3971,6 +3916,7 @@ class Srv_DbTools {
 
   static Future<bool> getParam_Saisie_ParamAll() async {
 
+
     ListParam_Saisie_ParamAll.clear();
     try {
       ListParam_Saisie_ParamAll = await getParam_Saisie_Param_API_Post("select", "select * from Param_Saisie_Param ORDER BY Param_Saisie_Param_Id,Param_Saisie_Param_Ordre");
@@ -3979,6 +3925,7 @@ class Srv_DbTools {
         Srv_DbTools.ListParam_Saisie_ParamAll.forEach((element) async {
           element.Param_Saisie_Param_Ico = await gObj.getAssetImage("assets/images/Aide_Ico_${element.Param_Saisie_Param_Label}.png");
         });
+
         return true;
       }
       return false;
@@ -4044,8 +3991,24 @@ class Srv_DbTools {
     return param_Saisie_Param;
   }
 
+
+  static String SIT_Lib = "";
+
+
   static String DESC_Lib = "";
   static String FAB_Lib = "";
+  static String TYPE_Lib = "";
+  static String ARM_Lib = "";
+  static String INOX_Lib = "";
+  static String DIAM_Lib = "";
+  static String LONG_Lib = "";
+  static String DIF_Lib = "";
+  static String DISP_Lib = "";
+  static String PREM_Lib = "";
+
+  static String NCERT_Lib = "";
+
+
   static String PRS_Lib = "";
   static String CLF_Lib = "";
   static String MOB_Lib = "";
@@ -4323,7 +4286,7 @@ class Srv_DbTools {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${gUserLogin.UserID}"});
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${gLoginID}"});
 
     http.StreamedResponse response = await request.send();
 
@@ -4375,130 +4338,7 @@ class Srv_DbTools {
     }
   }
 
-  //*****************************
-  //*****************************
-  //*****************************
 
-/*
-  static List<Param_Gamme> ListParam_GammeAll = [];
-  static List<Param_Gamme> ListParam_Gamme = [];
-  static List<Param_Gamme> ListParam_Gammesearchresult = [];
-  static Param_Gamme gParam_Gamme = Param_Gamme.Param_GammeInit();
-
-  static Future<bool> getParam_GammeAll() async {
-    ListParam_GammeAll = await getParam_Gamme_API_Post("select", "select * from Param_Gamme ORDER BY Param_Gamme_Ordre,Param_GammeId");
-    if (ListParam_GammeAll == null) return false;
-    if (ListParam_GammeAll.length > 0) {
-      return true;
-    }
-
-    return false;
-  }
-
-  static Future<bool> getParam_Gamme(String Param_Gamme_Type_Organe) async {
-    String wSql = "select * from Param_Gamme WHERE Param_Gamme_Type_Organe = '${Param_Gamme_Type_Organe}' ORDER BY Param_Gamme_Ordre,Param_Gamme_FAB_Lib,Param_Gamme_PRS_Lib,Param_Gamme_CLF_Lib,Param_Gamme_GAM_Lib,Param_Gamme_PDT_Lib,Param_Gamme_POIDS_Lib";
-
-    ListParam_Gamme = await getParam_Gamme_API_Post("select", wSql);
-
-    if (ListParam_Gamme == null) return false;
-    if (ListParam_Gamme.length > 0) {
-      int i = 1;
-      ListParam_Gamme.forEach((element) {
-        element.Param_Gamme_Ordre = i++;
-        setParam_Gamme(element);
-      });
-      return true;
-    }
-
-    return false;
-  }
-
-  static bool getParam_Gamme_Mem(String Param_Gamme_Type_Organe) {
-    ListParam_Gamme.clear();
-    ListParam_GammeAll.forEach((element) {
-      if (element.Param_Gamme_Type_Organe.compareTo(Param_Gamme_Type_Organe) == 0) {
-        ListParam_Gamme.add(element);
-      }
-    });
-    return true;
-  }
-
-  static bool getParam_Gamme_Mem_Base(String Param_Gamme_Type_Organe) {
-    ListParam_Gamme.clear();
-    ListParam_GammeAll.forEach((element) {
-      if (element.Param_Gamme_Type_Organe.compareTo(Param_Gamme_Type_Organe) == 0) {
-        ListParam_Gamme.add(element);
-      }
-    });
-    return true;
-  }
-
-  static Future<bool> setParam_Gamme(Param_Gamme param_Gamme) async {
-    String wSlq = 'UPDATE Param_Gamme SET '
-            'Param_Gamme_Type_Organe = "${param_Gamme.Param_Gamme_Type_Organe}", ' +
-        'Param_Gamme_FAB_Id = ${param_Gamme.Param_Gamme_FAB_Id}, ' +
-        'Param_Gamme_FAB_Lib = "${param_Gamme.Param_Gamme_FAB_Lib}", ' +
-        'Param_Gamme_PRS_Id = ${param_Gamme.Param_Gamme_PRS_Id}, ' +
-        'Param_Gamme_PRS_Lib = "${param_Gamme.Param_Gamme_PRS_Lib}", ' +
-        'Param_Gamme_CLF_Id = ${param_Gamme.Param_Gamme_CLF_Id}, ' +
-        'Param_Gamme_CLF_Lib = "${param_Gamme.Param_Gamme_CLF_Lib}", ' +
-        'Param_Gamme_MOB_Id = ${param_Gamme.Param_Gamme_MOB_Id}, ' +
-        'Param_Gamme_MOB_Lib = "${param_Gamme.Param_Gamme_MOB_Lib}", ' +
-        'Param_Gamme_GAM_Id = ${param_Gamme.Param_Gamme_GAM_Id}, ' +
-        'Param_Gamme_GAM_Lib = "${param_Gamme.Param_Gamme_GAM_Lib}", ' +
-        'Param_Gamme_PDT_Id = ${param_Gamme.Param_Gamme_PDT_Id}, ' +
-        'Param_Gamme_PDT_Lib = "${param_Gamme.Param_Gamme_PDT_Lib}", ' +
-        'Param_Gamme_POIDS_Id = ${param_Gamme.Param_Gamme_POIDS_Id}, ' +
-        'Param_Gamme_POIDS_Lib = "${param_Gamme.Param_Gamme_POIDS_Lib}", ' +
-        'Param_Gamme_REF = "${param_Gamme.Param_Gamme_REF}", ' +
-        'Param_Gamme_Ordre = ${param_Gamme.Param_Gamme_Ordre} ' +
-        'WHERE Param_GammeId = ${param_Gamme.Param_GammeId.toString()}';
-
-    print("setParam_Gamme " + wSlq);
-    bool ret = await add_API_Post("upddel", wSlq);
-    print("setParam_Gamme ret " + ret.toString());
-    return ret;
-  }
-
-  static Future<bool> addParam_Gamme(Param_Gamme param_Gamme) async {
-    String wValue = "NULL,'${param_Gamme.Param_Gamme_Type_Organe}'";
-    String wSlq = "INSERT INTO Param_Gamme (Param_GammeId,Param_Gamme_Type_Organe) VALUES ($wValue)";
-    print("addParam_Gamme " + wSlq);
-    bool ret = await add_API_Post("insert", wSlq);
-    print("addParam_Gamme ret " + ret.toString());
-    return ret;
-  }
-
-  static Future<bool> delParam_Gamme(Param_Gamme param_Gamme) async {
-    String aSQL = "DELETE FROM Param_Gamme WHERE Param_GammeId = ${param_Gamme.Param_GammeId} ";
-    print("delParam_Gamme " + aSQL);
-    bool ret = await add_API_Post("upddel", aSQL);
-    print("delParam_Gamme ret " + ret.toString());
-    return ret;
-  }
-
-  static Future<List<Param_Gamme>> getParam_Gamme_API_Post(String aType, String aSQL) async {
-    setSrvToken();
-    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
-    var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
-    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${gUserLogin.UserID}"});
-
-    http.StreamedResponse response = await request.send();
-    if (response.statusCode == 200) {
-      var parsedJson = json.decode(await response.stream.bytesToString());
-      final items = parsedJson['data'];
-      if (items != null) {
-        List<Param_Gamme> Param_GammeList = await items.map<Param_Gamme>((json) {
-          return Param_Gamme.fromJson(json);
-        }).toList();
-        return Param_GammeList;
-      }
-    } else {
-      print(response.reasonPhrase);
-    }
-    return [];
-  }
-*/
 
   //****************************************
   //****************************************

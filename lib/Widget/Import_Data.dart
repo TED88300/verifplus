@@ -407,6 +407,22 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
     //***********************************
     //***********************************
 
+
+    await Srv_DbTools.IMPORT_Srv_RIA_Gammes();
+    print("IMPORT_DataDialog ListRIA_Gammes ${Srv_DbTools.ListRIA_Gammes.length}");
+    DbTools.TrunckRIA_Gammes();
+    for (int i = 0; i < Srv_DbTools.ListRIA_Gammes.length; i++) {
+      RIA_Gammes wRIA_Gammes = Srv_DbTools.ListRIA_Gammes[i];
+      DbTools.insertRIA_Gammes(wRIA_Gammes);
+    }
+    DbTools.glfRIA_Gammes = await  DbTools.getRIA_Gammes();
+    print("IMPORT_DataDialog glfRIA_Gammes ${DbTools.glfRIA_Gammes.length}");
+    setState(() {
+      wSt += "► RIA : ${DbTools.glfRIA_Gammes.length} Gammes\n";
+    });
+
+    
+    
     await Srv_DbTools.IMPORT_Srv_NF074_Gammes();
     print("IMPORT_DataDialog ListNF074_Gammes ${Srv_DbTools.ListNF074_Gammes.length}");
     DbTools.TrunckNF074_Gammes();

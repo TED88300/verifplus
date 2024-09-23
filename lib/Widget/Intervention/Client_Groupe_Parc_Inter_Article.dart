@@ -544,12 +544,9 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                     wParc_Ent.Parcs_UUID_Parent = DbTools.gParc_Ent.Parcs_UUID;
 
                     wParc_Ent.Parcs_FREQ_Id = DbTools.gParc_Ent.Parcs_FREQ_Id;
-                    wParc_Ent.Parcs_FREQ_Id = DbTools.gParc_Ent.Parcs_FREQ_Id;
-
-                    wParc_Ent.Parcs_FREQ_Id = DbTools.gParc_Ent.Parcs_FREQ_Id;
                     wParc_Ent.Parcs_FREQ_Label = DbTools.gParc_Ent.Parcs_FREQ_Label;
-                    wParc_Ent.Parcs_ANN_Id = DbTools.gParc_Ent.Parcs_ANN_Id;
 
+                    wParc_Ent.Parcs_ANN_Id = DbTools.gParc_Ent.Parcs_ANN_Id;
                     DateTime now = DateTime.now();
                     String formattedDate = DateFormat('MM-yyyy').format(now);
                     wParc_Ent.Parcs_ANN_Label = formattedDate;
@@ -649,7 +646,9 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                 }
               }
 
+              print(" Saisie Article getParcs_Art > ");
               DbTools.lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, widget.art_Type);
+              print(" Saisie Article getParcs_Art < ");
 
               widget.onSaisie();
               Navigator.of(context).pop();

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -22,13 +23,17 @@ class Client_Groupe_Parc_Inter_Verif extends StatefulWidget {
   final VoidCallback onMaj;
   final String x_t;
 
-  const Client_Groupe_Parc_Inter_Verif({Key? key, required this.onMaj, required this.x_t}) : super(key: key);
+  const Client_Groupe_Parc_Inter_Verif(
+      {Key? key, required this.onMaj, required this.x_t})
+      : super(key: key);
 
   @override
-  Client_Groupe_Parc_Inter_VerifState createState() => Client_Groupe_Parc_Inter_VerifState();
+  Client_Groupe_Parc_Inter_VerifState createState() =>
+      Client_Groupe_Parc_Inter_VerifState();
 }
 
-class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter_Verif> {
+class Client_Groupe_Parc_Inter_VerifState
+    extends State<Client_Groupe_Parc_Inter_Verif> {
   final txtController = TextEditingController();
   Parc_Art parc_Art = Parc_Art.Parc_ArtInit(DbTools.gParc_Ent.ParcsId!);
 
@@ -47,8 +52,13 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
   bool isImage = false;
   List<Widget> imgList = [];
 
+  Future onDelete() async {
+    await initLib();
+  }
+
   Future Reload() async {
-    DbTools.glfParc_Imgs = await DbTools.getParc_Imgs(DbTools.gParc_Ent.ParcsId!, 1);
+    DbTools.glfParc_Imgs =
+        await DbTools.getParc_Imgs(DbTools.gParc_Ent.ParcsId!, 1);
     print("glfParc_Imgs lenght ${DbTools.glfParc_Imgs.length}");
     if (DbTools.glfParc_Imgs.length > 0) {
       imgList.clear();
@@ -74,10 +84,10 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
   }
 
   @override
-  void initLib() async {
-
+  Future initLib() async {
 //    print("initLib Client_Groupe_Parc_Inter_Verif >>> A ListParam_Verif_Base ${Srv_DbTools.ListParam_Verif_Base.length}");
-    DbTools.lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "ES");
+    DbTools.lParcs_Art =
+        await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "ES");
     ParcsArt_Lib = "---";
     if (DbTools.lParcs_Art.length > 0) {
       parc_Art = DbTools.lParcs_Art[0];
@@ -90,10 +100,16 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
 
     for (int i = 0; i < Srv_DbTools.ListParam_Verif_Base.length; i++) {
       Param_Saisie element = Srv_DbTools.ListParam_Verif_Base[i];
-      Parc_Desc wParc_Desc = await DbTools.getParcs_Desc_Id_Type_Add(DbTools.gParc_Ent.ParcsId!, element.Param_Saisie_ID);
+
+      print(
+          ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VERIF element ${element.Param_Saisie_ID} ${element.Param_Saisie_Type} ${element.Param_Saisie_Label}");
+
+      Parc_Desc wParc_Desc = await DbTools.getParcs_Desc_Id_Type_Add(
+          DbTools.gParc_Ent.ParcsId!, element.Param_Saisie_ID);
     }
 
-    DbTools.glfParcs_Desc = await DbTools.getParcs_Desc(DbTools.gParc_Ent.ParcsId!);
+    DbTools.glfParcs_Desc =
+        await DbTools.getParcs_Desc(DbTools.gParc_Ent.ParcsId!);
 
     txtController.text = DbTools.gParc_Ent.Parcs_Verif_Note!;
 
@@ -113,15 +129,12 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
 
   @override
   Widget build(BuildContext context) {
-
-
-
-    for (int i = 0; i < Client_Groupe_Parc_Tools.listResult_Article_Link_Verif_Deb.length; i++) {
-      Result_Article_Link_Verif wLink = Client_Groupe_Parc_Tools.listResult_Article_Link_Verif_Deb[i];
-
+    for (int i = 0;
+        i < Client_Groupe_Parc_Tools.listResult_Article_Link_Verif_Deb.length;
+        i++) {
+      Result_Article_Link_Verif wLink =
+          Client_Groupe_Parc_Tools.listResult_Article_Link_Verif_Deb[i];
     }
-
-
 
     return Scaffold(
       body: Padding(
@@ -237,57 +250,94 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
     isRes = true;
     bool isEmpty = true;
 
+    bool is5ans = false;
+    bool is10ans = false;
+
+    print("buildDesc DbTools.gDateMS ${DbTools.gDateMS}");
+
+    try {
+      String wMois = "";
+      String wAnnee = "";
+      int wInd = DbTools.gDateMS.indexOf("-");
+      print("buildDesc indexoff ${wInd}");
+      wMois = DbTools.gDateMS.substring(0, wInd);
+      wAnnee = DbTools.gDateMS.substring(wInd + 1);
+      print("buildDesc wMois ${wMois}");
+      print("buildDesc wAnnee ${wAnnee}");
+      DateTime wDateMS =
+          DateTime(int.tryParse(wAnnee) ?? 2024, int.tryParse(wMois) ?? 1, 1);
+      DateTime wDateNow = DateTime.now();
+      int wYears = (wDateNow.difference(wDateMS).inDays ~/ 365);
+      print(
+          "buildDesc wDateNow.difference(wDateMS).inDays ${wDateNow.difference(wDateMS).inDays} ${wYears}");
+
+      is5ans = wYears >= 5;
+      is10ans = wYears >= 10;
+
+      print("buildDesc is5ans ${is5ans}");
+      print("buildDesc is10ans ${is10ans}");
+    } catch (e) {}
+
     for (int i = 0; i < Srv_DbTools.ListParam_Verif_Base.length; i++) {
       Param_Saisie element = Srv_DbTools.ListParam_Verif_Base[i];
-      Parc_Desc wParc_Desc = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, element.Param_Saisie_ID);
 
-      if (element.Param_Saisie_ID.compareTo("IntMaint") == 0) {
+      Parc_Desc wParc_Desc = DbTools.getParcs_Desc_Id_Type(
+          DbTools.gParc_Ent.ParcsId!, element.Param_Saisie_ID);
+
+      if (element.Param_Saisie_ID.contains("IntMaint")) {
         element.Param_Saisie_Label = "Intervention de maintenance";
       }
-      if (element.Param_Saisie_ID.compareTo("RES") == 0 && wParc_Desc.ParcsDesc_Lib!.compareTo("---") == 0) {
+      if (element.Param_Saisie_ID.contains("RES") &&
+          wParc_Desc.ParcsDesc_Lib!.compareTo("---") == 0) {
         isRes = false;
       }
 
-      if (element.Param_Saisie_ID.compareTo("Result") != 0) {
+      if (!element.Param_Saisie_ID.contains("Result")) {
         if (wParc_Desc.ParcsDesc_Lib != "---") isEmpty = false;
       }
 
-
-      /*for (int i = 0; i < Srv_DbTools.ListResult_Article_Link_Verif_Indisp.length; i++) {
-        Result_Article_Link_Verif_Indisp wResult_Article_Link_Verif_Indisp = Srv_DbTools.ListResult_Article_Link_Verif_Indisp[i];
-        if (element.Param_Saisie_ID.compareTo(wResult_Article_Link_Verif_Indisp.Articles_Link_Verif_TypeVerif) == 0) {
-          element.Param_Saisie_Label = "${element.Param_Saisie_Label} ***Indsiponible***";
-          print("> wResult_Article_Link_Verif -${element.Param_Saisie_ID} ${wResult_Article_Link_Verif_Indisp.Desc()}");
-          Indispo = true;
-          break;
-        }
-      }*/
-
-
-
-      if (element.Param_Saisie_ID.compareTo("Ech") == 0) {
+      if (element.Param_Saisie_ID.contains("Ech")) {
         if (isRes) {
+          print(
+              ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VERIF RowSaisies 1 ${element.Param_Saisie_Type} ${element.Param_Saisie_ID} ${element.Param_Saisie_Label}");
           RowSaisies.add(RowSaisie(element, LargeurCol, LargeurCol2, H2));
         }
-      } else if (element.Param_Saisie_ID.compareTo("Ext") == 0) {
+      } else if (element.Param_Saisie_ID.contains("Ext")) {
         if (isRes) {
-          print("Ext element ${element.Param_Saisie_ID} ${element.Param_Saisie_Label} ${wParc_Desc.ParcsDescId} ${wParc_Desc.ParcsDesc_Lib}");
+          print(
+              ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VERIF RowSaisies 2 ${element.Param_Saisie_Type} ${element.Param_Saisie_ID} ${element.Param_Saisie_Label}");
+
           RowSaisies.add(RowSaisie(element, LargeurCol, LargeurCol2, H2));
         }
+      } else if (element.Param_Saisie_ID.contains("VerifQuin2")) {
+        if (is5ans)
+          RowSaisies.add(RowSaisie(element, LargeurCol, LargeurCol2, H2));
+      } else if (element.Param_Saisie_ID.contains("VerifDec2")) {
+        if (is10ans)
+        RowSaisies.add(RowSaisie(element, LargeurCol, LargeurCol2, H2));
+      } else if (element.Param_Saisie_ID.contains("PRARR")) {
+        print("Srv_DbTools.SIT_Lib PRARR ${Srv_DbTools.SIT_Lib}");
+        if (Srv_DbTools.SIT_Lib.contains("Défavorisé"))
+          RowSaisies.add(RowSaisie(element, LargeurCol, LargeurCol2, H2));
+      } else if (element.Param_Saisie_ID.contains("DEBIT")) {
+        print("Srv_DbTools.SIT_Lib DEBIT ${Srv_DbTools.SIT_Lib}");
+        if (Srv_DbTools.SIT_Lib.contains("Favorisé"))
+          RowSaisies.add(RowSaisie(element, LargeurCol, LargeurCol2, H2));
       } else {
-        //      print("element ${element.Param_Saisie_ID} ${element.Param_Saisie_Label} ${wParc_Desc.ParcsDescId} ${wParc_Desc.ParcsDesc_Lib}");
+        print(
+            ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VERIF RowSaisies 3 ${element.Param_Saisie_Type} ${element.Param_Saisie_ID} ${element.Param_Saisie_Label}");
         RowSaisies.add(RowSaisie(element, LargeurCol, LargeurCol2, H2));
       }
+
+
+
+
+
     }
 
-
-    if (isEmpty)
-    {
+    if (isEmpty) {
       Maj_Result_NV();
-
     }
-
-
 
     return
         //Expanded(child:
@@ -306,7 +356,11 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                     itemBuilder: (context, index) {
                       return RowSaisies[index];
                     },
-                    separatorBuilder: (BuildContext context, int index) => Container(height: 1, width: double.infinity, color: gColors.greyDark),
+                    separatorBuilder: (BuildContext context, int index) =>
+                        Container(
+                            height: 1,
+                            width: double.infinity,
+                            color: gColors.greyDark),
                   ),
                 )))
         //)
@@ -316,7 +370,8 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
   Future<Image> GetImage(Parc_Art art) async {
     if (art.wImgeTrv) return art.wImage!;
 
-    String wImgPath = "${Srv_DbTools.SrvImg}ArticlesImg_Ebp_${art.ParcsArt_Id}s.jpg";
+    String wImgPath =
+        "${Srv_DbTools.SrvImg}ArticlesImg_Ebp_${art.ParcsArt_Id}s.jpg";
     gObj.pic = await gObj.networkImageToByte(wImgPath);
     if (gObj.pic.length > 0) {
       art.wImgeTrv = true;
@@ -348,17 +403,127 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
     );
   }
 
-  Widget RowSaisie(Param_Saisie param_Saisie, double LargeurCol, double LargeurCol2, double H2, {bool Indispo: false}) {
+  Widget RowSaisie(Param_Saisie param_Saisie, double LargeurCol,
+      double LargeurCol2, double H2,
+      {bool Indispo: false}) {
 //    print("RowSaisie ${param_Saisie.Param_Saisie_ID}");
 
-    Parc_Desc wParc_Desc = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, param_Saisie.Param_Saisie_ID);
+    Parc_Desc wParc_Desc = DbTools.getParcs_Desc_Id_Type(
+        DbTools.gParc_Ent.ParcsId!, param_Saisie.Param_Saisie_ID);
+
+    print(" wParc_Desc ${wParc_Desc.toMap()}");
+
     double IcoWidth = 30;
-    Param_Saisie_Param wParam_Saisie_Param = Srv_DbTools.getParam_Saisie_ParamMem_Lib(param_Saisie.Param_Saisie_ID, wParc_Desc.ParcsDesc_Lib!);
+    Param_Saisie_Param wParam_Saisie_Param =
+        Srv_DbTools.getParam_Saisie_ParamMem_Lib(
+            param_Saisie.Param_Saisie_ID, wParc_Desc.ParcsDesc_Lib!);
     if (param_Saisie.Param_Saisie_Icon.compareTo("") == 0) LargeurCol += 40;
 
-    if (Indispo)
+    if (param_Saisie.Param_Saisie_Icon == "Verif_prs") {
+      Color wColor = Colors.green;
+      String wUnit = "bar";
+      String wNC = "";
+
+      if (wParc_Desc.ParcsDesc_Type == "DEBIT") wUnit = "l/min";
+
+      if (wParc_Desc.ParcsDesc_Type == "PRDIF") {
+        double wDouble = double.parse(wParc_Desc.ParcsDesc_Id!);
+        if (wDouble < 2) {
+          wNC = "_nc";
+          wColor = Colors.red;
+        }
+      }
+      if (wParc_Desc.ParcsDesc_Type == "PRARR") {
+        double wDouble = double.parse(wParc_Desc.ParcsDesc_Id!);
+        double dPivotm = 2;
+        double dPivotM = 2;
+
+        if (Srv_DbTools.DIAM_Lib.contains("19/6"))
+        {
+          dPivotm = 4;
+          dPivotM = 12;
+        }
+        else if (Srv_DbTools.DIAM_Lib.contains("25/8"))
+        {
+          dPivotm = 3.5;
+          dPivotM = 12;
+        }
+        else if (Srv_DbTools.DIAM_Lib.contains("33/12"))
+        {
+          dPivotm = 3;
+          dPivotM = 7;
+        }
+
+
+
+        if (wDouble < dPivotm || wDouble > dPivotM ) {
+          wNC = "_nc";
+          wColor = Colors.red;
+        }
+      }
+
+
+
+
+
       return Container(
-        color: param_Saisie.Param_Saisie_Icon.contains("Verif_") ? gColors.greyLight : Colors.white,
+          color: Colors.white,
+          height: 45,
+          child: InkWell(
+            onTap: () async {
+              print("InkWell Saisie A");
+              await HapticFeedback.vibrate();
+              print("InkWell Saisie B ${param_Saisie.toMap()}");
+              print("InkWell Saisie C ${wParc_Desc.toString()}");
+
+              print("InkWell Saisie D ${wParc_Desc.ParcsDesc_Type}");
+
+              await Client_Groupe_Parc_Inter_Verif_Saisie_Dialog.Dialogs_Saisie(
+                  context, onSaisie, param_Saisie, wParc_Desc);
+              setState(() {});
+            },
+            child: Row(
+//            mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: 10,
+                ),
+                Padding(
+                  padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                  child: Image.asset(
+                    "assets/images/${param_Saisie.Param_Saisie_Icon}${wNC}.png",
+                    height: IcoWidth,
+                    width: IcoWidth,
+                  ),
+                ),
+                Container(
+                  width: 435,
+                  height: 20,
+                  padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                  child: Text(
+                    "${param_Saisie.Param_Saisie_Label}",
+                    style: gColors.bodyTitle1_B_Gr,
+                  ),
+                ),
+                Spacer(),
+                Container(
+                  width: 135,
+                  height: 20,
+                  padding: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                  child: Text(
+                    "${wParc_Desc.ParcsDesc_Id} ${wUnit} >",
+                    style: gColors.bodyTitle1_B_Gr.copyWith(color: wColor),
+                    textAlign: TextAlign.right,
+                  ),
+                ),
+              ],
+            ),
+          ));
+    } else if (Indispo)
+      return Container(
+        color: param_Saisie.Param_Saisie_Icon.contains("Verif_")
+            ? gColors.greyLight
+            : Colors.white,
         height: 45,
         child: Row(
 //            mainAxisAlignment: MainAxisAlignment.center,
@@ -390,19 +555,25 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
       );
     else
       return Container(
-          color: param_Saisie.Param_Saisie_Icon.contains("Verif_") ? gColors.greyLight : Colors.white,
+          color: param_Saisie.Param_Saisie_Icon.contains("Verif_")
+              ? gColors.greyLight
+              : Colors.white,
           height: 45,
           child: InkWell(
             onTap: () async {
               print("InkWell Saisie A");
               await HapticFeedback.vibrate();
-              if (param_Saisie.Param_Saisie_Icon.compareTo("Verif_renouv") == 0) {
+              if (param_Saisie.Param_Saisie_Icon.compareTo("Verif_renouv") ==
+                  0) {
                 print("InkWell Saisie B");
                 await HapticFeedback.vibrate();
-                await Client_Groupe_Parc_Inter_Article_Dialog.Dialogs_Saisie(context, onSaisie, "ES");
+                await Client_Groupe_Parc_Inter_Article_Dialog.Dialogs_Saisie(
+                    context, onSaisie, "ES");
               } else if (!wParc_Desc.ParcsDesc_Lib!.contains(">")) {
                 print("InkWell Saisie C ${wParc_Desc.toString()}");
-                await Client_Groupe_Parc_Inter_Verif_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, param_Saisie, wParc_Desc);
+                await Client_Groupe_Parc_Inter_Verif_Saisie_Dialog
+                    .Dialogs_Saisie(
+                        context, onSaisie, param_Saisie, wParc_Desc);
               }
               setState(() {});
             },
@@ -413,7 +584,12 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                   width: 10,
                 ),
                 param_Saisie.Param_Saisie_ID.compareTo("Ext") == 0
-                    ? Container(margin: EdgeInsets.fromLTRB(0, 0, 10, 0), height: IcoWidth, width: IcoWidth, color: Colors.white, child: buildImage(context, parc_ArtES))
+                    ? Container(
+                        margin: EdgeInsets.fromLTRB(0, 0, 10, 0),
+                        height: IcoWidth,
+                        width: IcoWidth,
+                        color: Colors.white,
+                        child: buildImage(context, parc_ArtES))
                     : param_Saisie.Param_Saisie_Icon.compareTo("") == 0
                         ? Container(
                             width: 0,
@@ -427,12 +603,18 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                             ),
                           ),
                 Container(
-                  width: param_Saisie.Param_Saisie_ID.compareTo("Ext") == 0 ? 535 : LargeurCol,
+                  width: param_Saisie.Param_Saisie_ID.compareTo("Ext") == 0
+                      ? 535
+                      : LargeurCol,
                   height: 20,
                   padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
                   child: Text(
-                    param_Saisie.Param_Saisie_ID.compareTo("Ext") == 0 ? "${ParcsArt_Lib}" : "${param_Saisie.Param_Saisie_Label}",
-                    style: param_Saisie.Param_Saisie_ID.compareTo("Ext") == 0 ? gColors.bodyTitle1_B_Gr.copyWith(color: Colors.green) : gColors.bodyTitle1_B_Gr,
+                    param_Saisie.Param_Saisie_ID.compareTo("Ext") == 0
+                        ? "${ParcsArt_Lib}"
+                        : "${param_Saisie.Param_Saisie_Label}",
+                    style: param_Saisie.Param_Saisie_ID.compareTo("Ext") == 0
+                        ? gColors.bodyTitle1_B_Gr.copyWith(color: Colors.green)
+                        : gColors.bodyTitle1_B_Gr,
                   ),
                 ),
                 param_Saisie.Param_Saisie_ID.compareTo("Ext") == 0
@@ -440,22 +622,36 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                     : Expanded(
                         child: Row(
                         children: [
-                          param_Saisie.Param_Saisie_Icon.compareTo("Verif_renouv") == 0 ? Spacer() : Container(),
-                          param_Saisie.Param_Saisie_Icon.compareTo("Verif_renouv") == 0
+                          param_Saisie.Param_Saisie_Icon.compareTo(
+                                      "Verif_renouv") ==
+                                  0
+                              ? Spacer()
+                              : Container(),
+                          param_Saisie.Param_Saisie_Icon.compareTo(
+                                      "Verif_renouv") ==
+                                  0
                               ? Container(
                                   padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
                                   child: ElevatedButton(
                                     onPressed: () async {
                                       await HapticFeedback.vibrate();
-                                      await Client_Groupe_Parc_Inter_Article_Dialog.Dialogs_Saisie(context, onSaisie, "ES");
+                                      await Client_Groupe_Parc_Inter_Article_Dialog
+                                          .Dialogs_Saisie(
+                                              context, onSaisie, "ES");
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: gColors.greyDark,
                                     ),
-                                    child: Text('Articles', style: gColors.bodyTitle1_N_W),
+                                    child: Text('Articles',
+                                        style: gColors.bodyTitle1_N_W),
                                   ),
                                 )
-                              : BtnCard("${wParc_Desc.ParcsDesc_Lib}", LargeurCol2, wParam_Saisie_Param.Param_Saisie_Param_Color, param_Saisie.Param_Saisie_Icon, param_Saisie),
+                              : BtnCard(
+                                  "${wParc_Desc.ParcsDesc_Lib}",
+                                  LargeurCol2,
+                                  wParam_Saisie_Param.Param_Saisie_Param_Color,
+                                  param_Saisie.Param_Saisie_Icon,
+                                  param_Saisie),
                         ],
                       ))
               ],
@@ -463,55 +659,47 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
           ));
   }
 
-
-  Future Maj_Result_V() async
-  {
-      Parc_Desc wParc_DescAuto = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, "Result");
-      print(" Maj_Result_V Result ${wParc_DescAuto.toMap()}");
-      if (wParc_DescAuto.ParcsDesc_Lib == "---" || wParc_DescAuto.ParcsDesc_Lib!.contains("Non") )
-      {
-        wParc_DescAuto.ParcsDesc_Id = "1002";
-        wParc_DescAuto.ParcsDesc_Lib = "Vérifié";
-        await DbTools.updateParc_Desc_NoRaz(wParc_DescAuto, "");
-        DbTools.gParc_Ent.Parcs_Date_Rev = DateTime.now().toIso8601String();
-        DbTools.updateParc_Ent(DbTools.gParc_Ent);
-        print("•••••••••••••••• VERIF gIntervention ${Srv_DbTools.gIntervention.Desc()}");
-
-
-        String formattedDateDeb = DateFormat('dd/MM/yyyy').format(DateTime.now());
-
-
-        Srv_DbTools.gIntervention.Intervention_Date_Visite = formattedDateDeb;
-        await DbTools.updateInterventions(Srv_DbTools.gIntervention);
-        bool wRes = await Srv_DbTools.setIntervention(Srv_DbTools.gIntervention);
-  //    print("•••• setIntervention ${wRes}");
-        Srv_DbTools.gIntervention.Intervention_isUpdate = wRes;
-        if (!wRes) DbTools.setBoolErrorSync(true);
-        await DbTools.updateInterventions(Srv_DbTools.gIntervention);
-
-      }
-
-
-  }
-
-  Future Maj_Result_NV() async
-  {
-    Parc_Desc wParc_DescAuto = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, "Result");
-    print(" Maj_Result_NV Result ${wParc_DescAuto.toMap()}");
-      wParc_DescAuto.ParcsDesc_Id = "1003";
-      wParc_DescAuto.ParcsDesc_Lib = "Non vérifié";
+  Future Maj_Result_V() async {
+    Parc_Desc wParc_DescAuto =
+        DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, "Result");
+    print(" Maj_Result_V Result ${wParc_DescAuto.toMap()}");
+    if (wParc_DescAuto.ParcsDesc_Lib == "---" ||
+        wParc_DescAuto.ParcsDesc_Lib!.contains("Non")) {
+      wParc_DescAuto.ParcsDesc_Id = "1002";
+      wParc_DescAuto.ParcsDesc_Lib = "Vérifié";
       await DbTools.updateParc_Desc_NoRaz(wParc_DescAuto, "");
-      DbTools.gParc_Ent.Parcs_Date_Rev = "";
+      DbTools.gParc_Ent.Parcs_Date_Rev = DateTime.now().toIso8601String();
       DbTools.updateParc_Ent(DbTools.gParc_Ent);
-//      print("•••••••••••••••• NV VERIF gIntervention ${Srv_DbTools.gIntervention.Desc()}");
+      print(
+          "•••••••••••••••• VERIF gIntervention ${Srv_DbTools.gIntervention.Desc()}");
 
+      String formattedDateDeb = DateFormat('dd/MM/yyyy').format(DateTime.now());
+
+      Srv_DbTools.gIntervention.Intervention_Date_Visite = formattedDateDeb;
+      await DbTools.updateInterventions(Srv_DbTools.gIntervention);
+      bool wRes = await Srv_DbTools.setIntervention(Srv_DbTools.gIntervention);
+      //    print("•••• setIntervention ${wRes}");
+      Srv_DbTools.gIntervention.Intervention_isUpdate = wRes;
+      if (!wRes) DbTools.setBoolErrorSync(true);
+      await DbTools.updateInterventions(Srv_DbTools.gIntervention);
+    }
   }
 
+  Future Maj_Result_NV() async {
+    Parc_Desc wParc_DescAuto =
+        DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, "Result");
+    print(" Maj_Result_NV Result ${wParc_DescAuto.toMap()}");
+    wParc_DescAuto.ParcsDesc_Id = "1003";
+    wParc_DescAuto.ParcsDesc_Lib = "Non vérifié";
+    await DbTools.updateParc_Desc_NoRaz(wParc_DescAuto, "");
+    DbTools.gParc_Ent.Parcs_Date_Rev = "";
+    DbTools.updateParc_Ent(DbTools.gParc_Ent);
+//      print("•••••••••••••••• NV VERIF gIntervention ${Srv_DbTools.gIntervention.Desc()}");
+  }
 
-  Widget BtnCard(String? wText, double LargeurCol2, String color, String ico, Param_Saisie param_Saisie) {
+  Widget BtnCard(String? wText, double LargeurCol2, String color, String ico,
+      Param_Saisie param_Saisie) {
     String Param_Saisie_ID = param_Saisie.Param_Saisie_ID;
-
-
 
     Color wColor = gColors.getColor(color);
     double IcoWidth = 40;
@@ -523,7 +711,9 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
         color: gColors.transparent,
         elevation: 0,
         child: Row(
-          mainAxisAlignment: ico.compareTo("Verif_titre") == 0 ? MainAxisAlignment.end : MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: ico.compareTo("Verif_titre") == 0
+              ? MainAxisAlignment.end
+              : MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             wText!.contains("---")
@@ -543,81 +733,119 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                       color: wColor,
                     ),
                   ),
-            ico.compareTo("Verif_titre") == 0 || Param_Saisie_ID.compareTo("Ext") == 0
+            ico.compareTo("Verif_titre") == 0 ||
+                    Param_Saisie_ID.compareTo("Ext") == 0
                 ? Container()
                 : InkWell(
                     onTap: () async {
                       await HapticFeedback.vibrate();
-                      Parc_Desc wParc_Desc = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, Param_Saisie_ID);
+                      Parc_Desc wParc_Desc = DbTools.getParcs_Desc_Id_Type(
+                          DbTools.gParc_Ent.ParcsId!, Param_Saisie_ID);
                       if (wText.contains("---")) {
-                        print("SELECTION ${wParc_Desc.ParcsDescId} ${wParc_Desc.ParcsDesc_Id} ${wParc_Desc.ParcsDesc_Lib}");
+                        print(
+                            "SELECTION ${wParc_Desc.ParcsDescId} ${wParc_Desc.ParcsDesc_Type} ${wParc_Desc.ParcsDesc_Id} ${wParc_Desc.ParcsDesc_Lib}");
 
-                        Param_Saisie_Param wParam_Saisie_Param = Srv_DbTools.getParam_Saisie_ParamMem_Lib0(Param_Saisie_ID);
-                        wParc_Desc.ParcsDesc_Id = wParam_Saisie_Param.Param_Saisie_Param_Id;
-                        wParc_Desc.ParcsDesc_Lib = wParam_Saisie_Param.Param_Saisie_Param_Label;
-                        print(" SELECTION SELECT SET param_Saisie ${param_Saisie.DescAuto()}}");
-                        print(" SELECTION SELECT SET wParam_Saisie_Param ${wParam_Saisie_Param.Desc()}");
-                        print(" SELECTION SELECT SET wParc_Desc ${wParc_Desc.toMap()}");
+                        Param_Saisie_Param wParam_Saisie_Param =
+                            Srv_DbTools.getParam_Saisie_ParamMem_Lib0(
+                                Param_Saisie_ID);
+                        wParc_Desc.ParcsDesc_Id =
+                            wParam_Saisie_Param.Param_Saisie_Param_Id;
+                        wParc_Desc.ParcsDesc_Lib =
+                            wParam_Saisie_Param.Param_Saisie_Param_Label;
+                        print(
+                            " SELECTION SELECT SET param_Saisie ${wParam_Saisie_Param.toMap()}}");
+
+                        print(
+                            " SELECTION SELECT SET wParc_Desc ${wParc_Desc.toMap()}");
 
                         // TRIGER : Ex Recharge => Verif Annuel
                         await DbTools.updateParc_Desc_NoRaz(wParc_Desc, "");
-                        var lTriger = param_Saisie.Param_Saisie_Triger.split(",");
+                        var lTriger =
+                            param_Saisie.Param_Saisie_Triger.split(",");
 
                         lTriger.forEach((triger) async {
                           print("triger ${triger.trim()}");
-                          Parc_Desc wParc_DescAuto = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, triger.trim());
+                          Parc_Desc wParc_DescAuto =
+                              DbTools.getParcs_Desc_Id_Type(
+                                  DbTools.gParc_Ent.ParcsId!, triger.trim());
                           print(" wParc_DescAuto ${wParc_DescAuto.toMap()}");
                           if (wParc_DescAuto.ParcsDesc_Lib == "---") {
-                            wParc_DescAuto.ParcsDesc_Id = wParam_Saisie_Param.Param_Saisie_Param_Id;
-                            wParc_DescAuto.ParcsDesc_Lib = wParam_Saisie_Param.Param_Saisie_Param_Label;
-                            await DbTools.updateParc_Desc_NoRaz(wParc_DescAuto, "");
+                            wParc_DescAuto.ParcsDesc_Id =
+                                wParam_Saisie_Param.Param_Saisie_Param_Id;
+                            wParc_DescAuto.ParcsDesc_Lib =
+                                wParam_Saisie_Param.Param_Saisie_Param_Label;
+                            await DbTools.updateParc_Desc_NoRaz(
+                                wParc_DescAuto, "");
                             await Maj_Result_V();
                           }
                         });
                         setState(() {});
                       } else {
-                        print("DESELECTION ${wParc_Desc.ParcsDescId} ${wParc_Desc.ParcsDesc_Id} ${wParc_Desc.ParcsDesc_Lib}");
+                        print(
+                            "DESELECTION ${wParc_Desc.ParcsDescId} ${wParc_Desc.ParcsDesc_Id} ${wParc_Desc.ParcsDesc_Lib}");
 
                         if (wParc_Desc.ParcsDesc_Id!.compareTo("RES") == 0) {
                           for (int i = 0; i < DbTools.lParcs_Art.length; i++) {
                             Parc_Art parc_Art = DbTools.lParcs_Art[i];
-                            print(" Icone UNSELECT parc_Art ${parc_Art.toMap()}");
+                            print(
+                                " Icone UNSELECT parc_Art ${parc_Art.toMap()}");
                             await DbTools.deleteParc_Art(parc_Art.ParcsArtId!);
                           }
                         }
-                        Parc_Ent wParc_Ent = await DbTools.getParcs_Ent_Parcs_UUID_Child(DbTools.gParc_Ent.Parcs_UUID!);
-                        print("Saisie Article ESESESESESES  deleteParc_EntTrigger ${wParc_Ent.toString()}");
+                        Parc_Ent wParc_Ent =
+                            await DbTools.getParcs_Ent_Parcs_UUID_Child(
+                                DbTools.gParc_Ent.Parcs_UUID!);
+                        print(
+                            "Saisie Article ESESESESESES  deleteParc_EntTrigger ${wParc_Ent.toString()}");
                         if (wParc_Ent.Parcs_InterventionId != -1) {
-                          await DbTools.deleteParc_EntTrigger(wParc_Ent.ParcsId!);
+                          await DbTools.deleteParc_EntTrigger(
+                              wParc_Ent.ParcsId!);
                         }
                         wParc_Desc.ParcsDesc_Lib = "---";
                         await DbTools.updateParc_Desc_NoRaz(wParc_Desc, "");
                         bool isEmpty = true;
-                        for (int i = 0; i < Srv_DbTools.ListParam_Verif_Base.length; i++) {
-                          Param_Saisie element = Srv_DbTools.ListParam_Verif_Base[i];
-                          Parc_Desc wParc_Desc = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, element.Param_Saisie_ID);
-                          if (element.Param_Saisie_ID.compareTo("Result") != 0) {
-                            if (wParc_Desc.ParcsDesc_Lib != "---") isEmpty = false;
+                        for (int i = 0;
+                            i < Srv_DbTools.ListParam_Verif_Base.length;
+                            i++) {
+                          Param_Saisie element =
+                              Srv_DbTools.ListParam_Verif_Base[i];
+                          Parc_Desc wParc_Desc = DbTools.getParcs_Desc_Id_Type(
+                              DbTools.gParc_Ent.ParcsId!,
+                              element.Param_Saisie_ID);
+                          if (element.Param_Saisie_ID.compareTo("Result") !=
+                              0) {
+                            if (wParc_Desc.ParcsDesc_Lib != "---")
+                              isEmpty = false;
                           }
                         }
-                        if (isEmpty)
-                        {
+                        if (isEmpty) {
                           Maj_Result_NV();
                         }
                         setState(() {});
                       }
 
                       print(" GENERATION DES ARTICLES ASSOCIES ");
+                      DbTools.gIsOU = false;
+                      DbTools.gIsOUlParcs_Art.clear();
                       await Client_Groupe_Parc_Tools.Gen_Articles();
                       // Proposition Auto si Reformé
-                      if (Param_Saisie_ID.compareTo("RES") == 0 && wText.contains("---")) {
-                        await Client_Groupe_Parc_Inter_Verif_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, param_Saisie, wParc_Desc);
+                      if (Param_Saisie_ID.compareTo("RES") == 0 &&
+                          wText.contains("---")) {
+                        await Client_Groupe_Parc_Inter_Verif_Saisie_Dialog
+                            .Dialogs_Saisie(
+                                context, onSaisie, param_Saisie, wParc_Desc);
+                      }
+
+                      if (DbTools.gIsOU) {
+                        await AffisOU(context);
                       }
                     },
                     child: Container(
                         padding: const EdgeInsets.fromLTRB(20, 0, 0, 0),
                         child: Image.asset(
-                          wText.contains("---") ? "assets/images/Plus_No_Sel.png" : "assets/images/Plus_Sel.png",
+                          wText.contains("---")
+                              ? "assets/images/Plus_No_Sel.png"
+                              : "assets/images/Plus_Sel.png",
                           width: IcoWidth,
                           height: IcoWidth,
                         ))),
@@ -625,5 +853,131 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
         ),
       ),
     );
+  }
+
+  Future AffisOU(BuildContext context) async {
+    ScrollController scrollController =
+        ScrollController(initialScrollOffset: 0);
+
+    return showDialog(
+        context: context,
+        builder: (_) => new AlertDialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(24.0))),
+              surfaceTintColor: Colors.white,
+              title: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Pièces détachées à Options Multiples",
+                      textAlign: TextAlign.center,
+                      style: gColors.bodyTitle1_B_G_20,
+                    ),
+                    Text(
+                      "Sélectionner la pièce pour cet organe",
+                      textAlign: TextAlign.center,
+                      style: gColors.bodyTitle1_N_Gr,
+                    ),
+                  ]),
+              content: Container(
+                height: 143,
+                width: 500,
+                child: Column(
+                  children: [
+                    Container(
+                      color: gColors.black,
+                      height: 1,
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        // controller: scrollController,
+                        shrinkWrap: true,
+                        itemCount: DbTools.gIsOUlParcs_Art.length,
+                        itemBuilder: (context, index) {
+                          final item = DbTools.gIsOUlParcs_Art[index];
+                          return InkWell(
+                              onTap: () async {
+                                await HapticFeedback.vibrate();
+                                List<Parc_Art> wlParcs_Art =
+                                    await DbTools.getParcs_ArtAll(
+                                        DbTools.gParc_Ent.ParcsId!);
+                                for (int i = 0; i < wlParcs_Art.length; i++) {
+                                  Parc_Art element = wlParcs_Art[i];
+                                  if (element.ParcsArt_Lib!.startsWith(">>>")) {
+                                    if (element.ParcsArt_Id !=
+                                        item.ParcsArt_Id) {
+                                      print("DELETE");
+
+                                      List<Parc_Art> wlParcs_Art =
+                                          await DbTools.getParcs_Art(
+                                              DbTools.gParc_Ent.ParcsId!, "P");
+                                      List<Parc_Art> lParcs_Art =
+                                          await DbTools.getParcs_Art(
+                                              DbTools.gParc_Ent.ParcsId!, "V");
+                                      lParcs_Art.addAll(wlParcs_Art);
+                                      print(
+                                          "deleteParc_Art lParcs_Art ${lParcs_Art.length}");
+
+                                      await DbTools.deleteParc_Art(
+                                          element.ParcsArtId!);
+
+                                      wlParcs_Art = await DbTools.getParcs_Art(
+                                          DbTools.gParc_Ent.ParcsId!, "P");
+                                      lParcs_Art = await DbTools.getParcs_Art(
+                                          DbTools.gParc_Ent.ParcsId!, "V");
+                                      lParcs_Art.addAll(wlParcs_Art);
+                                      print(
+                                          "deleteParc_Art lParcs_Art ${lParcs_Art.length}");
+
+                                      await onDelete();
+                                      FBroadcast.instance()
+                                          .broadcast("Gen_Articles");
+                                      setState(() {});
+                                    }
+                                  }
+                                }
+
+                                Navigator.of(context).pop();
+                              },
+                              child: Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.transparent,
+                                    border: Border.all(
+                                      color: gColors.primaryGreen,
+                                    ),
+                                    borderRadius: BorderRadius.all(
+                                      Radius.circular(12.0),
+                                    ),
+                                  ),
+                                  margin:
+                                      EdgeInsets.fromLTRB(0, 5, 0, 5), // TED
+                                  padding:
+                                      EdgeInsets.fromLTRB(5, 5, 5, 5), // TED
+                                  height: 60,
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(item.ParcsArt_Id!,
+                                          textAlign: TextAlign.center,
+                                          style: gColors.bodyTitle1_B_Gr),
+                                      SizedBox(height: 4.0),
+                                      Text(item.ParcsArt_Lib!,
+                                          textAlign: TextAlign.center,
+                                          style: gColors.bodyTitle1_N_Gr)
+                                    ],
+                                  )));
+                        },
+                      ),
+                    ),
+                    Container(
+                      color: gColors.black,
+                      height: 1,
+                    ),
+                  ],
+                ),
+              ),
+            ));
   }
 }

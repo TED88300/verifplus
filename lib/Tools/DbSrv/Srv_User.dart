@@ -39,10 +39,10 @@ class User {
   String User_Depot = "";
   int User_NivHabID = 0;
   bool User_Niv_Isole = true;
-  int User_TypeUserID = 0;
+  String User_TypeUser = "";
 
   static UserInit() {
-    return User(0, false, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, false, 0);
+    return User(0, false, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, false, "");
   }
 
   User(
@@ -65,7 +65,7 @@ class User {
     String User_Depot,
     int User_NivHabID,
     bool User_Niv_Isole,
-    int User_TypeUserID,
+      String User_TypeUser,
   ) {
     this.UserID = UserID;
     this.User_Actif = User_Actif;
@@ -87,7 +87,7 @@ class User {
 
     this.User_NivHabID = User_NivHabID;
     this.User_Niv_Isole = User_Niv_Isole;
-    this.User_TypeUserID = User_TypeUserID;
+    this.User_TypeUser = User_TypeUser;
   }
 
   Map<String, dynamic> toMap() {
@@ -111,7 +111,7 @@ class User {
       'User_Depot': User_Depot,
       'User_NivHabID': User_NivHabID,
       'User_Niv_Isole': User_Niv_Isole.toString(),
-      'User_TypeUserID': User_TypeUserID
+      'User_TypeUser': User_TypeUser
 
     };
 
@@ -141,7 +141,7 @@ class User {
        map["User_Depot"],
        map["User_NivHabID"],
       map['User_Niv_Isole'].toString() == 'true',
-      map["User_TypeUserID"],
+      map["User_TypeUser"],
 
     );
 
@@ -153,41 +153,40 @@ class User {
 
 
   factory User.fromJson(Map<String, dynamic> json) {
+
+
+
     int iUser_Actif = int.parse(json['User_Actif'].toString());
     bool bUser_Actif = (iUser_Actif == 1);
-
     int iUser_Niv_Isole = int.parse(json['User_Niv_Isole'].toString());
     bool bUser_Niv_Isole = (iUser_Niv_Isole == 1);
-
 
     User wUser = User(
       int.parse(json['UserID'].toString()),
       bUser_Actif,
-      json['User_Token_FBM'],
-      json['User_Matricule'],
-      json['User_Nom'],
-      json['User_Prenom'],
-      json['User_Adresse1'],
-      json['User_Adresse2'],
-      json['User_Cp'],
-      json['User_Ville'],
-      json['User_Tel'],
-      json['User_Mail'],
-      json['User_PassWord'],
-      json['User_Service'],
-      json['User_Fonction'],
-      json['User_Famille'],
-      json['User_Depot'],
-
-
-      int.parse(json['User_NivHabID'].toString()),
-      bUser_Niv_Isole,
-      int.parse(json['User_TypeUserID'].toString()),
+     json['User_Token_FBM'],
+     json['User_Matricule'],
+     json['User_Nom'],
+     json['User_Prenom'],
+     json['User_Adresse1'],
+     json['User_Adresse2'],
+     json['User_Cp'],
+     json['User_Ville'],
+     json['User_Tel'],
+     json['User_Mail'],
+     json['User_PassWord'],
+     json['User_Service'],
+     json['User_Fonction'],
+     json['User_Famille'],
+     json['User_Depot'],
+     int.parse(json['User_NivHabID'].toString()),
+     bUser_Niv_Isole,
+      json['User_TypeUser'],
     );
     return wUser;
   }
 
   String Desc() {
-    return '$UserID $User_Matricule $User_Nom $User_Prenom $User_Adresse1 $User_Adresse2 $User_Cp $User_Ville $User_Mail $User_Service $User_Fonction $User_Famille $User_Depot $User_NivHabID $User_Niv_Isole $User_TypeUserID';
+    return '$UserID $User_Matricule $User_Nom $User_Prenom $User_Adresse1 $User_Adresse2 $User_Cp $User_Ville $User_Mail $User_Service $User_Fonction $User_Famille $User_Depot $User_NivHabID $User_Niv_Isole $User_TypeUser';
   }
 }

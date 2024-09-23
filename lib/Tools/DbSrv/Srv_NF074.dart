@@ -1211,6 +1211,136 @@ class NF074_Pieces_Actions {
       'NF074_Pieces_Actions_QtePD3': NF074_Pieces_Actions_QtePD3,
     };
   }
-
-
 }
+
+
+class RIA_Gammes {
+  int? RIA_GammesId;
+  String? RIA_Gammes_DESC;
+  String? RIA_Gammes_FAB;
+  String? RIA_Gammes_TYPE;
+  String? RIA_Gammes_ARM;
+  String? RIA_Gammes_INOX;
+  String? RIA_Gammes_PDT;
+  String? RIA_Gammes_DIAM;
+  String? RIA_Gammes_LONG;
+  String? RIA_Gammes_DIF;
+  String? RIA_Gammes_DISP;
+  String? RIA_Gammes_PREM;
+  String? RIA_Gammes_REF;
+  String? RIA_Gammes_NCERT;
+
+
+  RIA_Gammes(
+      int    RIA_GammesId,
+      String RIA_Gammes_DESC,
+      String RIA_Gammes_FAB,
+      String RIA_Gammes_TYPE,
+      String RIA_Gammes_ARM,
+      String RIA_Gammes_INOX,
+      String RIA_Gammes_PDT,
+      String RIA_Gammes_DIAM,
+      String RIA_Gammes_LONG,
+      String RIA_Gammes_DIF,
+      String RIA_Gammes_DISP,
+      String RIA_Gammes_PREM,
+      String RIA_Gammes_REF,
+      String RIA_Gammes_NCERT,
+      ) {
+    this.RIA_GammesId = RIA_GammesId;
+    this.RIA_Gammes_DESC = RIA_Gammes_DESC;
+    this.RIA_Gammes_FAB = RIA_Gammes_FAB;
+    this.RIA_Gammes_TYPE = RIA_Gammes_TYPE;
+    this.RIA_Gammes_ARM = RIA_Gammes_ARM;
+    this.RIA_Gammes_INOX = RIA_Gammes_INOX;
+    this.RIA_Gammes_PDT = RIA_Gammes_PDT;
+    this.RIA_Gammes_DIAM = RIA_Gammes_DIAM;
+    this.RIA_Gammes_LONG = RIA_Gammes_LONG;
+    this.RIA_Gammes_DIF = RIA_Gammes_DIF;
+    this.RIA_Gammes_DISP = RIA_Gammes_DISP;
+    this.RIA_Gammes_PREM = RIA_Gammes_PREM;
+    this.RIA_Gammes_REF = RIA_Gammes_REF;
+    this.RIA_Gammes_NCERT = RIA_Gammes_NCERT;
+
+  }
+
+
+
+  static RIA_GammesInit() {
+    return RIA_Gammes(
+      -1,
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+      "",
+    );
+  }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'RIA_GammesId': RIA_GammesId,
+      'RIA_Gammes_DESC': RIA_Gammes_DESC,
+      'RIA_Gammes_FAB': RIA_Gammes_FAB,
+      'RIA_Gammes_TYPE': RIA_Gammes_TYPE,
+      'RIA_Gammes_ARM': RIA_Gammes_ARM,
+      'RIA_Gammes_INOX': RIA_Gammes_INOX,
+      'RIA_Gammes_PDT': RIA_Gammes_PDT,
+      'RIA_Gammes_DIAM': RIA_Gammes_DIAM,
+      'RIA_Gammes_LONG': RIA_Gammes_LONG,
+      'RIA_Gammes_DIF': RIA_Gammes_DIF,
+      'RIA_Gammes_DISP': RIA_Gammes_DISP,
+      'RIA_Gammes_PREM': RIA_Gammes_PREM,
+      'RIA_Gammes_REF': RIA_Gammes_REF,
+      'RIA_Gammes_NCERT': RIA_Gammes_NCERT,
+
+    };
+  }
+
+
+  RIA_Gammes.fromJson(Map<String, dynamic> json) {
+    RIA_GammesId = int.parse(json['RIA_GammesId']);
+    RIA_Gammes_DESC = json['RIA_Gammes_DESC'];
+    RIA_Gammes_FAB = json['RIA_Gammes_FAB'];
+    RIA_Gammes_TYPE = json['RIA_Gammes_TYPE'];
+    RIA_Gammes_ARM = json['RIA_Gammes_ARM'];
+    RIA_Gammes_INOX = json['RIA_Gammes_INOX'];
+    RIA_Gammes_PDT = json['RIA_Gammes_PDT'];
+    RIA_Gammes_DIAM = json['RIA_Gammes_DIAM'];
+    RIA_Gammes_LONG = json['RIA_Gammes_LONG'];
+    RIA_Gammes_DIF = json['RIA_Gammes_DIF'];
+    RIA_Gammes_DISP = json['RIA_Gammes_DISP'];
+    RIA_Gammes_PREM = json['RIA_Gammes_PREM'];
+    RIA_Gammes_REF = json['RIA_Gammes_REF'];
+    RIA_Gammes_NCERT = json['RIA_Gammes_NCERT'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['RIA_GammesId'] = this.RIA_GammesId;
+    data['RIA_Gammes_DESC'] = this.RIA_Gammes_DESC;
+    data['RIA_Gammes_FAB'] = this.RIA_Gammes_FAB;
+    data['RIA_Gammes_TYPE'] = this.RIA_Gammes_TYPE;
+    data['RIA_Gammes_ARM'] = this.RIA_Gammes_ARM;
+    data['RIA_Gammes_INOX'] = this.RIA_Gammes_INOX;
+    data['RIA_Gammes_PDT'] = this.RIA_Gammes_PDT;
+    data['RIA_Gammes_DIAM'] = this.RIA_Gammes_DIAM;
+    data['RIA_Gammes_LONG'] = this.RIA_Gammes_LONG;
+    data['RIA_Gammes_DIF'] = this.RIA_Gammes_DIF;
+    data['RIA_Gammes_DISP'] = this.RIA_Gammes_DISP;
+    data['RIA_Gammes_PREM'] = this.RIA_Gammes_PREM;
+    data['RIA_Gammes_REF'] = this.RIA_Gammes_REF;
+    data['RIA_Gammes_NCERT'] = this.RIA_Gammes_NCERT;
+    return data;
+  }
+}
+
+

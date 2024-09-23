@@ -68,8 +68,8 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
       await AffDesc();
       print(" Call InitArt() ******************");
       await Client_Groupe_Parc_Tools.InitArt();
-      print("***************** Call Gen_Articles() ******************");
-      await Client_Groupe_Parc_Tools.Gen_Articles();
+      //print("***************** Call Gen_Articles() ******************");
+      //await Client_Groupe_Parc_Tools.Gen_Articles();
 
     print("***************** Call getParc_Imgs() ******************");
       DbTools.glfParc_Imgs = await DbTools.getParc_Imgs(DbTools.gParc_Ent.ParcsId!, 0);
@@ -134,9 +134,6 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
 
 
   Future AffDesc() async {
-
-
-
     DbTools.glfParcs_Desc = await DbTools.getParcs_Desc(DbTools.gParc_Ent.ParcsId!);
 
     for (int i = 0; i < Srv_DbTools.ListParam_Saisie.length; i++) {
@@ -147,14 +144,51 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
     DbTools.glfParcs_Desc.forEach((wParcs_Desc) {
       switch (wParcs_Desc.ParcsDesc_Type) {
         case "DESC":
+        case "DESC2":
           Srv_DbTools.DESC_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
           break;
         case "FAB":
+        case "FAB2":
           Srv_DbTools.FAB_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
           break;
-        case "PRS":
-          Srv_DbTools.PRS_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
+        case "TYPE":
+        case "TYPE2":
+          Srv_DbTools.TYPE_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
           break;
+
+        case "SIT":
+          Srv_DbTools.SIT_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
+          break;
+
+
+        case "ARM":
+          Srv_DbTools.ARM_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
+          break;
+        case "INOX":
+          Srv_DbTools.INOX_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
+          break;
+
+        case "DIAM":
+          Srv_DbTools.DIAM_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
+          break;
+        case "LONG":
+          Srv_DbTools.LONG_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
+          break;
+        case "DIF":
+          Srv_DbTools.DIF_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
+          break;
+        case "DISP":
+          Srv_DbTools.DISP_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
+          break;
+        case "PREM":
+          {
+            Srv_DbTools.PREM_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
+            break;
+          }
+        case "GAM":
+          Srv_DbTools.GAM_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
+          break;
+
         case "CLF":
           Srv_DbTools.CLF_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
           break;
@@ -168,12 +202,11 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
         case "POIDS":
           Srv_DbTools.POIDS_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
           break;
-        case "GAM":
-          Srv_DbTools.GAM_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
+        case "PRS":
+          Srv_DbTools.PRS_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
           Srv_DbTools.getParam_Saisie_ParamMem_REF();
           Srv_DbTools.gArticle_EbpEnt = Srv_DbTools.IMPORT_Article_Ebp(Srv_DbTools.REF_Lib);
           DescAff3 = "${Srv_DbTools.REF_Lib} ${Srv_DbTools.gArticle_EbpEnt.Article_descriptionCommercialeEnClair}";
-
           break;
       }
     });
@@ -187,6 +220,8 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
 
     DescAff = "N° ${DbTools.gParc_Ent.Parcs_order}";
 
+    if (DbTools.gParc_Ent.Parcs_Intervention_Timer == null) DbTools.gParc_Ent.Parcs_Intervention_Timer= 0;
+
     print("<<<<<<<<<<<<<<<<<<< StrTimer A ${DbTools.gParc_Ent.Parcs_Intervention_Timer}");
     StrTimer = gObj.printDuration(Duration(seconds: DbTools.gParc_Ent.Parcs_Intervention_Timer!));
     print("<<<<<<<<<<<<<<<<<<< StrTimer B ${StrTimer}");
@@ -199,6 +234,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
         if (element.Param_Saisie_ID.compareTo("FREQ") == 0) {
           DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FREQ_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("ANN") == 0) {
+          DbTools.gDateMS = DbTools.gParc_Ent.Parcs_ANN_Label!;
           DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ANN_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("AFAB") == 0) {
           DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FAB_Label!, element.Param_Saisie_ID)}";
@@ -233,6 +269,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
         if (element.Param_Saisie_ID.compareTo("FREQ") == 0) {
           DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FREQ_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("ANN") == 0) {
+          DbTools.gDateMS = DbTools.gParc_Ent.Parcs_ANN_Label!;
           DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ANN_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("AFAB") == 0) {
           DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FAB_Label!, element.Param_Saisie_ID)}";
@@ -255,6 +292,10 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
         }
       }
     });
+
+
+    DbTools.DescAff = DescAff;
+
   }
 
   @override
@@ -269,12 +310,16 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
 
 //    Widget wchildren = widgets[DbTools.gCurrentIndex2];
 
+
+    String wTitre2 = "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}";
+    if (Srv_DbTools.gIntervention.Groupe_Nom == Srv_DbTools.gIntervention.Site_Nom)
+      wTitre2 = "${Srv_DbTools.gIntervention.Site_Nom}";
+
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       //    endDrawer: DbTools.gIsMedecinLogin! ? C_SideDrawer() : I_SideDrawer(),
-
       backgroundColor: Colors.white,
-
       appBar: AppBar(
         title: InkWell(
           onTap: () async {
@@ -343,9 +388,11 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                       color: Colors.white,
                       elevation: 10,
                       child: Container(
-                        padding: EdgeInsets.fromLTRB(10, 0, 10, 10),
+                        color: gColors.LinearGradient2,
+                        height: 47,
+                        padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
                         child:
-                        Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                        Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
                           Container(
                             width: 60,
                             child: GestureDetector(
@@ -361,13 +408,10 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                               ),
                             ),
                           ),
-
-// subTitle
-
                           Expanded(
                             child:
                             Text (
-                            "${Srv_DbTools.gClient.Client_Nom}/${Srv_DbTools.gGroupe.Groupe_Nom}/${Srv_DbTools.gSite.Site_Nom}/${Srv_DbTools.gZone.Zone_Nom}",
+                              wTitre2,
                             maxLines: 1,
                             style: gColors.bodyTitle1_B_Gr,
                             ),
@@ -413,7 +457,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                                 ),
                                 Container(
                                   child: Text(
-                                    DescAff,
+                                    "${DescAff}",
                                     style: gColors.bodyTitle1_B_G_20,
                                     textAlign: TextAlign.center,
                                   ),

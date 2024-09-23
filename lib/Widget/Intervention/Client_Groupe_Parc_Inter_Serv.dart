@@ -68,6 +68,11 @@ class Client_Groupe_Parc_Inter_ServState extends State<Client_Groupe_Parc_Inter_
     await initLib();
   }
 
+  void onDelete() async {
+    await initLib();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -263,7 +268,7 @@ class Client_Groupe_Parc_Inter_ServState extends State<Client_Groupe_Parc_Inter_
             await HapticFeedback.vibrate();
             print("onTap ");
             print("onTap ${parc_Art.toString()} ");
-            await Client_Groupe_Parc_Inter_Piece_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, parc_Art);
+            await Client_Groupe_Parc_Inter_Piece_Saisie_Dialog.Dialogs_Saisie(context, onSaisie,  onDelete, parc_Art);
 
             setState(() {});
           },

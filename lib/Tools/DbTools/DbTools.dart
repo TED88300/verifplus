@@ -35,6 +35,9 @@ import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Ent.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Img.dart';
+import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
+
+import '../../Widget/Widget_Tools/gColors.dart';
 
 class SelLig {
   int Id = 0;
@@ -78,7 +81,7 @@ class DbTools {
     FBroadcast.instance().broadcast("MAJHOME");
   }
 
-  static int gCurrentIndex = 1;
+  static int gCurrentIndex = 3;
   static int gCurrentIndex2 = 0;
   static int gCurrentIndex3 = 0;
 
@@ -103,6 +106,13 @@ class DbTools {
   static String ParamTypeOg = "";
 
   static int gLastID = 0;
+
+  static bool gIsOU = false;
+  static List<Parc_Art> gIsOUlParcs_Art = [];
+
+  static String gDateMS = "";
+  static String DescAff = "";
+
 
   static bool hasConnection = false;
   static Future<bool> checkConnection() async {
@@ -170,51 +180,53 @@ class DbTools {
         "User_Depot TEXT NOT NULL DEFAULT '',"
         "User_NivHabID INTEGER NOT NULL DEFAULT 0,"
         "User_Niv_Isole INTEGER NOT NULL DEFAULT 0,"
-        "User_TypeUserID INTEGER NOT NULL);";
+        "User_TypeUser TEXT NOT NULL DEFAULT '');";
 
     String wCREATE_Clients =
         "CREATE TABLE Clients (ClientId INTEGER NOT NULL, Client_CodeGC TEXT NOT NULL DEFAULT '', Client_CL_Pr INTEGER NOT NULL, Client_Famille TEXT NOT NULL, Client_Rglt TEXT NOT NULL, Client_Depot TEXT NOT NULL DEFAULT '', Client_PersPhys INTEGER NOT NULL, Client_OK_DataPerso INTEGER NOT NULL, Client_Civilite TEXT NOT NULL DEFAULT '', Client_Nom TEXT NOT NULL DEFAULT '', Client_Siret TEXT NOT NULL DEFAULT '', Client_NAF TEXT NOT NULL DEFAULT '', Client_TVA TEXT NOT NULL DEFAULT '', Client_Commercial TEXT NOT NULL DEFAULT '', Client_Createur TEXT NOT NULL DEFAULT '', Client_Contrat INTEGER NOT NULL, Client_TypeContrat TEXT NOT NULL DEFAULT '', Client_Ct_Debut TEXT NOT NULL, Client_Ct_Fin TEXT NOT NULL, Client_Organes TEXT NOT NULL DEFAULT '', Users_Nom TEXT NOT NULL DEFAULT '', Livr TEXT NOT NULL,Client_isUpdate INTEGER NOT NULL DEFAULT 0 DEFAULT 0);";
     String wCREATE_Adresses =
-        "CREATE TABLE `Adresses` (`AdresseId` int(11) NOT NULL,`Adresse_ClientId` int(11) NOT NULL,`Adresse_Code` varchar(24) NOT NULL DEFAULT '',`Adresse_Type` varchar(24) NOT NULL DEFAULT '',`Adresse_Nom` varchar(64) NOT NULL DEFAULT '',`Adresse_Adr1` varchar(40) NOT NULL DEFAULT '',`Adresse_Adr2` varchar(40) NOT NULL DEFAULT '',`Adresse_Adr3` varchar(40) NOT NULL DEFAULT '',`Adresse_Adr4` varchar(40) NOT NULL,`Adresse_CP` varchar(10) NOT NULL DEFAULT '',`Adresse_Ville` varchar(35) NOT NULL,`Adresse_Pays` varchar(40) NOT NULL DEFAULT '',`Adresse_Acces` varchar(128) NOT NULL,`Adresse_Rem` varchar(1024) NOT NULL DEFAULT '', Adresse_isUpdate INTEGER NOT NULL DEFAULT 0)";
+        "CREATE TABLE Adresses (AdresseId int(11) NOT NULL,Adresse_ClientId int(11) NOT NULL,Adresse_Code varchar(24) NOT NULL DEFAULT '',Adresse_Type varchar(24) NOT NULL DEFAULT '',Adresse_Nom varchar(64) NOT NULL DEFAULT '',Adresse_Adr1 varchar(40) NOT NULL DEFAULT '',Adresse_Adr2 varchar(40) NOT NULL DEFAULT '',Adresse_Adr3 varchar(40) NOT NULL DEFAULT '',Adresse_Adr4 varchar(40) NOT NULL,Adresse_CP varchar(10) NOT NULL DEFAULT '',Adresse_Ville varchar(35) NOT NULL,Adresse_Pays varchar(40) NOT NULL DEFAULT '',Adresse_Acces varchar(128) NOT NULL,Adresse_Rem varchar(1024) NOT NULL DEFAULT '', Adresse_isUpdate INTEGER NOT NULL DEFAULT 0)";
     String wCREATE_Contacts =
-        "CREATE TABLE `Contacts` (`ContactId` int(11) NOT NULL,`Contact_ClientId` int(11) NOT NULL,`Contact_AdresseId` int(11) NOT NULL,`Contact_Code` varchar(24) NOT NULL DEFAULT '',`Contact_Type` varchar(24) NOT NULL DEFAULT '',`Contact_Civilite` varchar(25) NOT NULL,`Contact_Prenom` varchar(60) NOT NULL,`Contact_Nom` varchar(60) NOT NULL,`Contact_Fonction` varchar(40) NOT NULL,`Contact_Service` varchar(40) NOT NULL,`Contact_Tel1` varchar(20) NOT NULL,`Contact_Tel2` varchar(20) NOT NULL,`Contact_eMail` varchar(100) NOT NULL,`Contact_Rem` varchar(1024) NOT NULL, Contact_isUpdate INTEGER NOT NULL DEFAULT 0)";
+        "CREATE TABLE Contacts (ContactId int(11) NOT NULL,Contact_ClientId int(11) NOT NULL,Contact_AdresseId int(11) NOT NULL,Contact_Code varchar(24) NOT NULL DEFAULT '',Contact_Type varchar(24) NOT NULL DEFAULT '',Contact_Civilite varchar(25) NOT NULL,Contact_Prenom varchar(60) NOT NULL,Contact_Nom varchar(60) NOT NULL,Contact_Fonction varchar(40) NOT NULL,Contact_Service varchar(40) NOT NULL,Contact_Tel1 varchar(20) NOT NULL,Contact_Tel2 varchar(20) NOT NULL,Contact_eMail varchar(100) NOT NULL,Contact_Rem varchar(1024) NOT NULL, Contact_isUpdate INTEGER NOT NULL DEFAULT 0)";
     String wCREATE_Groupes =
-        "CREATE TABLE `Groupes` (`GroupeId` int(11) NOT NULL,`Groupe_ClientId` int(11) NOT NULL,`Groupe_Code` varchar(24) NOT NULL DEFAULT '',`Groupe_Depot` varchar(128) NOT NULL DEFAULT '',`Groupe_Nom` varchar(64) NOT NULL DEFAULT '',`Groupe_Adr1` varchar(40) NOT NULL DEFAULT '',`Groupe_Adr2` varchar(40) NOT NULL DEFAULT '',`Groupe_Adr3` varchar(40) NOT NULL DEFAULT '',`Groupe_Adr4` varchar(40) NOT NULL,`Groupe_CP` varchar(10) NOT NULL DEFAULT '',`Groupe_Ville` varchar(40) NOT NULL DEFAULT '',`Groupe_Pays` varchar(40) NOT NULL DEFAULT '',`Groupe_Acces` varchar(128) NOT NULL,`Groupe_Rem` varchar(1024) NOT NULL DEFAULT '',`Livr` varchar(8) NOT NULL, Groupe_isUpdate INTEGER NOT NULL DEFAULT 0)";
+        "CREATE TABLE Groupes (GroupeId int(11) NOT NULL,Groupe_ClientId int(11) NOT NULL,Groupe_Code varchar(24) NOT NULL DEFAULT '',Groupe_Depot varchar(128) NOT NULL DEFAULT '',Groupe_Nom varchar(64) NOT NULL DEFAULT '',Groupe_Adr1 varchar(40) NOT NULL DEFAULT '',Groupe_Adr2 varchar(40) NOT NULL DEFAULT '',Groupe_Adr3 varchar(40) NOT NULL DEFAULT '',Groupe_Adr4 varchar(40) NOT NULL,Groupe_CP varchar(10) NOT NULL DEFAULT '',Groupe_Ville varchar(40) NOT NULL DEFAULT '',Groupe_Pays varchar(40) NOT NULL DEFAULT '',Groupe_Acces varchar(128) NOT NULL,Groupe_Rem varchar(1024) NOT NULL DEFAULT '',Livr varchar(8) NOT NULL, Groupe_isUpdate INTEGER NOT NULL DEFAULT 0)";
 
     String wCREATE_Sites =
-        "CREATE TABLE `Sites` (`SiteId` int(11) NOT NULL,`Site_GroupeId` int(11) NOT NULL,`Site_Code` varchar(24) NOT NULL DEFAULT '',`Site_Depot` varchar(128) NOT NULL DEFAULT '',`Site_Nom` varchar(64) NOT NULL DEFAULT '',`Site_Adr1` varchar(40) NOT NULL DEFAULT '',`Site_Adr2` varchar(40) NOT NULL DEFAULT '',`Site_Adr3` varchar(40) NOT NULL DEFAULT '',`Site_Adr4` varchar(40) NOT NULL,`Site_CP` varchar(10) NOT NULL DEFAULT '',`Site_Ville` varchar(40) NOT NULL DEFAULT '',`Site_Pays` varchar(40) NOT NULL DEFAULT '',`Site_Acces` varchar(128) NOT NULL,`Site_RT` varchar(1024) NOT NULL DEFAULT '',`Site_APSAD` varchar(1024) NOT NULL DEFAULT '',`Site_Rem` varchar(1024) NOT NULL DEFAULT '',`Site_ResourceId` int(11) NOT NULL DEFAULT 0,`Livr` varchar(8) NOT NULL, Site_isUpdate INTEGER NOT NULL DEFAULT 0)";
+        "CREATE TABLE Sites (SiteId int(11) NOT NULL,Site_GroupeId int(11) NOT NULL,Site_Code varchar(24) NOT NULL DEFAULT '',Site_Depot varchar(128) NOT NULL DEFAULT '',Site_Nom varchar(64) NOT NULL DEFAULT '',Site_Adr1 varchar(40) NOT NULL DEFAULT '',Site_Adr2 varchar(40) NOT NULL DEFAULT '',Site_Adr3 varchar(40) NOT NULL DEFAULT '',Site_Adr4 varchar(40) NOT NULL,Site_CP varchar(10) NOT NULL DEFAULT '',Site_Ville varchar(40) NOT NULL DEFAULT '',Site_Pays varchar(40) NOT NULL DEFAULT '',Site_Acces varchar(128) NOT NULL,Site_RT varchar(1024) NOT NULL DEFAULT '',Site_APSAD varchar(1024) NOT NULL DEFAULT '',Site_Rem varchar(1024) NOT NULL DEFAULT '',Site_ResourceId int(11) NOT NULL DEFAULT 0,Livr varchar(8) NOT NULL, Site_isUpdate INTEGER NOT NULL DEFAULT 0, Groupe_Nom varchar(64) NOT NULL)";
     String wCREATE_Zones =
-        "CREATE TABLE `Zones` (`ZoneId` int(11) NOT NULL,`Zone_SiteId` int(11) NOT NULL,`Zone_Code` varchar(24) NOT NULL DEFAULT '',`Zone_Depot` varchar(128) NOT NULL DEFAULT '',`Zone_Nom` varchar(64) NOT NULL DEFAULT '',`Zone_Adr1` varchar(40) NOT NULL DEFAULT '',`Zone_Adr2` varchar(40) NOT NULL DEFAULT '',`Zone_Adr3` varchar(40) NOT NULL DEFAULT '',`Zone_Adr4` varchar(40) NOT NULL,`Zone_CP` varchar(10) NOT NULL DEFAULT '',`Zone_Ville` varchar(40) NOT NULL DEFAULT '',`Zone_Pays` varchar(40) NOT NULL DEFAULT '',`Zone_Acces` varchar(128) NOT NULL,`Zone_Rem` varchar(1024) NOT NULL DEFAULT '',`Livr` varchar(8) NOT NULL, Zone_isUpdate INTEGER NOT NULL DEFAULT 0)";
-    String wCREATE_Intervention = "CREATE TABLE `Interventions` (`InterventionId` int(11) NOT NULL,`Intervention_ZoneId` int(11) DEFAULT 0,"
-        "`Intervention_Date` varchar(32) NOT NULL DEFAULT '',`Intervention_Date_Visite` varchar(32) NOT NULL DEFAULT '',`Intervention_Type` varchar(32) NOT NULL DEFAULT '',`"
-        "Intervention_Parcs_Type` varchar(32) NOT NULL,`Intervention_Status` varchar(32) NOT NULL DEFAULT 'Planifiée',"
-        "`Intervention_Histo_Status` longtext NOT NULL DEFAULT '',`Intervention_Facturation` varchar(32) NOT NULL DEFAULT 'Détaillée',"
-        "`Intervention_Histo_Facturation` longtext NOT NULL DEFAULT '',`Intervention_Responsable` varchar(128) NOT NULL DEFAULT '',"
-        "`Intervention_Responsable2` varchar(128) NOT NULL DEFAULT '',"
-        "`Intervention_Responsable3` varchar(128) NOT NULL DEFAULT '',"
-        "`Intervention_Responsable4` varchar(128) NOT NULL DEFAULT '',"
-        "`Intervention_Intervenants` mediumtext NOT NULL DEFAULT '',`Intervention_Reglementation` mediumtext NOT NULL DEFAULT '',"
-        "`Intervention_Signataire_Client` varchar(128) NOT NULL,`Intervention_Signataire_Tech` varchar(128) NOT NULL,"
-        "Intervention_Signataire_Date varchar(32) NOT NULL,Intervention_Signataire_Date_Client varchar(32) NOT NULL,`Intervention_Remarque` varchar(1024) NOT NULL DEFAULT '',"
-        "`Livr` varchar(8) NOT NULL DEFAULT '',`Intervention_Contrat` varchar(64) NOT NULL DEFAULT '',"
-        "`Intervention_TypeContrat` varchar(128) NOT NULL DEFAULT '',`Intervention_Duree` varchar(128) NOT NULL DEFAULT '',"
-        "`Intervention_Organes` varchar(1024) NOT NULL DEFAULT '',`Intervention_RT` varchar(1024) NOT NULL DEFAULT '',"
-        "`Intervention_APSAD` varchar(1024) NOT NULL DEFAULT '', `Intervention_Sat` varchar(1024) NOT NULL DEFAULT '', Intervention_isUpdate INTEGER NOT NULL DEFAULT 0,"
+        "CREATE TABLE Zones (ZoneId int(11) NOT NULL,Zone_SiteId int(11) NOT NULL,Zone_Code varchar(24) NOT NULL DEFAULT '',Zone_Depot varchar(128) NOT NULL DEFAULT '',Zone_Nom varchar(64) NOT NULL DEFAULT '',Zone_Adr1 varchar(40) NOT NULL DEFAULT '',Zone_Adr2 varchar(40) NOT NULL DEFAULT '',Zone_Adr3 varchar(40) NOT NULL DEFAULT '',Zone_Adr4 varchar(40) NOT NULL,Zone_CP varchar(10) NOT NULL DEFAULT '',Zone_Ville varchar(40) NOT NULL DEFAULT '',Zone_Pays varchar(40) NOT NULL DEFAULT '',Zone_Acces varchar(128) NOT NULL,Zone_Rem varchar(1024) NOT NULL DEFAULT '',Livr varchar(8) NOT NULL, Zone_isUpdate INTEGER NOT NULL DEFAULT 0)";
+    String wCREATE_Intervention = "CREATE TABLE Interventions (InterventionId int(11) NOT NULL,Intervention_ZoneId int(11) DEFAULT 0,"
+        "Intervention_Date varchar(32) NOT NULL DEFAULT '',Intervention_Date_Visite varchar(32) NOT NULL DEFAULT '',Intervention_Type varchar(32) NOT NULL DEFAULT '',"
+        "Intervention_Parcs_Type varchar(32) NOT NULL,Intervention_Status varchar(32) NOT NULL DEFAULT 'Planifiée',"
+        "Intervention_Histo_Status longtext NOT NULL DEFAULT '',Intervention_Facturation varchar(32) NOT NULL DEFAULT 'Détaillée',"
+        "Intervention_Histo_Facturation longtext NOT NULL DEFAULT '',Intervention_Responsable varchar(128) NOT NULL DEFAULT '',"
+        "Intervention_Responsable2 varchar(128) NOT NULL DEFAULT '',"
+        "Intervention_Responsable3 varchar(128) NOT NULL DEFAULT '',"
+        "Intervention_Responsable4 varchar(128) NOT NULL DEFAULT '',"
+        "Intervention_Responsable5 varchar(128) NOT NULL DEFAULT '',"
+        "Intervention_Responsable6 varchar(128) NOT NULL DEFAULT '',"
+        "Intervention_Intervenants mediumtext NOT NULL DEFAULT '',Intervention_Reglementation mediumtext NOT NULL DEFAULT '',"
+        "Intervention_Signataire_Client varchar(128) NOT NULL,Intervention_Signataire_Tech varchar(128) NOT NULL,"
+        "Intervention_Signataire_Date varchar(32) NOT NULL,Intervention_Signataire_Date_Client varchar(32) NOT NULL,Intervention_Remarque varchar(1024) NOT NULL DEFAULT '',"
+        "Livr varchar(8) NOT NULL DEFAULT '',Intervention_Contrat varchar(64) NOT NULL DEFAULT '',"
+        "Intervention_TypeContrat varchar(128) NOT NULL DEFAULT '',Intervention_Duree varchar(128) NOT NULL DEFAULT '',"
+        "Intervention_Organes varchar(1024) NOT NULL DEFAULT '',Intervention_RT varchar(1024) NOT NULL DEFAULT '',"
+        "Intervention_APSAD varchar(1024) NOT NULL DEFAULT '', Intervention_Sat varchar(1024) NOT NULL DEFAULT '', Intervention_isUpdate INTEGER NOT NULL DEFAULT 0,"
         "Intervention_Signature_Client TEXT NOT NULL DEFAULT '',"
         "Intervention_Signature_Tech TEXT NOT NULL DEFAULT ''"
         ")";
 
-    String wCREATE_InterMissions = "CREATE TABLE `InterMissions` (`InterMissionId` int(11) NOT NULL,"
-        "`InterMission_InterventionId` int(11) NOT NULL DEFAULT 0,`InterMission_Nom` varchar(512) NOT NULL,"
-        "`InterMission_Exec` tinyint(1) NOT NULL,`InterMission_Date` varchar(32) NOT NULL,`InterMission_Note` varchar(4096) NOT NULL"
+    String wCREATE_InterMissions = "CREATE TABLE InterMissions (InterMissionId int(11) NOT NULL,"
+        "InterMission_InterventionId int(11) NOT NULL DEFAULT 0,InterMission_Nom varchar(512) NOT NULL,"
+        "InterMission_Exec tinyint(1) NOT NULL,InterMission_Date varchar(32) NOT NULL,InterMission_Note varchar(4096) NOT NULL"
         ")";
 
-    String wCREATE_Planning = "CREATE TABLE `Planning` (`PlanningId` int(11) NOT NULL,"
-        "`Planning_InterventionId` int(11) NOT NULL DEFAULT 0,"
-        "`Planning_ResourceId` int(11) NOT NULL DEFAULT 0,`"
-        "Planning_InterventionstartTime` datetime NOT NULL DEFAULT current_timestamp,"
-        "`Planning_InterventionendTime` datetime NOT NULL DEFAULT current_timestamp,"
-        "`Planning_Libelle` varchar(512) NOT NULL DEFAULT '')";
+    String wCREATE_Planning = "CREATE TABLE Planning (PlanningId int(11) NOT NULL,"
+        "Planning_InterventionId int(11) NOT NULL DEFAULT 0,"
+        "Planning_ResourceId int(11) NOT NULL DEFAULT 0,"
+        "Planning_InterventionstartTime datetime NOT NULL DEFAULT current_timestamp,"
+        "Planning_InterventionendTime datetime NOT NULL DEFAULT current_timestamp,"
+        "Planning_Libelle varchar(512) NOT NULL DEFAULT '')";
 
     String wCREATE_Planning_Intervention = "CREATE TABLE Planning_Intervention ("
         "Planning_Interv_PlanningId int(11) NOT NULL,"
@@ -310,6 +322,8 @@ class DbTools {
     String wCREATE_NF074_Pieces_Det_Inc =
         "CREATE TABLE NF074_Pieces_Det_Inc (NF074_Pieces_Det_IncId int(11) NOT NULL,NF074_Pieces_Det_Inc_DESC varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_FAB varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_PRS varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_CLF varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_MOB varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_PDT varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_POIDS varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_GAM varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_CODF varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_Inst int(11) NOT NULL DEFAULT 0,NF074_Pieces_Det_Inc_VerifAnn int(11) NOT NULL DEFAULT 0,NF074_Pieces_Det_Inc_Rech int(11) NOT NULL DEFAULT 0,NF074_Pieces_Det_Inc_MAA int(11) NOT NULL DEFAULT 0,NF074_Pieces_Det_Inc_Charge int(11) NOT NULL DEFAULT 0,NF074_Pieces_Det_Inc_RA int(11) NOT NULL DEFAULT 0,NF074_Pieces_Det_Inc_RES int(11) NOT NULL DEFAULT 0,NF074_Pieces_Det_Inc_CodearticlePD1 varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_DescriptionPD1 varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_QtePD1 int(11) NOT NULL,NF074_Pieces_Det_Inc_CodearticlePD2 varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_DescriptionPD2 varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_QtePD2 int(11) NOT NULL,NF074_Pieces_Det_Inc_CodearticlePD3 varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_DescriptionPD3 varchar(128) NOT NULL DEFAULT '',NF074_Pieces_Det_Inc_QtePD3 int(11) NOT NULL);";
 
+    String wCREATE_RIA_Gammes = "CREATE TABLE RIA_Gammes (RIA_GammesId int(11) NOT NULL, RIA_Gammes_DESC varchar(128) NOT NULL DEFAULT '',RIA_Gammes_FAB varchar(128) NOT NULL DEFAULT '',RIA_Gammes_TYPE varchar(128) NOT NULL DEFAULT '',RIA_Gammes_ARM varchar(128) NOT NULL DEFAULT '',RIA_Gammes_INOX varchar(128) NOT NULL DEFAULT '',RIA_Gammes_PDT varchar(128) NOT NULL DEFAULT '',RIA_Gammes_DIAM varchar(128) NOT NULL DEFAULT '',RIA_Gammes_LONG varchar(128) NOT NULL DEFAULT '',RIA_Gammes_DIF varchar(128) NOT NULL DEFAULT '',RIA_Gammes_DISP varchar(128) NOT NULL DEFAULT '',RIA_Gammes_PREM varchar(128) NOT NULL DEFAULT '',RIA_Gammes_REF varchar(128) NOT NULL DEFAULT '',RIA_Gammes_NCERT varchar(128) NOT NULL DEFAULT '')";
+
     String wCREATE_Articles_Ebp = "CREATE TABLE Articles_Ebp ("
         " ArticleID INTEGER PRIMARY KEY AUTOINCREMENT "
         ", Article_codeArticle varchar(128) NOT NULL DEFAULT ''"
@@ -336,7 +350,7 @@ class DbTools {
         ")";
 
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
-    String wDbPath = "kaqpavmasella2n.db";
+    String wDbPath = "karavan2.db";
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
 
     database = openDatabase(
@@ -375,6 +389,8 @@ class DbTools {
         await db.execute(wCREATE_NF074_Pieces_Det);
         await db.execute(wCREATE_NF074_Pieces_Det_Inc);
         await db.execute(wCREATE_Articles_Ebp);
+        await db.execute(wCREATE_RIA_Gammes);
+
       },
       onUpgrade: (db, oldVersion, newVersion) {
         print(">>>>>>>>>>>>>>>>>>>>>>>>>>> onUpgrade $oldVersion $newVersion");
@@ -728,6 +744,157 @@ class DbTools {
   static List<Maint> lMaints = [];
   static late Maint gMaint;
 
+
+  //************************************************
+  //******************** RIA_Gammes **************
+  //************************************************
+
+  static List<RIA_Gammes> glfRIA_Gammes = [];
+
+  static Future getRIA_Gammes_FAB() async {
+    Srv_DbTools.ListParam_Saisie_Param.clear();
+    final db = await database;
+    String wRef = "RIA_Gammes_FAB";
+    String wSql = "SELECT ${wRef} FROM RIA_Gammes WHERE RIA_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
+      print("***********>>>   wSql ${wSql}");
+    final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
+    return List.generate(maps.length, (i) {
+//      print("***********>>>   getParcs_DescInter maps ${maps[i]["${wRef}"]}");
+      Srv_DbTools.ListParam_Saisie_Param.add(Param_Saisie_Param(i, "FAB", i, maps[i]["${wRef}"], maps[i]["${wRef}"], maps[i]["${wRef}"], false, false, SizedBox(), "Noir"));
+    });
+  }
+
+  static Future getRIA_Gammes_TYPE() async {
+    Srv_DbTools.ListParam_Saisie_Param.clear();
+    final db = await database;
+    String wRef = "RIA_Gammes_TYPE";
+    String wSql = "SELECT ${wRef} FROM RIA_Gammes WHERE RIA_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND RIA_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
+    print("***********>>>   wSql ${wSql}");
+    final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
+    return List.generate(maps.length, (i) {
+//      print("***********>>>   getParcs_DescInter maps ${maps[i]["${wRef}"]}");
+      Srv_DbTools.ListParam_Saisie_Param.add(Param_Saisie_Param(i, "TYPE", i, maps[i]["${wRef}"], maps[i]["${wRef}"], maps[i]["${wRef}"], false, false, SizedBox(), "Noir"));
+    });
+  }
+
+  static Future getRIA_Gammes_ARM() async {
+    Srv_DbTools.ListParam_Saisie_Param.clear();
+    final db = await database;
+    String wRef = "RIA_Gammes_ARM";
+    String wSql = "SELECT ${wRef} FROM RIA_Gammes WHERE RIA_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND RIA_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND RIA_Gammes_TYPE = '${Srv_DbTools.TYPE_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
+    print("***********>>>  getRIA_Gammes_ARM wSql ${wSql}");
+    final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
+
+    return List.generate(maps.length, (i) {
+//      print("***********>>>   getParcs_DescInter maps ${maps[i]["${wRef}"]}");
+      Srv_DbTools.ListParam_Saisie_Param.add(Param_Saisie_Param(i, "ARM", i, maps[i]["${wRef}"], maps[i]["${wRef}"], maps[i]["${wRef}"], false, false, SizedBox(), "Noir"));
+    });
+  }
+
+
+  static Future getRIA_Gammes_INOX() async {
+    Srv_DbTools.ListParam_Saisie_Param.clear();
+    final db = await database;
+    String wRef = "RIA_Gammes_INOX";
+    String wSql = "SELECT ${wRef} FROM RIA_Gammes WHERE RIA_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND RIA_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND RIA_Gammes_TYPE = '${Srv_DbTools.TYPE_Lib}'  AND RIA_Gammes_ARM = '${Srv_DbTools.ARM_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
+    print("***********>>>  getRIA_Gammes_INOX wSql ${wSql}");
+    final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
+    return List.generate(maps.length, (i) {
+//      print("***********>>>   getParcs_DescInter maps ${maps[i]["${wRef}"]}");
+      Srv_DbTools.ListParam_Saisie_Param.add(Param_Saisie_Param(i, "INOX", i, maps[i]["${wRef}"], maps[i]["${wRef}"], maps[i]["${wRef}"], false, false, SizedBox(), "Noir"));
+    });
+  }
+
+  static Future getRIA_Gammes_DIAM() async {
+    Srv_DbTools.ListParam_Saisie_Param.clear();
+    final db = await database;
+    String wRef = "RIA_Gammes_DIAM";
+    String wSql = "SELECT ${wRef} FROM RIA_Gammes WHERE RIA_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND RIA_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND RIA_Gammes_TYPE = '${Srv_DbTools.TYPE_Lib}' AND RIA_Gammes_ARM = '${Srv_DbTools.ARM_Lib}'  AND RIA_Gammes_INOX = '${Srv_DbTools.INOX_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
+    print("***********>>>  getRIA_Gammes_DIAM wSql ${wSql}");
+    final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
+    return List.generate(maps.length, (i) {
+//      print("***********>>>   getParcs_DescInter maps ${maps[i]["${wRef}"]}");
+      Srv_DbTools.ListParam_Saisie_Param.add(Param_Saisie_Param(i, "DIAM", i, maps[i]["${wRef}"], maps[i]["${wRef}"], maps[i]["${wRef}"], false, false, SizedBox(), "Noir"));
+    });
+  }
+
+  static Future getRIA_Gammes_LONG() async {
+    Srv_DbTools.ListParam_Saisie_Param.clear();
+    final db = await database;
+    String wRef = "RIA_Gammes_LONG";
+    String wSql = "SELECT ${wRef} FROM RIA_Gammes WHERE RIA_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND RIA_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND RIA_Gammes_TYPE = '${Srv_DbTools.TYPE_Lib}' AND RIA_Gammes_ARM = '${Srv_DbTools.ARM_Lib}' AND RIA_Gammes_INOX = '${Srv_DbTools.INOX_Lib}' AND RIA_Gammes_DIAM = '${Srv_DbTools.DIAM_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
+    print("***********>>>  getRIA_Gammes_LONG wSql ${wSql}");
+    final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
+    return List.generate(maps.length, (i) {
+//      print("***********>>>   getParcs_DescInter maps ${maps[i]["${wRef}"]}");
+      Srv_DbTools.ListParam_Saisie_Param.add(Param_Saisie_Param(i, "DIAM", i, maps[i]["${wRef}"], maps[i]["${wRef}"], maps[i]["${wRef}"], false, false, SizedBox(), "Noir"));
+    });
+  }
+
+
+  static Future getRIA_Gammes_DIF() async {
+    Srv_DbTools.ListParam_Saisie_Param.clear();
+    final db = await database;
+    String wRef = "RIA_Gammes_DIF";
+    String wSql = "SELECT ${wRef} FROM RIA_Gammes WHERE RIA_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND RIA_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND RIA_Gammes_TYPE = '${Srv_DbTools.TYPE_Lib}' AND RIA_Gammes_ARM = '${Srv_DbTools.ARM_Lib}' AND RIA_Gammes_INOX = '${Srv_DbTools.INOX_Lib}' AND RIA_Gammes_DIAM = '${Srv_DbTools.DIAM_Lib}' AND RIA_Gammes_LONG = '${Srv_DbTools.LONG_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
+    print("***********>>>  getRIA_Gammes_DIF wSql ${wSql}");
+    final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
+    return List.generate(maps.length, (i) {
+//      print("***********>>>   getParcs_DescInter maps ${maps[i]["${wRef}"]}");
+      Srv_DbTools.ListParam_Saisie_Param.add(Param_Saisie_Param(i, "DIAM", i, maps[i]["${wRef}"], maps[i]["${wRef}"], maps[i]["${wRef}"], false, false, SizedBox(), "Noir"));
+    });
+  }
+
+  static Future getRIA_Gammes_DISP() async {
+    Srv_DbTools.ListParam_Saisie_Param.clear();
+    final db = await database;
+    String wRef = "RIA_Gammes_DISP";
+    String wSql = "SELECT ${wRef} FROM RIA_Gammes WHERE RIA_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND RIA_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND RIA_Gammes_TYPE = '${Srv_DbTools.TYPE_Lib}' AND RIA_Gammes_ARM = '${Srv_DbTools.ARM_Lib}' AND RIA_Gammes_INOX = '${Srv_DbTools.INOX_Lib}' AND RIA_Gammes_DIAM = '${Srv_DbTools.DIAM_Lib}' AND RIA_Gammes_LONG = '${Srv_DbTools.LONG_Lib}' AND RIA_Gammes_DIF = '${Srv_DbTools.DIF_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
+    print("***********>>>  getRIA_Gammes_DISP wSql ${wSql}");
+    final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
+    return List.generate(maps.length, (i) {
+//      print("***********>>>   getParcs_DescInter maps ${maps[i]["${wRef}"]}");
+      Srv_DbTools.ListParam_Saisie_Param.add(Param_Saisie_Param(i, "DIAM", i, maps[i]["${wRef}"], maps[i]["${wRef}"], maps[i]["${wRef}"], false, false, SizedBox(), "Noir"));
+    });
+  }
+
+
+
+  static Future getRIA_Gammes_PREM() async {
+    Srv_DbTools.ListParam_Saisie_Param.clear();
+    final db = await database;
+    String wRef = "RIA_Gammes_PREM";
+    String wSql = "SELECT ${wRef} FROM RIA_Gammes WHERE RIA_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND RIA_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND RIA_Gammes_TYPE = '${Srv_DbTools.TYPE_Lib}' AND RIA_Gammes_ARM = '${Srv_DbTools.ARM_Lib}' AND RIA_Gammes_INOX = '${Srv_DbTools.INOX_Lib}' AND RIA_Gammes_DIAM = '${Srv_DbTools.DIAM_Lib}' AND RIA_Gammes_LONG = '${Srv_DbTools.LONG_Lib}' AND RIA_Gammes_DIF = '${Srv_DbTools.DIF_Lib}' AND RIA_Gammes_DISP = '${Srv_DbTools.DISP_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
+    print("***********>>>  getRIA_Gammes_DIAM wSql ${wSql}");
+    final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
+    return List.generate(maps.length, (i) {
+//      print("***********>>>   getParcs_DescInter maps ${maps[i]["${wRef}"]}");
+      Srv_DbTools.ListParam_Saisie_Param.add(Param_Saisie_Param(i, "DIAM", i, maps[i]["${wRef}"], maps[i]["${wRef}"], maps[i]["${wRef}"], false, false, SizedBox(), "Noir"));
+    });
+  }
+
+  static Future getRIA_Gammes_Ref() async {
+    Srv_DbTools.ListParam_Saisie_Param.clear();
+    final db = await database;
+    String wRef = "RIA_Gammes_REF, RIA_Gammes_NCERT";
+    String wSql = "SELECT ${wRef} FROM RIA_Gammes WHERE RIA_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND RIA_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND RIA_Gammes_TYPE = '${Srv_DbTools.TYPE_Lib}' AND RIA_Gammes_ARM = '${Srv_DbTools.ARM_Lib}' AND RIA_Gammes_INOX = '${Srv_DbTools.INOX_Lib}' AND RIA_Gammes_DIAM = '${Srv_DbTools.DIAM_Lib}' AND RIA_Gammes_LONG = '${Srv_DbTools.LONG_Lib}' AND RIA_Gammes_DIF = '${Srv_DbTools.DIF_Lib}' AND RIA_Gammes_DISP = '${Srv_DbTools.DISP_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
+    final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
+     List.generate(maps.length, (i) {
+      Srv_DbTools.REF_Lib = maps[i]["RIA_Gammes_REF"];
+      Srv_DbTools.NCERT_Lib = maps[i]["RIA_Gammes_NCERT"];
+    });
+
+print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.NCERT_Lib}");
+
+    DbTools.gParc_Ent.Parcs_CodeArticle = Srv_DbTools.REF_Lib;
+    DbTools.gParc_Ent.Parcs_NCERT = Srv_DbTools.NCERT_Lib;
+    await DbTools.updateParc_Ent(DbTools.gParc_Ent);
+    return;
+  }
+
+//  SELECT RIA_Gammes_REF, RIA_Gammes_NCERT FROM RIA_Gammes WHERE RIA_Gammes_DESC = 'RIA' AND RIA_Gammes_FAB = 'RH-Mobiak SA/GEM' AND RIA_Gammes_TYPE = 'Pivotant' AND RIA_Gammes_ARM = 'Oui' AND RIA_Gammes_INOX = 'Non' AND RIA_Gammes_DIAM = '33/12mm' AND RIA_Gammes_LONG = '20' AND RIA_Gammes_DIF = 'DMFA' AND RIA_Gammes_DISP = 'DMFA' GROUP BY RIA_Gammes_REF, RIA_Gammes_NCERT ORDER BY RIA_Gammes_REF, RIA_Gammes_NCERT;
+
+
   //************************************************
   //******************** NF074_Gammes **************
   //************************************************
@@ -743,13 +910,11 @@ class DbTools {
     Srv_DbTools.ListParam_Saisie_Param.clear();
     final db = await database;
     String wRef = "NF074_Gammes_DESC";
-    String wSql = "SELECT  *FROM `NF074_Gammes` Where NF074_Gammes_DESC = 'Extincteur automatique'";
+    String wSql = "SELECT  *FROM NF074_Gammes Where NF074_Gammes_DESC = 'Extincteur automatique'";
 
-    print("***********>>>   getNF074_Gammes_Decs_Test wSql ${wSql}");
 
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
     return List.generate(maps.length, (i) {
-      print("***********>>>   getNF074_Gammes_Decs_Test maps ${maps[i]}");
 
     });
   }
@@ -758,13 +923,10 @@ class DbTools {
     Srv_DbTools.ListParam_Saisie_Param.clear();
     final db = await database;
     String wRef = "NF074_Gammes_DESC";
-    String wSql = "SELECT ${wRef}  FROM `NF074_Gammes` GROUP BY ${wRef}  ORDER BY count(${wRef} ) DESC";
+    String wSql = "SELECT ${wRef}  FROM NF074_Gammes GROUP BY ${wRef}  ORDER BY count(${wRef} ) DESC";
 
-    print("***********>>>   getNF074_Gammes_Decs wSql ${wSql}");
-
-    final List<Map<String, dynamic>> maps = await db.rawQuery('SELECT ${wRef}  FROM `NF074_Gammes` GROUP BY ${wRef}  ORDER BY count(${wRef} ) DESC;');
+    final List<Map<String, dynamic>> maps = await db.rawQuery('SELECT ${wRef}  FROM NF074_Gammes GROUP BY ${wRef}  ORDER BY count(${wRef} ) DESC;');
     return List.generate(maps.length, (i) {
-     print("***********>>>   getNF074_Gammes_Decs maps ${maps[i]["NF074_Gammes_DESC"]}");
       Srv_DbTools.ListParam_Saisie_Param.add(Param_Saisie_Param(i, "DESC", i, maps[i]["NF074_Gammes_DESC"], maps[i]["NF074_Gammes_DESC"], maps[i]["NF074_Gammes_DESC"], false, false, SizedBox(), "Noir"));
     });
   }
@@ -785,7 +947,7 @@ class DbTools {
     Srv_DbTools.ListParam_Saisie_Param.clear();
     final db = await database;
     String wRef = "NF074_Gammes_PRS";
-    String wSql = "SELECT ${wRef} FROM `NF074_Gammes` WHERE NF074_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND NF074_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
+    String wSql = "SELECT ${wRef} FROM NF074_Gammes WHERE NF074_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND NF074_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
     return List.generate(maps.length, (i) {
 //      print("***********>>>   getParcs_DescInter maps ${maps[i]["${wRef}"]}");
@@ -797,7 +959,7 @@ class DbTools {
     Srv_DbTools.ListParam_Saisie_Param.clear();
     final db = await database;
     String wRef = "NF074_Gammes_CLF";
-    String wSql = "SELECT ${wRef} FROM `NF074_Gammes` WHERE NF074_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND NF074_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND NF074_Gammes_PRS = '${Srv_DbTools.PRS_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
+    String wSql = "SELECT ${wRef} FROM NF074_Gammes WHERE NF074_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND NF074_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND NF074_Gammes_PRS = '${Srv_DbTools.PRS_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
     return List.generate(maps.length, (i) {
       //    print("***********>>>   getParcs_DescInter maps ${maps[i]["${wRef}"]}");
@@ -809,7 +971,7 @@ class DbTools {
     Srv_DbTools.ListParam_Saisie_Param.clear();
     final db = await database;
     String wRef = "NF074_Gammes_MOB";
-    String wSql = "SELECT ${wRef} FROM `NF074_Gammes` WHERE NF074_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND NF074_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND NF074_Gammes_PRS = '${Srv_DbTools.PRS_Lib}' AND NF074_Gammes_CLF = '${Srv_DbTools.CLF_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
+    String wSql = "SELECT ${wRef} FROM NF074_Gammes WHERE NF074_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND NF074_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND NF074_Gammes_PRS = '${Srv_DbTools.PRS_Lib}' AND NF074_Gammes_CLF = '${Srv_DbTools.CLF_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
     print("***********>>>   getNF074_Gammes_MOB wSql ${wSql}");
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
     print("***********>>>   getNF074_Gammes_MOB maps.length ${maps.length}");
@@ -823,7 +985,7 @@ class DbTools {
     Srv_DbTools.ListParam_Saisie_Param.clear();
     final db = await database;
     String wRef = "NF074_Gammes_PDT";
-    String wSql = "SELECT ${wRef} FROM `NF074_Gammes` WHERE NF074_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND NF074_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND NF074_Gammes_PRS = '${Srv_DbTools.PRS_Lib}' AND NF074_Gammes_CLF = '${Srv_DbTools.CLF_Lib}'  AND NF074_Gammes_MOB = '${Srv_DbTools.MOB_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
+    String wSql = "SELECT ${wRef} FROM NF074_Gammes WHERE NF074_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND NF074_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND NF074_Gammes_PRS = '${Srv_DbTools.PRS_Lib}' AND NF074_Gammes_CLF = '${Srv_DbTools.CLF_Lib}'  AND NF074_Gammes_MOB = '${Srv_DbTools.MOB_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
     return List.generate(maps.length, (i) {
       // print("***********>>>   getParcs_DescInter maps ${maps[i]["${wRef}"]}");
@@ -835,7 +997,7 @@ class DbTools {
     Srv_DbTools.ListParam_Saisie_Param.clear();
     final db = await database;
     String wRef = "NF074_Gammes_POIDS";
-    String wSql = "SELECT ${wRef} FROM `NF074_Gammes` WHERE NF074_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND NF074_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND NF074_Gammes_PRS = '${Srv_DbTools.PRS_Lib}' AND NF074_Gammes_CLF = '${Srv_DbTools.CLF_Lib}' AND NF074_Gammes_MOB = '${Srv_DbTools.MOB_Lib}' AND NF074_Gammes_PDT = '${Srv_DbTools.PDT_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
+    String wSql = "SELECT ${wRef} FROM NF074_Gammes WHERE NF074_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND NF074_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND NF074_Gammes_PRS = '${Srv_DbTools.PRS_Lib}' AND NF074_Gammes_CLF = '${Srv_DbTools.CLF_Lib}' AND NF074_Gammes_MOB = '${Srv_DbTools.MOB_Lib}' AND NF074_Gammes_PDT = '${Srv_DbTools.PDT_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
 //    print("***********>>>   getNF074_Gammes_POIDS wSql ${wSql}");
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
     return List.generate(maps.length, (i) {
@@ -848,7 +1010,7 @@ class DbTools {
     Srv_DbTools.ListParam_Saisie_Param.clear();
     final db = await database;
     String wRef = "NF074_Gammes_GAM";
-    String wSql = "SELECT ${wRef} FROM `NF074_Gammes` WHERE NF074_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND NF074_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND NF074_Gammes_PRS = '${Srv_DbTools.PRS_Lib}' AND NF074_Gammes_CLF = '${Srv_DbTools.CLF_Lib}' AND NF074_Gammes_MOB = '${Srv_DbTools.MOB_Lib}' AND NF074_Gammes_PDT = '${Srv_DbTools.PDT_Lib}'  AND NF074_Gammes_POIDS = '${Srv_DbTools.POIDS_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
+    String wSql = "SELECT ${wRef} FROM NF074_Gammes WHERE NF074_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND NF074_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND NF074_Gammes_PRS = '${Srv_DbTools.PRS_Lib}' AND NF074_Gammes_CLF = '${Srv_DbTools.CLF_Lib}' AND NF074_Gammes_MOB = '${Srv_DbTools.MOB_Lib}' AND NF074_Gammes_PDT = '${Srv_DbTools.PDT_Lib}'  AND NF074_Gammes_POIDS = '${Srv_DbTools.POIDS_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
     //print("***********>>>   getNF074_Gammes_GAM wSql ${wSql}");
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
     return List.generate(maps.length, (i) {
@@ -857,9 +1019,13 @@ class DbTools {
     });
   }
 
+
+
+
+
   static Future getNF074_Gammes_Get_REF(String wRef) async {
     final db = await database;
-    String wSql = "SELECT * FROM `NF074_Gammes` WHERE NF074_Gammes_REF = '${wRef}';";
+    String wSql = "SELECT * FROM NF074_Gammes WHERE NF074_Gammes_REF = '${wRef}';";
     print("***********>>>   getNF074_Gammes_GAM wSql ${wSql}");
 
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
@@ -887,7 +1053,7 @@ class DbTools {
 
   static Future getNF074_Gammes_Get_CODF(String wCodf) async {
     final db = await database;
-    String wSql = "SELECT * FROM `NF074_Gammes` WHERE NF074_Gammes_CODF = '${wCodf}';";
+    String wSql = "SELECT * FROM NF074_Gammes WHERE NF074_Gammes_CODF = '${wCodf}';";
     print("***********>>>   getNF074_Gammes_Get_CODF wSql ${wSql}");
 
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
@@ -916,7 +1082,7 @@ class DbTools {
   static Future<List<NF074_Gammes_Date>> getNF074_Gammes_Get_NCERT(String wRef) async {
     final db = await database;
     wRef = wRef.replaceAll(" ", "");
-    String wSql = "SELECT NF074_Gammes.*, `NF074_Histo_Normes_ENTR_MM`, `NF074_Histo_Normes_ENTR_AAAA`, `NF074_Histo_Normes_SORT_MM`, `NF074_Histo_Normes_SORT_AAAA` FROM NF074_Gammes, NF074_Histo_Normes WHERE NF074_Gammes_NCERT = NF074_Histo_Normes_NCERT AND REPLACE(NF074_Gammes_NCERT, ' ', '') LIKE '${wRef}%' ORDER BY NF074_Gammes_NCERT,NF074_Gammes_REF;";
+    String wSql = "SELECT NF074_Gammes.*, NF074_Histo_Normes_ENTR_MM, NF074_Histo_Normes_ENTR_AAAA, NF074_Histo_Normes_SORT_MM, NF074_Histo_Normes_SORT_AAAA FROM NF074_Gammes, NF074_Histo_Normes WHERE NF074_Gammes_NCERT = NF074_Histo_Normes_NCERT AND REPLACE(NF074_Gammes_NCERT, ' ', '') LIKE '${wRef}%' ORDER BY NF074_Gammes_NCERT,NF074_Gammes_REF;";
     print("***********>>>   getNF074_Gammes_GAM wSql ${wSql}");
 
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
@@ -948,7 +1114,7 @@ class DbTools {
   static Future<List<NF074_Gammes>> getNF074_Gammes_Get_DESC() async {
     final db = await database;
 
-    String wSql = "SELECT * FROM `NF074_Gammes`WHERE "
+    String wSql = "SELECT * FROM NF074_Gammes WHERE "
         "NF074_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' "
         "AND NF074_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' "
         "AND NF074_Gammes_PRS = '${Srv_DbTools.PRS_Lib}' "
@@ -957,7 +1123,7 @@ class DbTools {
         "AND NF074_Gammes_POIDS = '${Srv_DbTools.POIDS_Lib}' "
         "AND NF074_Gammes_GAM = '${Srv_DbTools.GAM_Lib}';";
 
-    //print("¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶*>>>   getNF074_Gammes_Get_DESC wSql ${wSql}");
+    print("¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶*>>>   getNF074_Gammes_Get_DESC wSql ${wSql}");
 
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
     return List.generate(maps.length, (i) {
@@ -999,6 +1165,46 @@ class DbTools {
     final db = await DbTools.database;
     int? repid = await db.delete("NF074_Gammes");
   }
+
+
+  static Future<List<RIA_Gammes>> getRIA_Gammes() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query("RIA_Gammes", orderBy: "RIA_GammesId ASC");
+    return List.generate(maps.length, (i) {
+      return RIA_Gammes(
+        maps[i]["RIA_GammesId"],
+        maps[i]["RIA_Gammes_DESC"],
+        maps[i]["RIA_Gammes_FAB"],
+        maps[i]["RIA_Gammes_TYPE"],
+        maps[i]["RIA_Gammes_ARM"],
+        maps[i]["RIA_Gammes_INOX"],
+        maps[i]["RIA_Gammes_PDT"],
+        maps[i]["RIA_Gammes_DIAM"],
+        maps[i]["RIA_Gammes_LONG"],
+        maps[i]["RIA_Gammes_DIF"],
+        maps[i]["RIA_Gammes_DISP"],
+        maps[i]["RIA_Gammes_PREM"],
+        maps[i]["RIA_Gammes_REF"],
+        maps[i]["RIA_Gammes_NCERT"],
+      );
+    });
+  }
+
+
+
+
+  static Future<void> insertRIA_Gammes(RIA_Gammes RIA_Gammes) async {
+    final db = await DbTools.database;
+    int? repid = await db.insert("RIA_Gammes", RIA_Gammes.toMap());
+    gLastID = repid!;
+  }
+
+
+  static Future<void> TrunckRIA_Gammes() async {
+    final db = await DbTools.database;
+    int? repid = await db.delete("RIA_Gammes");
+  }
+
 
   //************************************************
   //******************** NF074_Histo_Normes ********
@@ -1061,7 +1267,7 @@ class DbTools {
 
     final db = await database;
     bool wRet = false;
-    String selSQL = "SELECT * FROM `NF074_Pieces_Det` WHERE NF074_Pieces_Det_CODF = '${Srv_DbTools.REF_Lib}'";
+    String selSQL = "SELECT * FROM NF074_Pieces_Det WHERE NF074_Pieces_Det_CODF = '${Srv_DbTools.REF_Lib}'";
     // print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_Is_Def selSQL ${selSQL}");
     final List<Map<String, dynamic>> maps = await db.rawQuery(selSQL);
     if (maps.length > 0) wRet = true;
@@ -1070,7 +1276,7 @@ class DbTools {
 
   static Future<List<NF074_Pieces_Det>> getNF074_Pieces_Det_In(String wType) async {
     final db = await database;
-    String selBase = "SELECT * FROM `NF074_Pieces_Det` WHERE ";
+    String selBase = "SELECT * FROM NF074_Pieces_Det WHERE ";
     String selDESC = "NF074_Pieces_Det_CODF = '${Srv_DbTools.REF_Lib}'";
 
     String selTypeVerif = "";
@@ -1111,9 +1317,12 @@ class DbTools {
     else
       selSQL = "$selBase ($selTypeVerif)  AND  $selDESC ";
 
-    // print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_In selSQL ${selSQL}");
+  //  print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_In selSQL ${selSQL}");
 
     final List<Map<String, dynamic>> maps = await db.rawQuery(selSQL);
+
+//    gColors.printWrapped("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_In maps ${maps}");
+
 
     return List.generate(maps.length, (i) {
       return NF074_Pieces_Det(
@@ -1159,7 +1368,7 @@ class DbTools {
 
   static Future<List<NF074_Pieces_Det>> getNF074_Pieces_Det_PROP() async {
     final db = await database;
-    String selBase = "SELECT * FROM `NF074_Pieces_Det` WHERE ";
+    String selBase = "SELECT * FROM NF074_Pieces_Det WHERE ";
     String selDESC = "NF074_Pieces_Det_CODF = '${Srv_DbTools.REF_Lib}'";
 
     String selTypeVerif = "";
@@ -1731,7 +1940,7 @@ class DbTools {
   static Future<List<NF074_Pieces_Actions>> getNF074_Pieces_Actions_In(String wType) async {
     final db = await database;
 
-    String selBase = "SELECT * FROM `NF074_Pieces_Actions` WHERE ";
+    String selBase = "SELECT * FROM NF074_Pieces_Actions WHERE ";
     String selDESC = "NF074_Pieces_Actions_DESC LIKE '%${Srv_DbTools.DESC_Lib}%'";
     String selPDT_POIDS_PRS = "(NF074_Pieces_Actions_PDT = '${Srv_DbTools.PDT_Lib}' AND NF074_Pieces_Actions_POIDS = '${Srv_DbTools.POIDS_Lib}' )";
 
@@ -2323,7 +2532,11 @@ class DbTools {
     final db = await database;
     Srv_DbTools.ListUserH.clear();
 
-    String wSql = "SELECT Users.User_Nom , Users.User_Prenom, SUM(ROUND((JULIANDAY(Planning_InterventionendTime) - JULIANDAY(Planning_InterventionstartTime)) * 24)  ) as H FROM Planning , Users where `Planning_ResourceId` = Users.UserID AND   Planning_InterventionId = $InterventionId GROUP BY Planning.Planning_ResourceId ORDER BY H DESC;";
+    String wSql = "SELECT Users.User_Nom , Users.User_Prenom, SUM(ROUND((JULIANDAY(Planning_InterventionendTime) - JULIANDAY(Planning_InterventionstartTime)) * 24)  ) as H FROM Planning , Users where Planning_ResourceId = Users.UserID AND   Planning_InterventionId = $InterventionId GROUP BY Planning.Planning_ResourceId ORDER BY H DESC;";
+
+    print(" DbTools getPlanning_InterventionIdRes ${wSql}");
+
+
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
     Srv_DbTools.ListUserH = List.generate(maps.length, (i) {
       return UserH(
@@ -2893,6 +3106,8 @@ class DbTools {
         maps[i]["Intervention_Responsable2"],
         maps[i]["Intervention_Responsable3"],
         maps[i]["Intervention_Responsable4"],
+        maps[i]["Intervention_Responsable5"],
+        maps[i]["Intervention_Responsable6"],
         maps[i]["Intervention_Intervenants"],
         maps[i]["Intervention_Reglementation"],
         maps[i]["Intervention_Signataire_Client"],
@@ -2938,6 +3153,8 @@ class DbTools {
         maps[i]["Intervention_Responsable2"],
         maps[i]["Intervention_Responsable3"],
         maps[i]["Intervention_Responsable4"],
+        maps[i]["Intervention_Responsable5"],
+        maps[i]["Intervention_Responsable6"],
         maps[i]["Intervention_Intervenants"],
         maps[i]["Intervention_Reglementation"],
         maps[i]["Intervention_Signataire_Client"],
@@ -2984,6 +3201,8 @@ class DbTools {
         maps[0]["Intervention_Responsable2"],
         maps[0]["Intervention_Responsable3"],
         maps[0]["Intervention_Responsable4"],
+        maps[0]["Intervention_Responsable5"],
+        maps[0]["Intervention_Responsable6"],
         maps[0]["Intervention_Intervenants"],
         maps[0]["Intervention_Reglementation"],
         maps[0]["Intervention_Signataire_Client"],
@@ -3687,6 +3906,7 @@ class DbTools {
     return wParc_Desc;
   }
 
+
   static Future<Parc_Desc> getParcs_Desc_Id_Type_Add(int ParcsDesc_ParcsId, ParcsDesc_Type) async {
 //    print("♠︎♠︎♠︎♠︎♠︎ getParcs_Desc_Id_Type_Add ParcsDesc_ParcsId ${ParcsDesc_ParcsId} ParcsDesc_Type ${ParcsDesc_Type}");
 
@@ -3712,43 +3932,36 @@ class DbTools {
     return wParc_Desc;
   }
 
-  /*static Future<void> setParc_Desc(Parc_Desc parc) async {
-    print(">>>> setParc_Desc A ${parc.ParcsDescId} ${parc.ParcsDesc_Lib} ");
-    final db = await database;
-    int? repid = await db.update(
-      "Parcs_Desc",
-      parc.toMap(),
-      where: "ParcsDescId = ?",
-      whereArgs: [parc.ParcsDescId],
-    );
-  }*/
-
   static Future<bool> updateParc_Desc(Parc_Desc parc, String InitLib) async {
-    print(">>>> updateParc_Desc ${parc.ParcsDescId} ${parc.ParcsDesc_Lib} ");
-
     bool isEq = false;
     for (int i = 0; i < DbTools.glfParcs_Desc.length; i++) {
       var element = DbTools.glfParcs_Desc[i];
       if (element.ParcsDescId! == parc.ParcsDescId!) {
-        if (element.ParcsDesc_Lib!.compareTo(InitLib) == 0) {
+        if (element.ParcsDesc_Lib!.compareTo(parc.ParcsDesc_Lib!) == 0) {
           isEq = true;
-          return isEq;
+        //  return isEq;
         }
       }
     }
-    ;
 
-    if (isEq) return isEq;
+
+//    if (isEq) return isEq;
 
     final db = await database;
-    {
       int? repid = await db.update(
         "Parcs_Desc",
         parc.toMap(),
         where: "ParcsDescId = ?",
         whereArgs: [parc.ParcsDescId],
       );
-    }
+
+    DbTools.glfParcs_Desc = await DbTools.getParcs_DescInter(Srv_DbTools.gIntervention.InterventionId!);
+
+
+    if (parc.ParcsDesc_Type == "SIT")  return true;
+    if (parc.ParcsDesc_Type == "SRC")  return true;
+
+
 
     bool modifDesc = false;
     for (int i = 0; i < Srv_DbTools.ListParam_Saisie.length; i++) {
@@ -3758,6 +3971,7 @@ class DbTools {
       }
     }
     if (!modifDesc) return isEq;
+//    if (Srv_DbTools.gIntervention.Intervention_Parcs_Type != "Ext")  return isEq;
 
     for (int i = 0; i < DbTools.glfParcs_Desc.length; i++) {
       Parc_Desc element = DbTools.glfParcs_Desc[i];
@@ -3770,7 +3984,16 @@ class DbTools {
           }
         }
 
+        if (isDesc && element.ParcsDesc_Type == "SIT")  isDesc = false;
+        if (isDesc && element.ParcsDesc_Type == "SRC")  isDesc = false;
+
+
+
         if (isDesc) {
+
+          print("   RESET ${element.ParcsDesc_Type}");
+
+
           element.ParcsDesc_Lib = "---";
           int? repid = await db.update(
             "Parcs_Desc",
@@ -3798,7 +4021,6 @@ class DbTools {
     });
 
     if (isEq) {
-      print(">>>> A updateParc_Desc_NoRaz isEq");
       return;
     }
 
@@ -3809,7 +4031,6 @@ class DbTools {
       where: "ParcsDescId = ?",
       whereArgs: [Parc_Desc.ParcsDescId],
     );
-    print(">>>> updateParc_Desc_NoRaz  db.update $repid ${Parc_Desc.ParcsDescId} ${Parc_Desc.ParcsDesc_Id} ${Parc_Desc.ParcsDesc_Lib} ");
   }
 
   static Future<void> insertParc_Desc(Parc_Desc parc_Desc) async {
@@ -3895,7 +4116,7 @@ class DbTools {
   static Future<List<Parc_Art>> getParcs_ArtInter(int Parcs_InterventionId) async {
     final db = await database;
 
-    String wTmp = "SELECT Parcs_Art.* FROM Parcs_Art, Parcs_Ent  WHERE ParcsArt_ParcsId = ParcsId AND Parcs_InterventionId = ${Parcs_InterventionId} ORDER BY `Parcs_Art`.`ParcsArt_Id` ASC";
+    String wTmp = "SELECT Parcs_Art.* FROM Parcs_Art, Parcs_Ent  WHERE ParcsArt_ParcsId = ParcsId AND Parcs_InterventionId = ${Parcs_InterventionId} ORDER BY Parcs_Art.ParcsArt_Id ASC";
 
 //    print("getParcs_ArtInter ${wTmp}");
     List<Map<String, dynamic>> maps = await db.rawQuery(wTmp);
@@ -3910,7 +4131,7 @@ class DbTools {
   static Future<List<Parc_Art>> getParcs_ArtInterSum(int Parcs_InterventionId) async {
     final db = await database;
 
-    String wTmp = "SELECT Parcs_Art.*, SUM(`ParcsArt_Qte`) as Qte FROM Parcs_Art, Parcs_Ent WHERE ParcsArt_ParcsId = ParcsId AND Parcs_InterventionId = ${Parcs_InterventionId} GROUP BY ParcsArt_Id,ParcsArt_Fact,ParcsArt_Livr ORDER BY `Parcs_Art`.`ParcsArt_Id` ASC;";
+    String wTmp = "SELECT Parcs_Art.*, SUM(ParcsArt_Qte) as Qte FROM Parcs_Art, Parcs_Ent WHERE ParcsArt_ParcsId = ParcsId AND Parcs_InterventionId = ${Parcs_InterventionId} GROUP BY ParcsArt_Id,ParcsArt_Fact,ParcsArt_Livr ORDER BY Parcs_Art.ParcsArt_Id ASC;";
 
     print("getParcs_ArtInter ${wTmp}");
     List<Map<String, dynamic>> maps = await db.rawQuery(wTmp);
@@ -3943,7 +4164,6 @@ class DbTools {
       where: "ParcsArtId = ?",
       whereArgs: [parc.ParcsArtId],
     );
-    print("☁︎☁︎☁︎☁︎☁︎☁︎☁︎☁︎☁︎☁︎☁︎☁︎>>>> updateParc_Art repid $repid toMap ${parc.toMap()} ");
 
     gParc_Ent.Livr = parc.ParcsArt_Livr!.substring(0, 1).compareTo("R") == 0 ? "R" : "";
     await updateParc_Ent_Livr(gParc_Ent);
@@ -3996,12 +4216,18 @@ class DbTools {
 
   static Future<void> deleteParc_Art(int aID) async {
     final db = await database;
-    await db.delete(
-      "Parcs_Art",
-      where: "ParcsArtId = ?",
-      whereArgs: [aID],
-    );
+    String wTmp = "DELETE FROM Parcs_Art WHERE ParcsArtId = $aID";
+    print("deleteParc_Art ${wTmp}");
+    List<Map<String, dynamic>> maps = await db.rawQuery(wTmp);
+
+    print("maps ${maps}");
+
+
+
   }
+
+
+
 
   static Future<void> deleteParc_Art_ParcsArt_ParcsId(int ParcsArt_ParcsId) async {
     final db = await database;

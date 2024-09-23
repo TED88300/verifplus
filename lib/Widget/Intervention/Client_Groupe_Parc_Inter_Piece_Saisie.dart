@@ -15,18 +15,17 @@ import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 class Client_Groupe_Parc_Inter_Piece_Saisie_Dialog {
   Client_Groupe_Parc_Inter_Piece_Saisie_Dialog();
 
-
-
-
   static Future<void> Dialogs_Saisie(
     BuildContext context,
     VoidCallback onSaisie,
+      VoidCallback onDelete,
     Parc_Art parc_Art,
   ) async {
     await showDialog(
       context: context,
       builder: (BuildContext context) => Client_Groupe_Parc_Inter_Piece_SaisieDialog(
         onSaisie: onSaisie,
+        onDelete: onDelete,
         parc_Art: parc_Art,
       ),
     );
@@ -39,8 +38,9 @@ class Client_Groupe_Parc_Inter_Piece_Saisie_Dialog {
 
 class Client_Groupe_Parc_Inter_Piece_SaisieDialog extends StatefulWidget {
   final VoidCallback onSaisie;
+  final VoidCallback onDelete;
   final Parc_Art parc_Art;
-  const Client_Groupe_Parc_Inter_Piece_SaisieDialog({Key? key, required this.onSaisie, required this.parc_Art}) : super(key: key);
+  const Client_Groupe_Parc_Inter_Piece_SaisieDialog({Key? key, required this.onSaisie,required this.onDelete, required this.parc_Art}) : super(key: key);
   @override
   Client_Groupe_Parc_Inter_Piece_SaisieDialogState createState() => Client_Groupe_Parc_Inter_Piece_SaisieDialogState();
 }
@@ -249,9 +249,6 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
                 Parc_Art element = DbTools.lParcs_Art[i];
                 print("Valider element Desc ${element.Desc()}");
               }
-
-
-
               widget.onSaisie();
               Navigator.of(context).pop();
             },
@@ -470,8 +467,21 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
                   ),
                 ),
                 onTap: () async {
+
+                  List<Parc_Art> wlParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "P");
+                  List<Parc_Art> lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "V");
+                  lParcs_Art.addAll(wlParcs_Art);
+                  print("deleteParc_Art lParcs_Art ${lParcs_Art.length}");
+
                   await DbTools.deleteParc_Art(widget.parc_Art.ParcsArtId!);
-                  widget.onSaisie();
+
+                  wlParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "P");
+                  lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "V");
+                  lParcs_Art.addAll(wlParcs_Art);
+                  print("deleteParc_Art lParcs_Art ${lParcs_Art.length}");
+
+
+                  widget.onDelete();
                   Navigator.of(context).pop();
                 },
               )),

@@ -74,9 +74,6 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
   @override
   void initState() {
     initValue = widget.param_Saisie.Param_Saisie_Value;
-
-    
-
     Srv_DbTools.ListParam_Saisie_Param.clear();
 
     initializeDateFormatting();
@@ -91,6 +88,9 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
 
   @override
   Widget build(BuildContext context) {
+
+    print("build Vue_Intervention_SaisieDialog");
+
     Widget Ctrl = Container();
 
     double wDialogHeight = 250;
@@ -110,7 +110,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
         break;
 
       case "FlipFlopIco":
-        print("FlipFlopIco");
+        print("Case FlipFlopIco");
         Ctrl = FlipFlopIco(context);
         wLigneHeight = 59;
         wDialogHeight = wDialogBase + nbL * wLigneHeight + 135;
@@ -420,6 +420,10 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
 //**********************************
 
   Widget FlipFlopIco(BuildContext context) {
+
+    print("Widget FlipFlopIco");
+
+
     List<Widget> Rows = [];
 
     List<Widget> BtnCards = [];

@@ -82,10 +82,13 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
 
     Srv_DbTools.ListParam_Param_Status_Interv.clear();
     Srv_DbTools.ListParam_ParamAll.forEach((element) {
-      if (element.Param_Param_Type.compareTo("Civ") == 0) {
-        Srv_DbTools.ListParam_Param_Civ.add(element);
+      if (element.Param_Param_Type.compareTo("Status_Interv") == 0) {
+        Srv_DbTools.ListParam_Param_Status_Interv.add(element);
       }
     });
+
+
+
 
     Srv_DbTools.ListParam_ParamCiv.clear();
     Srv_DbTools.ListParam_ParamCiv.add("");

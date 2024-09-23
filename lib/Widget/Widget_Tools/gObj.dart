@@ -191,26 +191,45 @@ class gObj {
       child: Container(
         height: 57,
         padding: EdgeInsets.fromLTRB(10, 12, 10, 10),
-        child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+        child: Row(mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
 //          Spacer(),
-          Text(
-            "${wTitre}",
-            style: gColors.bodyTitle1_B_Gr,
-            textAlign: TextAlign.center,
-          ),
-          wTitre2.isEmpty
-              ? Container()
-              : AutoSizeText(
-                  " / $wTitre2",
-                  style: gColors.bodyTitle1_N_Gr,
-                  textAlign: TextAlign.center,
-                ),
+
+        Container(
+/*
+          width: 400,
+          color: Colors.red,
+*/
+          child : Row(children: [
+            Text(
+              "${wTitre}",
+              style: gColors.bodyTitle1_B_Gr,
+              textAlign: TextAlign.center,
+            ),
+            wTitre2.isEmpty
+                ? Container()
+                : AutoSizeText(
+              " / $wTitre2",
+              style: gColors.bodyTitle1_N_Gr,
+              textAlign: TextAlign.center,
+            ),
+
+          ],),
+
+        ),
+
+
           Spacer(),
           wTimer == 0
               ? Container()
-              : Text(
-                  "${printDurationHHMM(now)}",
-                ),
+              :
+          Container(
+            child:
+            Text(
+              "${printDurationHHMM(now)}",
+            ),
+          )
         ]),
       ),
     );
@@ -986,15 +1005,20 @@ class gObj {
   }
 
   static Future<Widget> getAssetImage(String path) async {
-    //print("getAssetImage path ${path}");
     try {
       await rootBundle.load(path);
+
+      print("getAssetImage path ${path}");
+
+
       return Image.asset(
         path,
         height: 140,
       );
     } catch (_) {
-      return SizedBox(); // Return this widget
+//      print("getAssetImage path ${path}");
+
+      return Container(); // Return this widget
     }
   }
 

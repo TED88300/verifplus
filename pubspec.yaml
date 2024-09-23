@@ -2,9 +2,9 @@ name: verifplus
 description: Flutter project.
 
 publish_to: 'none'
-version: 1.0.125+125
-environment:
+version: 1.1.138+138
 
+environment:
   sdk: ">=2.17.6 <3.0.0"
 
 dependencies:
@@ -67,6 +67,8 @@ dependencies:
   hand_signature: ^3.0.2
 
   camera_android_camerax: ^0.6.5+5
+  group_button: ^5.3.4
+  carousel_slider: ^4.2.1
 
 dependency_overrides:
   pdf:

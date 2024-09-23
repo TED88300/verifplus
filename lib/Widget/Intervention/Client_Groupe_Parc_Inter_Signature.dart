@@ -11,6 +11,7 @@ import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/pdf/Aff_Bdc.dart';
 import 'package:verifplus/pdf/Aff_CR.dart';
+import 'package:verifplus/pdf/Aff_CR_Ria.dart';
 
 class Client_Groupe_Parc_Inter_Signature extends StatefulWidget {
   final VoidCallback onMaj;
@@ -92,8 +93,10 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
               new ElevatedButton(
                 onPressed: () async {
                   await HapticFeedback.vibrate();
-
-                  await Navigator.push(context, MaterialPageRoute(builder: (context) => Aff_CR()));
+                  if (Srv_DbTools.gIntervention.Intervention_Parcs_Type == "Ext")
+                      await Navigator.push(context, MaterialPageRoute(builder: (context) => Aff_CR()));
+                  if (Srv_DbTools.gIntervention.Intervention_Parcs_Type == "Ria")
+                    await Navigator.push(context, MaterialPageRoute(builder: (context) => Aff_CR_Ria()));
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: gColors.primaryGreen,

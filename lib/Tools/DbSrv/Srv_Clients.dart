@@ -191,6 +191,7 @@ class Client {
 
 
 
+
   factory Client.fromJson(Map<String, dynamic> json) {
 //    print("json $json");
     if (json['Adresse_Adr1'] == null) json['Adresse_Adr1'] ="";
@@ -224,6 +225,15 @@ class Client {
       true,
 
     );
+
+    wTmp.Adresse_Adr1     = json['Adresse_Adr1'];
+    wTmp.Adresse_CP     = json['Adresse_CP'];
+    wTmp.Adresse_Ville  = json['Adresse_Ville'];
+    wTmp.Adresse_Pays   = json['Adresse_Pays'];
+
+
+
+
     return wTmp;
   }
 

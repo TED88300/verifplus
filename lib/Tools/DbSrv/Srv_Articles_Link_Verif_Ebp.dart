@@ -34,18 +34,20 @@ class Result_Article_Link_Verif {
   String? Fact = "";
   String? Livr = "";
 
+  bool isOU = false;
 
   static Result_Article_Link_VerifInit() {
-    return Result_Article_Link_Verif("", "", "", 0, "Fact.", "Livré");
+    return Result_Article_Link_Verif("", "", "", 0, "Fact.", "Livré", false);
   }
 
-  Result_Article_Link_Verif(String ParentID, String TypeChildID, String ChildID, double Qte, String Fact, String Livr) {
+  Result_Article_Link_Verif(String ParentID, String TypeChildID, String ChildID, double Qte, String Fact, String Livr, bool isOU) {
     this.ParentID = ParentID;
     this.TypeChildID = TypeChildID;
     this.ChildID = ChildID;
     this.Qte = Qte;
     this.Fact = Fact;
     this.Livr = Livr;
+    this.isOU = isOU;
   }
 
   factory Result_Article_Link_Verif.fromJson(Map<String, dynamic> json) {
@@ -57,6 +59,7 @@ class Result_Article_Link_Verif {
       double.parse(json['Qte']),
       json['Fact'],
       json['Livr'],
+      false,
     );
     return wResult_Article_Link_Verif;
   }

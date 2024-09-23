@@ -58,7 +58,7 @@ class Planning {
         'Planning_InterventionId $Planning_InterventionId '
         'user $Planning_ResourceId     '
         'start $Planning_InterventionstartTime     '
-        'end $Planning_InterventionendTime     ';
+        'end $Planning_InterventionendTime     '
         'lib $Planning_Libelle     ';
   }
 }

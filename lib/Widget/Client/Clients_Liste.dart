@@ -6,7 +6,6 @@ import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
-import 'package:verifplus/Widget/Client/Client_Groupes.dart';
 import 'package:verifplus/Widget/Client/Client_Sites.dart';
 import 'package:verifplus/Widget/Client/Vue_Client.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
@@ -15,7 +14,6 @@ import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 class Liste_Clients extends StatefulWidget {
   final VoidCallback onSaisie;
   const Liste_Clients({Key? key, required this.onSaisie}) : super(key: key);
-
   @override
   Liste_ClientsState createState() => Liste_ClientsState();
 }
@@ -39,7 +37,6 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
 
     await Srv_ImportExport.ImportAll();
     await Srv_ImportExport.getErrorSync();
-
 
     print("   Liste_Clients reload ${DbTools.gBoolErrorSync}");
     print("   Liste_Clients reload ${DbTools.gBoolErrorSync}");

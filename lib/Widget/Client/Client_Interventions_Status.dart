@@ -39,9 +39,6 @@ class _Client_InterventionStatusDialogState extends State<Client_InterventionSta
   String wStatus = "";
   String wStatusID = "";
 
-
-
-
   void Reload() async {
     setState(() {});
   }
@@ -129,7 +126,7 @@ class _Client_InterventionStatusDialogState extends State<Client_InterventionSta
           : Container(
 
         width: 50.0,
-        height: 380,
+        height: 430,
         padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
         child:
 
