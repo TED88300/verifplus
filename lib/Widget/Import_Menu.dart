@@ -6,6 +6,7 @@ import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Ent.dart';
+import 'package:verifplus/Tools/DbTools/Db_Parcs_Img.dart';
 import 'package:verifplus/Widget/Import_Data.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 
@@ -204,10 +205,15 @@ class Import_MenuDialogState extends State<Import_MenuDialog> with TickerProvide
 
                   List<Parc_Art> ListParc_Art = await DbTools.getParcs_ArtTout();
                   print(" ListParc_Art ${ListParc_Art.length}");
-                  await DbTools.TrunckParcs_Desc();
+                  await DbTools.TrunckParcs_Art();
 
 
-    },
+                  List<Parc_Img> ListParc_Imgs = await DbTools.getParcs_ImgsTout();
+                  print(" ListParc_Imgs ${ListParc_Imgs.length}");
+                  await DbTools.TrunckParcs_Imgs();
+
+
+                },
 
 
 

@@ -235,6 +235,7 @@ class Client_Groupe_Parc_Inter_Audit_SaisieDialogState extends State<Client_Grou
     Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
       if (widget.parc_Desc.ParcsDesc_Lib!.compareTo("---") == 0) {
         if (element.Param_Saisie_Param_Default) {
+          print(" F Param_Saisie_Param_Default");
           widget.parc_Desc.ParcsDesc_Lib = element.Param_Saisie_Param_Label;
         }
       }

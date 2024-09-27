@@ -293,6 +293,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
     Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
       if (widget.parc_Desc.ParcsDesc_Lib!.compareTo("---") == 0) {
         if (element.Param_Saisie_Param_Default) {
+          print(" A Param_Saisie_Param_Default");
           widget.parc_Desc.ParcsDesc_Lib = element.Param_Saisie_Param_Label;
         }
       }
@@ -379,6 +380,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
 
       if (widget.parc_Desc.ParcsDesc_Lib!.compareTo("---") == 0) {
         if (element.Param_Saisie_Param_Default) {
+          print(" B Param_Saisie_Param_Default");
           widget.parc_Desc.ParcsDesc_Lib = element.Param_Saisie_Param_Label;
         }
       }

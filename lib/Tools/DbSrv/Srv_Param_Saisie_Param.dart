@@ -86,8 +86,6 @@ class Param_Saisie_Param {
       json['Param_Saisie_Param_Color'],
     );
 
-
-
     return wParam_Saisie_Param;
   }
 }

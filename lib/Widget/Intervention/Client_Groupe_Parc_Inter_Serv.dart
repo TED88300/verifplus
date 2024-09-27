@@ -29,25 +29,19 @@ class Client_Groupe_Parc_Inter_ServState extends State<Client_Groupe_Parc_Inter_
     print("initLib");
     Srv_DbTools.getParam_Saisie_ParamMem("Fact");
 
-    List<Parc_Art> lParcs_ArtMo = [];
-    List<Parc_Art> lParcs_ArtDn = [];
 
-    lParcs_Art = await DbTools.getParcs_Art_AllType(DbTools.gParc_Ent.ParcsId!);
-    for (int i = 0; i < lParcs_Art.length; i++) {
-      Parc_Art element = lParcs_Art[i];
-      print("getParcs_Art_AllType ${element.Desc()}");
+    List<Parc_Art> wlParcs_Art = await DbTools.getParcs_Art_AllType(DbTools.gParc_Ent.ParcsId!);
+
+    lParcs_Art.clear();
+    for (int i = 0; i < wlParcs_Art.length; i++) {
+      Parc_Art element = wlParcs_Art[i];
+      if (element.ParcsArt_Id!.startsWith("S"))
+      {
+        lParcs_Art.add(element);
+      }
 
     }
 
-    lParcs_Art.clear();
-    lParcs_ArtMo = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "Mo");
-    lParcs_Art.addAll(lParcs_ArtMo);
-    lParcs_ArtDn = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "Dn");
-    lParcs_Art.addAll(lParcs_ArtDn);
-
-    print("lParcs_ArtMo ${lParcs_ArtMo.length}");
-    print("lParcs_ArtDn ${lParcs_ArtDn.length}");
-    print("lParcs_Art ${lParcs_Art.length}");
     setState(() {});
   }
 
@@ -61,6 +55,12 @@ class Client_Groupe_Parc_Inter_ServState extends State<Client_Groupe_Parc_Inter_
       initLib();
     });
 
+  }
+
+  @override
+  void dispose() {
+    FBroadcast.instance().unregister(this);
+    super.dispose();
   }
 
   void onSaisie() async {
@@ -320,7 +320,7 @@ class Client_Groupe_Parc_Inter_ServState extends State<Client_Groupe_Parc_Inter_
                 padding: EdgeInsets.fromLTRB(0, 2, 0, 0),
                 child: Text(
                   "${parc_Art.ParcsArt_Qte}",
-                  style: gColors.bodyTitle1_N_Gr,
+                  style: gColors.bodyTitle1_B_Gr,
                   textAlign: TextAlign.center,
                 ),
               ),

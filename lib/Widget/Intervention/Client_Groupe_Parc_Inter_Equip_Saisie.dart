@@ -11,6 +11,7 @@ import 'package:toggle_switch/toggle_switch.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_NF074.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie_Param.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Article.dart';
@@ -76,14 +77,20 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
   String NCERT_Search_Result = "...";
 
   Future Reload() async {
+    await Srv_DbTools.getParam_Saisie_ParamAll();
     print(
-        "≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ widget.param_Saisie.Param_Saisie_ID ${widget.param_Saisie.Param_Saisie_ID}");
+        " Srv_DbTools.ListParam_Saisie_ParamAll. ${Srv_DbTools.ListParam_Saisie_ParamAll.length}");
+
+
+
+    print("     widget.param_Saisie.Param_Saisie_ID ${widget.param_Saisie.Param_Saisie_ID}");
+
+
+
 
     switch (widget.param_Saisie.Param_Saisie_ID) {
       case "FAB2":
         await DbTools.getRIA_Gammes_FAB();
-        print(
-            "≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ Srv_DbTools.ListParam_Saisie_Param.length  ${Srv_DbTools.ListParam_Saisie_Param.length}");
         if (Srv_DbTools.ListParam_Saisie_Param.length == 0)
           Srv_DbTools.getParam_Saisie_ParamMem(
               widget.param_Saisie.Param_Saisie_ID);
@@ -91,8 +98,6 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
 
       case "TYPE2":
         await DbTools.getRIA_Gammes_TYPE();
-        print(
-            "≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ Srv_DbTools.ListParam_Saisie_Param.length  ${Srv_DbTools.ListParam_Saisie_Param.length}");
         if (Srv_DbTools.ListParam_Saisie_Param.length == 0)
           Srv_DbTools.getParam_Saisie_ParamMem(
               widget.param_Saisie.Param_Saisie_ID);
@@ -100,8 +105,6 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
 
       case "ARM":
         await DbTools.getRIA_Gammes_ARM();
-        print(
-            "≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ Srv_DbTools.ListParam_Saisie_Param.length  ${Srv_DbTools.ListParam_Saisie_Param.length}");
         if (Srv_DbTools.ListParam_Saisie_Param.length == 0)
           Srv_DbTools.getParam_Saisie_ParamMem(
               widget.param_Saisie.Param_Saisie_ID);
@@ -168,8 +171,6 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
               widget.param_Saisie.Param_Saisie_ID);
         break;
 
-
-
       case "PRS":
         await DbTools.getNF074_Gammes_PRS();
         if (Srv_DbTools.ListParam_Saisie_Param.length == 0)
@@ -185,8 +186,9 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
       case "MOB":
         await DbTools.getNF074_Gammes_MOB();
         if (Srv_DbTools.ListParam_Saisie_Param.length == 0)
-          Srv_DbTools.getParam_Saisie_ParamMem(
-              widget.param_Saisie.Param_Saisie_ID);
+          {
+            Srv_DbTools.getParam_Saisie_ParamMem( widget.param_Saisie.Param_Saisie_ID);
+          }
         break;
       case "PDT":
         await DbTools.getNF074_Gammes_PDT();
@@ -223,10 +225,9 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
 
     print(
         "${widget.param_Saisie.Param_Saisie_ID} ListParam_Saisie_Param lenght  ${Srv_DbTools.ListParam_Saisie_Param.length}");
-    Srv_DbTools.ListParam_Saisie_Param.forEach((element) async {
-      element.Param_Saisie_Param_Ico = await gObj.getAssetImage(
-          "assets/images/Aide_Ico_${element.Param_Saisie_Param_Label}.png");
-    });
+
+
+
 
     setState(() {});
   }
@@ -266,8 +267,6 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
       height: 1,
     );
 
-//    Widget wAide_Ico = gObj.getAssetImage("assets/images/Ico.png"),
-
     Srv_DbTools.ListParam_Saisie_Param.clear();
 
     initializeDateFormatting();
@@ -297,8 +296,6 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
         Ctrl = Poids(context);
         wLigneHeight = 59;
         wDialogHeight = wDialogBase + nbL * wLigneHeight + 45;
-        print("Poids ${wDialogHeight} nbL ${nbL}");
-
         break;
       case "FlipFlop":
         Ctrl = FlipFlop(context);
@@ -614,7 +611,9 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
                                       child: ElevatedButton(
                                         onPressed: () async {
                                           await HapticFeedback.vibrate();
-                                          await Client_Groupe_Parc_Inter_Article_Dialog.Dialogs_Saisie( context, onSaisie, "G");
+                                          await Client_Groupe_Parc_Inter_Article_Dialog
+                                              .Dialogs_Saisie(
+                                                  context, onSaisie, "G");
 
                                           if (Srv_DbTools.gArticle_EbpSelRef
                                                   .ArticleID >=
@@ -681,11 +680,14 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
                                             print(" updateParc_Ent C");
                                             await DbTools.updateParc_Ent(
                                                 DbTools.gParc_Ent);
-                                            print(" updateParc_Ent D ${Srv_DbTools.CLF_Lib}");
+                                            print(
+                                                " updateParc_Ent D ${Srv_DbTools.CLF_Lib}");
                                             await setData();
-                                            print(" updateParc_Ent E ${Srv_DbTools.CLF_Lib}");
+                                            print(
+                                                " updateParc_Ent E ${Srv_DbTools.CLF_Lib}");
                                             widget.onSaisie();
-                                            print(" updateParc_Ent F ${Srv_DbTools.CLF_Lib}");
+                                            print(
+                                                " updateParc_Ent F ${Srv_DbTools.CLF_Lib}");
                                             Navigator.of(context).pop();
                                           }
                                         },
@@ -733,9 +735,11 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
 
     for (int i = 0; i < DbTools.glfNF074_Gammes.length; i++) {
       NF074_Gammes wNF074_Gammes = DbTools.glfNF074_Gammes[i];
-      if (DbTools.gParc_Ent.Parcs_CODF!.compareTo(wNF074_Gammes.NF074_Gammes_CODF) == 0) {
-
-        print(" setData() ${DbTools.gParc_Ent.Parcs_CODF} ${DbTools.glfParcs_Desc.length}");
+      if (DbTools.gParc_Ent.Parcs_CODF!
+              .compareTo(wNF074_Gammes.NF074_Gammes_CODF) ==
+          0) {
+        print(
+            " setData() ${DbTools.gParc_Ent.Parcs_CODF} ${DbTools.glfParcs_Desc.length}");
         for (int i = 0; i < DbTools.glfParcs_Desc.length; i++) {
           var element2 = DbTools.glfParcs_Desc[i];
           print(" setData() ParcsDesc_Type ${element2.ParcsDesc_Type}");
@@ -744,7 +748,8 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
             element2.ParcsDesc_Id = "";
             element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_DESC;
             Srv_DbTools.DESC_Lib = element2.ParcsDesc_Lib!;
-            bool isNotRaz = await DbTools.updateParc_Desc(element2, "---");
+            bool isNotRaz =
+                await DbTools.updateParc_DescSimple(element2, "---");
             if (!isNotRaz) {
               Srv_DbTools.FAB_Lib = "";
               Srv_DbTools.PRS_Lib = "";
@@ -758,8 +763,8 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
             element2.ParcsDesc_Id = "";
             element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_FAB;
             Srv_DbTools.FAB_Lib = element2.ParcsDesc_Lib!;
-            await DbTools.updateParc_Desc(element2, "---");
-            bool isNotRaz = await DbTools.updateParc_Desc(element2, "---");
+            bool isNotRaz =
+                await DbTools.updateParc_DescSimple(element2, "---");
             if (!isNotRaz) {
               Srv_DbTools.PRS_Lib = "";
               Srv_DbTools.PRS_Lib = "";
@@ -773,7 +778,8 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
             element2.ParcsDesc_Id = "";
             element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_PRS;
             Srv_DbTools.PRS_Lib = element2.ParcsDesc_Lib!;
-            bool isNotRaz = await DbTools.updateParc_Desc(element2, "---");
+            bool isNotRaz =
+                await DbTools.updateParc_DescSimple(element2, "---");
             if (!isNotRaz) {
               Srv_DbTools.CLF_Lib = "";
               Srv_DbTools.MOB_Lib = "";
@@ -781,12 +787,12 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
               Srv_DbTools.POIDS_Lib = "";
               Srv_DbTools.GAM_Lib = "";
             }
-
           } else if (element2.ParcsDesc_Type!.compareTo("CLF") == 0) {
             element2.ParcsDesc_Id = "";
             element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_CLF;
             Srv_DbTools.CLF_Lib = element2.ParcsDesc_Lib!;
-            bool isNotRaz = await DbTools.updateParc_Desc(element2, "---");
+            bool isNotRaz =
+                await DbTools.updateParc_DescSimple(element2, "---");
             if (!isNotRaz) {
               Srv_DbTools.MOB_Lib = "";
               Srv_DbTools.PDT_Lib = "";
@@ -797,8 +803,8 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
             element2.ParcsDesc_Id = "";
             element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_MOB;
             Srv_DbTools.MOB_Lib = element2.ParcsDesc_Lib!;
-            await DbTools.updateParc_Desc(element2, "---");
-            bool isNotRaz = await DbTools.updateParc_Desc(element2, "---");
+            bool isNotRaz =
+                await DbTools.updateParc_DescSimple(element2, "---");
             if (!isNotRaz) {
               Srv_DbTools.PDT_Lib = "";
               Srv_DbTools.POIDS_Lib = "";
@@ -808,7 +814,8 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
             element2.ParcsDesc_Id = "";
             element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_PDT;
             Srv_DbTools.PDT_Lib = element2.ParcsDesc_Lib!;
-            bool isNotRaz = await DbTools.updateParc_Desc(element2, "---");
+            bool isNotRaz =
+                await DbTools.updateParc_DescSimple(element2, "---");
             if (!isNotRaz) {
               Srv_DbTools.POIDS_Lib = "";
               Srv_DbTools.GAM_Lib = "";
@@ -817,7 +824,8 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
             element2.ParcsDesc_Id = "";
             element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_POIDS;
             Srv_DbTools.POIDS_Lib = element2.ParcsDesc_Lib!;
-            bool isNotRaz = await DbTools.updateParc_Desc(element2, "---");
+            bool isNotRaz =
+                await DbTools.updateParc_DescSimple(element2, "---");
             if (!isNotRaz) {
               Srv_DbTools.GAM_Lib = "";
             }
@@ -826,15 +834,13 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
             element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_GAM;
             Srv_DbTools.GAM_Lib = element2.ParcsDesc_Lib!;
             print(" setData() GAM ${Srv_DbTools.GAM_Lib}");
-            bool isNotRaz = await DbTools.updateParc_Desc(element2, "---");
-
-
+            bool isNotRaz =
+                await DbTools.updateParc_DescSimple(element2, "---");
           }
         }
       }
     }
     print(" setData() FIN GAM_Lib ${Srv_DbTools.GAM_Lib}");
-
   }
 
   //**********************************
@@ -949,8 +955,13 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
                 Srv_DbTools.GAM_Lib = widget.parc_Desc.ParcsDesc_Lib!;
               }
 
+              print("VALIDER EQUIP updateParc_Desc >>>>");
+
               await DbTools.updateParc_Desc(
                   widget.parc_Desc, initParcsDesc_Lib);
+
+              print("VALIDER EQUIP updateParc_Desc <<<");
+
               widget.onSaisie();
               Navigator.of(context).pop();
             },
@@ -973,6 +984,8 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
 
   Widget Poids(BuildContext context) {
     List<Widget> Rows = [];
+
+    List<String> wSw = [];
 
     String wPoids = "";
     String wUnit = "Litres";
@@ -1010,15 +1023,22 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
     List<Widget> BtnCards = [];
     int nbBtn = 0;
 
-    print(
-        ">>>>>>>>>>>>>>>>>> Poids  wUnit ${wUnit} ${widget.parc_Desc.ParcsDesc_Lib!}");
-
     Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
+      if (element.Param_Saisie_Param_Label.contains('Litres')) {
+        if (!wSw.contains('Litres')) wSw.add('Litres');
+      }
+      if (element.Param_Saisie_Param_Label.contains('Kilos')) {
+        if (!wSw.contains('Kilos')) wSw.add('Kilos');
+      }
+
+      print(
+          "element.Param_Saisie_Param_Label ${element.Param_Saisie_Param_Label} ${wPoids}");
+
       BtnCards.add(BtnCardPoids(
           element.Param_Saisie_Param_Label,
           wUnit,
           element.Param_Saisie_Param_Id,
-          element.Param_Saisie_Param_Label.compareTo(wPoids) == 0));
+          element.Param_Saisie_Param_Label.contains(wPoids)));
 
       nbBtn++;
       if (nbBtn == 3) {
@@ -1043,38 +1063,35 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
       Rows.add(wRow);
       BtnCards = [];
     }
-    print("POIDS $wUnit ${Srv_DbTools.wKgL} ${Srv_DbTools.wKgL.length == 0}");
+
+    print("POIDS $wUnit ${Rows.toString()}");
 
     return Container(
         child: Column(
       children: [
-        Container(
-          padding: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 10.0),
-          child: ToggleSwitch(
-            activeBgColor: [gColors.primaryGreen],
-            activeFgColor: Colors.white,
-            inactiveBgColor: Colors.grey,
-            inactiveFgColor: Colors.grey[900],
-            minHeight: 32.0,
-            initialLabelIndex: ToggleSwitchIndex,
-            totalSwitches: Srv_DbTools.wKgL.length == 0 ? 2 : 1,
-            labels: Srv_DbTools.wKgL.length == 0
-                ? ['Litres', 'Kilos']
-                : ['${Srv_DbTools.wKgL}'],
-            onToggle: (index) async {
-              await HapticFeedback.vibrate();
-              index == 0 ? wUnit = "Litres" : wUnit = "Kilos";
-              widget.parc_Desc.ParcsDesc_Lib = "${wPoids} ${wUnit}";
-              await Reload();
-            },
-          ),
-        ),
-
-/*
-        wEditFocus
+        wSw.length == 1
             ? Container()
-            :
-*/
+            : Container(
+                padding: EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 10.0),
+                child: ToggleSwitch(
+                  activeBgColor: [gColors.primaryGreen],
+                  activeFgColor: Colors.white,
+                  inactiveBgColor: Colors.grey,
+                  inactiveFgColor: Colors.grey[900],
+                  minHeight: 32.0,
+                  initialLabelIndex: ToggleSwitchIndex,
+                  totalSwitches: Srv_DbTools.wKgL.length == 0 ? 2 : 1,
+                  labels: Srv_DbTools.wKgL.length == 0
+                      ? ['Litres', 'Kilos']
+                      : ['${Srv_DbTools.wKgL}'],
+                  onToggle: (index) async {
+                    await HapticFeedback.vibrate();
+                    index == 0 ? wUnit = "Litres" : wUnit = "Kilos";
+                    widget.parc_Desc.ParcsDesc_Lib = "${wPoids} ${wUnit}";
+                    await Reload();
+                  },
+                ),
+              ),
         Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1089,7 +1106,6 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
                 child: TextFormField(
                   onChanged: (value) async {
                     await HapticFeedback.vibrate();
-                    print("value ${value}");
                     wPoids = value;
                     widget.parc_Desc.ParcsDesc_Lib = "${wPoids} ${wUnit}";
                     await Reload();
@@ -1142,6 +1158,7 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
         child: InkWell(
           onTap: () async {
             await HapticFeedback.vibrate();
+            print(" POIDS SELECT wText ${wText}");
 
             widget.parc_Desc.ParcsDesc_Lib = "${wText}";
             widget.parc_Desc.ParcsDesc_Id = wId;
@@ -1175,9 +1192,14 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
     List<Widget> BtnCards = [];
     int nbBtn = 0;
     wAide = "Aide : ";
-    Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
+    for (int i = 0; i < Srv_DbTools.ListParam_Saisie_Param.length; i++) {
+      Param_Saisie_Param element = Srv_DbTools.ListParam_Saisie_Param[i];
+      print("••••••••••••••• Param_Saisie_Param_Aide ${Srv_DbTools.ListParam_Saisie_Param.length} : ${element.Param_Saisie_Param_Label} ${element.Param_Saisie_Param_Aide}");
+
       if (widget.parc_Desc.ParcsDesc_Lib!.compareTo("---") == 0) {
         if (element.Param_Saisie_Param_Default) {
+          print(" G Param_Saisie_Param_Default");
+          print("Param_Saisie_Param_Default  ${element.Param_Saisie_Param_Label}");
           widget.parc_Desc.ParcsDesc_Lib = element.Param_Saisie_Param_Label;
         }
       }
@@ -1186,14 +1208,21 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
       BtnCards.add(BtnCard(
           element.Param_Saisie_Param_Label,
           element.Param_Saisie_Param_Id,
-          element.Param_Saisie_Param_Label.compareTo(
-                  widget.parc_Desc.ParcsDesc_Lib!) ==
+          element.Param_Saisie_Param_Label.compareTo(               widget.parc_Desc.ParcsDesc_Lib!) ==
               0,
           element.Param_Saisie_ParamId));
 
-      if (element.Param_Saisie_Param_Label.compareTo(
-              widget.parc_Desc.ParcsDesc_Lib!) ==
-          0) wAide += element.Param_Saisie_Param_Aide;
+      if (element.Param_Saisie_Param_Label.compareTo(widget.parc_Desc.ParcsDesc_Lib!) == 0)
+        {
+          Srv_DbTools.ListParam_Saisie_ParamAll.forEach((elementAll) {
+            if (elementAll.Param_Saisie_Param_Id.compareTo(widget.param_Saisie.Param_Saisie_ID) == 0) {
+              if (elementAll.Param_Saisie_Param_Label.compareTo(widget.parc_Desc.ParcsDesc_Lib!) == 0) {
+                wAide += elementAll.Param_Saisie_Param_Aide;
+              }
+            }
+          });
+
+        }
 
       nbBtn++;
       if (nbBtn == 3) {
@@ -1206,7 +1235,8 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
         Rows.add(wRow);
         BtnCards = [];
       }
-    });
+    }
+    ;
 
     if (nbBtn > 0) {
       nbBtn = 0;
@@ -1316,6 +1346,8 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
     Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
       if (widget.parc_Desc.ParcsDesc_Lib!.compareTo("---") == 0) {
         if (element.Param_Saisie_Param_Default) {
+          print(
+              " H Param_Saisie_Param_Default");
           widget.parc_Desc.ParcsDesc_Lib = element.Param_Saisie_Param_Label;
         }
       }
@@ -1329,10 +1361,15 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
         element.Param_Saisie_Param_Ico,
       ));
 
-      if (element.Param_Saisie_Param_Label.compareTo(
-              widget.parc_Desc.ParcsDesc_Lib!) ==
-          0) {
-        wAide += element.Param_Saisie_Param_Aide;
+      if (element.Param_Saisie_Param_Label.compareTo(widget.parc_Desc.ParcsDesc_Lib!) == 0) {
+        Srv_DbTools.ListParam_Saisie_ParamAll.forEach((elementAll) {
+          if (elementAll.Param_Saisie_Param_Id.compareTo(widget.param_Saisie.Param_Saisie_ID) == 0) {
+            if (elementAll.Param_Saisie_Param_Label.compareTo(widget.parc_Desc.ParcsDesc_Lib!) == 0) {
+              wAide += elementAll.Param_Saisie_Param_Aide;
+            }
+          }
+        });
+
         wIco = Container(
           width: 450,
           padding: const EdgeInsets.fromLTRB(5, 15, 5, 0),
@@ -1466,6 +1503,9 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
 
       if (widget.parc_Desc.ParcsDesc_Lib!.compareTo("---") == 0) {
         if (element.Param_Saisie_Param_Default) {
+          print(
+              " I Param_Saisie_Param_Default");
+
           widget.parc_Desc.ParcsDesc_Lib = element.Param_Saisie_Param_Label;
         }
       }
@@ -2162,6 +2202,8 @@ class Client_Groupe_Parc_Inter_Equip_SaisieDialogState
                     tec_Saisie.text = item.Param_Saisie_Param_Label;
                     tec_Saisie.selection = TextSelection.fromPosition(
                         TextPosition(offset: tec_Saisie.text.length));
+
+                    await Reload();
                   },
                   child: Container(
 //              margin: EdgeInsets.fromLTRB(0, 2, 0, 2),

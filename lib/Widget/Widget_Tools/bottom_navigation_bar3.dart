@@ -1,3 +1,4 @@
+import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Catalogue_Grig/light_color.dart';
@@ -20,7 +21,6 @@ class _CustomBottomNavigationBar3State extends State<CustomBottomNavigationBar3>
   void initState() {
     _xController = AnimationController(vsync: this, animationBehavior: AnimationBehavior.preserve);
     _yController = AnimationController(vsync: this, animationBehavior: AnimationBehavior.preserve);
-
     Listenable.merge([_xController, _yController]).addListener(() {
       setState(() {});
     });
@@ -112,17 +112,17 @@ class _CustomBottomNavigationBar3State extends State<CustomBottomNavigationBar3>
             ? Container()
             : Positioned(
                 top: 0,
-                right: 15,
+                right: 30,
                 child:
                 Material(
                   borderRadius: BorderRadius.circular(20),
                   elevation: 10,
                   child: CircleAvatar(
                     radius: 10,
-                    backgroundColor: gColors.tks,
-                    child: Text("${DbTools.gCountDev}",
+                    backgroundColor: Colors.yellow,
+                    child: Text("!",
                         style: TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 12,
                           fontWeight: FontWeight.normal,
                         )),
@@ -158,24 +158,32 @@ class _CustomBottomNavigationBar3State extends State<CustomBottomNavigationBar3>
   }
 
   void _handlePressed(int index) {
+
     if (_selectedIndex == index || _xController.isAnimating) return;
     widget.onIconPresedCallback(index);
+
     setState(() {
       _selectedIndex = index;
     });
+
     _yController.value = 1.0;
     _xController.animateTo(_indexToPosition(index) / MediaQuery.of(context).size.width, duration: Duration(milliseconds: 620));
     Future.delayed(
       Duration(milliseconds: 500),
-      () {
+          () {
         _yController.animateTo(1.0, duration: Duration(milliseconds: 1200));
       },
     );
     _yController.animateTo(0.0, duration: Duration(milliseconds: 300));
   }
 
+
+
+
   @override
   Widget build(BuildContext context) {
+
+
     final appSize = MediaQuery.of(context).size;
     final height = 60.0;
     return Container(

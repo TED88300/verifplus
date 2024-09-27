@@ -33,14 +33,25 @@ class Client_Groupe_Parc_Inter_PieceState extends State<Client_Groupe_Parc_Inter
   Future initLib() async {
     print("         initLib PIECE");
     List<Parc_Art> wlParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "P");
-    lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "V");
-    lParcs_Art.addAll(wlParcs_Art);
+//    lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "V");
+//    lParcs_Art.addAll(wlParcs_Art);
+
+
+    lParcs_Art.clear();
+    for (int i = 0; i < wlParcs_Art.length; i++) {
+      Parc_Art element = wlParcs_Art[i];
+      if (!element.ParcsArt_Id!.startsWith("S"))
+        {
+          lParcs_Art.add(element);
+        }
+
+    }
+
+
     print("initLib lParcs_Art A ${lParcs_Art.length}");
     Client_Groupe_Parc_Tools.DebtoArt();
 
     print("initLib lParcs_Art B ${lParcs_Art.length}");
-
-
     for (int i = 0; i < lParcs_Art.length; i++) {
       Parc_Art element = lParcs_Art[i];
       print("♣︎♣︎♣︎ initLib PIECES Parc_Art ${element.Desc()}");
@@ -69,6 +80,12 @@ class Client_Groupe_Parc_Inter_PieceState extends State<Client_Groupe_Parc_Inter
         }
     });
   }
+  @override
+  void dispose() {
+    FBroadcast.instance().unregister(this);
+    super.dispose();
+  }
+
 
   void onSaisie() async {
     widget.onMaj();
@@ -309,9 +326,7 @@ class Client_Groupe_Parc_Inter_PieceState extends State<Client_Groupe_Parc_Inter
                 padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
                 child: Text(
                   "${parc_Art.ParcsArt_Fact}",
-                  style: gColors.bodyTitle1_B_Gr.copyWith(
-                    color: wColor,
-                  ),
+                  style: gColors.bodyTitle1_B_Gr.copyWith(color: wColor,),
                 ),
               ),
 
@@ -322,7 +337,7 @@ class Client_Groupe_Parc_Inter_PieceState extends State<Client_Groupe_Parc_Inter
                 padding: EdgeInsets.fromLTRB(0, 2, 0, 0),
                 child: Text(
                   "${parc_Art.ParcsArt_Qte}",
-                  style: gColors.bodyTitle1_N_Gr,
+                  style: gColors.bodyTitle1_B_Gr,
                   textAlign: TextAlign.center,
                 ),
               ),

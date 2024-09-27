@@ -32,15 +32,17 @@ class Client_Groupe_Parc_Inter_MixteState extends State<Client_Groupe_Parc_Inter
     Srv_DbTools.getParam_Saisie_ParamMem("Fact");
 
 
-    lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "M");
-    print("lParcs_Art ${lParcs_Art.length}");
+    List<Parc_Art> wlParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "M");
 
-    for (int i = 0; i < lParcs_Art.length; i++) {
-      Parc_Art element = lParcs_Art[i];
-      print("♥︎♥︎♥︎ initLib MIXTE Parc_Art ${element.Desc()}");
+    lParcs_Art.clear();
+    for (int i = 0; i < wlParcs_Art.length; i++) {
+      Parc_Art element = wlParcs_Art[i];
+      if (!element.ParcsArt_Id!.startsWith("S"))
+      {
+        lParcs_Art.add(element);
+      }
+
     }
-    print("         initLib MIXTE FIN");
-
 
 
     setState(() {});
@@ -57,6 +59,15 @@ class Client_Groupe_Parc_Inter_MixteState extends State<Client_Groupe_Parc_Inter
     });
 
   }
+
+
+  @override
+  void dispose() {
+    FBroadcast.instance().unregister(this);
+    super.dispose();
+  }
+
+
 
   void onSaisie() async {
     widget.onMaj();
@@ -315,7 +326,7 @@ class Client_Groupe_Parc_Inter_MixteState extends State<Client_Groupe_Parc_Inter
                 padding: EdgeInsets.fromLTRB(0, 2, 0, 0),
                 child: Text(
                   "${parc_Art.ParcsArt_Qte}",
-                  style: parc_Art.ParcsArt_Livr!.isNotEmpty ? gColors.bodySaisie_N_O : gColors.bodySaisie_N_G,
+                  style: gColors.bodyTitle1_B_Gr,
                   textAlign: TextAlign.center,
                 ),
               ),

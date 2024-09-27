@@ -22,6 +22,7 @@ import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie_Param.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Art.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Desc.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Ent.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Imgs.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Planning.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Planning_Interventions.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Sites.dart';
@@ -412,25 +413,6 @@ class DbTools {
   //************************************************
   //************************************************
 
-  static Future LoadParam_Saisie_Param() async {
-    var myData = await rootBundle.loadString('assets/Param_Saisie_Param.txt');
-    List<List<dynamic>> rowsAsListOfValues = const CsvToListConverter(eol: "\n", fieldDelimiter: ";", shouldParseNumbers: false).convert(myData);
-
-    print("Param_Saisie_Param ${rowsAsListOfValues.length}");
-    for (var i = 1; i < rowsAsListOfValues.length; i++) {
-      print("==> ${rowsAsListOfValues[i][0].toString()} ${rowsAsListOfValues[i][1].toString()} ${rowsAsListOfValues[i][2].toString()} ${rowsAsListOfValues[i][3].toString()} ${rowsAsListOfValues[i][4].toString()} ");
-
-      Param_Saisie_Param wParam_Saisie_Param = Param_Saisie_Param.Param_Saisie_ParamInit();
-
-      wParam_Saisie_Param.Param_Saisie_Param_Id = rowsAsListOfValues[i][1].toString();
-      wParam_Saisie_Param.Param_Saisie_Param_Ordre = int.parse(rowsAsListOfValues[i][2]);
-      wParam_Saisie_Param.Param_Saisie_Param_Label = rowsAsListOfValues[i][3].toString();
-      wParam_Saisie_Param.Param_Saisie_Param_Aide = rowsAsListOfValues[i][4].toString();
-
-      Srv_DbTools.addParam_Saisie_Param(wParam_Saisie_Param);
-    }
-  }
-
   static Future getListTables() async {
     final db = await database;
     print("getListTables");
@@ -542,6 +524,10 @@ class DbTools {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query("Param_Saisie_Param");
     return List.generate(maps.length, (i) {
+
+//      print(" getParam_Saisie_ParamAll IMPORT ${maps[i]["Param_Saisie_Param_Id"]} ${maps[i]["Param_Saisie_Param_Label"]} ${maps[i]["Param_Saisie_Param_Init"]}");
+
+
       return Param_Saisie_Param(
         maps[i]["Param_Saisie_ParamId"],
         maps[i]["Param_Saisie_Param_Id"],
@@ -549,8 +535,8 @@ class DbTools {
         maps[i]["Param_Saisie_Param_Label"],
         maps[i]["Param_Saisie_Param_Abrev"],
         maps[i]["Param_Saisie_Param_Aide"],
-        maps[i]["Param_Saisie_Param_Default"] == "true",
-        maps[i]["Param_Saisie_Param_Init"] == "true",
+        maps[i]["Param_Saisie_Param_Default"].toString() == "1",
+        maps[i]["Param_Saisie_Param_Init"].toString() == "1",
         SizedBox(),
         maps[i]["Param_Saisie_Param_Color"],
       );
@@ -935,7 +921,8 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     Srv_DbTools.ListParam_Saisie_Param.clear();
     final db = await database;
     String wRef = "NF074_Gammes_FAB";
-    String wSql = "SELECT ${wRef} FROM NF074_Gammes WHERE NF074_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
+
+    String wSql = 'SELECT ${wRef} FROM NF074_Gammes WHERE NF074_Gammes_DESC = "${Srv_DbTools.DESC_Lib}" GROUP BY ${wRef} ORDER BY ${wRef};';
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
     return List.generate(maps.length, (i) {
 //      print("***********>>>   getNF074_Gammes_FAB maps ${maps[i]["NF074_Gammes_FAB"]}");
@@ -947,7 +934,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     Srv_DbTools.ListParam_Saisie_Param.clear();
     final db = await database;
     String wRef = "NF074_Gammes_PRS";
-    String wSql = "SELECT ${wRef} FROM NF074_Gammes WHERE NF074_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND NF074_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
+    String wSql = 'SELECT ${wRef} FROM NF074_Gammes WHERE NF074_Gammes_DESC = "${Srv_DbTools.DESC_Lib}" AND NF074_Gammes_FAB = "${Srv_DbTools.FAB_Lib}" GROUP BY ${wRef} ORDER BY ${wRef};';
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
     return List.generate(maps.length, (i) {
 //      print("***********>>>   getParcs_DescInter maps ${maps[i]["${wRef}"]}");
@@ -959,7 +946,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     Srv_DbTools.ListParam_Saisie_Param.clear();
     final db = await database;
     String wRef = "NF074_Gammes_CLF";
-    String wSql = "SELECT ${wRef} FROM NF074_Gammes WHERE NF074_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND NF074_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND NF074_Gammes_PRS = '${Srv_DbTools.PRS_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
+    String wSql = 'SELECT ${wRef} FROM NF074_Gammes WHERE NF074_Gammes_DESC = "${Srv_DbTools.DESC_Lib}" AND NF074_Gammes_FAB = "${Srv_DbTools.FAB_Lib}" AND NF074_Gammes_PRS = "${Srv_DbTools.PRS_Lib}" GROUP BY ${wRef} ORDER BY ${wRef};';
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
     return List.generate(maps.length, (i) {
       //    print("***********>>>   getParcs_DescInter maps ${maps[i]["${wRef}"]}");
@@ -971,7 +958,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     Srv_DbTools.ListParam_Saisie_Param.clear();
     final db = await database;
     String wRef = "NF074_Gammes_MOB";
-    String wSql = "SELECT ${wRef} FROM NF074_Gammes WHERE NF074_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND NF074_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND NF074_Gammes_PRS = '${Srv_DbTools.PRS_Lib}' AND NF074_Gammes_CLF = '${Srv_DbTools.CLF_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
+    String wSql = 'SELECT ${wRef} FROM NF074_Gammes WHERE NF074_Gammes_DESC = "${Srv_DbTools.DESC_Lib}" AND NF074_Gammes_FAB = "${Srv_DbTools.FAB_Lib}" AND NF074_Gammes_PRS = "${Srv_DbTools.PRS_Lib}" AND NF074_Gammes_CLF = "${Srv_DbTools.CLF_Lib}" GROUP BY ${wRef} ORDER BY ${wRef};';
     print("***********>>>   getNF074_Gammes_MOB wSql ${wSql}");
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
     print("***********>>>   getNF074_Gammes_MOB maps.length ${maps.length}");
@@ -985,7 +972,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     Srv_DbTools.ListParam_Saisie_Param.clear();
     final db = await database;
     String wRef = "NF074_Gammes_PDT";
-    String wSql = "SELECT ${wRef} FROM NF074_Gammes WHERE NF074_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND NF074_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND NF074_Gammes_PRS = '${Srv_DbTools.PRS_Lib}' AND NF074_Gammes_CLF = '${Srv_DbTools.CLF_Lib}'  AND NF074_Gammes_MOB = '${Srv_DbTools.MOB_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
+    String wSql = 'SELECT ${wRef} FROM NF074_Gammes WHERE NF074_Gammes_DESC = "${Srv_DbTools.DESC_Lib}" AND NF074_Gammes_FAB = "${Srv_DbTools.FAB_Lib}" AND NF074_Gammes_PRS = "${Srv_DbTools.PRS_Lib}" AND NF074_Gammes_CLF = "${Srv_DbTools.CLF_Lib}"  AND NF074_Gammes_MOB = "${Srv_DbTools.MOB_Lib}" GROUP BY ${wRef} ORDER BY ${wRef};';
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
     return List.generate(maps.length, (i) {
       // print("***********>>>   getParcs_DescInter maps ${maps[i]["${wRef}"]}");
@@ -997,7 +984,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     Srv_DbTools.ListParam_Saisie_Param.clear();
     final db = await database;
     String wRef = "NF074_Gammes_POIDS";
-    String wSql = "SELECT ${wRef} FROM NF074_Gammes WHERE NF074_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND NF074_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND NF074_Gammes_PRS = '${Srv_DbTools.PRS_Lib}' AND NF074_Gammes_CLF = '${Srv_DbTools.CLF_Lib}' AND NF074_Gammes_MOB = '${Srv_DbTools.MOB_Lib}' AND NF074_Gammes_PDT = '${Srv_DbTools.PDT_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
+    String wSql = 'SELECT ${wRef} FROM NF074_Gammes WHERE NF074_Gammes_DESC = "${Srv_DbTools.DESC_Lib}" AND NF074_Gammes_FAB = "${Srv_DbTools.FAB_Lib}" AND NF074_Gammes_PRS = "${Srv_DbTools.PRS_Lib}" AND NF074_Gammes_CLF = "${Srv_DbTools.CLF_Lib}" AND NF074_Gammes_MOB = "${Srv_DbTools.MOB_Lib}" AND NF074_Gammes_PDT = "${Srv_DbTools.PDT_Lib}" GROUP BY ${wRef} ORDER BY ${wRef};';
 //    print("***********>>>   getNF074_Gammes_POIDS wSql ${wSql}");
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
     return List.generate(maps.length, (i) {
@@ -1010,7 +997,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     Srv_DbTools.ListParam_Saisie_Param.clear();
     final db = await database;
     String wRef = "NF074_Gammes_GAM";
-    String wSql = "SELECT ${wRef} FROM NF074_Gammes WHERE NF074_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND NF074_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND NF074_Gammes_PRS = '${Srv_DbTools.PRS_Lib}' AND NF074_Gammes_CLF = '${Srv_DbTools.CLF_Lib}' AND NF074_Gammes_MOB = '${Srv_DbTools.MOB_Lib}' AND NF074_Gammes_PDT = '${Srv_DbTools.PDT_Lib}'  AND NF074_Gammes_POIDS = '${Srv_DbTools.POIDS_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
+    String wSql = 'SELECT ${wRef} FROM NF074_Gammes WHERE NF074_Gammes_DESC = "${Srv_DbTools.DESC_Lib}" AND NF074_Gammes_FAB = "${Srv_DbTools.FAB_Lib}" AND NF074_Gammes_PRS = "${Srv_DbTools.PRS_Lib}" AND NF074_Gammes_CLF = "${Srv_DbTools.CLF_Lib}" AND NF074_Gammes_MOB = "${Srv_DbTools.MOB_Lib}" AND NF074_Gammes_PDT = "${Srv_DbTools.PDT_Lib}"  AND NF074_Gammes_POIDS = "${Srv_DbTools.POIDS_Lib}" GROUP BY ${wRef} ORDER BY ${wRef};';
     //print("***********>>>   getNF074_Gammes_GAM wSql ${wSql}");
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
     return List.generate(maps.length, (i) {
@@ -3380,7 +3367,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
   static Future<Parc_Ent> getParcs_Ent_Parcs_UUID_Child(String Parcs_UUID) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query("Parcs_Ent", orderBy: "Parcs_order ASC", where: '"Parcs_UUID_Parent" = "${Parcs_UUID}"', whereArgs: []);
-    print("getParcs_Ent_Parcs_UUID_Child Parcs_Ent.length ${maps.length} ${Parcs_UUID}");
+//    print("getParcs_Ent_Parcs_UUID_Child Parcs_Ent.length ${maps.length} ${Parcs_UUID}");
     if (maps.length > 0)
       return Parc_Ent.fromMap(maps[0]);
     else
@@ -3390,7 +3377,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
   static Future<Parc_Ent> getParcs_Ent_Parcs_UUID_Parent(String Parcs_UUID) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query("Parcs_Ent", orderBy: "Parcs_order ASC", where: '"Parcs_UUID_Parent" = "${Parcs_UUID}"', whereArgs: []);
-    print("getParcs_Ent_Parcs_UUID_Child Parcs_Ent.length ${maps.length} ${Parcs_UUID}");
+//    print("getParcs_Ent_Parcs_UUID_Child Parcs_Ent.length ${maps.length} ${Parcs_UUID}");
     if (maps.length > 0)
       return Parc_Ent.fromMap(maps[0]);
     else
@@ -3442,31 +3429,49 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     var wglfParcs_Ent = glfParcs_Ent.where((element) => element.Parcs_UUID_Parent!.isEmpty);
 
     Parc_Ent parc = Parc_Ent();
+
+
+    print(" moveParc_EntNew ${Sens}");
+
+    bool trv = false;
     if (Sens == -1) {
       for (int i = 0; i < wglfParcs_Ent.length; i++) {
         Parc_Ent element = wglfParcs_Ent.elementAt(i);
-        if (element.Parcs_order! < aparSel.Parcs_order!) parc = element;
+        if (element.Parcs_order! < aparSel.Parcs_order!)
+          {
+            parc = element;
+            trv = true;
+          }
       }
     } else
       for (int i = wglfParcs_Ent.length - 1; i >= 0; i--) {
         Parc_Ent element = wglfParcs_Ent.elementAt(i);
-        if (element.Parcs_order! > aparSel.Parcs_order!) parc = element;
+        if (element.Parcs_order! > aparSel.Parcs_order!)
+          {
+            parc = element;
+            trv = true;
+          }
       }
 
-    int SaveparcParcs_order = parc.Parcs_order!;
-    parc.Parcs_order = aparSel.Parcs_order!;
-    updateParc_Ent_Ordre(parc);
 
-    aparSel.Parcs_order = SaveparcParcs_order;
-    updateParc_Ent_Ordre(aparSel);
+      if (trv)
+        {
+          print(" SaveparcParcs_order ${parc.toMap()}");
+          int SaveparcParcs_order = parc.Parcs_order!;
+          parc.Parcs_order = aparSel.Parcs_order!;
+          updateParc_Ent_Ordre(parc);
 
-    for (int i = wglfParcs_Ent.length - 1; i >= 0; i--) {
-      Parc_Ent element = wglfParcs_Ent.elementAt(i);
-      Parc_Ent wParc_Ent = await DbTools.getParcs_Ent_Parcs_UUID_Child(element.Parcs_UUID!);
-      wParc_Ent.Parcs_order = element.Parcs_order;
-      updateParc_Ent_Ordre(wParc_Ent);
-    }
-    await DbTools.Parc_Ent_GetOrder();
+          aparSel.Parcs_order = SaveparcParcs_order;
+          updateParc_Ent_Ordre(aparSel);
+
+          for (int i = wglfParcs_Ent.length - 1; i >= 0; i--) {
+            Parc_Ent element = wglfParcs_Ent.elementAt(i);
+            Parc_Ent wParc_Ent = await DbTools.getParcs_Ent_Parcs_UUID_Child(element.Parcs_UUID!);
+            wParc_Ent.Parcs_order = element.Parcs_order;
+            updateParc_Ent_Ordre(wParc_Ent);
+          }
+          await DbTools.Parc_Ent_GetOrder();
+        }
   }
 
   static Future<void> moveParc_Ent(int aparcId, int Sens) async {
@@ -3795,9 +3800,9 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
 
   static Future<void> insertParc_Ent_Srv(Parc_Ent_Srv Parc_Ent) async {
     final db = await DbTools.database;
-    print("insertParc_Ent");
+//    print("insertParc_Ent");
     gLastID = await db.insert("Parcs_Ent", Parc_Ent.toMap());
-    print("insertParc_Ent ${gLastID}");
+//    print("insertParc_Ent ${gLastID}");
   }
 
   static Future<void> deleteParc_Ent(int aID) async {
@@ -3908,7 +3913,6 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
 
 
   static Future<Parc_Desc> getParcs_Desc_Id_Type_Add(int ParcsDesc_ParcsId, ParcsDesc_Type) async {
-//    print("♠︎♠︎♠︎♠︎♠︎ getParcs_Desc_Id_Type_Add ParcsDesc_ParcsId ${ParcsDesc_ParcsId} ParcsDesc_Type ${ParcsDesc_Type}");
 
     Parc_Desc wParc_Desc = Parc_Desc.Parc_DescInit(ParcsDesc_ParcsId, ParcsDesc_Type);
     for (int i = 0; i < glfParcs_Desc.length; i++) {
@@ -3932,7 +3936,28 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     return wParc_Desc;
   }
 
-  static Future<bool> updateParc_Desc(Parc_Desc parc, String InitLib) async {
+
+  static Future<bool> updateParc_DescSimple(Parc_Desc parc, String InitLib) async {
+
+    final db = await database;
+    int? repid = await db.update(
+      "Parcs_Desc",
+      parc.toMap(),
+      where: "ParcsDescId = ?",
+      whereArgs: [parc.ParcsDescId],
+    );
+
+
+    return false;
+  }
+  
+  
+  
+    static Future<bool> updateParc_Desc(Parc_Desc parc, String InitLib) async {
+
+
+    print("♠︎♠︎♠︎♠︎♠︎ updateParc_Desc ${parc.toMap()}");
+
     bool isEq = false;
     for (int i = 0; i < DbTools.glfParcs_Desc.length; i++) {
       var element = DbTools.glfParcs_Desc[i];
@@ -3955,7 +3980,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
         whereArgs: [parc.ParcsDescId],
       );
 
-    DbTools.glfParcs_Desc = await DbTools.getParcs_DescInter(Srv_DbTools.gIntervention.InterventionId!);
+    DbTools.glfParcs_Desc = await DbTools.getParcs_Desc(parc.ParcsDesc_ParcsId!);
 
 
     if (parc.ParcsDesc_Type == "SIT")  return true;
@@ -3975,7 +4000,11 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
 
     for (int i = 0; i < DbTools.glfParcs_Desc.length; i++) {
       Parc_Desc element = DbTools.glfParcs_Desc[i];
-      if (element.ParcsDescId! > parc.ParcsDescId!) {
+
+//      print("♠︎♠︎♠︎♠︎♠︎ Parc_Desc ${element.toMap()} ***** ${element.ParcsDescId} ${parc.ParcsDescId}");
+
+//      if (element.ParcsDescId! > parc.ParcsDescId!) {
+      if (element.ParcsDesc_ParcsId! == parc.ParcsDesc_ParcsId! && element.ParcsDescId! > parc.ParcsDescId!) {
         bool isDesc = false;
         for (int i = 0; i < Srv_DbTools.ListParam_Saisie.length; i++) {
           Param_Saisie wParam_Saisie = Srv_DbTools.ListParam_Saisie[i];
@@ -4056,7 +4085,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
   static Future<void> insertParc_Desc_Srv(Parc_Desc_Srv parc_Desc) async {
     final db = await DbTools.database;
     int? repid = await db.insert("Parcs_Desc", parc_Desc.toMap());
-    print("insertParc_Desc_Srv ${repid}");
+//    print("insertParc_Desc_Srv ${repid}");
   }
 
   static Future<void> deleteParc_Desc(int aID) async {
@@ -4128,6 +4157,37 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     });
   }
 
+  static Future<List<Parc_Art>> getParcs_ArtInterSumBL(int Parcs_InterventionId) async {
+    final db = await database;
+
+    String wTmp = "SELECT Parcs_Art.*, SUM(ParcsArt_Qte) as Qte FROM Parcs_Art, Parcs_Ent WHERE ParcsArt_Fact != 'Devis' AND  ParcsArt_ParcsId = ParcsId AND Parcs_InterventionId = ${Parcs_InterventionId} GROUP BY ParcsArt_Id,ParcsArt_Fact,ParcsArt_Livr ORDER BY Parcs_Art.ParcsArt_Id ASC;";
+
+    print("getParcs_ArtInter ${wTmp}");
+    List<Map<String, dynamic>> maps = await db.rawQuery(wTmp);
+
+    print("getParcs_ArtInter maps.length ${maps.length}");
+
+    return await List.generate(maps.length, (i) {
+      return Parc_Art.fromMapQte(maps[i]);
+    });
+  }
+
+  static Future<List<Parc_Art>> getParcs_ArtInterSumDevis(int Parcs_InterventionId) async {
+    final db = await database;
+
+    String wTmp = "SELECT Parcs_Art.*, SUM(ParcsArt_Qte) as Qte FROM Parcs_Art, Parcs_Ent WHERE ParcsArt_Fact = 'Devis' AND  ParcsArt_ParcsId = ParcsId AND Parcs_InterventionId = ${Parcs_InterventionId} GROUP BY ParcsArt_Id,ParcsArt_Fact,ParcsArt_Livr ORDER BY Parcs_Art.ParcsArt_Id ASC;";
+
+    print("getParcs_ArtInter ${wTmp}");
+    List<Map<String, dynamic>> maps = await db.rawQuery(wTmp);
+
+    print("getParcs_ArtInter maps.length ${maps.length}");
+
+    return await List.generate(maps.length, (i) {
+      return Parc_Art.fromMapQte(maps[i]);
+    });
+  }
+
+
   static Future<List<Parc_Art>> getParcs_ArtInterSum(int Parcs_InterventionId) async {
     final db = await database;
 
@@ -4142,6 +4202,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
       return Parc_Art.fromMapQte(maps[i]);
     });
   }
+
 
   static Future<void> TrunckParcs_Art() async {
     final db = await DbTools.database;
@@ -4245,6 +4306,27 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
   static Parc_Img gParc_Img = Parc_Img();
   static int gParc_Img_Type = 0;
 
+
+  static Future<void> TrunckParcs_Imgs() async {
+    final db = await DbTools.database;
+    int? repid = await db.delete("Parc_Imgs");
+  }
+
+  static Future<List<Parc_Img>> getParcs_ImgsTout() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query("Parc_Imgs", orderBy: "Parc_Imgid ASC");
+    //print("getParcs Parcs.length gParc.ParcsId ${ParcsId} ${maps.length}");
+    return List.generate(maps.length, (i) {
+      return Parc_Img(
+        Parc_Imgid: maps[i]["Parc_Imgid"],
+        Parc_Imgs_ParcsId: maps[i]["Parc_Imgs_ParcsId"],
+        Parc_Imgs_Type: maps[i]["Parc_Imgs_Type"],
+        Parc_Imgs_Path: maps[i]["Parc_Imgs_Path"],
+        Parc_Imgs_Data: maps[i]["Parc_Imgs_Data"],
+      );
+    });
+  }
+
   static Future<List<Parc_Img>> getParc_Imgs(int ParcsId, int Type) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query("Parc_Imgs", orderBy: "Parc_Imgid ASC", where: 'Parc_Imgs_ParcsId = ${ParcsId} AND Parc_Imgs_Type = ${Type}', whereArgs: []);
@@ -4253,6 +4335,22 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
       return Parc_Img(
         Parc_Imgid: maps[i]["Parc_Imgid"],
         Parc_Imgs_ParcsId: maps[i]["Parc_Imgs_ParcsId"],
+        Parc_Imgs_Type: maps[i]["Parc_Imgs_Type"],
+        Parc_Imgs_Path: maps[i]["Parc_Imgs_Path"],
+        Parc_Imgs_Data: maps[i]["Parc_Imgs_Data"],
+      );
+    });
+  }
+
+  static Future<List<Parc_Img>> getParc_ImgsAll(int ParcsId) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query("Parc_Imgs", orderBy: "Parc_Imgid ASC", where: 'Parc_Imgs_ParcsId = ${ParcsId}', whereArgs: []);
+    //print("getParcs Parcs.length gParc.ParcsId ${ParcsId} ${maps.length}");
+    return List.generate(maps.length, (i) {
+      return Parc_Img(
+        Parc_Imgid: maps[i]["Parc_Imgid"],
+        Parc_Imgs_ParcsId: maps[i]["Parc_Imgs_ParcsId"],
+        Parc_Imgs_Type: maps[i]["Parc_Imgs_Type"],
         Parc_Imgs_Path: maps[i]["Parc_Imgs_Path"],
         Parc_Imgs_Data: maps[i]["Parc_Imgs_Data"],
       );
@@ -4265,7 +4363,6 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
 
     wParc_Imgs.forEach((element) async {
       print("parc_Img.Parc_Imgid ${parc_Img.Parc_Imgid}");
-
       if (parc_Img.Parc_Imgid != null) await deleteParc_Img(parc_Img.Parc_Imgid!, parc_Img.Parc_Imgs_Type!);
     });
 
@@ -4273,6 +4370,16 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     int? repid = await db.insert("Parc_Imgs", parc_Img.toMap());
     print("insertParc_Img ${repid} parc_Img.toMap() ${parc_Img.toMap()}");
   }
+
+
+  static Future<void> insertParc_Img_Srv(Parc_Imgs_Srv parc_Img) async {
+    parc_Img.Parc_Imgid = null;
+    final db = await DbTools.database;
+    int? repid = await db.insert("Parc_Imgs", parc_Img.toMap());
+  }
+
+
+
 
   static Future<void> deleteParc_Img(int aID, int Type) async {
     final db = await database;
@@ -4283,6 +4390,35 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     );
   }
 
+  static Future<void> deleteParc_ImgAllType(int aID ) async {
+    final db = await database;
+    await db.delete(
+      "Parc_Imgs",
+      where: "Parc_Imgid = ${aID}",
+      whereArgs: [],
+    );
+  }
+
+
+
+
+
+  static Future<List<Parc_Img>> getParcs_ImgInter(int Parcs_InterventionId) async {
+    final db = await database;
+
+    String wTmp = "SELECT Parc_Imgs.* FROM Parc_Imgs, Parcs_Ent  WHERE Parc_Imgs_ParcsId = ParcsId AND Parcs_InterventionId = ${Parcs_InterventionId} ORDER BY Parc_Imgs.Parc_Imgid ASC";
+
+//    print("getParcs_ImgInter ${wTmp}");
+    List<Map<String, dynamic>> maps = await db.rawQuery(wTmp);
+
+//    print("getParcs_ImgInter maps.length ${maps.length}");
+
+    return await List.generate(maps.length, (i) {
+      return Parc_Img.fromMap(maps[i]);
+    });
+  }
+  
+  
   //***
   //***
   //***

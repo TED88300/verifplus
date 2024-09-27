@@ -1,3 +1,4 @@
+import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Catalogue_Grig/light_color.dart';
@@ -24,7 +25,15 @@ class _CustomBottomNavigationBar2State extends State<CustomBottomNavigationBar2>
       setState(() {});
     });
     super.initState();
+    FBroadcast.instance().register("HandleBar2", (value, callback) {
+      _handlePressed(DbTools.gCurrentIndex2);
+    });
+
   }
+
+
+
+
 
   @override
   void didChangeDependencies() {

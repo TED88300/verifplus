@@ -24,6 +24,7 @@ import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie_Param.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Art.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Desc.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Ent.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Imgs.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Planning.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Planning_Interv.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Planning_Interventions.dart';
@@ -36,6 +37,7 @@ import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Ent.dart';
+import 'package:verifplus/Tools/DbTools/Db_Parcs_Img.dart';
 import 'package:verifplus/Tools/shared_pref.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
@@ -450,7 +452,13 @@ class Srv_DbTools {
   }
 
   static Future<bool> IMPORT_Article_Ebp_ES() async {
-    String wSlq = "SELECT Articles_Ebp.* FROM Articles_Ebp, Articles_Fam_Grp_Ebp where Articles_Fam_Grp_Code_Fam = Article_codeFamilleArticles AND Articles_Fam_Grp_Grp = '01 - EXTINCTION' ORDER BY Article_codeArticle";
+
+
+//    String wSlq = "SELECT Articles_Ebp.* FROM Articles_Ebp, Articles_Fam_Grp_Ebp where Articles_Fam_Grp_Code_Fam = Article_codeFamilleArticles AND Articles_Fam_Grp_Grp = '01 - EXTINCTION' ORDER BY Article_codeArticle";
+    String wSlq = "SELECT Articles_Ebp.* FROM Articles_Ebp where Article_codeFamilleArticles = '1'";
+
+print("IMPORT_Article_Ebp_ES ${wSlq}");
+
     try {
       ListArticle_Ebp_ES = await getArticle_Ebp_API_Post("select", wSlq);
       if (ListArticle_Ebp_ES == null) return false;
@@ -541,6 +549,7 @@ class Srv_DbTools {
   static List<Result_Article_Link_Verif> ListResult_Article_Link_Verif = [];
   static List<Result_Article_Link_Verif> ListResult_Article_Link_Verif_PROP = [];
   static List<Result_Article_Link_Verif> ListResult_Article_Link_Verif_PROP_Mixte = [];
+  static List<Result_Article_Link_Verif> ListResult_Article_Link_Verif_PROP_Service = [];
 
 
   //
@@ -2816,6 +2825,168 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
     return [];
   }
 
+
+  //******************************************
+  //************   Parcs_Imgs   ***************
+  //******************************************
+
+  static List<Parc_Imgs_Srv> ListParc_Imgs = [];
+  static List<Parc_Imgs_Srv> ListParc_Imgssearchresult = [];
+  static Parc_Imgs_Srv gParc_Imgs = Parc_Imgs_Srv(0,0,0,"","");
+  
+  static Future<bool> getParc_ImgsAll() async {
+    ListParc_Imgs = await getParc_Imgs_API_Post("select", "select * from Parcs_Imgs ORDER BY Parcs_Type");
+
+    if (ListParc_Imgs == null) return false;
+    print("getParc_ImgsAll ${ListParc_Imgs.length}");
+    if (ListParc_Imgs.length > 0) {
+      print("getParc_ImgsAll return TRUE");
+      return true;
+    }
+    return false;
+  }
+
+  static Future getParc_ImgsID(int ID) async {
+    ListParc_Imgs.forEach((element) {
+      if (element.Parc_Imgid == ID) {
+        gParc_Imgs = element;
+        return;
+      }
+    });
+  }
+
+  static Future<bool> getParcs_ImgsInter(int Parcs_InterventionId) async {
+    try {
+
+      print(" getParcs_ImgsInter SELECT Parcs_Imgs.* FROM Parcs_Imgs, Parcs_Ent  WHERE Parc_Imgs_ParcsId = ParcsId AND Parcs_InterventionId = $Parcs_InterventionId");
+
+      ListParc_Imgs = await getParc_Imgs_API_Post("select", "SELECT Parcs_Imgs.* FROM Parcs_Imgs, Parcs_Ent  WHERE Parc_Imgs_ParcsId = ParcsId AND Parcs_InterventionId = $Parcs_InterventionId");
+      if (ListParc_Imgs == null) return false;
+      if (ListParc_Imgs.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+
+  static Future<bool> setParc_Imgs(Parc_Imgs_Srv Parc_Imgs) async {
+    String wSlq = "UPDATE Parcs_Imgs SET "
+        "Parc_Imgid            =   ${Parc_Imgs.Parc_Imgid}, " +
+        "Parc_Imgs_ParcsId      =   ${Parc_Imgs.Parc_Imgs_ParcsId}, " +
+        "Parc_Imgs_Type      =   ${Parc_Imgs.Parc_Imgs_Type}, " +
+        "Parc_Imgs_Data         = \"${Parc_Imgs.Parc_Imgs_Data}\", " +
+        "Parc_Imgs_Path           = \"${Parc_Imgs.Parc_Imgs_Path}\" ";
+
+    gColors.printWrapped("setParc_Imgs " + wSlq);
+    bool ret = await add_API_Post("upddel", wSlq);
+    print("setParc_Imgs ret " + ret.toString());
+    return ret;
+  }
+
+  static Future<bool> delParc_Imgs_Srv(int Parc_Imgid) async {
+    String aSQL = "DELETE FROM Parcs_Imgs WHERE Parc_Imgid = ${Parc_Imgid} ";
+    print("delParc_Imgs_Srv " + aSQL);
+    bool ret = await add_API_Post("upddel", aSQL);
+    print("delParc_Imgs_Srv ret " + ret.toString());
+    return ret;
+  }
+
+
+  int?    Parc_Imgid = 0;
+  int?    Parc_Imgs_ParcsId = 0;
+  int?    Parc_Imgs_Type = 0;
+  String? Parc_Imgs_Data = "";
+  String? Parc_Imgs_Path = "";
+
+
+  static String InsertUpdateParc_Imgs_Srv_GetSql(Parc_Img aParc_Imgs) {
+    String wSql = "INSERT INTO Parcs_Imgs("
+        "Parc_Imgid, "
+        "Parc_Imgs_ParcsId, "
+        "Parc_Imgs_Type, "
+        "Parc_Imgs_Data, "
+        "Parc_Imgs_Path "
+        ") VALUES ("
+        "NULL ,  "
+        "${aParc_Imgs.Parc_Imgid},"
+        "${aParc_Imgs.Parc_Imgs_ParcsId},"
+        "${aParc_Imgs.Parc_Imgs_Type},"
+        "'${aParc_Imgs.Parc_Imgs_Data!.replaceAll("'", "‘")}',"
+        "'${aParc_Imgs.Parc_Imgs_Path!.replaceAll("'", "‘")}' "
+        ")";
+    return wSql;
+  }
+
+  static Future<bool> InsertUpdateParc_Imgs_Srv_Sql(String wSql) async {
+    print("InsertUpdateParc_Imgs_Srv_Sql " + wSql);
+    bool ret = await add_API_Post("multi", wSql);
+    print("InsertUpdateParc_Imgs_Srv_Sql ret " + ret.toString());
+    return ret;
+  }
+
+  static Future<bool> InsertUpdateParc_Imgs_Srv(Parc_Img aParc_Imgs) async {
+    String wSql = "INSERT INTO Parcs_Imgs("
+        "Parc_Imgid, "
+        "Parc_Imgs_ParcsId, "
+        "Parc_Imgs_Type, "
+        "Parc_Imgs_Data, "
+        "Parc_Imgs_Path "
+        ") VALUES ("
+        "NULL ,  "
+        "${aParc_Imgs.Parc_Imgs_ParcsId},"
+        "${aParc_Imgs.Parc_Imgs_Type},"
+        "'${aParc_Imgs.Parc_Imgs_Data!.replaceAll("'", "‘")}',"
+        "'${aParc_Imgs.Parc_Imgs_Path!.replaceAll("'", "‘")}' "
+        ")";
+//    print("setParc_Imgs " + wSql);
+    bool ret = await add_API_Post("upddel", wSql);
+    //  print("setParc_Imgs ret " + ret.toString());
+    return ret;
+  }
+
+  static Future<bool> addParc_Imgs(int Parcs_InterventionId) async {
+    String wValue = "NULL, $Parcs_InterventionId";
+    String wSlq = "INSERT INTO Parcs_Imgs (ParcsId, Parcs_InterventionId) VALUES ($wValue)";
+    print("addParc_Imgs " + wSlq);
+    bool ret = await add_API_Post("insert", wSlq);
+    print("addParc_Imgs ret " + ret.toString());
+    return ret;
+  }
+
+  static Future<bool> delParc_Imgs(Parc_Imgs_Srv Parc_Imgs) async {
+    String aSQL = "DELETE FROM Parcs_Imgs WHERE Parc_ImgsId = ${Parc_Imgs.Parc_Imgid} ";
+    print("delParc_Imgs " + aSQL);
+    bool ret = await add_API_Post("upddel", aSQL);
+    print("delParc_Imgs ret " + ret.toString());
+    return ret;
+  }
+
+  static Future<List<Parc_Imgs_Srv>> getParc_Imgs_API_Post(String aType, String aSQL) async {
+    setSrvToken();
+    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
+    var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      var parsedJson = json.decode(await response.stream.bytesToString());
+      final items = parsedJson['data'];
+
+      if (items != null) {
+        List<Parc_Imgs_Srv> Parc_ImgsList = await items.map<Parc_Imgs_Srv>((json) {
+          return Parc_Imgs_Srv.fromJson(json);
+        }).toList();
+        return Parc_ImgsList;
+      }
+    } else {
+      print(response.reasonPhrase);
+    }
+    return [];
+  }
+  
+  
   //******************************************
   //************   CONTACTS   ****************
   //******************************************
@@ -3915,8 +4086,6 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
   }
 
   static Future<bool> getParam_Saisie_ParamAll() async {
-
-
     ListParam_Saisie_ParamAll.clear();
     try {
       ListParam_Saisie_ParamAll = await getParam_Saisie_Param_API_Post("select", "select * from Param_Saisie_Param ORDER BY Param_Saisie_Param_Id,Param_Saisie_Param_Ordre");
@@ -3925,7 +4094,6 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
         Srv_DbTools.ListParam_Saisie_ParamAll.forEach((element) async {
           element.Param_Saisie_Param_Ico = await gObj.getAssetImage("assets/images/Aide_Ico_${element.Param_Saisie_Param_Label}.png");
         });
-
         return true;
       }
       return false;
@@ -3956,6 +4124,7 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
     ListParam_Saisie_Param.clear();
     ListParam_Saisie_ParamAll.forEach((element) {
       if (element.Param_Saisie_Param_Id.compareTo(Param_Saisie_Param_Id) == 0) {
+
         ListParam_Saisie_Param.add(element);
       }
     });
@@ -4020,214 +4189,6 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
   static String REF_Lib = "";
 
   static String wKgL = "";
-
-/*
-
-  static bool getParam_Saisie_ParamMem_PRS() {
-    ListParam_Saisie_Param.clear();
-    for (int i = 0; i < ListParam_GammeAll.length; i++) {
-      Param_Gamme eG = ListParam_GammeAll[i];
-      if (eG.Param_Gamme_DESC_Lib.compareTo(DESC_Lib) == 0) {
-        if (eG.Param_Gamme_FAB_Lib.compareTo(FAB_Lib) == 0) {
-          bool trv = false;
-          for (int i = 0; i < ListParam_Saisie_Param.length; i++) {
-            Param_Saisie_Param eP = ListParam_Saisie_Param[i];
-            if (eG.Param_Gamme_PRS_Id.compareTo(eP.Param_Saisie_ParamId) == 0) {
-              trv = true;
-              break;
-            }
-          }
-          if (!trv) {
-            ListParam_Saisie_ParamAll.forEach((element) {
-              if (element.Param_Saisie_ParamId.compareTo(eG.Param_Gamme_PRS_Id) == 0) {
-                ListParam_Saisie_Param.add(element);
-              }
-            });
-          }
-        }
-      }
-    }
-
-    return true;
-  }
-
-  static bool getParam_Saisie_ParamMem_CLF() {
-    ListParam_Saisie_Param.clear();
-
-    for (int i = 0; i < ListParam_GammeAll.length; i++) {
-      Param_Gamme eG = ListParam_GammeAll[i];
-      if (eG.Param_Gamme_DESC_Lib.compareTo(DESC_Lib) == 0) {
-        if (eG.Param_Gamme_FAB_Lib.compareTo(FAB_Lib) == 0) {
-          if (eG.Param_Gamme_PRS_Lib.compareTo(PRS_Lib) == 0) {
-            bool trv = false;
-            for (int i = 0; i < ListParam_Saisie_Param.length; i++) {
-              Param_Saisie_Param eP = ListParam_Saisie_Param[i];
-              if (eG.Param_Gamme_CLF_Id.compareTo(eP.Param_Saisie_ParamId) == 0) {
-                trv = true;
-                break;
-              }
-            }
-            if (!trv) {
-              ListParam_Saisie_ParamAll.forEach((element) {
-                if (element.Param_Saisie_ParamId.compareTo(eG.Param_Gamme_CLF_Id) == 0) {
-                  ListParam_Saisie_Param.add(element);
-                }
-              });
-            }
-          }
-        }
-      }
-    }
-
-    return true;
-  }
-
-  static bool getParam_Saisie_ParamMem_MOB() {
-    ListParam_Saisie_Param.clear();
-
-    for (int i = 0; i < ListParam_GammeAll.length; i++) {
-      Param_Gamme eG = ListParam_GammeAll[i];
-      if (eG.Param_Gamme_DESC_Lib.compareTo(DESC_Lib) == 0) {
-        if (eG.Param_Gamme_FAB_Lib.compareTo(FAB_Lib) == 0) {
-          if (eG.Param_Gamme_PRS_Lib.compareTo(PRS_Lib) == 0) {
-            if (eG.Param_Gamme_CLF_Lib.compareTo(CLF_Lib) == 0) {
-              bool trv = false;
-              for (int i = 0; i < ListParam_Saisie_Param.length; i++) {
-                Param_Saisie_Param eP = ListParam_Saisie_Param[i];
-                if (eG.Param_Gamme_MOB_Id.compareTo(eP.Param_Saisie_ParamId) == 0) {
-                  trv = true;
-                  break;
-                }
-              }
-              if (!trv) {
-                ListParam_Saisie_ParamAll.forEach((element) {
-                  if (element.Param_Saisie_ParamId.compareTo(eG.Param_Gamme_MOB_Id) == 0) {
-                    ListParam_Saisie_Param.add(element);
-                  }
-                });
-              }
-            }
-          }
-        }
-      }
-    }
-
-    return true;
-  }
-
-  static bool getParam_Saisie_ParamMem_PDT() {
-    ListParam_Saisie_Param.clear();
-
-    for (int i = 0; i < ListParam_GammeAll.length; i++) {
-      Param_Gamme eG = ListParam_GammeAll[i];
-      if (eG.Param_Gamme_DESC_Lib.compareTo(DESC_Lib) == 0) {
-        if (eG.Param_Gamme_FAB_Lib.compareTo(FAB_Lib) == 0) {
-          if (eG.Param_Gamme_PRS_Lib.compareTo(PRS_Lib) == 0) {
-            if (eG.Param_Gamme_CLF_Lib.compareTo(CLF_Lib) == 0) {
-              if (eG.Param_Gamme_MOB_Lib.compareTo(MOB_Lib) == 0) {
-                bool trv = false;
-                for (int i = 0; i < ListParam_Saisie_Param.length; i++) {
-                  Param_Saisie_Param eP = ListParam_Saisie_Param[i];
-                  if (eG.Param_Gamme_PDT_Id.compareTo(eP.Param_Saisie_ParamId) == 0) {
-                    trv = true;
-                    break;
-                  }
-                }
-                if (!trv) {
-                  ListParam_Saisie_ParamAll.forEach((element) {
-                    if (element.Param_Saisie_ParamId.compareTo(eG.Param_Gamme_PDT_Id) == 0) {
-                      ListParam_Saisie_Param.add(element);
-                    }
-                  });
-                }
-              }
-            }
-          }
-        }
-      }
-    }
-
-    return true;
-  }
-
-  static bool getParam_Saisie_ParamMem_POIDS() {
-    ListParam_Saisie_Param.clear();
-    wKgL = "";
-    ListParam_GammeAll.forEach((eG) {
-      if (eG.Param_Gamme_DESC_Lib.compareTo(DESC_Lib) == 0) {
-        if (eG.Param_Gamme_FAB_Lib.compareTo(FAB_Lib) == 0) {
-          if (eG.Param_Gamme_PRS_Lib.compareTo(PRS_Lib) == 0) {
-            if (eG.Param_Gamme_CLF_Lib.compareTo(CLF_Lib) == 0) {
-              if (eG.Param_Gamme_MOB_Lib.compareTo(MOB_Lib) == 0) {
-                if (eG.Param_Gamme_PDT_Lib.compareTo(PDT_Lib) == 0) {
-                  bool trv = false;
-                  for (int i = 0; i < ListParam_Saisie_Param.length; i++) {
-                    Param_Saisie_Param eP = ListParam_Saisie_Param[i];
-                    if (eG.Param_Gamme_POIDS_Id.compareTo(eP.Param_Saisie_ParamId) == 0) {
-                      trv = true;
-                      break;
-                    }
-                  }
-                  if (!trv) {
-                    ListParam_Saisie_ParamAll.forEach((element) {
-                      if (element.Param_Saisie_ParamId.compareTo(eG.Param_Gamme_POIDS_Id) == 0) {
-                        if (eG.Param_Gamme_POIDS_Lib.contains("L")) wKgL = "Litres";
-                        if (eG.Param_Gamme_POIDS_Lib.contains("Kg")) wKgL = "Kilos";
-
-                        ListParam_Saisie_Param.add(element);
-                      }
-                    });
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    });
-
-    return true;
-  }
-
-  static bool getParam_Saisie_ParamMem_GAM() {
-    ListParam_Saisie_Param.clear();
-
-    ListParam_GammeAll.forEach((eG) {
-      if (eG.Param_Gamme_DESC_Lib.compareTo(DESC_Lib) == 0) {
-        if (eG.Param_Gamme_FAB_Lib.compareTo(FAB_Lib) == 0) {
-          if (eG.Param_Gamme_PRS_Lib.compareTo(PRS_Lib) == 0) {
-            if (eG.Param_Gamme_CLF_Lib.compareTo(CLF_Lib) == 0) {
-              if (eG.Param_Gamme_MOB_Lib.compareTo(MOB_Lib) == 0) {
-                if (eG.Param_Gamme_PDT_Lib.compareTo(PDT_Lib) == 0) {
-                  String wPOIDS_Lib = POIDS_Lib.replaceAll("Litres", "L").replaceAll("Kilos", "Kg");
-                  if (eG.Param_Gamme_POIDS_Lib.compareTo(wPOIDS_Lib) == 0) {
-                    bool trv = false;
-                    for (int i = 0; i < ListParam_Saisie_Param.length; i++) {
-                      Param_Saisie_Param eP = ListParam_Saisie_Param[i];
-                      if (eG.Param_Gamme_GAM_Id.compareTo(eP.Param_Saisie_ParamId) == 0) {
-                        trv = true;
-                        break;
-                      }
-                    }
-                    if (!trv) {
-                      ListParam_Saisie_ParamAll.forEach((element) {
-                        if (element.Param_Saisie_ParamId.compareTo(eG.Param_Gamme_GAM_Id) == 0) {
-                          ListParam_Saisie_Param.add(element);
-                        }
-                      });
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    });
-
-    return true;
-  }
-*/
 
   static bool getParam_Saisie_ParamMem_REF() {
     ListParam_Saisie_Param.clear();

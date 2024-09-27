@@ -15,6 +15,8 @@ class Parc_Art {
   int?    Qte = 0;
   Image?  wImage ;
   bool    wImgeTrv       = false;
+  bool    Art_Sel       = false;
+
 
   static Parc_ArtInit(int wParcsArt_ParcsId) {
     String ParcsArt_Lib = "---";

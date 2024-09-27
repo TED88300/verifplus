@@ -655,13 +655,87 @@ class gColors {
     return showDialog(
         context: context,
         builder: (_) => new AlertDialog(
-          contentPadding : EdgeInsets.fromLTRB(0, 0, 0, 0),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+
+
+          contentPadding: EdgeInsets.zero,
           content: Container(
             child: wImageArt!,
             width: 700,
           ),
         ));
   }
+
+  static AffZoomImageArticle(BuildContext context, Image wImageArt, String wTxt) async {
+
+    return showDialog(
+        context: context,
+        builder: (_) =>  AlertDialog(
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+          title:  InkWell(
+            onTap: () async {
+              Navigator.of(context).pop();            },
+            child:
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Photo",
+                  textAlign: TextAlign.center,
+                  style: gColors.bodyTitle1_B_G_20,
+                ),
+                Text(
+                  "$wTxt",
+                  textAlign: TextAlign.center,
+                  style: gColors.bodyTitle1_N_Gr,
+                ),
+                Container(
+                  height: 8,
+                ),
+
+              ]),),
+          contentPadding: EdgeInsets.zero,
+          content:
+          InkWell(
+            onTap: () async {
+              Navigator.of(context).pop();            },
+            child:
+            Container(
+              height: 620,
+              child:
+
+                Column(children: [
+                  Container(
+                    color: gColors.black,
+                    height: 1,
+                  ),
+                  Container(
+                    height: 8,
+                  ),
+                  Container(
+                    height: 600,
+                    width: 600,
+                    child: wImageArt!,
+                  ),
+                  Container(
+                    height: 8,
+                  ),
+                  Container(
+                    color: gColors.black,
+                    height: 1,
+                  ),
+
+                ],))
+           ),
+          actions: <Widget>[
+            Container(
+              height: 8,
+            ),
+          ],
+        ));
+  }
+
+
 
 
 
@@ -750,18 +824,31 @@ class gColors {
 
   static String AbrevTxt_Param_Param(String wTxt, String wParam_Id) {
 
+//    print("AbrevTxt_Param_Param INIT $wTxt");
+
+
     if (wParam_Id.isNotEmpty)
       {
         Srv_DbTools.getParam_Saisie_ParamMem(wParam_Id);
+
+      //  print("AbrevTxt_Param_Param Srv_DbTools.ListParam_Saisie_Param.length ${Srv_DbTools.ListParam_Saisie_Param.length} ");
+
+
         Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
           if (element.Param_Saisie_Param_Label.compareTo(wTxt) == 0) {
             wTxt = element.Param_Saisie_Param_Abrev;
           }
         });
       }
+
+//    print("AbrevTxt_Param_Param A $wTxt ${Srv_DbTools.ListParam_Param_Abrev.length}");
+
     Srv_DbTools.ListParam_Param_Abrev.forEach((element) {
       wTxt = wTxt.replaceAll(element.Param_Param_ID, element.Param_Param_Text);
     });
+
+//    print("AbrevTxt_Param_Param B $wTxt");
+
     return wTxt;
   }
 

@@ -15,10 +15,12 @@ import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie_Param.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Art.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Desc.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Ent.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Imgs.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Ent.dart';
+import 'package:verifplus/Tools/DbTools/Db_Parcs_Img.dart';
 import 'package:verifplus/Widget/Client/Client_Dialog.dart';
 import 'package:verifplus/Widget/Client/Vue_Intervention.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_BC.dart';
@@ -41,7 +43,7 @@ class Client_Groupe_Parc_Inter extends StatefulWidget {
 }
 
 class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with TickerProviderStateMixin {
-  late TabController _tabController;
+//  late TabController _tabController;
   bool affEdtFilter = false;
 
   bool canClose = false;
@@ -119,34 +121,31 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     await DbTools.getParam_Saisie_Base("Audit");
     Srv_DbTools.ListParam_Audit_Base.clear();
     Srv_DbTools.ListParam_Audit_Base.addAll(Srv_DbTools.ListParam_Saisie_Base);
-    print("♦︎♦︎♦︎♦︎♦︎♦ Audit ${Srv_DbTools.ListParam_Audit_Base.length}");
+    //print("♦︎♦︎♦︎♦︎♦︎♦ Audit ${Srv_DbTools.ListParam_Audit_Base.length}");
 
     await DbTools.getParam_Saisie(Srv_DbTools.gIntervention.Intervention_Parcs_Type, "Audit");
     Srv_DbTools.ListParam_Audit_Base.addAll(Srv_DbTools.ListParam_Saisie);
-    print("♦︎♦︎♦︎♦︎♦︎♦ Audit ${Srv_DbTools.ListParam_Audit_Base.length}");
+    //print("♦︎♦︎♦︎♦︎♦︎♦ Audit ${Srv_DbTools.ListParam_Audit_Base.length}");
 
     await DbTools.getParam_Saisie_Base("Verif");
     Srv_DbTools.ListParam_Verif_Base.clear();
     Srv_DbTools.ListParam_Verif_Base.addAll(Srv_DbTools.ListParam_Saisie_Base);
-    print("♦︎♦︎♦︎♦︎♦︎♦ Verif ${Srv_DbTools.ListParam_Verif_Base.length}");
+    //print("♦︎♦︎♦︎♦︎♦︎♦ Verif ${Srv_DbTools.ListParam_Verif_Base.length}");
 
     await DbTools.getParam_Saisie(Srv_DbTools.gIntervention.Intervention_Parcs_Type, "Verif");
     Srv_DbTools.ListParam_Verif_Base.addAll(Srv_DbTools.ListParam_Saisie);
-    print("♦︎♦︎♦︎♦︎♦︎♦ Verif ${Srv_DbTools.ListParam_Verif_Base.length}");
-
-
-
+    //print("♦︎♦︎♦︎♦︎♦︎♦ Verif ${Srv_DbTools.ListParam_Verif_Base.length}");
 
     await DbTools.getParam_Saisie_Base("Interv");
     Srv_DbTools.ListParam_Interv_Base.clear();
     Srv_DbTools.ListParam_Interv_Base.addAll(Srv_DbTools.ListParam_Saisie_Base);
-    print("♦︎♦︎♦︎♦︎♦︎♦ Interv ${Srv_DbTools.ListParam_Interv_Base.length}");
+    //print("♦︎♦︎♦︎♦︎♦︎♦ Interv ${Srv_DbTools.ListParam_Interv_Base.length}");
 
     await DbTools.getParam_Saisie_Base("Desc");
-    print("♦︎♦︎♦︎♦︎♦︎♦ Desc ${Srv_DbTools.ListParam_Saisie_Base.length}");
+    //print("♦︎♦︎♦︎♦︎♦︎♦ Desc ${Srv_DbTools.ListParam_Saisie_Base.length}");
 
     DbTools.glfParcs_Ent = await DbTools.getParcs_Ent(Srv_DbTools.gIntervention.InterventionId!);
-    print("♦︎♦︎♦︎♦︎♦︎♦ DbTools.glfParcs_Ent A ${DbTools.glfParcs_Ent .length}");
+    //print("♦︎♦︎♦︎♦︎♦︎♦ DbTools.glfParcs_Ent A ${DbTools.glfParcs_Ent .length}");
 
 
     for (int i = 0; i < DbTools.gRowSels.length; i++) {
@@ -159,7 +158,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     }
 
     DbTools.glfParcs_Desc = await DbTools.getParcs_DescInter(Srv_DbTools.gIntervention.InterventionId!);
-    print("♦︎♦︎♦︎♦︎♦︎♦ DbTools.glfParcs_Ent B ${DbTools.glfParcs_Ent .length}");
+    //print("♦︎♦︎♦︎♦︎♦︎♦ DbTools.glfParcs_Ent B ${DbTools.glfParcs_Ent .length}");
 
 
     String DescAff = "";
@@ -179,18 +178,10 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     int index = subLibArray.indexWhere((element) => element.compareTo(DbTools.ParamTypeOg) == 0);
     DbTools.OrgLib = subLibArray[index];
 
-    print("♦︎♦︎♦︎♦︎♦︎♦ DbTools.ParamTypeOg ${DbTools.ParamTypeOg}");
-    print("♦︎♦︎♦︎♦︎♦︎♦ DbTools.OrgLib ${DbTools.OrgLib}");
-    print("♦︎♦︎♦︎♦︎♦︎♦ Intervention_Parcs_Type ${Srv_DbTools.gIntervention.Intervention_Parcs_Type}");
-
-
-
-
 
     await DbTools.getParam_Saisie(Srv_DbTools.gIntervention.Intervention_Parcs_Type, "Desc");
     for (int i = 0; i < Srv_DbTools.ListParam_Saisie.length; i++) {
       Param_Saisie eP = Srv_DbTools.ListParam_Saisie[i];
-      print("♦︎♦︎♦︎♦︎♦︎♦ eP ${eP.Param_Saisie_Organe} ${eP.Param_Saisie_ID} ${eP.Param_Saisie_Label}");
     }
 
 
@@ -198,20 +189,15 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     Srv_DbTools.getParam_ParamMemDet("Param_Div", "${Srv_DbTools.gIntervention.Intervention_Parcs_Type}_Desc");
     if (Srv_DbTools.ListParam_Param.length > 0) DescAffnewParam = Srv_DbTools.ListParam_Param[0].Param_Param_Text;
 
+
+
+
     //DescAffnewParam PDT POIDS PRS MOB / ZNE EMP NIV / ANN / FAB
     List<Param_Saisie> ListParam_Saisie_Tmp = [];
     ListParam_Saisie_Tmp.addAll(Srv_DbTools.ListParam_Saisie);
     ListParam_Saisie_Tmp.addAll(Srv_DbTools.ListParam_Saisie_Base);
 
 
-    for (int i = 0; i < ListParam_Saisie_Tmp.length; i++) {
-      Param_Saisie eP = ListParam_Saisie_Tmp[i];
-      print(" eP ${eP.Param_Saisie_Organe} ${eP.Param_Saisie_ID} ${eP.Param_Saisie_Label}");
-    }
-
-
-
-//    Parcs_Date_VRMC
 
     bool isRelEnt = false;
 
@@ -221,9 +207,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
     for (int jj = 0; jj < DbTools.glfParcs_Ent.length; jj++) {
       Parc_Ent elementEnt = DbTools.glfParcs_Ent[jj];
-
-      print("♦︎♦︎♦︎♦︎♦︎♦ Ordre︎ ${elementEnt.toMap()}");
-
       countTot++;
       if (!elementEnt.Parcs_Date_Rev!.isEmpty) countX++;
 
@@ -234,15 +217,12 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       }
 
       DescAff = DescAffnewParam;
-      print("♦︎♦︎♦︎♦︎♦︎♦ DescAffnewParam ${DescAff}");
-
-
       List<String?>? Parcs_Cols = [];
 
       for (int j = 0; j < ListParam_Saisie_Tmp.length; j++) {
         Param_Saisie param_Saisie = ListParam_Saisie_Tmp[j];
 
-        if (param_Saisie.Param_Saisie_Affichage.compareTo("DESC") == 0) {
+     if (param_Saisie.Param_Saisie_Affichage.compareTo("DESC") == 0) {
           if (param_Saisie.Param_Saisie_ID.compareTo("FREQ") == 0) {
             DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(elementEnt.Parcs_FREQ_Label!, param_Saisie.Param_Saisie_ID)}");
           } else if (param_Saisie.Param_Saisie_ID.compareTo("ANN") == 0) {
@@ -266,13 +246,9 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
             DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(elementEnt.Parcs_SERIE_Label!, param_Saisie.Param_Saisie_ID)}");
           } else {
             bool trv = false;
-            print("ELSE param_Saisie.Param_Saisie_ID ${param_Saisie.Param_Saisie_ID} ${DescAff} l ${DbTools.glfParcs_Desc.length}");
-
             for (int j = 0; j < DbTools.glfParcs_Desc.length; j++) {
               Parc_Desc element2 = DbTools.glfParcs_Desc[j];
               if (elementEnt.ParcsId == element2.ParcsDesc_ParcsId && param_Saisie.Param_Saisie_ID == element2.ParcsDesc_Type) {
-                //            print("param_Saisie.Param_Saisie_Affichage ${elementEnt.ParcsId} ${param_Saisie.Param_Saisie_ID}");
-                //          print("param_Saisie.Param_Saisie_Affichage2 ${element2.ParcsDesc_ParcsId} ${element2.ParcsDesc_Type}");
                 DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, param_Saisie.Param_Saisie_ID)}");
                 trv = true;
               }
@@ -280,9 +256,19 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
             if (!trv) DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "");
           }
         }
+     else if (param_Saisie.Param_Saisie_ID.compareTo("DESC2") == 0) {
 
+       bool trv = false;
+       for (int j = 0; j < DbTools.glfParcs_Desc.length; j++) {
+         Parc_Desc element2 = DbTools.glfParcs_Desc[j];
+         if (elementEnt.ParcsId == element2.ParcsDesc_ParcsId && param_Saisie.Param_Saisie_ID == element2.ParcsDesc_Type) {
+           DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, param_Saisie.Param_Saisie_ID)}");
+           trv = true;
+         }
+       }
+       if (!trv) DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "");
+     }
 
-        print("♦︎♦︎♦︎♦︎♦︎♦ DescAff ${DescAff}");
 
 
         if (param_Saisie.Param_Saisie_Affichage.compareTo("COL") == 0) {
@@ -528,11 +514,14 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     print("Reload Fin");
   }
 
+
+  DaviModel<Parc_Ent>? _model;
+
   Future Filtre() async {
 
 
-    print("♦︎♦︎♦︎♦︎♦︎♦ Filtre subLibArray ${subLibArray.length}");
-    print("♦︎♦︎♦︎♦︎♦︎♦ Filtre DbTools.ParamTypeOg ${DbTools.ParamTypeOg}");
+    //print("♦︎♦︎♦︎♦︎♦︎♦ Filtre subLibArray ${subLibArray.length}");
+    //print("♦︎♦︎♦︎♦︎♦︎♦ Filtre DbTools.ParamTypeOg ${DbTools.ParamTypeOg}");
 
 
     int index = subLibArray.indexWhere((element) => element.compareTo(DbTools.ParamTypeOg) == 0);
@@ -542,14 +531,14 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     DbTools.lParcs_Ent.clear();
 
 
-    print("♦︎♦︎♦︎♦︎♦︎♦ DbTools.glfParcs_Ent Filtre ${DbTools.glfParcs_Ent.length}");
+    //print("♦︎♦︎♦︎♦︎♦︎♦ DbTools.glfParcs_Ent Filtre ${DbTools.glfParcs_Ent.length}");
 
 
     for (int i = 0; i < DbTools.glfParcs_Ent.length; i++) {
       Parc_Ent element = DbTools.glfParcs_Ent[i];
 
-      print("♦︎♦︎♦︎♦︎♦︎♦ Filtre subTitleArray ${subTitleArray[index]}");
-      print("♦︎♦︎♦︎♦︎♦︎♦ Filtre Parcs_Type ${element.Parcs_Type!}");
+      //print("♦︎♦︎♦︎♦︎♦︎♦ Filtre subTitleArray ${subTitleArray[index]}");
+      //print("♦︎♦︎♦︎♦︎♦︎♦ Filtre Parcs_Type ${element.Parcs_Type!}");
 
 
 //      if (subTitleArray[index].toUpperCase().contains(element.Parcs_Type!.toUpperCase())) {
@@ -594,8 +583,75 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       }
     }
 
-    print("♦︎♦︎♦︎♦︎♦︎♦ DbTools.lParcs_Ent Filtre ${DbTools.lParcs_Ent.length}");
+    //print("♦︎♦︎♦︎♦︎♦︎♦ DbTools.lParcs_Ent Filtre ${DbTools.lParcs_Ent.length}");
 
+    List<DaviColumn<Parc_Ent>> wColumns = [
+      new DaviColumn(
+          name: 'N°',
+          cellStyleBuilder: (row) => DbTools.gRowisSel && isInSels(row.data.ParcsId!)
+              ? CellStyle(background: gColors.GrdBtn_Colors1Sel, alignment: Alignment.center, textStyle: gColors.bodySaisie_B_W)
+              : LastClickID == row.data.ParcsId
+              ? CellStyle(background: Colors.blue, alignment: Alignment.center, textStyle: gColors.bodySaisie_B_G)
+              : CellStyle(background: Colors.white, alignment: Alignment.center, textStyle: gColors.bodySaisie_N_G),
+          cellBuilder: (BuildContext context, DaviRow<Parc_Ent> row) {
+            int hab = 0;
+            bool upd = false;
+            if (row.data.Parcs_MaintCorrect!) hab = 1;
+            if (row.data.Parcs_MaintCorrect!) hab = 2;
+            if (row.data.Parcs_Install!) hab = 3;
+
+            upd = (row.data.Parcs_Update == 1);
+
+            return InkWell(
+                child: Container(
+                    alignment: Alignment.centerLeft,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        upd
+                            ? Container(
+                            width: 15,
+                            child: Icon(
+                              Icons.adjust,
+                              color: Colors.orange,
+                              size: 10,
+                            ))
+                            : Container(
+                          width: 15,
+                        ),
+                        Text(
+                          "${row.data.Parcs_order}",
+                          style: row.data.Livr!.isNotEmpty ? gColors.bodySaisie_B_O.copyWith(color: LastClickID == row.data.ParcsId ? Colors.white : null) : gColors.bodySaisie_B_G,
+                        ),
+                      ],
+                    )),
+                onLongPress: () => _onSelMove(row.data));
+          },
+          width: 60),
+      new DaviColumn(name: '${DbTools.ParamTypeOg}', stringValue: (row) => "${row.Parcs_Date_Desc}", width: gColors.MediaQuerysizewidth - 218, cellStyleBuilder: (row) => CellStyle(textStyle: row.data.Livr!.isNotEmpty ? gColors.bodySaisie_B_O.copyWith(color: LastClickID == row.data.ParcsId ? Colors.white : null) : gColors.bodySaisie_B_G.copyWith(color: LastClickID == row.data.ParcsId ? Colors.white : null))),
+      new DaviColumn(name: 'Visite', stringValue: (row) => "${row.Parcs_Date_Rev!.isEmpty ? '' : DateFormat('dd/MM/yy').format(DateTime.parse(row.Parcs_Date_Rev!))}", width: 75, cellStyleBuilder: (row) => CellStyle(textStyle: row.data.Livr!.isNotEmpty ? gColors.bodySaisie_B_O.copyWith(color: LastClickID == row.data.ParcsId ? Colors.white : null) : gColors.bodySaisie_B_G.copyWith(color: LastClickID == row.data.ParcsId ? Colors.white : null))),
+      new DaviColumn(
+          name: 'Action',
+          cellAlignment: Alignment.centerRight,
+          cellPadding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+          cellBuilder: (BuildContext context, DaviRow<Parc_Ent> row) {
+            return Container(
+              child: row.data.Parcs_VRMC!.isEmpty
+                  ? Container()
+                  : Text(
+                  "${row.data.Parcs_VRMC} >",
+                  textAlign: TextAlign.right,
+                  style: gColors.bodySaisie_B_G.copyWith(color: LastClickID == row.data.ParcsId ? Colors.white : Colors.green)
+
+              ),
+            );
+          },
+          width: 65),
+    ];
+
+
+
+    _model = DaviModel<Parc_Ent>(rows: DbTools.lParcs_Ent, columns: wColumns);
 
 
     setState(() {});
@@ -655,11 +711,14 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
     DbTools.ParamTypeOg = subLibArray[0];
 
+/*
     _tabController = TabController(vsync: this, length: 14);
     _tabController.index = 0;
     _tabController.addListener(() {
+      print(" _tabController.addListener(() ");
       Filtre();
     });
+*/
 
     initLib();
     initConnectivity();
@@ -858,7 +917,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
   @override
   Widget Import_Export() {
     return Padding(
-      padding: const EdgeInsets.only(left: 70, right: 30.0, bottom: 40.0),
+      padding: const EdgeInsets.only(left: 70, right: 30.0, bottom: 140.0),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
         crossAxisAlignment: CrossAxisAlignment.end,
@@ -905,13 +964,20 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
                     for (int i = 0; i < Srv_DbTools.ListParc_Ent.length; i++) {
                       Parc_Ent_Srv xParc_Ent_Srv = Srv_DbTools.ListParc_Ent[i];
-                      print("♦︎♦︎ IMPORT ♦︎♦︎ ListParc_Ent ${xParc_Ent_Srv.toMap()}");
+                  //    print("♦︎♦︎ IMPORT ♦︎♦︎ ListParc_Ent ${xParc_Ent_Srv.toMap()}");
                     }
 
                     await Srv_DbTools.getParcs_DescInter(Srv_DbTools.gIntervention.InterventionId!);
                     print("♦︎♦︎ IMPORT ♦︎♦︎ ListParc_Desc lenght ${Srv_DbTools.ListParc_Desc.length}");
 
                     await Srv_DbTools.getParcs_ArtInter(Srv_DbTools.gIntervention.InterventionId!);
+                    print("♦︎♦︎ IMPORT ♦︎♦︎ ListParc_Art lenght ${Srv_DbTools.ListParc_Art.length}");
+
+                    await Srv_DbTools.getParcs_ImgsInter(Srv_DbTools.gIntervention.InterventionId!);
+                    print("♦︎♦︎ IMPORT ♦︎♦︎ ListParc_Imgs lenght ${Srv_DbTools.ListParc_Imgs.length}");
+
+
+
 
                     for (int i = 0; i < Srv_DbTools.ListParc_Art.length; i++) {
                       Parc_Art_Srv element = Srv_DbTools.ListParc_Art[i];
@@ -934,6 +1000,14 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                       Parc_Desc xParc_Desc = wParcs_Desc[i];
                       await DbTools.deleteParc_Desc(xParc_Desc.ParcsDescId!);
                     }
+
+                    List<Parc_Img> wParcs_Img = await DbTools.getParcs_ImgInter(Srv_DbTools.gIntervention.InterventionId!);
+                    for (int i = 0; i < wParcs_Img.length; i++) {
+                      Parc_Img xParc_Img = wParcs_Img[i];
+                      await DbTools.deleteParc_ImgAllType(xParc_Img.Parc_Imgs_ParcsId!);
+                    }
+
+
 
                     // INSERT
                     print("***************** INSERT ****************");
@@ -963,6 +1037,23 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                           await DbTools.insertParc_Art_Srv(xParc_Art_Srv);
                         }
                       }
+
+                      for (int i = 0; i < Srv_DbTools.ListParc_Imgs.length; i++) {
+                        Parc_Imgs_Srv xParc_Imgs_Srv = Srv_DbTools.ListParc_Imgs[i];
+                        if (xParc_Imgs_Srv.Parc_Imgs_ParcsId == ParcsId) {
+                          xParc_Imgs_Srv.Parc_Imgid = null;
+                          xParc_Imgs_Srv.Parc_Imgs_ParcsId = gLastID;
+
+
+                          print(" xParc_Imgs_Srv.Parc_Imgs_Data!.length ${xParc_Imgs_Srv.Parc_Imgs_Data!.length}");
+
+
+                          await DbTools.insertParc_Img_Srv(xParc_Imgs_Srv);
+                        }
+                      }
+
+
+
                     }
                     print("setSt 7");
 
@@ -974,12 +1065,27 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                     await Reload();
                     List<Parc_Art> zParcs_Art = await DbTools.getParcs_ArtInter(Srv_DbTools.gIntervention.InterventionId!);
                     List<Parc_Desc> zParcs_Desc = await DbTools.getParcs_DescInter(Srv_DbTools.gIntervention.InterventionId!);
+                    List<Parc_Img> zParc_Img = await DbTools.getParcs_ImgInter(Srv_DbTools.gIntervention.InterventionId!);
 
                     String wStr = "Import de ${Srv_DbTools.ListParc_Ent.length} organes terminé\n\n"
+/*
                         "- ${Srv_DbTools.ListParc_Desc.length} descriptions\n"
-                        "- ${Srv_DbTools.ListParc_Art.length} Articles\n\n"
+                        "- ${Srv_DbTools.ListParc_Art.length} Articles - ${Srv_DbTools.ListParc_Imgs.length} zImages\n"
+*/
                         "- ${zParcs_Desc.length} descriptions\n"
-                        "- ${zParcs_Art.length} Articles\n\n";
+                        "- ${zParcs_Art.length} Articles\n"
+                        "- ${zParc_Img.length} Images ";
+
+
+                        print(" ${wStr}");
+
+                    for (int i = 0; i < zParc_Img.length; i++) {
+                      Parc_Img xParc_Imgs_Srv = zParc_Img[i];
+
+                      print("xParc_Imgs_Srv ${xParc_Imgs_Srv.toMap()}");
+
+                    }
+
 
                     await gObj.AffMessageInfo(context, "Verif Plus", wStr);
 
@@ -1025,6 +1131,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                     });
                     int NbDesc = 0;
                     int NbArt = 0;
+                    int NbImg = 0;
 
                     print("Export 0 glfParcs_Ent lenght ${DbTools.glfParcs_Ent.length}");
                     DbTools.glfParcs_Ent = await DbTools.getParcs_Ent_Upd(Srv_DbTools.gIntervention.InterventionId!);
@@ -1035,6 +1142,10 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                     print("Export getParcs_ArtInter ${Srv_DbTools.gIntervention.InterventionId!}");
                     print("Export glfParcs_Art lenght ${DbTools.glfParcs_Art.length}");
                     DbTools.lParcs_Art.addAll(DbTools.glfParcs_Art);
+
+                    DbTools.glfParc_Imgs = await DbTools.getParcs_ImgInter(Srv_DbTools.gIntervention.InterventionId!);
+
+
 
 //                    await Srv_DbTools.delParc_Ent_Srv(Srv_DbTools.gIntervention.InterventionId!);
                     await Srv_DbTools.delParc_Ent_Srv_Upd();
@@ -1063,6 +1174,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                         await Srv_DbTools.InsertUpdateParc_Desc_Srv_Sql(wSql);
                       }
 
+                      // ART
                       wSql = "";
                       for (int i = 0; i < DbTools.lParcs_Art.length; i++) {
                         var element2 = DbTools.lParcs_Art[i];
@@ -1076,6 +1188,17 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
                       if (wSql.isNotEmpty) {
                         await Srv_DbTools.InsertUpdateParc_Art_Srv_Sql(wSql);
+                      }
+
+                      // IMG
+                      wSql = "";
+                      for (int i = 0; i < DbTools.glfParc_Imgs.length; i++) {
+                        var element2 = DbTools.glfParc_Imgs[i];
+                        if (element2.Parc_Imgs_ParcsId == element.ParcsId) {
+                          NbImg++;
+                          element2.Parc_Imgs_ParcsId = gLastID;
+                          await Srv_DbTools.InsertUpdateParc_Imgs_Srv(element2);
+                        }
                       }
 
                       print(" updateParc_Ent_Update");
@@ -1094,7 +1217,8 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
                     String wStr = "Export => Transfert de ${DbTools.glfParcs_Ent.length} organes terminé \n\n"
                         "- ${NbDesc} descriptions\n"
-                        "- ${NbArt} Articles";
+                        "- ${NbArt} Articles\n"
+                        "- ${NbImg} Images";
 
                     await gObj.AffMessageInfo(context, "Verif Plus", wStr);
                     await Srv_ImportExport.getErrorSync();
@@ -1106,10 +1230,14 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
   @override
   Widget Enntete_Inter() {
+    String wTitre2 = "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}";
+    if (Srv_DbTools.gIntervention.Groupe_Nom! == Srv_DbTools.gIntervention.Site_Nom!)
+      wTitre2 = "";
+
     return Padding(
         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: Column(children: [
-          gObj.InterventionTitleWidget("${Srv_DbTools.gIntervention.Client_Nom!.toUpperCase()}", wTitre2: "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}", wTimer: 0),
+          gObj.InterventionTitleWidget("${Srv_DbTools.gIntervention.Client_Nom!.toUpperCase()}", wTitre2: "aaa ${wTitre2}", wTimer: 0),
         ]));
   }
 
@@ -1117,17 +1245,15 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
   Widget Organes() {
 
     String wTitre2 = "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}";
-    if (Srv_DbTools.gIntervention.Groupe_Nom == Srv_DbTools.gIntervention.Site_Nom)
-      wTitre2 = "${Srv_DbTools.gIntervention.Site_Nom}";
-
-    print(" Client_Groupe_Parc_Inter Organes() ${wTitre2}");
+    if (Srv_DbTools.gIntervention.Groupe_Nom! == Srv_DbTools.gIntervention.Site_Nom!)
+      wTitre2 = "";
 
 
     return Padding(
         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: Column(
           children: [
-            gObj.InterventionTitleWidget("${Srv_DbTools.gIntervention.Client_Nom!.toUpperCase()}", wTitre2: wTitre2, wTimer: wTimer),
+            gObj.InterventionTitleWidget("${Srv_DbTools.gIntervention.Client_Nom!.toUpperCase()}", wTitre2: "${wTitre2}", wTimer: wTimer),
             Entete_Btn_Search(),
             Expanded(
               child: ExtGridWidget(),
@@ -1141,7 +1267,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
   Widget Data() {
     String wTitre2 = "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}";
     if (Srv_DbTools.gIntervention.Groupe_Nom == Srv_DbTools.gIntervention.Site_Nom)
-      wTitre2 = "${Srv_DbTools.gIntervention.Site_Nom}";
+      wTitre2 = "";
 
     return Padding(
         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -1154,6 +1280,23 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
   @override
   AppBar appBar() {
+
+    String wTitle = "COMPTE-RENDU / VÉRIFICATION";
+    if (DbTools.gCurrentIndex3 == 0)
+      wTitle = "COMPTE-RENDU";
+    else if (DbTools.gCurrentIndex3 == 1)
+      wTitle = "IMPORT/EXPORT DE DONNEES";
+    else if (DbTools.gCurrentIndex3 == 2)
+      wTitle = "BON DE LIVRAISON";
+    else if (DbTools.gCurrentIndex3 == 3)
+      wTitle = "BON DE COMMANDE";
+    else if (DbTools.gCurrentIndex3 == 4)
+      wTitle = "DEVIS";
+    else if (DbTools.gCurrentIndex3 == 5)
+      wTitle = "SIGNATURE RAPPORT";
+
+
+
     return AppBar(
       title: InkWell(
         onTap: () async {
@@ -1162,7 +1305,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
         },
         child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
           AutoSizeText(
-            affAll ? "COMPTE-RENDU / VÉRIFICATION" : "INFOS PRATIQUES",
+            affAll ? wTitle : "INFOS PRATIQUES",
             maxLines: 1,
             style: gColors.bodyTitle1_B_G24,
           ),
@@ -1350,7 +1493,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     } else
       wchildren = Enntete_Inter();
 
-    print(" Client_Groupe_Parc_Inter Build ${affAll} ${DbTools.gCurrentIndex3}");
+
 
 
     return WillPopScope(
@@ -1389,7 +1532,9 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                                 print("Client_Groupe_Parc_Inter Parcs_Type ${DbTools.gParc_Ent.Parcs_Type}");
                                 print("Client_Groupe_Parc_Inter Parcs_order ${DbTools.gParc_Ent.Parcs_order}");
 
-                                Parc_Ent wParc_Ent = Parc_Ent.Parc_EntInit(Srv_DbTools.gIntervention.InterventionId!, Srv_DbTools.gIntervention.Intervention_Parcs_Type, 0);
+
+
+                                Parc_Ent wParc_Ent = Parc_Ent.Parc_EntInit(Srv_DbTools.gIntervention.InterventionId!, Srv_DbTools.gIntervention.Intervention_Parcs_Type, 999999);
                                 DbTools.insertParc_Ent(wParc_Ent);
                                 await Reload();
                               },
@@ -1649,6 +1794,11 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                   TextField(
                     onChanged: (text) {
                       iPos = int.tryParse(text) ?? 1;
+                      if (iPos > DbTools.lParcs_Ent.length) {
+                        iPos = DbTools.lParcs_Ent.length;
+                        ctrlPos.text = "$iPos";
+                        setState(() {});
+                      }
                     },
                     textAlign: TextAlign.center,
                     style: gColors.bodyTitle1_B_G_20,
@@ -1698,7 +1848,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                       if (timer != null) {
                         timer!.cancel();
                       }
-
                       timer = Timer.periodic(const Duration(milliseconds: 200), (t) {
                         if (iPos < DbTools.lParcs_Ent.length) {
                           iPos++;
@@ -1827,15 +1976,32 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                       print("Press Valid");
                       if (iPos > DbTools.lParcs_Ent.length) {
                         iPos = DbTools.lParcs_Ent.length;
+                        ctrlPos.text = "$iPos";
+                        setState(() {});
+                        return;
                       }
                       if (iPos < 1) {
                         iPos = 1;
                       }
                       ctrlPos.text = "$iPos";
+
+
+
+
                       int FirstSelOrdre = DbTools.gRowSels[0].Ordre;
                       int LastSel = DbTools.gRowSels.length - 1;
                       int LastSelOrdre = DbTools.gRowSels[LastSel].Ordre;
+
+
+
+                      int wRealPos = getRealPos( iPos);
+
+
+
+                      print(" Press Valid AAA ${iPos} wRealPos $wRealPos F ${FirstSelOrdre} L ${LastSelOrdre}");
                       if (iPos < FirstSelOrdre) {
+                        print(" Press Valid BBB 111");
+
                         int wDec = FirstSelOrdre - iPos;
                         for (int j = 1; j <= wDec; j++) {
                           await moveUP();
@@ -1845,6 +2011,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                         }
                         await Reload();
                       } else if (LastSelOrdre < iPos) {
+                        print(" Press Valid BBB 222");
                         int wDec = iPos - LastSelOrdre;
                         for (int j = 0; j < wDec; j++) {
                           await moveDOWN();
@@ -1854,6 +2021,10 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                         }
                         await Reload();
                       }
+
+                      print(" Press Valid CCC");
+
+
 
                       FocusScopeNode currentFocus = FocusScope.of(context);
                       if (!currentFocus.hasPrimaryFocus) {
@@ -2092,6 +2263,19 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     );
   }
 
+
+  int getRealPos(int iPos)
+  {
+    for (int j = 0; j < DbTools.lParcs_Ent.length; j++) {
+      Parc_Ent wParc_Ent = DbTools.lParcs_Ent[j];
+      if (wParc_Ent.Parcs_order == iPos)
+        return j;
+    }
+  return -1;
+  }
+
+
+
   Widget Btn(
     String Txt,
     IconData Ico,
@@ -2264,102 +2448,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
   Widget ExtGridWidget() {
 
-    print(" Client_Groupe_Parc_Inter ExtGridWidget ${DbTools.lParcs_Ent.length}");
-
-
-    List<DaviColumn<Parc_Ent>> wColumns = [
-      new DaviColumn(
-          name: 'N°',
-          cellStyleBuilder: (row) => DbTools.gRowisSel && isInSels(row.data.ParcsId!)
-              ? CellStyle(background: gColors.GrdBtn_Colors1Sel, alignment: Alignment.center, textStyle: gColors.bodySaisie_B_W)
-              : LastClickID == row.data.ParcsId
-                  ? CellStyle(background: gColors.greyLight, alignment: Alignment.center, textStyle: gColors.bodySaisie_B_G)
-                  : CellStyle(background: Colors.white, alignment: Alignment.center, textStyle: gColors.bodySaisie_N_G),
-          cellBuilder: (BuildContext context, DaviRow<Parc_Ent> row) {
-            int hab = 0;
-            bool upd = false;
-            if (row.data.Parcs_MaintCorrect!) hab = 1;
-            if (row.data.Parcs_MaintCorrect!) hab = 2;
-            if (row.data.Parcs_Install!) hab = 3;
-
-            upd = (row.data.Parcs_Update == 1);
-
-            return InkWell(
-                child: Container(
-                    alignment: Alignment.centerLeft,
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        upd
-                            ? Container(
-                                width: 15,
-                                child: Icon(
-                                  Icons.adjust,
-                                  color: Colors.orange,
-                                  size: 10,
-                                ))
-                            : Container(
-                                width: 15,
-                              ),
-                        Text(
-                          "${row.data.Parcs_order}",
-                          style: row.data.Livr!.isNotEmpty ? gColors.bodySaisie_B_O : gColors.bodySaisie_B_G,
-                        ),
-/*
-                        Container(
-                          width: 2,
-                        ),
-                        Text(
-                          "${hab}",
-                          style: LastSelID == row.data.ParcsId ? gColors.smallText_P_B : gColors.smallText_P_N,
-                        ),
-*/
-                      ],
-                    )),
-                onLongPress: () => _onSelMove(row.data));
-          },
-          width: 60),
-      new DaviColumn(name: '${DbTools.ParamTypeOg}', stringValue: (row) => "${row.Parcs_Date_Desc}", width: gColors.MediaQuerysizewidth - 218, cellStyleBuilder: (row) => CellStyle(textStyle: row.data.Livr!.isNotEmpty ? gColors.bodySaisie_B_O : gColors.bodySaisie_B_G)),
-      new DaviColumn(name: 'Visite', stringValue: (row) => "${row.Parcs_Date_Rev!.isEmpty ? '' : DateFormat('dd/MM/yy').format(DateTime.parse(row.Parcs_Date_Rev!))}", width: 75, cellStyleBuilder: (row) => CellStyle(textStyle: row.data.Livr!.isNotEmpty ? gColors.bodySaisie_B_O : gColors.bodySaisie_B_G)),
-      new DaviColumn(
-          name: 'Action',
-          cellAlignment: Alignment.centerRight,
-          cellPadding: EdgeInsets.fromLTRB(2, 0, 2, 0),
-          cellBuilder: (BuildContext context, DaviRow<Parc_Ent> row) {
-            return Container(
-              child: row.data.Parcs_VRMC!.isEmpty
-                  ? Container()
-                  : Text(
-                      "${row.data.Parcs_VRMC} >",
-                      textAlign: TextAlign.right,
-                      style: gColors.bodySaisie_B_G.copyWith(
-                        color: Colors.green,
-                      ),
-                    ),
-            );
-          },
-          width: 65),
-    ];
-
-    /*  for (int i = 0; i < Parcs_ColsTitle!.length; i++) {
-      wColumns.add(
-        new DaviColumn(
-            name: Parcs_ColsTitle![i],
-            stringValue: (row) {
-              String wRet = "";
-              if (i < row.Parcs_Cols!.length) {
-                wRet = "${row.Parcs_Cols![i]}";
-              }
-              return wRet;
-            },
-            width: 80,
-            cellStyleBuilder: (row) => LastSelID == row.data.ParcsId ? CellStyle(textStyle: gColors.bodySaisie_B_G) : CellStyle(textStyle: gColors.bodySaisie_N_G)),
-      );
-    }*/
-
-    DaviModel<Parc_Ent>? _model;
-    _model = DaviModel<Parc_Ent>(rows: DbTools.lParcs_Ent, columns: wColumns);
-
     Davi wDavi = Davi<Parc_Ent>(
       _model,
 //      visibleRowsCount: 16,
@@ -2370,9 +2458,11 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       unpinnedHorizontalScrollController: wHScrollController,
       verticalScrollController: wVScrollController,
     );
+
     return Container(
       padding: EdgeInsets.only(bottom: 60),
       child: GestureDetector(
+
           onPanStart: (d) {
             dxPosition = 0;
             dyPosition = 0;
@@ -2380,7 +2470,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
           onPanUpdate: (details) {
             hPosition = 0;
             vPosition = 0;
-            if (details.delta.dx > 5) {
+/*            if (details.delta.dx > 5) {
               final minposition = wHScrollController.position.minScrollExtent;
               hPosition = wHScrollController.offset - 5;
               if (hPosition < minposition) hPosition = minposition;
@@ -2393,7 +2483,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
               if (hPosition > Maxposition) hPosition = Maxposition;
               wHScrollController.jumpTo(hPosition);
               dxPosition = details.delta.dx;
-            } else if (details.delta.dy < 0) {
+            } else */if (details.delta.dy < 0) {
               final maxposition = wVScrollController.position.maxScrollExtent;
               vPosition = wVScrollController.offset + 20; //details.delta.dy;
               if (vPosition > maxposition) vPosition = maxposition;
@@ -2431,8 +2521,10 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                 wVScrollController.animateTo(vPosition, duration: Duration(milliseconds: 1000), curve: Curves.easeOutCubic);
               }
             }
-//    ctrl!.animateWith(FrictionSimulation(0.05, ctrl!.value, d.velocity.pixelsPerSecond.dx / 100));
+
           },
+
+
           child: DaviTheme(
               child: wDavi,
               data: DaviThemeData(
@@ -2457,7 +2549,8 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
   Color? _rowColor(DaviRow<Parc_Ent> row) {
     if (LastClickID == row.data.ParcsId) {
-      return gColors.greyLight;
+//      return gColors.greyLight;
+      return Colors.blue;
     }
 
     return null;
@@ -2642,6 +2735,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     }
 
     DbTools.glfParcs_Desc = await DbTools.getParcs_Desc(DbTools.gParc_Ent.ParcsId!);
+
     Srv_DbTools.FAB_Lib = "";
     Srv_DbTools.TYPE_Lib = "";
     Srv_DbTools.PRS_Lib = "";

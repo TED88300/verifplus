@@ -275,48 +275,8 @@ class _MissionsState extends State<Missions> {
     );
   }
 
-  Widget InterMissionGridWidgetvp() {
-    List<DaviColumn<InterMission>> wColumns = [
-      DaviColumn(
-          pinStatus: PinStatus.left,
-          width: 50,
-          cellBuilder: (BuildContext context, DaviRow<InterMission> aInterMission) {
-            return Checkbox(
-              checkColor: Colors.white,
-              fillColor: MaterialStateProperty.resolveWith<Color>((Set<MaterialState> states) {
-                return gColors.primary;
-              }),
-              value: aInterMission.data.InterMission_Exec,
-              onChanged: (bool? value) async {
-                aInterMission.data.InterMission_Exec = (value == true);
-                await Srv_DbTools.setInterMission(aInterMission.data);
-                setState(() {});
-              },
-            );
-          }),
-      new DaviColumn(name: 'Libellé', grow: 18, stringValue: (row) => row.InterMission_Nom),
-    ];
 
-    print("InterMissionGridWidget");
-    DaviModel<InterMission>? _model;
-    _model = DaviModel<InterMission>(rows: Srv_DbTools.ListInterMissionsearchresult, columns: wColumns);
-    return new DaviTheme(
-        child: new Davi<InterMission>(
-          _model,
-          visibleRowsCount: 10,
-          onRowTap: (interMission) => _onRowTap(context, interMission),
-        ),
-        data: DaviThemeData(
-          header: HeaderThemeData(color: gColors.LinearGradient3, bottomBorderHeight: 2, bottomBorderColor: gColors.LinearGradient3),
-          headerCell: HeaderCellThemeData(height: 24, alignment: Alignment.center, textStyle: gColors.bodySaisie_B_B, resizeAreaWidth: 3, resizeAreaHoverColor: Colors.black, sortIconColors: SortIconColors.all(Colors.black), expandableName: false),
-          cell: CellThemeData(
-            contentHeight: 44,
-            textStyle: gColors.bodySaisie_N_G,
-          ),
-        ));
-  }
-
-//**********************************
+  //**********************************
 //**********************************
 //**********************************
 

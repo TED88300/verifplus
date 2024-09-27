@@ -8,14 +8,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:image/image.dart' as IMG;
-import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 
 import 'dart:ui' as ui;
 
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Img.dart';
-import 'package:verifplus/Tools/Upload.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 
 class gPhotoCrop extends StatefulWidget {
@@ -79,7 +76,7 @@ class gPhotoCropState extends State<gPhotoCrop> {
     relaodImage();
 
     final cropController = CropController(
-      aspectRatio: 1,
+//      aspectRatio: 1,
 //    defaultCrop: const Rect.fromLTRB(0.1, 0.1, 0.9, 0.9),
     );
 
@@ -96,7 +93,7 @@ class gPhotoCropState extends State<gPhotoCrop> {
             mainAxisSize: MainAxisSize.min,
             children: <Widget>[
               Text(
-                "Taille de l'image",
+                "Crop de l'image",
                 style: gColors.bodyTitle1_N_W,
                 textAlign: TextAlign.center,
               )
@@ -113,6 +110,17 @@ class gPhotoCropState extends State<gPhotoCrop> {
                     );
                     print(">>>>>>>> bytes");
                     final bytes = data!.buffer.asUint8List();
+                    print(">>>>>>>> bytes ${bytes.length}");
+
+                    print(">>>>>>>> ui.Image Size  ${croppedImage.width} ${croppedImage.height}");
+
+
+//                    Image wImage = Image(image: ResizeImage(MemoryImage(bytes), width: 300, height: 400));
+
+
+
+
+
 
                     File file = File(DbTools.gImagePath!);
                     await file.writeAsBytes(bytes);
@@ -122,6 +130,9 @@ class gPhotoCropState extends State<gPhotoCrop> {
                     wParc_Img.Parc_Imgs_Type = DbTools.gParc_Img_Type;
 
                     print(">>>>>>>>>>>>> Parc_Imgs_Data");
+
+
+
 
                     wParc_Img.Parc_Imgs_Data = await base64Encode(bytes);
                     print("insertParc_Img            bytes ${bytes.length}         Parc_Imgs_Data ${wParc_Img.Parc_Imgs_Data!.length}");
@@ -172,12 +183,17 @@ class gPhotoCropState extends State<gPhotoCrop> {
             Container(
               height: 20,
             ),
-            Center(
-              child: CropImage(
-                controller: cropController,
-                image: image,
+            Container(
+              height: MediaQuery.of(context).size.height -110,
+              child:
+              Center(
+                child: CropImage(
+                  controller: cropController,
+                  image: image,
+                ),
               ),
-            ),
+            )
+
           ],
         ),
         floatingActionButton: new FloatingActionButton(
@@ -185,6 +201,7 @@ class gPhotoCropState extends State<gPhotoCrop> {
             child: new Icon(Icons.check),
             onPressed: () async {
               ui.Image croppedImage = await cropController.croppedBitmap();
+
               final data = await croppedImage.toByteData(
                 format: ui.ImageByteFormat.png,
               );

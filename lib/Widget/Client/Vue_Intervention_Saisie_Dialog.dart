@@ -57,9 +57,6 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
 
   Future Reload() async {
     print("widget.param_Saisie.Param_Saisie_ID ${widget.param_Saisie.Param_Saisie_ID}");
-
-
-
     print("${widget.param_Saisie.Param_Saisie_ID} ListParam_Saisie_Param lenght  ${Srv_DbTools.ListParam_Saisie_Param.length}");
 
     setState(() {});
@@ -305,6 +302,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
     Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
       if (widget.param_Saisie.Param_Saisie_Value.compareTo("---") == 0) {
         if (element.Param_Saisie_Param_Default) {
+          print(" C Param_Saisie_Param_Default");
           widget.param_Saisie.Param_Saisie_Value = element.Param_Saisie_Param_Label;
         }
       }
@@ -434,6 +432,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
     Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
       if (widget.param_Saisie.Param_Saisie_Value.compareTo("---") == 0) {
         if (element.Param_Saisie_Param_Default) {
+          print(" D Param_Saisie_Param_Default");
           widget.param_Saisie.Param_Saisie_Value = element.Param_Saisie_Param_Label;
         }
       }
@@ -578,6 +577,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
 
       if (widget.param_Saisie.Param_Saisie_Value.compareTo("---") == 0) {
         if (element.Param_Saisie_Param_Default) {
+          print(" E Param_Saisie_Param_Default");
           widget.param_Saisie.Param_Saisie_Value = element.Param_Saisie_Param_Label;
         }
       }
@@ -863,7 +863,6 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
                           await HapticFeedback.vibrate();
                           print("scrollController index $index ${scrollController.position}");
                           widget.param_Saisie.Param_Saisie_Value = item.Param_Saisie_Param_Label;
-
                           await Reload();
                         },
                         child:
@@ -953,6 +952,8 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
   Widget ListeEdt(BuildContext context) {
     print("tec_Search.text ${tec_Search.text}");
     print("tec_Saisie.text ${tec_Saisie.text}");
+    print("ListeEdt widget.param_Saisie.Param_Saisie_Value ${widget.param_Saisie.Param_Saisie_Value}");
+
 
     Srv_DbTools.ListParam_Saisie_Paramsearchresult.clear();
 
@@ -1035,15 +1036,15 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
               return InkWell(
                   onTap: () async {
                     await HapticFeedback.vibrate();
-                    print("scrollController index $index ${scrollController.position}");
+                    print("TAP index $index ");
                     widget.param_Saisie.Param_Saisie_Value = item.Param_Saisie_Param_Label;
                     tec_Saisie.text = item.Param_Saisie_Param_Label;
                     tec_Saisie.selection = TextSelection.fromPosition(TextPosition(offset: tec_Saisie.text.length));
+                    await Reload();
                   },
                   child: Container(
 //              margin: EdgeInsets.fromLTRB(0, 2, 0, 2),
                       padding: EdgeInsets.fromLTRB(10, 5, 10, 5), // TED
-
                       color: (item.Param_Saisie_Param_Label.compareTo(widget.param_Saisie.Param_Saisie_Value) == 0) ? gColors.primaryGreen : Colors.transparent,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,

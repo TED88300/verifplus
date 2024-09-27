@@ -4,25 +4,25 @@ import 'package:flutter/material.dart';
 import 'package:image_painter/image_painter.dart';
 import 'package:open_file/open_file.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
+
 /*
 
-
-
-class ImagePainterTools extends StatefulWidget {
+class ImageMemPainterTools extends StatefulWidget {
   final String imagePath;
-  const ImagePainterTools({super.key, required this.imagePath});
+  const ImageMemPainterTools({super.key, required this.imagePath});
 
   @override
-  _ImagePainterToolsState createState() => _ImagePainterToolsState();
+  _ImageMemPainterToolsState createState() => _ImageMemPainterToolsState();
 }
 
-class _ImagePainterToolsState extends State<ImagePainterTools> {
+class _ImageMemPainterToolsState extends State<ImageMemPainterTools> {
   final _imageKey = GlobalKey<ImagePainterState>();
   final _key = GlobalKey<ScaffoldState>();
 
   Future saveImage() async {
-//    final image = await _imageKey.currentState!.exportImage();
-    final image = await _imageKey.currentState!.exportImage();
+
+   */
+/* final image = await _imageKey.currentState!.exportImage();
     DbTools.gImageEdtFile = File(widget.imagePath);
     print("writeAsBytesSync wWidget > ${widget.imagePath}");
     DbTools.gImageEdtFile.writeAsBytesSync(image!, flush: true);
@@ -48,7 +48,9 @@ class _ImagePainterToolsState extends State<ImagePainterTools> {
           ],
         ),
       ),
-    );
+    );*//*
+
+
   }
 
   @override
@@ -69,12 +71,17 @@ class _ImagePainterToolsState extends State<ImagePainterTools> {
         imgFile,
         key: _imageKey,
         scalable: true,
+*/
+/*
         initialStrokeWidth: 4,
         initialColor: Colors.green,
         initialPaintMode: PaintMode.freeStyle,
+*//*
+
       ),
     );
   }
 }
+
 
 */

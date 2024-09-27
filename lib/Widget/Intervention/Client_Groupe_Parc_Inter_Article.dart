@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -78,6 +79,14 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
   bool isGamme = false;
   bool isES = false;
 
+  bool affEdtFilter = false;
+  double icoWidth = 40;
+  TextEditingController ctrlFilter = new TextEditingController();
+  String filterText = '';
+  static List<Parc_Art> searchParcs_Art = [];
+
+
+
   Future Reload() async {
     ListParam_FiltreSousFam.clear();
     ListParam_FiltreSousFamID.clear();
@@ -125,7 +134,6 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
       return;
     }
 
-
     if (isES) {
       List<Article_Ebp> ListArtsearchresultTmp = [];
       Srv_DbTools.ListArticle_Ebpsearchresult.clear();
@@ -164,6 +172,8 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
           }
         });
       }
+
+
       isRef = false;
       setState(() {});
       return;
@@ -176,11 +186,14 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
     print("Filtre ListResult_Article_Link_Verif_PROP_Mixte ${Srv_DbTools.ListResult_Article_Link_Verif_PROP_Mixte.length}");
 
     if (isProp) {
+
+
       Srv_DbTools.ListArticle_Ebpsearchresult.clear();
 
       if (widget.art_Type.compareTo("P") == 0) {
         for (int i = 0; i < Srv_DbTools.ListArticle_Ebp.length; i++) {
           Article_Ebp element = Srv_DbTools.ListArticle_Ebp[i];
+
           for (int i = 0; i < Srv_DbTools.ListResult_Article_Link_Verif_PROP.length; i++) {
             Result_Article_Link_Verif wResult_Article_Link_Verif = Srv_DbTools.ListResult_Article_Link_Verif_PROP[i];
             if (element.Article_codeArticle.compareTo(wResult_Article_Link_Verif.ChildID) == 0) {
@@ -188,8 +201,11 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
               break;
             }
           }
+
+
         }
       }
+
       if (widget.art_Type.compareTo("M") == 0) {
         for (int i = 0; i < Srv_DbTools.ListArticle_Ebp.length; i++) {
           Article_Ebp element = Srv_DbTools.ListArticle_Ebp[i];
@@ -202,6 +218,40 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
           }
         }
       }
+
+      if (widget.art_Type.compareTo("Serv") == 0) {
+        for (int i = 0; i < Srv_DbTools.ListArticle_Ebp.length; i++) {
+          Article_Ebp element = Srv_DbTools.ListArticle_Ebp[i];
+          for (int i = 0; i < Srv_DbTools.ListResult_Article_Link_Verif_PROP_Service.length; i++) {
+            Result_Article_Link_Verif wResult_Article_Link_Verif = Srv_DbTools.ListResult_Article_Link_Verif_PROP_Service[i];
+            if (element.Article_codeArticle.compareTo(wResult_Article_Link_Verif.ChildID) == 0) {
+              Srv_DbTools.ListArticle_Ebpsearchresult.add(element);
+              break;
+            }
+          }
+        }
+      }
+
+      List<Article_Ebp> ListArtsearchresultTmp = [];
+      ListArtsearchresultTmp.addAll(Srv_DbTools.ListArticle_Ebpsearchresult);
+      Srv_DbTools.ListArticle_Ebpsearchresult.clear();
+
+      print("Filtre isProp $isProp widget.art_Type ${ListArtsearchresultTmp.length} filterText ${filterText} ");
+
+
+      if (filterText.isEmpty) {
+        Srv_DbTools.ListArticle_Ebpsearchresult.addAll(ListArtsearchresultTmp);
+      } else {
+        print("_buildFieldTextSearch liste ${filterText}");
+        ListArtsearchresultTmp.forEach((element) {
+          String wComp = "${element.Article_codeArticle} ${element.Article_descriptionCommercialeEnClair}";
+          if (wComp.toLowerCase().contains(filterText.toLowerCase())) {
+            Srv_DbTools.ListArticle_Ebpsearchresult.add(element);
+          }
+        });
+      }
+
+
 
       setState(() {});
 
@@ -350,7 +400,13 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
     wDialogHeight = MediaQuery.of(context).size.height;
     wDialogWidth = MediaQuery.of(context).size.width;
 
-    if (isProp) wDialogHeight += 137;
+
+    if (isProp)
+      {
+        wDialogHeight += 137;
+        wDialogHeight -= 55;
+
+      }
     if (isES) wDialogHeight -= 50;
 
     wLabel = 120;
@@ -418,6 +474,10 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                         : Container(
                             height: 10,
                           ),
+                    !isProp
+                        ? Container()
+                        : Entete_Btn_Search(),
+
                     buildDesc(context),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.start,
@@ -510,7 +570,10 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                   }
                 }
               } else if (widget.art_Type.contains("ES")) {
-                print("Saisie Article ESESESESESES deleteParc_Art");
+
+
+
+                print(" SES deleteParc_Art");
 
                 // Effacement interne
                 for (int i = 0; i < DbTools.lParcs_Art.length; i++) {
@@ -520,7 +583,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
 
                 // Effacement externe
                 Parc_Ent wParc_Ent = await DbTools.getParcs_Ent_Parcs_UUID_Child(DbTools.gParc_Ent.Parcs_UUID!);
-                print("Saisie Article ESESESESESES  deleteParc_EntTrigger ${wParc_Ent.toString()}");
+                print(" SES  deleteParc_EntTrigger}");
                 if (wParc_Ent.Parcs_InterventionId != -1) {
                   await DbTools.deleteParc_EntTrigger(wParc_Ent.ParcsId!);
                 }
@@ -529,15 +592,27 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                   Article_Ebp art = Srv_DbTools.ListArticle_Ebpsearchresult[i];
 
                   if (art.Art_Sel) {
+
+                    print(" SES Art_Sel ${art.toMap()}");
+
+
                     Parc_Art wParc_Art = Parc_Art.Parc_ArtInit(DbTools.gParc_Ent.ParcsId!);
                     wParc_Art.ParcsArt_Id = art.Article_codeArticle;
                     wParc_Art.ParcsArt_Type = widget.art_Type;
                     wParc_Art.ParcsArt_Lib = "${art.Article_descriptionCommercialeEnClair}";
                     wParc_Art.ParcsArt_Qte = 1;
 
-                    print("Saisie Article ESESESESESES > insertParc_Art ${wParc_Art.toString()}");
+                    print(" SES > insertParc_Art ${wParc_Art.toString()}");
                     await DbTools.insertParc_Art(wParc_Art);
-                    print("Saisie Article ESESESESESES < insertParc_Art ${wParc_Art.toString()}");
+                    print(" SES < insertParc_Art ");
+
+                    List<Parc_Art> xParcs_Art = await DbTools.getParcs_Art_AllType(DbTools.gParc_Ent.ParcsId!);
+                    for (int i = 0; i < xParcs_Art.length; i++) {
+                      Parc_Art xparc_Art = xParcs_Art[i];
+                      print(" SES xparc_Art ${xparc_Art.Desc()} ");
+                    }
+
+
 
                     //Construction Parc_Ent
                     wParc_Ent = Parc_Ent.Parc_EntInit(Srv_DbTools.gIntervention.InterventionId!, DbTools.gParc_Ent.Parcs_Type!, DbTools.gParc_Ent.Parcs_order!);
@@ -560,7 +635,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
 
                     await DbTools.insertParc_Ent(wParc_Ent);
 
-                    print("Saisie Article ESESESESESES  insertParc_Ent ${wParc_Ent.toString()}");
+                    print(" SES  insertParc_Ent ${wParc_Ent.toString()}");
                     print("Set Article ${art.Article_descriptionCommercialeEnClair}");
 
                     for (int i = 0; i < DbTools.glfNF074_Gammes.length; i++) {
@@ -617,6 +692,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                       }
                     }
 //                    await DbTools.Parc_Ent_List();
+                    FBroadcast.instance().broadcast("Gen_Articles");
                   }
                 }
               } else {
@@ -1024,4 +1100,77 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
       ),
     );
   }
+
+
+  @override
+  Widget Entete_Btn_Search() {
+    return Container(
+        height: 57,
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Container(
+            width: 8,
+          ),
+
+          Spacer(),
+
+          EdtFilterWidget(),
+        ]));
+  }
+
+
+  Widget EdtFilterWidget() {
+    return !affEdtFilter
+        ? InkWell(
+        child: Padding(
+          padding: EdgeInsets.only(right: 8),
+          child: Image.asset(
+            "assets/images/Btn_Loupe.png",
+            height: icoWidth,
+            width: icoWidth,
+          ),
+        ),
+        onTap: () async {
+          affEdtFilter = !affEdtFilter;
+          setState(() {});
+        })
+        : Container(
+        width: 320,
+        child: Row(
+          children: [
+            InkWell(
+                child: Image.asset(
+                  "assets/images/Btn_Loupe.png",
+                  height: icoWidth,
+                  width: icoWidth,
+                ),
+                onTap: () async {
+                  affEdtFilter = !affEdtFilter;
+                  setState(() {});
+                }),
+            Expanded(
+                child: TextField(
+                  onChanged: (text) {
+                    filterText = text;
+                    Filtre();
+                  },
+                  controller: ctrlFilter,
+                  decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        ctrlFilter.clear();
+                        filterText = "";
+                        Filtre();
+                      },
+                      icon: Image.asset(
+                        "assets/images/Btn_Clear.png",
+                        height: icoWidth,
+                        width: icoWidth,
+                      ),
+                    ),
+                  ),
+                ))
+          ],
+        ));
+  }
+
 }

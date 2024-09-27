@@ -28,7 +28,9 @@ class Client_Groupe_Parc_Inter_SynthState extends State<Client_Groupe_Parc_Inter
   @override
   Future initLib() async {
     print("initLib");
-    lParcs_Art = await DbTools.getParcs_ArtAll(DbTools.gParc_Ent.ParcsId!);
+//    lParcs_Art = await DbTools.getParcs_ArtAll(DbTools.gParc_Ent.ParcsId!);
+    lParcs_Art = await DbTools.getParcs_Art_AllType(DbTools.gParc_Ent.ParcsId!);
+
 
     setState(() {});
   }
@@ -42,6 +44,12 @@ class Client_Groupe_Parc_Inter_SynthState extends State<Client_Groupe_Parc_Inter
       initLib();
     });
 
+  }
+
+  @override
+  void dispose() {
+    FBroadcast.instance().unregister(this);
+    super.dispose();
   }
 
   void onSaisie() async {
@@ -285,7 +293,7 @@ class Client_Groupe_Parc_Inter_SynthState extends State<Client_Groupe_Parc_Inter
                 padding: EdgeInsets.fromLTRB(0, 2, 0, 0),
                 child: Text(
                   "${parc_Art.ParcsArt_Qte}",
-                  style: gColors.bodyTitle1_N_Gr,
+                  style: gColors.bodyTitle1_B_Gr,
                   textAlign: TextAlign.end,
                 ),
               ),

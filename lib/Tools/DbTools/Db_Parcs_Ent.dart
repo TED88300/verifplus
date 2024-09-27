@@ -104,9 +104,6 @@ class Parc_Ent_Count {
   static Parc_EntInit(int Parcs_InterventionId, String Parcs_Type, int Parcs_order) {
 
 
-    print("Parc_EntInit Parcs_InterventionId ${Parcs_InterventionId}");
-    print("Parc_EntInit Parcs_Type ${Parcs_Type}");
-    print("Parc_EntInit Parcs_order ${Parcs_order}");
 
 
 

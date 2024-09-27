@@ -5,6 +5,7 @@ import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie_Param.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Article.dart';
+import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Article_View.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 import 'package:verifplus/pdf/Aff_BL.dart';
@@ -22,19 +23,40 @@ class Client_Groupe_Parc_Inter_BL extends StatefulWidget {
 
 class Client_Groupe_Parc_Inter_BLState extends State<Client_Groupe_Parc_Inter_BL> {
 
-  double IcoWidth = 30;
+
+  bool affEdtFilter = false;
+  double icoWidth = 40;
+  TextEditingController ctrlFilter = new TextEditingController();
+  String filterText = '';
+  static List<Parc_Art> searchParcs_Art = [];
 
 
   @override
   Future initLib() async {
     print("initLib");
-
-    DbTools.lParcs_Art = await DbTools.getParcs_ArtInterSum(Srv_DbTools.gIntervention.InterventionId!);
+    DbTools.lParcs_Art = await DbTools.getParcs_ArtInterSumBL(Srv_DbTools.gIntervention.InterventionId!);
     print("DbTools.lParcs_Art ${DbTools.lParcs_Art.length}");
+    Filtre();
+  }
+
+  void Filtre() async {
+    searchParcs_Art.clear();
+
+    if (filterText.isEmpty)
+      searchParcs_Art.addAll(DbTools.lParcs_Art);
+    else {
+      for (int jj = 0; jj < DbTools.lParcs_Art.length; jj++) {
+        Parc_Art wParc_Art = DbTools.lParcs_Art[jj];
+        if(wParc_Art.Desc().contains(filterText))
+          searchParcs_Art.add(wParc_Art);
+      }
+    }
     setState(() {});
   }
 
-  void initState() {
+
+
+    void initState() {
     DbTools.lParcs_Art.clear();
     initLib();
     super.initState();
@@ -50,6 +72,11 @@ class Client_Groupe_Parc_Inter_BLState extends State<Client_Groupe_Parc_Inter_BL
     print("build BL");
     Srv_DbTools.getParam_Saisie_ParamMem("Fact");
     print("initLib ${Srv_DbTools.ListParam_Saisie_Param.length}");
+
+    String wTitre2 = "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}";
+    if (Srv_DbTools.gIntervention.Groupe_Nom == Srv_DbTools.gIntervention.Site_Nom)
+      wTitre2 = "";
+
 
     return Scaffold(
       bottomNavigationBar: Container(
@@ -84,20 +111,22 @@ class Client_Groupe_Parc_Inter_BLState extends State<Client_Groupe_Parc_Inter_BL
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              InterventionTitleWidget2(),
+              gObj.InterventionTitleWidget("${Srv_DbTools.gClient.Client_Nom.toUpperCase()}", wTitre2: wTitre2, wTimer: 0),
+              Entete_Btn_Search(),
               Container(
-                height: 1,
-                color: gColors.greyDark,
+                height: 5,
               ),
               buildIcoTitre(context),
-              (DbTools.lParcs_Art.length == 0 ) ? Container() :
-              buildDesc(context),
+              (searchParcs_Art.length == 0 ) ? Container() :
+              Expanded(
+                child:              buildDesc(context),
+              ),
             ],
           )),
     );
   }
 
-  static Widget InterventionTitleWidget2() {
+   Widget InterventionTitleWidget2() {
     return Material(
       elevation: 4,
       child: Container(
@@ -161,8 +190,8 @@ class Client_Groupe_Parc_Inter_BLState extends State<Client_Groupe_Parc_Inter_BL
 
     List<Widget> RowSaisies = [];
 
-    for (int i = 0; i < DbTools.lParcs_Art.length; i++) {
-      Parc_Art element = DbTools.lParcs_Art[i];
+    for (int i = 0; i < searchParcs_Art.length; i++) {
+      Parc_Art element = searchParcs_Art[i];
       RowSaisies.add(RowSaisie(element, H2));
     }
 
@@ -170,7 +199,7 @@ class Client_Groupe_Parc_Inter_BLState extends State<Client_Groupe_Parc_Inter_BL
 //      Expanded(child:
       Container(
         width: 640,
-        height: 770,
+        height: 717,
         color: Colors.redAccent,
         child: Container(
             padding: EdgeInsets.fromLTRB(0, 1, 0, 0),
@@ -252,6 +281,7 @@ class Client_Groupe_Parc_Inter_BLState extends State<Client_Groupe_Parc_Inter_BL
             await HapticFeedback.vibrate();
             print("onTap ");
             print("onTap ${parc_Art.toString()} ");
+            await Client_Groupe_Parc_Inter_Article_View_Dialog.Dialogs_Saisie(context,  parc_Art);
 
 
             setState(() {});
@@ -317,4 +347,78 @@ class Client_Groupe_Parc_Inter_BLState extends State<Client_Groupe_Parc_Inter_BL
           ),
         ));
   }
+
+
+  @override
+  Widget Entete_Btn_Search() {
+    return Container(
+        height: 57,
+        child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+          Container(
+            width: 8,
+          ),
+
+          Spacer(),
+
+          EdtFilterWidget(),
+        ]));
+  }
+
+
+  Widget EdtFilterWidget() {
+    return !affEdtFilter
+        ? InkWell(
+        child: Padding(
+          padding: EdgeInsets.only(right: 8),
+          child: Image.asset(
+            "assets/images/Btn_Loupe.png",
+            height: icoWidth,
+            width: icoWidth,
+          ),
+        ),
+        onTap: () async {
+          affEdtFilter = !affEdtFilter;
+          setState(() {});
+        })
+        : Container(
+        width: 320,
+        child: Row(
+          children: [
+            InkWell(
+                child: Image.asset(
+                  "assets/images/Btn_Loupe.png",
+                  height: icoWidth,
+                  width: icoWidth,
+                ),
+                onTap: () async {
+                  affEdtFilter = !affEdtFilter;
+                  setState(() {});
+                }),
+            Expanded(
+                child: TextField(
+                  onChanged: (text) {
+                    filterText = text;
+                    Filtre();
+                  },
+                  controller: ctrlFilter,
+                  decoration: InputDecoration(
+                    suffixIcon: IconButton(
+                      onPressed: () {
+                        ctrlFilter.clear();
+                        filterText = "";
+                        Filtre();
+                      },
+                      icon: Image.asset(
+                        "assets/images/Btn_Clear.png",
+                        height: icoWidth,
+                        width: icoWidth,
+                      ),
+                    ),
+                  ),
+                ))
+          ],
+        ));
+  }
+
+
 }

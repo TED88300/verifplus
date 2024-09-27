@@ -64,6 +64,12 @@ class _Client_Groupe_Parc_Inter_EnteteDialogState extends State<Client_Groupe_Pa
 
 
   void AffDesc() {
+    DbTools.glfParcs_Desc.forEach((element2) async {
+      print(" DbTools.glfParcs_Desc ${element2.toMap()}");
+    });
+
+
+
     DbTools.glfParcs_Desc.forEach((param_Saisie) async {
       switch (param_Saisie.ParcsDesc_Type) {
         case "DESC":
@@ -129,15 +135,20 @@ class _Client_Groupe_Parc_Inter_EnteteDialogState extends State<Client_Groupe_Pa
         } else if (element.Param_Saisie_ID.compareTo("SERIE") == 0) {
           DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_SERIE_Label!, element.Param_Saisie_ID)}";
         } else {
+
+
           DbTools.glfParcs_Desc.forEach((element2) async {
             if (element.Param_Saisie_ID == element2.ParcsDesc_Type) {
-//              print("AffDesc() ParcsDesc_Type ${element2.ParcsDesc_Type}");
               DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, element.Param_Saisie_ID)}";
+              print(" ELSE ${element.Param_Saisie_ID } ${element2.ParcsDesc_Lib} ${element2.toMap()}");
             }
           });
         }
       }
     });
+
+    print(" AffDesc()  ${DescAff}");
+
 
     DescAff2 = "";
     ListParam_Saisie_Tmp.sort(Srv_DbTools.affL2SortComparison);

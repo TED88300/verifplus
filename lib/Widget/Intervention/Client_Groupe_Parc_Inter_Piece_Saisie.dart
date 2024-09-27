@@ -67,15 +67,7 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
 
 
   Future Reload() async {
-    print("Parc_Art ${widget.parc_Art.toString()}");
-    Srv_DbTools.getParam_Saisie_ParamMem("Fact");
-    ListParam_Saisie_ParamFact.clear();
-    ListParam_Saisie_ParamFact.addAll(Srv_DbTools.ListParam_Saisie_Param);
-    print("ListParam_Saisie_ParamFact lenght  ${ListParam_Saisie_ParamFact.length}");
-    Srv_DbTools.getParam_Saisie_ParamMem("Livr");
-    ListParam_Saisie_ParamLivr.clear();
-    ListParam_Saisie_ParamLivr.addAll(Srv_DbTools.ListParam_Saisie_Param);
-    print("ListParam_Saisie_ParamLivr lenght  ${ListParam_Saisie_ParamLivr.length}");
+
 
     setState(() {});
   }
@@ -94,6 +86,16 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
         gObj.pic,
       );
     }
+
+    print("Reload Parc_Art ${widget.parc_Art.toString()}");
+    Srv_DbTools.getParam_Saisie_ParamMem("Fact");
+    ListParam_Saisie_ParamFact.clear();
+    ListParam_Saisie_ParamFact.addAll(Srv_DbTools.ListParam_Saisie_Param);
+
+    Srv_DbTools.getParam_Saisie_ParamMem("Livr");
+    ListParam_Saisie_ParamLivr.clear();
+    ListParam_Saisie_ParamLivr.addAll(Srv_DbTools.ListParam_Saisie_Param);
+
     await Reload();
   }
 
@@ -278,6 +280,8 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
     ListParam_Saisie_ParamFact.forEach((element) {
       if (widget.parc_Art.ParcsArt_Lib!.compareTo("---") == 0) {
         if (element.Param_Saisie_Param_Default) {
+          print(" J Param_Saisie_Param_Default");
+
           initParcsArt_Fact = element.Param_Saisie_Param_Label;
         }
       }
@@ -340,8 +344,11 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
         ? InkWell(
             onTap: () async {
               await HapticFeedback.vibrate();
-              widget.parc_Art.ParcsArt_Fact = wText;
-              print(" FlipFlopFact ${widget.parc_Art.ParcsArt_Id} ${widget.parc_Art.ParcsArt_Lib}");
+              initParcsArt_Fact = wText;
+              if (wText == "Devis") initParcsArt_Livr = "Reliquat";
+              print(" FlipFlopFact ${widget.parc_Art.ParcsArt_Id} ${widget.parc_Art.ParcsArt_Lib} ${initParcsArt_Fact} ${initParcsArt_Livr}");
+
+
               await Reload();
             },
             child: Container(
@@ -362,7 +369,9 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
                 onTap: () async {
                   await HapticFeedback.vibrate();
                   initParcsArt_Fact = wText;
-                  print(" FlipFlopFact ${widget.parc_Art.ParcsArt_Id} ${widget.parc_Art.ParcsArt_Lib}");
+                  if (wText == "Devis") initParcsArt_Livr = "Reliquat";
+                  print(" FlipFlopFact ${widget.parc_Art.ParcsArt_Id} ${widget.parc_Art.ParcsArt_Lib} ${initParcsArt_Fact} ${initParcsArt_Livr}");
+
                   await Reload();
                 },
                 child: Column(
@@ -400,11 +409,12 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
     ListParam_Saisie_ParamLivr.forEach((element) {
       if (widget.parc_Art.ParcsArt_Lib!.compareTo("---") == 0) {
         if (element.Param_Saisie_Param_Default) {
+          print(" K Param_Saisie_Param_Default");
           initParcsArt_Livr = element.Param_Saisie_Param_Label;
         }
       }
 
-      //print("BtnCardLivrs.add element ${element.Param_Saisie_ParamId} element.Param_Saisie_Param_Label ${element.Param_Saisie_Param_Label} widget.parc_Art.ParcsArt_Livr! ${initParcsArt_Livr}");
+      print("BtnCardLivrs.add element ${element.Param_Saisie_ParamId} element.Param_Saisie_Param_Label ${element.Param_Saisie_Param_Label} initParcsArt_Livr ${initParcsArt_Livr} ${element.Param_Saisie_Param_Label.compareTo(initParcsArt_Livr)}");
       BtnCardLivrs.add(BtnCardLivr(element.Param_Saisie_Param_Label, element.Param_Saisie_Param_Id, element.Param_Saisie_Param_Label.compareTo(initParcsArt_Livr) == 0, element.Param_Saisie_ParamId, element.Param_Saisie_Param_Color));
 
       if (element.Param_Saisie_Param_Label.compareTo(widget.parc_Art.ParcsArt_Lib!) == 0) wAide += element.Param_Saisie_Param_Aide;
@@ -578,7 +588,7 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
         onTap: () async {
           await HapticFeedback.vibrate();
           widget.parc_Art.ParcsArt_Livr = wText;
-          print(" FlipFlopLivr ${widget.parc_Art.ParcsArt_Id} ${widget.parc_Art.ParcsArt_Lib}");
+          print(" FlipFlopLivr ${widget.parc_Art.ParcsArt_Id} ${widget.parc_Art.ParcsArt_Lib} ${widget.parc_Art.ParcsArt_Livr}");
           await Reload();
         },
         child: Container(
@@ -599,7 +609,8 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
           onTap: () async {
             await HapticFeedback.vibrate();
             initParcsArt_Livr = wText;
-            print(" FlipFlopLivr ${widget.parc_Art.ParcsArt_Id} ${widget.parc_Art.ParcsArt_Lib}");
+            print(" FlipFlopLivr ${widget.parc_Art.ParcsArt_Id} ${widget.parc_Art.ParcsArt_Lib} ${initParcsArt_Fact} ${initParcsArt_Livr}");
+
             await Reload();
           },
           child: Column(

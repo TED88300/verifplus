@@ -1139,8 +1139,9 @@ class Client_Groupe_Parc_Inter_EquipState
   Widget buildBottom(BuildContext context) {
     //print(" buildBottom CODF ${DbTools.gParc_Ent.Parcs_NCERT}   ${DbTools.gParc_Ent.Parcs_CodeArticle}  ${DbTools.gParc_Ent.Parcs_CODF}   ");
 
-    print("***********>>>   buildBottom ${DbTools.gParc_Ent.Parcs_CodeArticle} ${DbTools.gParc_Ent.Parcs_NCERT}");
+    print("***********>>>   buildBottom ${DbTools.gParc_Ent.Parcs_CodeArticle} ${DbTools.gParc_Ent.Parcs_NCERT} GAM_ID ${Srv_DbTools.GAM_ID}");
 
+    String wTxt = "NCERT : ${DbTools.gParc_Ent.Parcs_NCERT}     REF : ${DbTools.gParc_Ent.Parcs_CodeArticle}     Gamme : ${Srv_DbTools.GAM_Lib}";
 
 
     return Container(
@@ -1155,7 +1156,7 @@ class Client_Groupe_Parc_Inter_EquipState
             children: [
               InkWell(
                 onTap: () async {
-                  gColors.AffZoomImage(context, wImageArt!);
+                  gColors.AffZoomImageArticle(context, wImageArt!, wTxt);
                 },
                 child: Container(
                     height: 42,
@@ -1166,10 +1167,8 @@ class Client_Groupe_Parc_Inter_EquipState
                         SizedBox(
                           width: 8,
                         ),
-                        Text("NCERT ${DbTools.gParc_Ent.Parcs_NCERT}     "),
-                        Text("REF ${DbTools.gParc_Ent.Parcs_CodeArticle}     "),
-                        Text("CODF ${DbTools.gParc_Ent.Parcs_CODF}     "),
-                        Text("Gamme ${Srv_DbTools.GAM_ID}   "),
+                        Text(wTxt),
+
                         Spacer(),
                         Container(
                           child: wImageArt!,

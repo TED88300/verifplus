@@ -330,8 +330,11 @@ class PlanningState extends State<Planning> {
 
   Widget _buildHeader(BuildContext context, int sectionIndex, int index) {
     DateSection section = sectionList[sectionIndex];
+
+    String formattedDateLib = DateFormat('EEEE dd MMM yy', 'fr').format(section.wDate);
+
     return InkWell(
-        child: AffHeader("${section.header}", "", gColors.white, "Icon_Planning"),
+        child: AffHeader("${formattedDateLib}", "", gColors.white, "Icon_Planning"),
         onTap: () {
           //toggle section expand state
           setState(() {
@@ -510,14 +513,14 @@ class PlanningState extends State<Planning> {
 
       String formattedDeb = DateFormat('HH:mm').format(wPlanning_Intervention.Planning_Interv_InterventionstartTime);
       String formattedFin = DateFormat('HH:mm').format(wPlanning_Intervention.Planning_Interv_InterventionendTime);
-      print("wPlanning_Intervention ${formattedDate} ${formattedDateLib} ${formattedDeb} ${formattedFin}");
+      print(" wPlanning_Intervention ${formattedDate} ${formattedDateLib} deb ${formattedDeb} fin ${formattedFin}");
 
       if (Rupt != formattedDate) {
         if (Rupt == "") {
         } else {
           section.wDate = RuptDate;
           section.header = "${RuptDateLib}";
-          print("ADDADDADDADDADDADD ${section.wDate}");
+          print(" RUPT AJOUT NOUVELLEDATE ${section.wDate}");
           sections.add(section);
         }
         section = DateSection();
@@ -562,27 +565,30 @@ class PlanningState extends State<Planning> {
           section.items2.add(wLibH);
         }
 
-    }
-    ;
+    };
+
     if (section.items.length > 0) {
-//        print("ADDADDADDADDADDADD Fin  ${section.items.length} ${section.items[0]} ${section.items[1]}");
+        print(" DET AJOUT RDV  ${section.items.length} ${section.items[0]} ${section.items[1]}");
       sections.add(section);
     }
 
-    print("sections ${sections.length}");
+    print("sections len ${sections.length}");
 
     for (int d = 0; d < 7; d++) {
       DateTime wDate = buttonsWeeksDeb[selWeek].add(Duration(days: d));
       print("Date ${wDate}");
       DateTime weekStart = wDate.add(Duration(seconds: -1));
-      DateTime weekEnd1 = weekStart.add(Duration(days: 1, seconds: 2));
+      DateTime weekEnd1 = weekStart.add(Duration(days: 1, seconds: 1));
 
       bool trv = false;
       for (int i = 0; i < sections.length; i++) {
-        print("weekStart ${weekStart} weekEnd1 ${weekEnd1} sections[i].wDate ${sections[i].wDate}");
+//        print("weekStart ${weekStart} weekEnd1 ${weekEnd1} sections[i].wDate ${sections[i].wDate}");
 
         if (sections[i].wDate.isAfter(weekStart) && sections[i].wDate.isBefore(weekEnd1)) {
           trv = true;
+
+          print("•••••••••• sections_Final ADD A Date ${sections[i].wDate}");
+
           sections_Final.add(sections[i]);
           break;
         }
@@ -591,14 +597,21 @@ class PlanningState extends State<Planning> {
       if (!trv) {
         section = DateSection();
         section.wDate = wDate;
-        String formattedDateLib = DateFormat('EEEE dd MMM yy', 'fr').format(wDate);
+        String formattedDateLib = DateFormat('EEEE dd MMM zzzzz yy', 'fr').format(wDate);
         section..header = "${formattedDateLib}";
         section..expanded = false;
+
+        print("•••••••••• sections_Final ADD B Date ${section.wDate}");
+
+
         sections_Final.add(section);
       }
     }
 
-    return sections_Final;
+    for (int i = 0; i < sections_Final.length; i++) {
+      print("@@@@@@@@ sections_Final[i].wDate ${sections_Final[i].wDate} ${sections_Final[i].header}");
+    }
+      return sections_Final;
   }
 }
 

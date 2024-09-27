@@ -29,7 +29,7 @@ class _CounterScreenState extends State<CounterScreen> {
     timer = Timer.periodic(
       Duration(seconds: 1),
       (timer) {
-        if (!DbTools.gTED)
+//        if (!DbTools.gTED)
         setState(() {
           count++;
           DbTools.gParc_Ent.Parcs_Intervention_Timer = count;

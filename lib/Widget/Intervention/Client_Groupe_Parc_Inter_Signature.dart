@@ -9,6 +9,7 @@ import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
+import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 import 'package:verifplus/pdf/Aff_Bdc.dart';
 import 'package:verifplus/pdf/Aff_CR.dart';
 import 'package:verifplus/pdf/Aff_CR_Ria.dart';
@@ -74,12 +75,9 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
     print("build BL $SignTechOpen");
     Srv_DbTools.getParam_Saisie_ParamMem("Fact");
 
-
-
-
-
-
-
+    String wTitre2 = "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}";
+    if (Srv_DbTools.gIntervention.Groupe_Nom == Srv_DbTools.gIntervention.Site_Nom)
+      wTitre2 = "";
 
     return Scaffold(
       bottomNavigationBar: Container(
@@ -120,7 +118,8 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                InterventionTitleWidget2(),
+                gObj.InterventionTitleWidget("${Srv_DbTools.gClient.Client_Nom.toUpperCase()}", wTitre2: wTitre2, wTimer: 0),
+
                 gColors.wLigne(),
                 buildTitreTech(context),
                 gColors.wLigne(),

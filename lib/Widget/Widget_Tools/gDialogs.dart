@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
@@ -25,10 +26,6 @@ class gDialogs {
       builder: (BuildContext context) => PhotoDialog(),
     );
   }
-
-
-
-
 }
 
 //**********************************
@@ -256,19 +253,27 @@ class _PhotoDialogState extends State<PhotoDialog> {
   @override
   void initLib() async {
     imgList.clear();
-    DbTools.glfParc_Imgs.forEach((element) {
-      Widget wWidget = Container(
-        child: Image.file(
-          File(element.Parc_Imgs_Path!),
-          width: 200,
-          height: 300,
-        ),
-      );
-      imgList.add(wWidget);
-    });
 
+    for (int i = 0; i < DbTools.glfParc_Imgs.length; i++) {
+      var element = DbTools.glfParc_Imgs[i];
+      var bytes =  base64Decode(element.Parc_Imgs_Data!);
+      Widget wWidget = Container();
+      if (bytes.length > 0)
+      {
+        wWidget =
+            ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.memory(
+                bytes,
+                fit: BoxFit.fill,
+                height: 200,
+                width: 200,
+              ),
+            );
 
-
+        imgList.add(wWidget);
+      }
+    }
     setState(() {});
   }
 
@@ -522,107 +527,4 @@ class _PhotoDialogState extends State<PhotoDialog> {
 //**********************************
 //**********************************
 //**********************************
-/*
 
-class DisplayImageScreenz extends StatelessWidget {
-  final String imagePath;
-  const DisplayImageScreenz({super.key, required this.imagePath});
-  @override
-  Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size.width;
-
-    final imgFile = File(imagePath);
-
-    Uint8List fileBytes = imgFile.readAsBytesSync();
-
-    return Scaffold(
-      appBar: AppBar(
-        title: AutoSizeText(
-          "Photo Organe gDialog",
-          maxLines: 1,
-        ),
-        leading: Padding(
-          padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
-          child: Image.asset("assets/images/Ico.png"),
-        ),
-        backgroundColor: gColors.primary,
-      ),
-      body: Container(
-        color: Colors.black,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              color: Colors.white,
-              width: size,
-              height: size,
-              child: ClipRect(
-                child: OverflowBox(
-                  alignment: Alignment.center,
-                  child: FittedBox(
-                    fit: BoxFit.fitWidth,
-                    child: Container(
-                      color: Colors.black,
-                      width: size,
-                      height: size * 1.5,
-                      child: //Image.file(File(imagePath)),
-                          Image.memory(
-                        fileBytes,
-                      ),
-                      // this is my CameraPreview
-                    ),
-                  ),
-                ),
-              ),
-            ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  child: const Icon(
-                    Icons.delete,
-                    color: gColors.secondary,
-                  ),
-                  onPressed: () async {
-                    DbTools.gImagePath = "";
-                    Navigator.pop(context);
-                  },
-                ),
-                ElevatedButton(
-                  child: const Icon(
-                    Icons.edit,
-                    color: Colors.white,
-                  ),
-                  onPressed: () async {
-                    await Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (context) => ImagePainterTools(
-                          imagePath: DbTools.gImagePath!,
-                        ),
-                      ),
-                    );
-
-                    Navigator.pop(context);
-                  },
-                ),
-                ElevatedButton(
-                  child: const Icon(
-                    Icons.check,
-                    color: Colors.white,
-                  ),
-                  onPressed: () async {
-                    Navigator.pop(context);
-                  },
-                )
-              ],
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-
-*/

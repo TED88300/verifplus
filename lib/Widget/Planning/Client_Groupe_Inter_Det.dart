@@ -383,7 +383,7 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
         "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}";
     if (Srv_DbTools.gIntervention.Groupe_Nom ==
         Srv_DbTools.gIntervention.Site_Nom)
-      wTitre2 = "${Srv_DbTools.gIntervention.Site_Nom}";
+      wTitre2 = "";
     return Scaffold(
         appBar: appBar(),
         body: Stack(
