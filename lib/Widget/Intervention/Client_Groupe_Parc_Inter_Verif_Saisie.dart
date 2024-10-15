@@ -5,9 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
-
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
-
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
@@ -85,10 +83,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
     initParcsDesc_Lib = widget.parc_Desc.ParcsDesc_Lib!;
     initParcsDesc_Id = widget.parc_Desc.ParcsDesc_Id!;
 
-    print(
-        " VALIDER ${widget.parc_Desc.ParcsDescId} ${widget.parc_Desc.ParcsDesc_Id} ${widget.parc_Desc.ParcsDesc_Lib} ${widget.param_Saisie.Param_Saisie_Controle}");
-
-//    Widget wAide_Ico = gObj.getAssetImage("assets/images/Ico.png"),
+    print(" VALIDER ${widget.parc_Desc.ParcsDescId} ${widget.parc_Desc.ParcsDesc_Id} ${widget.parc_Desc.ParcsDesc_Lib} ${widget.param_Saisie.Param_Saisie_Controle}");
 
     Srv_DbTools.ListParam_Saisie_Param.clear();
 

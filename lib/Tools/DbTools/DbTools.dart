@@ -16,6 +16,7 @@ import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_InterMissions.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Interventions.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_NF074.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Param_Av.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie_Param.dart';
@@ -32,6 +33,7 @@ import 'package:verifplus/Tools/DbSrv/Srv_User_Hab.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Zones.dart';
 import 'package:verifplus/Tools/DbTools/Db_Inters.dart';
 import 'package:verifplus/Tools/DbTools/Db_Maints.dart';
+import 'package:verifplus/Tools/DbTools/Db_Param_Av.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Ent.dart';
@@ -159,6 +161,14 @@ class DbTools {
         "Param_Saisie_Param_Init INTEGER NOT NULL DEFAULT 0, Param_Saisie_Param_Color TEXT NOT NULL DEFAULT 'Noir');";
 
     String wCREATE_Users_Desc = "CREATE TABLE User_Desc (User_DescID INTEGER NOT NULL, User_Desc_UserID INTEGER NOT NULL, User_Desc_Param_DescID INTEGER NOT NULL, User_Desc_MaintPrev INTEGER NOT NULL, User_Desc_Install INTEGER NOT NULL, User_Desc_MaintCorrect INTEGER NOT NULL, User_Desc_Ordre INTEGER NOT NULL DEFAULT 0);";
+
+
+
+    String wCREATE_Param_Av = "CREATE TABLE Param_Av (Param_AvID TEXT NOT NULL, Param_Av_No TEXT NOT NULL, Param_Av_Det TEXT NOT NULL, Param_Av_Proc TEXT NOT NULL, Param_Av_Lnk TEXT NOT NULL );";
+
+
+
+
     String wCREATE_Users_Hab = "CREATE TABLE User_Hab (User_HabID INTEGER NOT NULL, User_Hab_UserID INTEGER NOT NULL, User_Hab_Param_HabID INTEGER NOT NULL, User_Hab_MaintPrev INTEGER NOT NULL, User_Hab_Install INTEGER NOT NULL, User_Hab_MaintCorrect INTEGER NOT NULL, User_Hab_Ordre INTEGER NOT NULL DEFAULT 0);";
 
     String wCREATE_Users = "CREATE TABLE Users ("
@@ -283,6 +293,7 @@ class DbTools {
         ", Parcs_CodeArticle varchar(128) NOT NULL DEFAULT ''"
         ", Parcs_CODF varchar(128) NOT NULL DEFAULT ''"
         ", Parcs_NCERT varchar(128) NOT NULL DEFAULT ''"
+        ", Parcs_NoSpec varchar(128) NOT NULL DEFAULT ''"
         ", Parcs_Gamme varchar(128) NOT NULL DEFAULT ''"
         ", Livr varchar(8) NOT NULL DEFAULT ''"
         ", Devis varchar(8) NOT NULL DEFAULT ''"
@@ -358,6 +369,8 @@ class DbTools {
       join(await getDatabasesPath(), wDbPath),
       onCreate: (db, version) async {
 
+
+        await db.execute(wCREATE_Param_Av);
         await db.execute(wCREATE_Users_Desc);
         await db.execute(wCREATE_Users_Hab);
         await db.execute(wCREATE_Param_Param);
@@ -484,6 +497,59 @@ class DbTools {
     int? repid = await db.delete("User_Desc");
   }
 
+
+  //************************************************
+  //**************  P A R A M  A V  **************
+  //************************************************
+
+  static Param_Av gParam_Av = Param_Av.Param_AvInit();
+
+  static Future<List<Param_Av>> getParam_Av() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query("Param_Av");
+    return List.generate(maps.length, (i) {
+      return Param_Av(
+        maps[i]["Param_AvID"],
+        maps[i]["Param_Av_No"],
+        maps[i]["Param_Av_Det"],
+        maps[i]["Param_Av_Proc"],
+        maps[i]["Param_Av_Lnk"],
+
+      );
+    });
+  }
+
+
+  static Future<List<Param_Av>> getParam_Av_NCERT(String wNo) async {
+    final db = await database;
+
+
+    final List<Map<String, dynamic>> maps = await db.query("Param_Av", where: "Param_Av_No = '${wNo}' ");
+    return List.generate(maps.length, (i) {
+      return Param_Av(
+        maps[i]["Param_AvID"],
+        maps[i]["Param_Av_No"],
+        maps[i]["Param_Av_Det"],
+        maps[i]["Param_Av_Proc"],
+        maps[i]["Param_Av_Lnk"],
+
+      );
+    });
+  }
+
+
+
+  static Future<void> inserParam_Av(SrvParam_Av wParam_Av) async {
+    final db = await DbTools.database;
+    int? repid = await db.insert("Param_Av", wParam_Av.toMap());
+    gLastID = repid!;
+  }
+
+  static Future<void> TrunckParam_Av() async {
+    final db = await DbTools.database;
+    int? repid = await db.delete("Param_Av");
+  }
+
   //************************************************
   //***********  P A R A M   P A R A M  ************
   //************************************************
@@ -504,6 +570,48 @@ class DbTools {
       );
     });
   }
+
+  static genParam()
+  {
+    Srv_DbTools.ListParam_Param_Abrev.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Abrev") == 0) {
+        Srv_DbTools.ListParam_Param_Abrev.add(element);
+      }
+    });
+
+    Srv_DbTools.ListParam_Param_Civ.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Civ") == 0) {
+        Srv_DbTools.ListParam_Param_Civ.add(element);
+      }
+    });
+
+    Srv_DbTools.ListParam_Param_Status_Interv.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Status_Interv") == 0) {
+        Srv_DbTools.ListParam_Param_Status_Interv.add(element);
+      }
+    });
+
+    Srv_DbTools.ListParam_ParamCiv.clear();
+    Srv_DbTools.ListParam_ParamCiv.add("");
+    for (int i = 0; i < Srv_DbTools.ListParam_Param_Civ.length; i++) {
+      Param_Param wParam_Param = Srv_DbTools.ListParam_Param_Civ[i];
+      if (wParam_Param.Param_Param_Text == "C")
+        Srv_DbTools.ListParam_ParamCiv.add(wParam_Param.Param_Param_ID);
+    }
+
+    Srv_DbTools.ListParam_ParamForme.clear();
+    Srv_DbTools.ListParam_ParamForme.add("");
+    for (int i = 0; i < Srv_DbTools.ListParam_Param_Civ.length; i++) {
+      Param_Param wParam_Param = Srv_DbTools.ListParam_Param_Civ[i];
+      if (wParam_Param.Param_Param_Text != "C")
+        Srv_DbTools.ListParam_ParamForme.add(wParam_Param.Param_Param_ID);
+    }
+  }
+
+
 
   static Future<void> inserParam_Param(Param_Param wParam_Param) async {
     final db = await DbTools.database;
@@ -1684,6 +1792,49 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
       );
     });
   }
+
+
+  static Future<List<NF074_Pieces_Det_Inc>> getNF074_Pieces_Det_Inc_G110() async {
+    final db = await database;
+
+
+    String selBase = "SELECT * FROM NF074_Pieces_Det_Inc where NF074_Pieces_Det_Inc_CodeArticlePD1 Like 'G110%'";
+
+
+    final List<Map<String, dynamic>> maps = await db.rawQuery(selBase);
+
+    return List.generate(maps.length, (i) {
+      return NF074_Pieces_Det_Inc(
+        maps[i]["NF074_Pieces_Det_IncId"],
+        maps[i]["NF074_Pieces_Det_Inc_DESC"],
+        maps[i]["NF074_Pieces_Det_Inc_FAB"],
+        maps[i]["NF074_Pieces_Det_Inc_PRS"],
+        maps[i]["NF074_Pieces_Det_Inc_CLF"],
+        maps[i]["NF074_Pieces_Det_Inc_MOB"],
+        maps[i]["NF074_Pieces_Det_Inc_PDT"],
+        maps[i]["NF074_Pieces_Det_Inc_POIDS"],
+        maps[i]["NF074_Pieces_Det_Inc_GAM"],
+        maps[i]["NF074_Pieces_Det_Inc_Inst"],
+        maps[i]["NF074_Pieces_Det_Inc_VerifAnn"],
+        maps[i]["NF074_Pieces_Det_Inc_Rech"],
+        maps[i]["NF074_Pieces_Det_Inc_MAA"],
+        maps[i]["NF074_Pieces_Det_Inc_Charge"],
+        maps[i]["NF074_Pieces_Det_Inc_RA"],
+        maps[i]["NF074_Pieces_Det_Inc_RES"],
+        maps[i]["NF074_Pieces_Det_Inc_CodearticlePD1"],
+        maps[i]["NF074_Pieces_Det_Inc_DescriptionPD1"],
+        maps[i]["NF074_Pieces_Det_Inc_QtePD1"],
+        maps[i]["NF074_Pieces_Det_Inc_CodearticlePD2"],
+        maps[i]["NF074_Pieces_Det_Inc_DescriptionPD2"],
+        maps[i]["NF074_Pieces_Det_Inc_QtePD2"],
+        maps[i]["NF074_Pieces_Det_Inc_CodearticlePD3"],
+        maps[i]["NF074_Pieces_Det_Inc_DescriptionPD3"],
+        maps[i]["NF074_Pieces_Det_Inc_QtePD3"],
+      );
+    });
+  }
+
+
 
   static Future<void> insertNF074_Pieces_Det_Inc(NF074_Pieces_Det_Inc NF074_Pieces_Det_Inc) async {
     final db = await DbTools.database;
@@ -3695,6 +3846,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
         'Parcs_CodeArticle = "${parc.Parcs_CodeArticle}", ' +
         'Parcs_CODF = "${parc.Parcs_CODF}", ' +
         'Parcs_NCERT = "${parc.Parcs_NCERT}", ' +
+        'Parcs_NoSpec = "${parc.Parcs_NoSpec}", ' +
         'Parcs_Audit_Note = "${parc.Parcs_Audit_Note}", ' +
         'Livr = "${parc.Livr}", ' +
         'Devis = "${parc.Devis}", ' +
@@ -4105,6 +4257,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
   static List<Parc_Art> lParcs_Art = [];
 
   static Parc_Art gParc_Art = Parc_Art();
+  static Parc_Art gParc_Art_MS = Parc_Art();
 
   static Future<List<Parc_Art>> getParcs_ArtAll(int ParcsArt_ParcsId) async {
     List<Parc_Art> Parc_ArtRet = [];
@@ -4115,6 +4268,8 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     Parc_ArtTmp = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "M");
     Parc_ArtRet.addAll(Parc_ArtTmp);
     Parc_ArtTmp = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "ES");
+    Parc_ArtRet.addAll(Parc_ArtTmp);
+    Parc_ArtTmp = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "MS");
     Parc_ArtRet.addAll(Parc_ArtTmp);
     Parc_ArtTmp = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "Mo");
     Parc_ArtRet.addAll(Parc_ArtTmp);
@@ -4134,6 +4289,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     });
   }
 
+
   static Future<List<Parc_Art>> getParcs_Art_AllType(int ParcsArt_ParcsId) async {
     final db = await database;
     List<Map<String, dynamic>> maps = await db.rawQuery('SELECT Parcs_Art.* FROM Parcs_Art  WHERE ParcsArt_ParcsId = "${ParcsArt_ParcsId}" ORDER BY ParcsArt_Id', []);
@@ -4141,6 +4297,16 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
       return Parc_Art.fromMap(maps[i]);
     });
   }
+
+  static Future<List<Parc_Art>> getParcs_Art_AllTypeSynth(int ParcsArt_ParcsId) async {
+    final db = await database;
+    List<Map<String, dynamic>> maps = await db.rawQuery('SELECT Parcs_Art.* FROM Parcs_Art  WHERE ParcsArt_ParcsId = "${ParcsArt_ParcsId}" and ParcsArt_Type != "ES" ORDER BY ParcsArt_Id', []);
+    return await List.generate(maps.length, (i) {
+      return Parc_Art.fromMap(maps[i]);
+    });
+  }
+
+
 
   static Future<List<Parc_Art>> getParcs_ArtInter(int Parcs_InterventionId) async {
     final db = await database;
@@ -4160,7 +4326,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
   static Future<List<Parc_Art>> getParcs_ArtInterSumBL(int Parcs_InterventionId) async {
     final db = await database;
 
-    String wTmp = "SELECT Parcs_Art.*, SUM(ParcsArt_Qte) as Qte FROM Parcs_Art, Parcs_Ent WHERE ParcsArt_Fact != 'Devis' AND  ParcsArt_ParcsId = ParcsId AND Parcs_InterventionId = ${Parcs_InterventionId} GROUP BY ParcsArt_Id,ParcsArt_Fact,ParcsArt_Livr ORDER BY Parcs_Art.ParcsArt_Id ASC;";
+    String wTmp = "SELECT Parcs_Art.*, SUM(ParcsArt_Qte) as Qte FROM Parcs_Art, Parcs_Ent WHERE ParcsArt_Fact != 'Devis' AND  ParcsArt_ParcsId = ParcsId AND Parcs_InterventionId = ${Parcs_InterventionId} and ParcsArt_Type != 'ES'  GROUP BY ParcsArt_Id,ParcsArt_Fact,ParcsArt_Livr ORDER BY Parcs_Art.ParcsArt_Id ASC;";
 
     print("getParcs_ArtInter ${wTmp}");
     List<Map<String, dynamic>> maps = await db.rawQuery(wTmp);
@@ -4175,7 +4341,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
   static Future<List<Parc_Art>> getParcs_ArtInterSumDevis(int Parcs_InterventionId) async {
     final db = await database;
 
-    String wTmp = "SELECT Parcs_Art.*, SUM(ParcsArt_Qte) as Qte FROM Parcs_Art, Parcs_Ent WHERE ParcsArt_Fact = 'Devis' AND  ParcsArt_ParcsId = ParcsId AND Parcs_InterventionId = ${Parcs_InterventionId} GROUP BY ParcsArt_Id,ParcsArt_Fact,ParcsArt_Livr ORDER BY Parcs_Art.ParcsArt_Id ASC;";
+    String wTmp = "SELECT Parcs_Art.*, SUM(ParcsArt_Qte) as Qte FROM Parcs_Art, Parcs_Ent WHERE ParcsArt_Fact = 'Devis' AND  ParcsArt_ParcsId = ParcsId AND Parcs_InterventionId = ${Parcs_InterventionId} and ParcsArt_Type != 'ES' GROUP BY ParcsArt_Id,ParcsArt_Fact,ParcsArt_Livr ORDER BY Parcs_Art.ParcsArt_Id ASC;";
 
     print("getParcs_ArtInter ${wTmp}");
     List<Map<String, dynamic>> maps = await db.rawQuery(wTmp);
@@ -4266,7 +4432,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     parc_Art.ParcsArtId = null;
     final db = await DbTools.database;
     int? repid = await db.insert("Parcs_Art", parc_Art.toMap());
-//    print(">>>>>>>>>>> db.insert repid ${repid}");
+    print(">>>>>>>>>>> insertParc_Art db.insert repid ${repid}");
   }
 
   static Future<void> insertParc_Art_Srv(Parc_Art_Srv parc_Art) async {
@@ -4282,9 +4448,6 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     List<Map<String, dynamic>> maps = await db.rawQuery(wTmp);
 
     print("maps ${maps}");
-
-
-
   }
 
 
@@ -4292,7 +4455,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
 
   static Future<void> deleteParc_Art_ParcsArt_ParcsId(int ParcsArt_ParcsId) async {
     final db = await database;
-    String wTmp = "DELETE FROM Parcs_Art WHERE ParcsArt_ParcsId = $ParcsArt_ParcsId AND ParcsArt_lnk = 'L'";
+    String wTmp = "DELETE FROM Parcs_Art WHERE ParcsArt_ParcsId = $ParcsArt_ParcsId AND ParcsArt_lnk = 'L' OR ParcsArt_Type = 'ES' OR ParcsArt_Type = 'MS'";
     print("deleteParc_Art_ParcsArt_ParcsId ${wTmp}");
     List<Map<String, dynamic>> maps = await db.rawQuery(wTmp);
   }

@@ -77,8 +77,6 @@ class Client_Groupe_Parc_Inter_Audit_SaisieDialogState extends State<Client_Grou
     initParcsDesc_Lib = widget.parc_Desc.ParcsDesc_Lib!;
     initParcsDesc_Id = widget.parc_Desc.ParcsDesc_Id!;
 
-//    Widget wAide_Ico = gObj.getAssetImage("assets/images/Ico.png"),
-
     Srv_DbTools.ListParam_Saisie_Param.clear();
 
     initializeDateFormatting();

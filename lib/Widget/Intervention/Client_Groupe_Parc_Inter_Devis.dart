@@ -20,16 +20,12 @@ class Client_Groupe_Parc_Inter_Devis extends StatefulWidget {
 }
 
 class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter_Devis> {
-
-
   bool affEdtFilter = false;
   double icoWidth = 40;
   TextEditingController ctrlFilter = new TextEditingController();
   String filterText = '';
 
-
   static List<Parc_Art> searchParcs_Art = [];
-
 
   @override
   Future initLib() async {
@@ -48,17 +44,11 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
     else {
       for (int jj = 0; jj < DbTools.lParcs_Art.length; jj++) {
         Parc_Art wParc_Art = DbTools.lParcs_Art[jj];
-        if(wParc_Art.Desc().contains(filterText))
-          searchParcs_Art.add(wParc_Art);
+        if (wParc_Art.Desc().contains(filterText)) searchParcs_Art.add(wParc_Art);
       }
-
     }
     setState(() {});
-
-
   }
-
-
 
   void initState() {
     DbTools.lParcs_Art.clear();
@@ -78,13 +68,10 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
     print("initLib ${Srv_DbTools.ListParam_Saisie_Param.length}");
 
     String wTitre2 = "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}";
-    if (Srv_DbTools.gIntervention.Groupe_Nom == Srv_DbTools.gIntervention.Site_Nom)
-      wTitre2 = "";
-
+    if (Srv_DbTools.gIntervention.Groupe_Nom == Srv_DbTools.gIntervention.Site_Nom) wTitre2 = "";
 
     return Scaffold(
-
-
+      backgroundColor: Colors.white,
       body: Padding(
           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Column(
@@ -98,10 +85,11 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
                 color: gColors.greyDark,
               ),
               buildIcoTitre(context),
-              (DbTools.lParcs_Art.length == 0 ) ? Container() :
-              Expanded(
-                child:              buildDesc(context),
-              ),
+              (DbTools.lParcs_Art.length == 0)
+                  ? Container()
+                  : Expanded(
+                      child: buildDesc(context),
+                    ),
             ],
           )),
     );
@@ -115,7 +103,6 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
         height: 57,
         padding: EdgeInsets.fromLTRB(10, 12, 10, 10),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-
           Spacer(),
           Text(
             "${Srv_DbTools.gIntervention.Intervention_Type}/${Srv_DbTools.gIntervention.Intervention_Parcs_Type} - ${Srv_DbTools.gIntervention.Intervention_Status} - Cr N° : ${Srv_DbTools.gIntervention.InterventionId} -Anthony FUNDONI",
@@ -123,12 +110,10 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
             textAlign: TextAlign.center,
           ),
           Spacer(),
-
         ]),
       ),
     );
   }
-
 
   Widget buildIcoTitre(BuildContext context) {
     double IcoWidth = 30;
@@ -176,41 +161,42 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
 
     return
 //      Expanded(child:
-      Container(
-        width: 640,
-        height: 770,
-        color: Colors.redAccent,
-        child: Container(
-            padding: EdgeInsets.fromLTRB(0, 1, 0, 0),
-            color: gColors.greyDark,
-            child: Container(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              color: gColors.greyLight,
-              child: ListView.separated(
-                padding: const EdgeInsets.all(0.0),
-                shrinkWrap: true,
-                itemCount: RowSaisies.length,
-                itemBuilder: (context, index) {
-                  return RowSaisies[index];
-                },
-                separatorBuilder: (BuildContext context, int index) => Container(height: 1, width: double.infinity, color: gColors.greyDark),
-              ),
-            )),
-      );
+        Container(
+      width: 640,
+      height: 770,
+      color: gColors.greyDark,
+      child: Container(
+          padding: EdgeInsets.fromLTRB(0, 2, 0, 0),
+          color: gColors.greyDark,
+          child: Container(
+            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            color: gColors.white,
+            child: ListView.separated(
+              padding: const EdgeInsets.all(0.0),
+              shrinkWrap: true,
+              itemCount: RowSaisies.length,
+              itemBuilder: (context, index) {
+                return RowSaisies[index];
+              },
+              separatorBuilder: (BuildContext context, int index) => Container(height: 1, width: double.infinity, color: gColors.greyDark),
+            ),
+          )),
+
+
+
+
+        );
   }
 
-
   Future<Image> GetImage(Parc_Art art) async {
-    if (art.wImgeTrv)
-      return art.wImage!;
-
+    if (art.wImgeTrv) return art.wImage!;
 
     String wImgPath = "${Srv_DbTools.SrvImg}ArticlesImg_Ebp_${art.ParcsArt_Id}s.jpg";
     gObj.pic = await gObj.networkImageToByte(wImgPath);
 
     if (gObj.pic.length > 0) {
       art.wImgeTrv = true;
-      art.wImage =  Image.memory(
+      art.wImage = Image.memory(
         gObj.pic,
         fit: BoxFit.scaleDown,
         width: 30,
@@ -225,6 +211,7 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
       width: 30,
     );
   }
+
   Widget buildImage(BuildContext context, Parc_Art art) {
     return new FutureBuilder(
       future: GetImage(art),
@@ -239,7 +226,6 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
   }
 
   Widget RowSaisie(Parc_Art parc_Art, double H2) {
-
     Color wColor = Colors.green;
 
     for (int i = 0; i < Srv_DbTools.ListParam_Saisie_Param.length; i++) {
@@ -249,7 +235,7 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
         break;
       }
     }
-    String ParcsArt_Livr = parc_Art.ParcsArt_Livr!.substring(0,1);
+    String ParcsArt_Livr = parc_Art.ParcsArt_Livr!.substring(0, 1);
     if (ParcsArt_Livr.compareTo("R") != 0) ParcsArt_Livr = "";
 
     return Container(
@@ -261,7 +247,7 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
             print("onTap ");
             print("onTap ${parc_Art.toString()} ");
 
-            await Client_Groupe_Parc_Inter_Article_View_Dialog.Dialogs_Saisie(context,  parc_Art);
+            await Client_Groupe_Parc_Inter_Article_View_Dialog.Dialogs_Saisie(context, parc_Art);
 
             setState(() {});
           },
@@ -280,7 +266,7 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
                 padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
                 child: Text(
                   "${parc_Art.ParcsArt_Id}",
-                  style: parc_Art.ParcsArt_Livr!.substring(0,1).compareTo("R")==0 ? gColors.bodySaisie_B_O : gColors.bodySaisie_B_G,
+                  style: parc_Art.ParcsArt_Livr!.substring(0, 1).compareTo("R") == 0 ? gColors.bodySaisie_B_O : gColors.bodySaisie_B_G,
                 ),
               ),
               Expanded(
@@ -288,8 +274,8 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
                   height: 20,
                   padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
                   child: Text(
-                    "[${parc_Art.ParcsArt_Livr!.substring(0,1)}] ${parc_Art.ParcsArt_Lib}",
-                    style: parc_Art.ParcsArt_Livr!.substring(0,1).compareTo("R")==0 ? gColors.bodySaisie_B_O : gColors.bodySaisie_B_G,
+                    "[${parc_Art.ParcsArt_Livr!.substring(0, 1)}] ${parc_Art.ParcsArt_Lib}",
+                    style: parc_Art.ParcsArt_Livr!.substring(0, 1).compareTo("R") == 0 ? gColors.bodySaisie_B_O : gColors.bodySaisie_B_G,
                   ),
                 ),
               ),
@@ -304,21 +290,16 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
                   ),
                 ),
               ),
-
-
               Container(
                 width: 40,
                 height: 20,
                 padding: EdgeInsets.fromLTRB(0, 2, 0, 0),
                 child: Text(
                   "${parc_Art.Qte}",
-                  style: gColors.bodyTitle1_N_Gr,
+                  style: gColors.bodyTitle1_B_Gr,
                   textAlign: TextAlign.center,
                 ),
               ),
-
-
-
               Container(
                 width: 10,
               ),
@@ -326,7 +307,6 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
           ),
         ));
   }
-
 
   @override
   Widget Entete_Btn_Search() {
@@ -336,45 +316,42 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
           Container(
             width: 8,
           ),
-
           Spacer(),
-
           EdtFilterWidget(),
         ]));
   }
 
-
   Widget EdtFilterWidget() {
     return !affEdtFilter
         ? InkWell(
-        child: Padding(
-          padding: EdgeInsets.only(right: 8),
-          child: Image.asset(
-            "assets/images/Btn_Loupe.png",
-            height: icoWidth,
-            width: icoWidth,
-          ),
-        ),
-        onTap: () async {
-          affEdtFilter = !affEdtFilter;
-          setState(() {});
-        })
+            child: Padding(
+              padding: EdgeInsets.only(right: 8),
+              child: Image.asset(
+                "assets/images/Btn_Loupe.png",
+                height: icoWidth,
+                width: icoWidth,
+              ),
+            ),
+            onTap: () async {
+              affEdtFilter = !affEdtFilter;
+              setState(() {});
+            })
         : Container(
-        width: 320,
-        child: Row(
-          children: [
-            InkWell(
-                child: Image.asset(
-                  "assets/images/Btn_Loupe.png",
-                  height: icoWidth,
-                  width: icoWidth,
-                ),
-                onTap: () async {
-                  affEdtFilter = !affEdtFilter;
-                  setState(() {});
-                }),
-            Expanded(
-                child: TextField(
+            width: 320,
+            child: Row(
+              children: [
+                InkWell(
+                    child: Image.asset(
+                      "assets/images/Btn_Loupe.png",
+                      height: icoWidth,
+                      width: icoWidth,
+                    ),
+                    onTap: () async {
+                      affEdtFilter = !affEdtFilter;
+                      setState(() {});
+                    }),
+                Expanded(
+                    child: TextField(
                   onChanged: (text) {
                     filterText = text;
                     Filtre();
@@ -395,8 +372,7 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
                     ),
                   ),
                 ))
-          ],
-        ));
+              ],
+            ));
   }
-
 }

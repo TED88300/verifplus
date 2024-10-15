@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -310,8 +311,6 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
             onPressed: () async {
               await HapticFeedback.vibrate();
 
-
-
               List<Parc_Art> wlParcs_Art = await DbTools.getParcs_ArtAll(DbTools.gParc_Ent.ParcsId!);
               for (int i = 0; i < wlParcs_Art.length; i++) {
                 Parc_Art element = wlParcs_Art[i];
@@ -324,14 +323,20 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                     List<Parc_Art> lParcs_Art =
                     await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "V");
                     lParcs_Art.addAll(wlParcs_Art);
-                    print(
-                        "deleteParc_Art lParcs_Art ${lParcs_Art.length}");
+                    print("deleteParc_Art lParcs_Art ${element.ParcsArtId} ${element.ParcsArt_Id} ${element.ParcsArt_Lib}");
                     await DbTools.deleteParc_Art(element.ParcsArtId!);
                     wlParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "P");
                     lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "V");
                     lParcs_Art.addAll(wlParcs_Art);
                     print("deleteParc_Art lParcs_Art ${lParcs_Art.length}");
-                    setState(() {});
+
+                    for (int ii = 0; ii < lParcs_Art.length; ii++) {
+                      Parc_Art element = lParcs_Art[ii];
+                      print("deleteParc_Art Liste ${element.ParcsArtId} ${element.ParcsArt_Type} ${element.ParcsArt_Id} ${element.ParcsArt_Lib}");
+                    }
+
+                    FBroadcast.instance().broadcast("Gen_Articles");
+
                   }
                 }
               }

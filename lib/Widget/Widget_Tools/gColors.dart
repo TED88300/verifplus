@@ -44,6 +44,7 @@ class gColors {
   static const Color LinearGradient1 = Color(0xFFaaaaaa);
   static const Color LinearGradient2 = Color(0xFFf6f6f6);
   static const Color LinearGradient3 = Color(0xFFe6e6e6);
+  static const Color LinearGradient4 = Color(0xFFBBBBBB);
 
   static const Color TextColor1 = Color(0xFF222222);
   static const Color TextColor2 = Color(0xFF555555);
@@ -666,7 +667,7 @@ class gColors {
         ));
   }
 
-  static AffZoomImageArticle(BuildContext context, Image wImageArt, String wTxt) async {
+  static AffZoomImageArticle(BuildContext context, Image wImageArt, String wTxt, String wTxt2) async {
 
     return showDialog(
         context: context,
@@ -680,12 +681,15 @@ class gColors {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "Photo",
+                  "$wTxt",
                   textAlign: TextAlign.center,
                   style: gColors.bodyTitle1_B_G_20,
                 ),
+                Container(
+                  height: 8,
+                ),
                 Text(
-                  "$wTxt",
+                  "$wTxt2",
                   textAlign: TextAlign.center,
                   style: gColors.bodyTitle1_N_Gr,
                 ),
@@ -817,6 +821,8 @@ class gColors {
 
   static String AbrevTxt(String wTxt) {
     Srv_DbTools.ListParam_Param_Abrev.forEach((element) {
+//      print("element.Param_Param_ID ${element.Param_Param_ID} ${element.Param_Param_Text}");
+
       wTxt = wTxt.replaceAll(element.Param_Param_ID, element.Param_Param_Text);
     });
     return wTxt;
@@ -824,18 +830,16 @@ class gColors {
 
   static String AbrevTxt_Param_Param(String wTxt, String wParam_Id) {
 
-//    print("AbrevTxt_Param_Param INIT $wTxt");
+
 
 
     if (wParam_Id.isNotEmpty)
       {
         Srv_DbTools.getParam_Saisie_ParamMem(wParam_Id);
 
-      //  print("AbrevTxt_Param_Param Srv_DbTools.ListParam_Saisie_Param.length ${Srv_DbTools.ListParam_Saisie_Param.length} ");
-
-
         Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
-          if (element.Param_Saisie_Param_Label.compareTo(wTxt) == 0) {
+          String wTmp = element.Param_Saisie_Param_Label.replaceAll(" - ", "-");
+          if (wTmp.compareTo(wTxt) == 0) {
             wTxt = element.Param_Saisie_Param_Abrev;
           }
         });
@@ -972,5 +976,100 @@ class gColors {
   }
 
 
+  static Widget TxtField(BuildContext context, double lWidth, double wWidth, String wLabel, TextEditingController textEditingController, {TextInputType wTextInputType = TextInputType.none, Iterable<String>? wautofillHints = const [], bool obscureText = false, String wErrorText = "", int Ligne = 1, String sep = " : ", int maxChar = -1}) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        lWidth == -1
+            ? Container(
+          padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+          child: Text(
+            wLabel,
+            style: gColors.bodySaisie_N_G,
+          ),
+        )
+            : Container(
+          width: lWidth,
+          padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+          child: Text(
+            wLabel,
+            style: gColors.bodySaisie_N_G,
+          ),
+        ),
+        Container(
+          width: 12,
+          padding: const EdgeInsets.fromLTRB(0, 8, 0, 0),
+          child: Text(
+            sep,
+            style: gColors.bodySaisie_N_G,
+          ),
+        ),
+        Container(
+            width: wWidth * 6,
+            child: TextFormField(
+              obscureText: obscureText,
+              keyboardType: wTextInputType,
+              autofillHints: wautofillHints,
+              minLines: Ligne,
+              maxLines: Ligne,
+              decoration: InputDecoration(
+                errorText: wErrorText.isEmpty ? null : wErrorText,
+                isDense: true,
+                enabledBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blueAccent),
+                ),
+                focusedBorder: UnderlineInputBorder(
+                  borderSide: BorderSide(color: Colors.blueAccent),
+                ),
+              ),
+              inputFormatters: [
+                if (maxChar > 0) LengthLimitingTextInputFormatter(maxChar),
+              ],
+
+              controller: textEditingController,
+
+//               maxLength: maxChar,
+
+              style: gColors.bodySaisie_B_B,
+            )),
+        Container(
+          width: 20,
+        ),
+      ],
+    );
+  }
+
+  static Widget DescText(BuildContext context, double wWidth,  String wText, int Ligne) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+//          color: Colors.red,
+            width: wWidth,
+            child: Text(wText,
+              maxLines : Ligne,
+            ))
+      ],
+    );
+  }
+
+
+  static Widget DescTextSmall(BuildContext context, double wWidth,  String wText, int Ligne) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Container(
+//          color: Colors.red,
+            width: wWidth,
+            child: Text(wText,
+              maxLines : Ligne,
+              style: gColors.smallSaisie_N_G,
+            ))
+      ],
+    );
+  }
 
 }

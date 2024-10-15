@@ -57,6 +57,15 @@ class Client_Groupe_Parc_Inter_ArticleDialog extends StatefulWidget {
 class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Parc_Inter_ArticleDialog> {
   Widget wIco = Container();
 
+  List<Widget> views = <Widget>[
+    Text('Pièces Détachées'),
+    Text('Catalogue Articles'),
+  ];
+
+  final List<bool> _selectedView = <bool>[true, false, false];
+
+
+
   final Search_TextController = TextEditingController();
 
   static List<String> ListParam_FiltreFam = [];
@@ -380,6 +389,12 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
 
   @override
   void initState() {
+
+    _selectedView.clear();
+    for (int i = 0; i < views.length; i++) {
+      _selectedView.add(i == 0);
+    }
+
     if (widget.art_Type.compareTo("G") == 0) {
       isGamme = true;
     } else if (widget.art_Type.compareTo("ES") == 0) {
@@ -513,7 +528,8 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
 
   Widget Valider(BuildContext context) {
     return Container(
-      width: 450,
+      width: 540,
+//      color: Colors.red,
       alignment: Alignment.centerRight,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -524,21 +540,32 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
             color: gColors.primary,
             width: 8,
           ),
+
+
           !isRef
-              ? Container()
-              : Text(
-                  "Pièces Détachées",
-                  style: gColors.bodySaisie_N_G,
-                ),
-          !isRef
-              ? Container()
-              : Checkbox(
-                  materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  value: isProp,
-                  onChanged: (bool? value) {
-                    isProp = value!;
-                    Filtre();
-                  }),
+              ? Container() :
+          ToggleButtons(
+            direction: Axis.horizontal,
+            onPressed: (int index) async {
+              for (int i = 0; i < _selectedView.length; i++) {
+                _selectedView[i] = i == index;
+                isProp = (index == 0);
+                Filtre();
+              }
+            },
+            borderRadius: const BorderRadius.all(Radius.circular(8)),
+            selectedBorderColor: Colors.white,
+            selectedColor: Colors.white,
+            fillColor: gColors.primary,
+            color: gColors.primary,
+            constraints: const BoxConstraints(
+              minHeight: 36.0,
+              minWidth: 160.0,
+            ),
+            isSelected: _selectedView,
+            children: views,
+          ),
+
           Spacer(),
           new ElevatedButton(
             onPressed: () async {
@@ -570,7 +597,6 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                   }
                 }
               } else if (widget.art_Type.contains("ES")) {
-
 
 
                 print(" SES deleteParc_Art");
@@ -643,6 +669,10 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                       if (art.Article_codeArticle.compareTo(wNF074_Gammes.NF074_Gammes_REF) == 0) {
                         print("Selection wParam_Gamme ${wNF074_Gammes.NF074_Gammes_CODF} gLastID ${DbTools.gLastID}");
 
+
+                        print("Selection wParam_Gamme ${wNF074_Gammes.toMap()}");
+
+
                         List<Parc_Desc> wParcs_Desc = [];
                         wParcs_Desc.addAll(DbTools.glfParcs_Desc);
 
@@ -655,36 +685,36 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                             await DbTools.insertIntoParc_Desc(element2);
                           } else if (element2.ParcsDesc_Type!.compareTo("DESC") == 0) {
                             element2.ParcsDesc_Id = "";
-                            element2.ParcsDesc_Lib = DbTools.gNF074_Gammes.NF074_Gammes_DESC;
+                            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_DESC;
                             print("INSERT ParcsDesc_Type ${element2.ParcsDesc_Type} ParcsDesc_Id ${element2.ParcsDesc_Id} ParcsDesc_Lib ${element2.ParcsDesc_Lib}");
                             await DbTools.insertIntoParc_Desc(element2);
                           } else if (element2.ParcsDesc_Type!.compareTo("FAB") == 0) {
                             element2.ParcsDesc_Id = "";
-                            element2.ParcsDesc_Lib = DbTools.gNF074_Gammes.NF074_Gammes_FAB;
+                            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_FAB;
                             await DbTools.insertIntoParc_Desc(element2);
                           } else if (element2.ParcsDesc_Type!.compareTo("PRS") == 0) {
                             element2.ParcsDesc_Id = "";
-                            element2.ParcsDesc_Lib = DbTools.gNF074_Gammes.NF074_Gammes_PRS;
+                            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_PRS;
                             await DbTools.insertIntoParc_Desc(element2);
                           } else if (element2.ParcsDesc_Type!.compareTo("CLF") == 0) {
                             element2.ParcsDesc_Id = "";
-                            element2.ParcsDesc_Lib = DbTools.gNF074_Gammes.NF074_Gammes_DESC;
+                            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_CLF;
                             await DbTools.insertIntoParc_Desc(element2);
                           } else if (element2.ParcsDesc_Type!.compareTo("MOB") == 0) {
                             element2.ParcsDesc_Id = "";
-                            element2.ParcsDesc_Lib = DbTools.gNF074_Gammes.NF074_Gammes_MOB;
+                            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_MOB;
                             await DbTools.insertIntoParc_Desc(element2);
                           } else if (element2.ParcsDesc_Type!.compareTo("PDT") == 0) {
                             element2.ParcsDesc_Id = "";
-                            element2.ParcsDesc_Lib = DbTools.gNF074_Gammes.NF074_Gammes_PDT;
+                            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_PDT;
                             await DbTools.insertIntoParc_Desc(element2);
                           } else if (element2.ParcsDesc_Type!.compareTo("POIDS") == 0) {
                             element2.ParcsDesc_Id = "";
-                            element2.ParcsDesc_Lib = DbTools.gNF074_Gammes.NF074_Gammes_POIDS;
+                            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_POIDS;
                             await DbTools.insertIntoParc_Desc(element2);
                           } else if (element2.ParcsDesc_Type!.compareTo("GAM") == 0) {
                             element2.ParcsDesc_Id = "";
-                            element2.ParcsDesc_Lib = DbTools.gNF074_Gammes.NF074_Gammes_GAM;
+                            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_GAM;
                             Srv_DbTools.GAM_ID = element2.ParcsDesc_Id.toString();
                             await DbTools.insertIntoParc_Desc(element2);
                           }

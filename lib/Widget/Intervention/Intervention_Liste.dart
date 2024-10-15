@@ -308,6 +308,8 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
 
   Widget InterventionGridWidget() {
 
+
+
     return Column(
       children: <Widget>[
         gColors.wLigne(),
@@ -327,7 +329,7 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
                         style: gColors.bodySaisie_B_B,
                       ))),
               Expanded(
-                  flex: 5,
+                  flex: 6,
                   child: Container(
                       child: Text(
                         "Statut",
@@ -335,23 +337,14 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
                         style: gColors.bodySaisie_B_B,
                       ))),
               Expanded(
-                  flex: 15,
+                  flex: 25,
                   child: Container(
                       child: Text(
-                        "Client",
+                        "Client/Groupe/Site/Zone",
                         textAlign: TextAlign.center,
                         style: gColors.bodySaisie_B_B,
                       ))),
-
-
               Expanded(
-                  flex: 15,
-                  child: Container(
-                      child: Text(
-                        "Site",
-                        textAlign: TextAlign.center,
-                        style: gColors.bodySaisie_B_B,
-                      ))),              Expanded(
                   flex: 8,
                   child: Container(
                       child: Text(
@@ -385,6 +378,10 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
               wColor = gColors.getColorStatus(intervention.Intervention_Status);
 
               double rowh = 24;
+
+              String wNom = "${intervention.Client_Nom}/${intervention.Site_Nom}/${intervention.Groupe_Nom}/${intervention.Zone_Nom}";
+              if (intervention.Client_Nom == intervention.Site_Nom && intervention.Client_Nom == intervention.Groupe_Nom && intervention.Client_Nom == intervention.Zone_Nom)
+                wNom = "${intervention.Client_Nom}";
 
               return Column(children: [
                 new GestureDetector(
@@ -426,7 +423,7 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
                                   ))),
 
                           Expanded(
-                              flex: 10,
+                              flex: 12,
                               child:
 
                               Row(
@@ -440,7 +437,7 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
                                         child: Text(
                                           "${intervention.Intervention_Status}",
                                           textAlign: TextAlign.right,
-                                          style: gColors.bodySaisie_B_B.copyWith(color: Colors.orange),
+                                          style: gColors.bodySaisie_B_B,
                                         ))
 
                                   ]),
@@ -449,25 +446,17 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
 
 
                           Expanded(
-                              flex: 15,
+                              flex: 30,
                               child: Container(
                                 height: rowh,
                                 child: Text(
-                                  "${intervention.Client_Nom}",
+                                  "${wNom}",
                                   maxLines: 1,
                                   style: gColors.bodySaisie_B_B,
                                 ),
                               )),
-                          Expanded(
-                              flex: 15,
-                              child: Container(
-                                height: rowh,
-                                child: Text(
-                                  "${intervention.Site_Nom}",
-                                  maxLines: 1,
-                                  style: gColors.bodySaisie_B_B,
-                                ),
-                              )),
+
+
                           Expanded(
                               flex: 8,
                               child: Container(

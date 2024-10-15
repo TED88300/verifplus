@@ -5,9 +5,8 @@ import 'package:verifplus/Tools/DbSrv/Srv_Articles_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_InterMissions.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Interventions.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_NF074.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Param_Av.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie_Param.dart';
@@ -18,6 +17,8 @@ import 'package:verifplus/Tools/DbSrv/Srv_User_Hab.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Zones.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
+
+import '../Tools/DbTools/Db_Param_Av.dart';
 
 class Import_Data_Dialog {
   Import_Data_Dialog();
@@ -281,52 +282,14 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
       Param_Param wParam_Param = Srv_DbTools.ListParam_ParamAll[i];
       await DbTools.inserParam_Param(wParam_Param);
     }
+
     Srv_DbTools.ListParam_ParamAll = await  DbTools.getParam_Param();
     print("Import_DataDialog Srv_DbTools.ListParam_ParamAll ${Srv_DbTools.ListParam_ParamAll}");
     setState(() {
       wSt += "► Param_Param : ${Srv_DbTools.ListParam_ParamAll.length} Params\n";
     });
 
-    Srv_DbTools.ListParam_Param_Abrev.clear();
-    Srv_DbTools.ListParam_ParamAll.forEach((element) {
-      if (element.Param_Param_Type.compareTo("Abrev") == 0) {
-        Srv_DbTools.ListParam_Param_Abrev.add(element);
-      }
-    });
-
-    Srv_DbTools.ListParam_Param_Civ.clear();
-    Srv_DbTools.ListParam_ParamAll.forEach((element) {
-      if (element.Param_Param_Type.compareTo("Civ") == 0) {
-        Srv_DbTools.ListParam_Param_Civ.add(element);
-      }
-    });
-
-    Srv_DbTools.ListParam_Param_Status_Interv.clear();
-    Srv_DbTools.ListParam_ParamAll.forEach((element) {
-      if (element.Param_Param_Type.compareTo("Status_Interv") == 0) {
-        Srv_DbTools.ListParam_Param_Status_Interv.add(element);
-      }
-    });
-
-
-
-
-
-    Srv_DbTools.ListParam_ParamCiv.clear();
-    Srv_DbTools.ListParam_ParamCiv.add("");
-    for (int i = 0; i < Srv_DbTools.ListParam_Param_Civ.length; i++) {
-      Param_Param wParam_Param = Srv_DbTools.ListParam_Param_Civ[i];
-      if (wParam_Param.Param_Param_Text == "C")
-        Srv_DbTools.ListParam_ParamCiv.add(wParam_Param.Param_Param_ID);
-    }
-
-    Srv_DbTools.ListParam_ParamForme.clear();
-    Srv_DbTools.ListParam_ParamForme.add("");
-    for (int i = 0; i < Srv_DbTools.ListParam_Param_Civ.length; i++) {
-      Param_Param wParam_Param = Srv_DbTools.ListParam_Param_Civ[i];
-      if (wParam_Param.Param_Param_Text != "C")
-        Srv_DbTools.ListParam_ParamForme.add(wParam_Param.Param_Param_ID);
-    }
+    DbTools.genParam();
 
     //***********************************
     //***********************************
@@ -350,6 +313,27 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
     //***********************************
     //***********************************
 
+
+    await Srv_DbTools.getParam_Av(Srv_DbTools.gUserLogin.UserID);
+    print("Import_DataDialog ListParam_Av ${Srv_DbTools.ListParam_Av.length}");
+
+    await DbTools.TrunckParam_Av();
+    for (int i = 0; i < Srv_DbTools.ListParam_Av.length; i++) {
+      SrvParam_Av wParam_Av = Srv_DbTools.ListParam_Av[i];
+      await DbTools.inserParam_Av(wParam_Av);
+    }
+
+    List<Param_Av> ListParam_Av = await  DbTools.getParam_Av();
+    print("Import_DataDialog Srv_DbTools.ListParam_Av ${ListParam_Av.length}");
+    setState(() {
+      wSt += "► Param_Av : ${ListParam_Av.length} Params\n";
+    });
+
+
+    //***********************************
+    //***********************************
+    //***********************************
+
     await Srv_DbTools.getUser_Hab(Srv_DbTools.gUserLogin.UserID);
     print("Import_DataDialog ListUser_Hab ${Srv_DbTools.ListUser_Hab.length}");
 
@@ -364,6 +348,8 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
       wSt += "► User_Hab : ${Srv_DbTools.ListUser_Hab.length} Params\n";
     });
 
+    
+
     await Srv_DbTools.getUser_Desc(Srv_DbTools.gUserLogin.UserID);
     print("Import_DataDialog ListUser_Desc ${Srv_DbTools.ListUser_Desc.length}");
 
@@ -377,6 +363,7 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
     setState(() {
       wSt += "► User_Desc : ${Srv_DbTools.ListUser_Desc.length} Params\n";
     });
+
 
 
     //**********************************

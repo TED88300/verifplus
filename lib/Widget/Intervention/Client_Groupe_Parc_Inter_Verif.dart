@@ -186,7 +186,7 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
             padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
 //                color: gColors.white,
             child: TextField(
-              keyboardType: TextInputType.visiblePassword,
+//              keyboardType: TextInputType.,
               controller: txtController,
               style: gColors.bodyTitle1_N_Gr,
               autofocus: false,
@@ -223,7 +223,7 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
               DbTools.gParc_Img_Type = 1;
               DbTools.glfParc_Imgs = await DbTools.getParc_Imgs(DbTools.gParc_Ent.ParcsId!, 1);
 
-              await gDialogs.Dialog_Photo(context);
+              await gDialogs.Dialog_Photo(context, "AAA", "AAAA");
               await Reload();
             }),
       ],
@@ -508,14 +508,11 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
           height: 45,
           child: InkWell(
             onTap: () async {
-              print("InkWell Saisie A");
               await HapticFeedback.vibrate();
               if (param_Saisie.Param_Saisie_Icon.compareTo("Verif_renouv") == 0 || param_Saisie.Param_Saisie_Icon.compareTo("Ech") == 0) {
-                print("InkWell Saisie B");
                 await HapticFeedback.vibrate();
                 await Client_Groupe_Parc_Inter_Article_Dialog.Dialogs_Saisie(context, onSaisie, "ES");
               } else if (!wParc_Desc.ParcsDesc_Lib!.contains(">")) {
-                print("InkWell Saisie C ${wParc_Desc.toString()}");
                 await Client_Groupe_Parc_Inter_Verif_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, param_Saisie, wParc_Desc);
               }
               setState(() {});
@@ -545,7 +542,7 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                   height: 20,
                   padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
                   child: Text(
-                    param_Saisie.Param_Saisie_ID.compareTo("Ext") == 0 ? "${ParcsArt_Lib}" : "${param_Saisie.Param_Saisie_Label}",
+                    param_Saisie.Param_Saisie_ID.compareTo("Ext") == 0 ? ">${ParcsArt_Lib}" : "${param_Saisie.Param_Saisie_Label}",
                     style: param_Saisie.Param_Saisie_ID.compareTo("Ext") == 0 ? gColors.bodyTitle1_B_Gr.copyWith(color: Colors.green) : gColors.bodyTitle1_B_Gr,
                   ),
                 ),
@@ -649,6 +646,15 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                 ? Container()
                 : InkWell(
                     onTap: () async {
+
+                      if (Param_Saisie_ID.compareTo("Inst") == 0 && wText.contains("---")) {
+                        DbTools.gParc_Art_MS = Parc_Art();
+                        DbTools.gParc_Art_MS.ParcsArtId = -99;
+                        await gDialogs.Dialog_MiseEnServ(context);
+                      }
+
+
+
                       await HapticFeedback.vibrate();
                       Parc_Desc wParc_Desc = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, Param_Saisie_ID);
 
@@ -736,9 +742,6 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                       if (isVerif) await Maj_Result_V(); else await Maj_Result_NV();
 
 
-
-
-
     print(" GENERATION DES ARTICLES ASSOCIES ");
                       DbTools.gIsOU = false;
                       DbTools.gIsOUlParcs_Art.clear();
@@ -748,6 +751,9 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                       if (Param_Saisie_ID.compareTo("RES") == 0 && wText.contains("---")) {
                         await Client_Groupe_Parc_Inter_Verif_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, param_Saisie, wParc_Desc);
                       }
+
+
+
 
                       if (DbTools.gIsOU) {
                         await Client_Groupe_Parc_Inter_ArticleAss_Dialog.Dialogs_SaisieAss(context);
@@ -766,176 +772,6 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
     );
   }
 
-  Future AffisOU(BuildContext context) async {
-    ScrollController scrollController = ScrollController(initialScrollOffset: 0);
-    double wDialogHeight = MediaQuery.of(context).size.height;
-    double IcoWidth = 40;
-
-    print("  AffisOU ");
-
-    return showDialog(
-        context: context,
-        builder: (_) => new AlertDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
-              surfaceTintColor: Colors.white,
-              backgroundColor: gColors.white,
-              title: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-                Text(
-                  "Pièces détachées à Options Multiples",
-                  textAlign: TextAlign.center,
-                  style: gColors.bodyTitle1_B_G_20,
-                ),
-                Text(
-                  "Sélectionner la pièce pour cet organe",
-                  textAlign: TextAlign.center,
-                  style: gColors.bodyTitle1_N_Gr,
-                ),
-                Container(
-                  height: 8,
-                ),
-              ]),
-              contentPadding: EdgeInsets.zero,
-              content: Container(
-                color: gColors.greyLight,
-                height: wDialogHeight,
-                width: MediaQuery.of(context).size.width,
-                child: Column(
-                  children: [
-                    Container(
-                      color: gColors.black,
-                      height: 1,
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                        // controller: scrollController,
-                        shrinkWrap: true,
-                        itemCount: DbTools.gIsOUlParcs_Art.length,
-                        itemBuilder: (context, index) {
-                          final art = DbTools.gIsOUlParcs_Art[index];
-                          return InkWell(
-                              onTap: () async {
-                                await HapticFeedback.vibrate();
-                                List<Parc_Art> wlParcs_Art = await DbTools.getParcs_ArtAll(DbTools.gParc_Ent.ParcsId!);
-                                for (int i = 0; i < wlParcs_Art.length; i++) {
-                                  Parc_Art element = wlParcs_Art[i];
-                                  if (element.ParcsArt_Lib!.startsWith(">>>")) {
-                                    if (element.ParcsArt_Id != art.ParcsArt_Id) {
-                                      print("DELETE");
-
-                                      List<Parc_Art> wlParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "P");
-                                      List<Parc_Art> lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "V");
-                                      lParcs_Art.addAll(wlParcs_Art);
-                                      print("deleteParc_Art lParcs_Art ${lParcs_Art.length}");
-
-                                      await DbTools.deleteParc_Art(element.ParcsArtId!);
-
-                                      wlParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "P");
-                                      lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "V");
-                                      lParcs_Art.addAll(wlParcs_Art);
-                                      print("deleteParc_Art lParcs_Art ${lParcs_Art.length}");
-
-                                      await onDelete();
-                                      FBroadcast.instance().broadcast("Gen_Articles");
-                                      setState(() {});
-                                    }
-                                  }
-                                }
-
-                                Navigator.of(context).pop();
-                              },
-                              child: Column(
-                                children: [
-                                  Container(
-                                    color: Colors.white,
-                                    height: 45,
-                                    child: Row(
-                                      children: [
-                                        Container(
-                                          width: 10,
-                                        ),
-                                        buildImage(context, art),
-                                        Container(
-                                          width: 10,
-                                        ),
-                                        Container(
-                                          width: 100,
-                                          height: 20,
-                                          padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
-                                          child: Text(
-                                            "${art.ParcsArt_Id}",
-                                            style: gColors.bodyTitle1_N_Gr,
-                                          ),
-                                        ),
-                                        Expanded(
-                                          child: Container(
-                                            height: 20,
-                                            padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
-                                            child: Text(
-                                              "${art.ParcsArt_Lib!}",
-                                              style: gColors.bodyTitle1_N_Gr,
-                                            ),
-                                          ),
-                                        ),
-                                        InkWell(
-                                          onTap: () async {
-                                            await HapticFeedback.vibrate();
-
-                                            print("onTap ${art.Desc()}");
-                                            art.Art_Sel = !art.Art_Sel;
-
-                                            setState(() {});
-                                          },
-                                          child: Image.asset(
-                                            art.Art_Sel ? "assets/images/Plus_Sel.png" : "assets/images/Plus_No_Sel.png",
-                                            height: IcoWidth,
-                                            width: IcoWidth,
-                                          ),
-                                        ),
-                                        Container(
-                                          width: 10,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  Container(
-                                    color: gColors.greyLight,
-                                    height: .7,
-                                  ),
-                                ],
-                              ));
-                        },
-                      ),
-                    ),
-                    Container(
-                      color: gColors.greyDark,
-                      height: 1,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Container(
-                          height: 30,
-                        ),
-                        Valider(context),
-                      ],
-                    ),
-
-//                    Spacer(),
-                    Container(
-                      color: gColors.black,
-                      height: 1,
-                    ),
-                  ],
-                ),
-              ),
-              actions: <Widget>[
-                Container(
-                  height: 8,
-                ),
-              ],
-            ));
-  }
 
   Valider(BuildContext context) {
     return Container(

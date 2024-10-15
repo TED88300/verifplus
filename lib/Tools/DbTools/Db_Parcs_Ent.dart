@@ -36,6 +36,8 @@ class Parc_Ent_Count {
   String? Parcs_CodeArticle = "";
   String? Parcs_CODF = "";
   String? Parcs_NCERT = "";
+  String? Parcs_FAB = "";
+  String? Parcs_NoSpec = "";
   String? Livr = "";
   String? Devis = "";
   String? Action = "";
@@ -83,6 +85,7 @@ class Parc_Ent_Count {
     this.Parcs_CodeArticle,
     this.Parcs_CODF,
     this.Parcs_NCERT,
+    this.Parcs_NoSpec,
     this.Livr,
     this.Devis,
     this.Action,
@@ -142,7 +145,7 @@ class Parc_Ent_Count {
     wParc_Ent.Parcs_CodeArticle = "";
     wParc_Ent.Parcs_CODF = "";
     wParc_Ent.Parcs_NCERT = "";
-
+    wParc_Ent.Parcs_NoSpec = "";
 
     wParc_Ent.Parcs_Date_Desc = "";
     wParc_Ent.Parcs_Install = false;
@@ -191,6 +194,7 @@ class Parc_Ent_Count {
       'Parcs_CodeArticle':     Parcs_CodeArticle,
       'Parcs_CODF':     Parcs_CODF,
       'Parcs_NCERT':     Parcs_NCERT,
+      'Parcs_NoSpec':     Parcs_NoSpec,
       'Livr':     Livr,
       'Devis':     Devis,
       'Action':     Action,
@@ -241,6 +245,7 @@ class Parc_Ent_Count {
       Parcs_CodeArticle: map["Parcs_CodeArticle"],
       Parcs_CODF: map["Parcs_CODF"],
       Parcs_NCERT: map["Parcs_NCERT"],
+      Parcs_NoSpec: map["Parcs_NoSpec"],
       Livr: map["Livr"],
       Devis: map["Devis"],
       Action: map["Action"],
@@ -291,6 +296,7 @@ class Parc_Ent_Count {
     Parcs_CodeArticle: Parcs_CodeArticle,
     Parcs_CODF: Parcs_CODF,
     Parcs_NCERT: Parcs_NCERT,
+    Parcs_NoSpec: Parcs_NoSpec,
     Livr: Livr,
     Devis: Devis,
     Action: Action,
@@ -322,6 +328,7 @@ class Parc_Ent_Count {
         'Parcs_CodeArticle $Parcs_CodeArticle, '
         'Parcs_CODF $Parcs_CODF, '
         'Parcs_NCERT $Parcs_NCERT, '
+        'Parcs_NoSpec $Parcs_NoSpec, '
         '> Parcs_MaintPrev $Parcs_MaintPrev, '
         '> Parcs_Install $Parcs_Install, '
         '> Parcs_MaintCorrect $Parcs_MaintCorrect, '

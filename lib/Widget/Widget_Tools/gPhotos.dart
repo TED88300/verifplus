@@ -2,10 +2,8 @@ import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:camera/camera.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
-import 'package:verifplus/Tools/DbTools/Db_Parcs_Img.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gPhotoCrop.dart';
 import 'package:verifplus/main.dart';
@@ -33,14 +31,15 @@ class gPhotosState
 
   @override
   void initState() {
-    initLib();
-    super.initState();
-
     _controller = CameraController(
       firstCamera,
       ResolutionPreset.medium,
     );
     _initializeControllerFuture = _controller.initialize();
+
+    initLib();
+    super.initState();
+
   }
 
   @override
@@ -86,12 +85,12 @@ class gPhotosState
                     child: Container(
                       color: Colors.black,
                       width: size,
-                      height: size,
+                      height: size * 1.5,
                       child: FutureBuilder<void>(
                         future: _initializeControllerFuture,
                         builder: (context, snapshot) {
                           if (snapshot.connectionState == ConnectionState.done) {
-                            print("_controller.value.aspectRatio ${_controller.value.aspectRatio}");
+                            print(" _controller.value.aspectRatio ${_controller.value.aspectRatio}");
                             return CameraPreview(_controller);
                           } else {
                             return const Center(

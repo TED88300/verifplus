@@ -26,6 +26,11 @@ class _CustomBottomNavigationBar3State extends State<CustomBottomNavigationBar3>
     });
 
     super.initState();
+
+    FBroadcast.instance().register("HandleBar3", (value, callback) {
+      _handlePressed(DbTools.gCurrentIndex3);
+    });
+
   }
 
   @override
@@ -206,11 +211,11 @@ class _CustomBottomNavigationBar3State extends State<CustomBottomNavigationBar3>
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: <Widget>[
-                _icon("Icon_CR.png"     ,    "CR", _selectedIndex == 0, 0),
-                _icon("Btn_Download.png", "Datas", _selectedIndex == 1, 1),
-                _icon("Icon_BL.png"     ,    "BL", _selectedIndex == 2, 2),
-                _icon("Icon_BC.png"     ,    "BC", _selectedIndex ==   3, 3),
-                _icon("Icon_Dev.png"    , "Devis", _selectedIndex ==   4, 4),
+                _icon("Btn_Download.png", "Datas", _selectedIndex ==  0, 0),
+                _icon("Icon_CR.png"     ,    "CR", _selectedIndex ==  1, 1),
+                _icon("Icon_BL.png"     ,    "BL", _selectedIndex ==  2, 2),
+                _icon("Icon_BC.png"     ,    "BC", _selectedIndex ==  3, 3),
+                _icon("Icon_Dev.png"    , "Devis", _selectedIndex ==  4, 4),
                 _icon("Icon_Sign.png",  "Signature", _selectedIndex == 5, 5),
               ],
             ),

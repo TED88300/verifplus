@@ -121,6 +121,7 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
     Srv_DbTools.ListArticle_Ebp = await Article_Ebp.getArticle_Ebp();
     await Srv_DbTools.IMPORT_Article_Ebp_ES();
 
+    DbTools.genParam();
 
     if (DbTools.gIsRememberLogin) DbTools.gIsRememberLogin = await Srv_DbTools.getUserLogin(DbTools.gUsername, DbTools.gPassword);
 

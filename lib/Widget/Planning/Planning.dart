@@ -568,7 +568,7 @@ class PlanningState extends State<Planning> {
     };
 
     if (section.items.length > 0) {
-        print(" DET AJOUT RDV  ${section.items.length} ${section.items[0]} ${section.items[1]}");
+//        print(" DET AJOUT RDV  ${section.items.length} ${section.items[0]} ${section.items[1]}");
       sections.add(section);
     }
 

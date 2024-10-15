@@ -18,6 +18,7 @@ import 'package:verifplus/Tools/DbSrv/Srv_InterMissions.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_InterMissions_Document.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Interventions.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_NF074.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Param_Av.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie_Param.dart';
@@ -73,6 +74,8 @@ class Srv_DbTools {
   static String wImgPathAvatar = "";
 
   static String simCountryCode = "";
+
+
 
 
   static List<String> List_UserInter = [];
@@ -2290,6 +2293,7 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
         "Parcs_UUID  = \"${Parc_Ent.Parcs_UUID}\", " +
         "Parcs_UUID_Parent  = \"${Parc_Ent.Parcs_UUID_Parent}\", " +
         "Parcs_NCERT  = \"${Parc_Ent.Parcs_NCERT}\", " +
+        "Parcs_NoSpec  = \"${Parc_Ent.Parcs_NoSpec}\", " +
         "Parcs_CodeArticle  = \"${Parc_Ent.Parcs_CodeArticle}\", " +
         "Parcs_CODF  = \"${Parc_Ent.Parcs_CODF}\", " +
         "Livr        = \"${Parc_Ent.Livr}\", " +
@@ -2332,6 +2336,7 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
 
   static Future<bool> InsertUpdateParc_Ent_Srv(Parc_Ent aParc_Ent) async {
     if (aParc_Ent.Parcs_NCERT == null) aParc_Ent.Parcs_NCERT = "";
+    if (aParc_Ent.Parcs_NoSpec == null) aParc_Ent.Parcs_NoSpec = "";
     if (aParc_Ent.Parcs_CodeArticle == null) aParc_Ent.Parcs_CodeArticle = "";
     if (aParc_Ent.Parcs_CODF == null) aParc_Ent.Parcs_CODF = "";
 
@@ -2354,6 +2359,7 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
         "Parcs_UUID, "
         "Parcs_UUID_Parent, "
         "Parcs_NCERT, "
+        "Parcs_NoSpec, "
         "Parcs_CodeArticle, "
         "Parcs_CODF, "
         "Livr, Devis, Action, "
@@ -2383,6 +2389,7 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
         "'${aParc_Ent.Parcs_UUID!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Parcs_UUID_Parent!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Parcs_NCERT!.replaceAll("'", "‘")}',"
+        "'${aParc_Ent.Parcs_NoSpec!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Parcs_CodeArticle!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Parcs_CODF!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Livr!.replaceAll("'", "‘")}',"
@@ -2419,6 +2426,7 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
         "Parcs_Audit_Note, Parcs_Verif_Note, Parcs_UUID, "
         "Parcs_UUID_Parent, "
         "Parcs_NCERT, "
+        "Parcs_NoSpec, "
         "Parcs_CodeArticle, "
         "Parcs_CODF, "
         "Livr, Devis, Action, Parcs_Intervention_Timer) VALUES ("
@@ -2447,6 +2455,7 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
         "'${aParc_Ent.Parcs_UUID!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Parcs_UUID_Parent!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Parcs_NCERT!.replaceAll("'", "‘")}',"
+        "'${aParc_Ent.Parcs_NoSpec!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Parcs_CodeArticle!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Parcs_CODF!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Livr!.replaceAll("'", "‘")}',"
@@ -3630,6 +3639,42 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
     return [];
   }
 
+
+
+  //*****************************
+  //*****************************
+  //*****************************
+
+  static List<SrvParam_Av> ListParam_Av = [];
+  static List<SrvParam_Av> ListParam_Avsearchresult = [];
+
+  static Future<bool> getParam_Av(int Param_Av_UserID) async {
+    ListParam_Av = await getParam_Av_API_Post("select", "select * from Param_Av ORDER BY Param_AvID");
+    if (ListParam_Av == null) return false;
+    return false;
+  }
+
+  static Future<List<SrvParam_Av>> getParam_Av_API_Post(String aType, String aSQL) async {
+    setSrvToken();
+    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
+    var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${gLoginID}"});
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      var parsedJson = json.decode(await response.stream.bytesToString());
+      final items = parsedJson['data'];
+      if (items != null) {
+        List<SrvParam_Av> Param_AvList = await items.map<SrvParam_Av>((json) {
+          return SrvParam_Av.fromJson(json);
+        }).toList();
+        return Param_AvList;
+      }
+    } else {
+      print(response.reasonPhrase);
+    }
+    return [];
+  }
+
   //*****************************
   //*****************************
   //*****************************
@@ -4086,19 +4131,25 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
   }
 
   static Future<bool> getParam_Saisie_ParamAll() async {
+
     ListParam_Saisie_ParamAll.clear();
     try {
       ListParam_Saisie_ParamAll = await getParam_Saisie_Param_API_Post("select", "select * from Param_Saisie_Param ORDER BY Param_Saisie_Param_Id,Param_Saisie_Param_Ordre");
       if (ListParam_Saisie_ParamAll == null) return false;
       if (ListParam_Saisie_ParamAll.length > 0) {
-        Srv_DbTools.ListParam_Saisie_ParamAll.forEach((element) async {
+        for (int i = 0; i < ListParam_Saisie_ParamAll.length; i++) {
+          Param_Saisie_Param element = ListParam_Saisie_ParamAll[i];
           element.Param_Saisie_Param_Ico = await gObj.getAssetImage("assets/images/Aide_Ico_${element.Param_Saisie_Param_Label}.png");
-        });
+//          if (element.Param_Saisie_Param_Ico.toString().contains("AssetImage"))
+//          print("Param_Saisie_Param_Ico ${element.Param_Saisie_Param_Ico.toString()}");
+
+
+        };
         return true;
       }
       return false;
     } catch (e) {
-      DbTools.getParam_Saisie_ParamAll();
+      await DbTools.getParam_Saisie_ParamAll();
       return false;
     }
 

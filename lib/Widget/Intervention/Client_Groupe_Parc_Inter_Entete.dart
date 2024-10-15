@@ -11,6 +11,7 @@ import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Client/Client_Dialog.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Audit.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Entete_Dialog.dart';
+import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Entete_DialogNo.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Equip.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Piece.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Serv.dart';
@@ -61,42 +62,37 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
   List<Widget> imgList = [];
 
   Future Reload() async {
-
     print("");
     print(" ENTETE Reload ******************");
     print("");
 
-      await AffDesc();
-      print(" Call InitArt() ******************");
-      await Client_Groupe_Parc_Tools.InitArt();
+    await AffDesc();
+    print(" Call InitArt() ******************");
+    await Client_Groupe_Parc_Tools.InitArt();
 
+    DbTools.glfParc_Imgs = await DbTools.getParc_Imgs(DbTools.gParc_Ent.ParcsId!, 0);
+    if (DbTools.glfParc_Imgs.length > 0) {
+      imgList.clear();
 
-      DbTools.glfParc_Imgs = await DbTools.getParc_Imgs(DbTools.gParc_Ent.ParcsId!, 0);
-      if (DbTools.glfParc_Imgs.length > 0) {
-        imgList.clear();
+      for (int i = 0; i < DbTools.glfParc_Imgs.length; i++) {
+        var element = DbTools.glfParc_Imgs[i];
+        var bytes = base64Decode(element.Parc_Imgs_Data!);
+        Widget wWidget = Container();
+        if (bytes.length > 0) {
+          wWidget = ClipRRect(
+            borderRadius: BorderRadius.circular(8.0),
+            child: Image.memory(
+              bytes,
+              fit: BoxFit.fill,
+              height: 50.0,
+              width: 50.0,
+            ),
+          );
 
-        for (int i = 0; i < DbTools.glfParc_Imgs.length; i++) {
-          var element = DbTools.glfParc_Imgs[i];
-          var bytes =  base64Decode(element.Parc_Imgs_Data!);
-          Widget wWidget = Container();
-          if (bytes.length > 0)
-          {
-            wWidget =
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(8.0),
-                  child: Image.memory(
-                    bytes,
-                    fit: BoxFit.fill,
-                    height: 50.0,
-                    width: 50.0,
-                  ),
-                );
-
-            imgList.add(wWidget);
-            isImage = true;
-          }
+          imgList.add(wWidget);
+          isImage = true;
         }
-
+      }
     }
     setState(() {});
   }
@@ -124,7 +120,6 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
       Client_Groupe_Parc_Inter_Synth(onMaj: onMaj, x_t: "6/6"),
     ];
 
-
     initLib();
     super.initState();
   }
@@ -134,7 +129,6 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
   String DescAff3 = "";
 
   String StrTimer = "";
-
 
   Future AffDesc() async {
     DbTools.glfParcs_Desc = await DbTools.getParcs_Desc(DbTools.gParc_Ent.ParcsId!);
@@ -162,7 +156,6 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
         case "SIT":
           Srv_DbTools.SIT_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
           break;
-
 
         case "ARM":
           Srv_DbTools.ARM_Lib = wParcs_Desc.ParcsDesc_Lib.toString();
@@ -214,16 +207,15 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
       }
     });
 
-
 //    print("<<<<<<<<<<<<<<<<<<<DESC PDT>>>>>>>>>>>>>>>>>>>>>>>>  ${Srv_DbTools.DESC_Lib}  ${Srv_DbTools.PDT_Lib}");
 
     List<Param_Saisie> ListParam_Saisie_Tmp = [];
     ListParam_Saisie_Tmp.addAll(Srv_DbTools.ListParam_Saisie);
     ListParam_Saisie_Tmp.addAll(Srv_DbTools.ListParam_Saisie_Base);
 
-    DescAff = "N° ${DbTools.gParc_Ent.Parcs_order}";
+    DescAff = "N°${DbTools.gParc_Ent.Parcs_order} ${DbTools.gParc_Ent.Parcs_NoSpec!.isEmpty ? '': DbTools.gParc_Ent.Parcs_NoSpec}";
 
-    if (DbTools.gParc_Ent.Parcs_Intervention_Timer == null) DbTools.gParc_Ent.Parcs_Intervention_Timer= 0;
+    if (DbTools.gParc_Ent.Parcs_Intervention_Timer == null) DbTools.gParc_Ent.Parcs_Intervention_Timer = 0;
 
     print("<<<<<<<<<<<<<<<<<<< StrTimer A ${DbTools.gParc_Ent.Parcs_Intervention_Timer}");
     StrTimer = gObj.printDuration(Duration(seconds: DbTools.gParc_Ent.Parcs_Intervention_Timer!));
@@ -256,9 +248,8 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
             if (element.Param_Saisie_ID == element2.ParcsDesc_Type) {
 //              print(">>>>>>>>>>>>>>>>>>>>>>>> element2 ${element2.ParcsDesc_ParcsId} ${element2.ParcsDesc_Type} ${element2.ParcsDesc_Lib}");
 
-                            DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, element.Param_Saisie_ID)}";
+              DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, element.Param_Saisie_ID)}";
               //DescAff = "${DescAff} ${element2.ParcsDesc_ParcsId}";
-
             }
           });
         }
@@ -296,9 +287,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
       }
     });
 
-
     DbTools.DescAff = DescAff;
-
   }
 
   @override
@@ -311,15 +300,13 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
     islock = false;
     Srv_DbTools.Hab_PDT = 99;
 
+
+    print(" ENTETE RELOAD");
+
 //    Widget wchildren = widgets[DbTools.gCurrentIndex2];
 
-
-    String wTitre2 = "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}";
-    if (Srv_DbTools.gIntervention.Groupe_Nom == Srv_DbTools.gIntervention.Site_Nom)
-      wTitre2 = "${Srv_DbTools.gIntervention.Site_Nom}";
-
-
-
+    String wTitre2 = "${Srv_DbTools.gIntervention.Client_Nom!.toUpperCase()} ${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}";
+    if (Srv_DbTools.gIntervention.Groupe_Nom! == Srv_DbTools.gIntervention.Site_Nom!) wTitre2 = Srv_DbTools.gIntervention.Client_Nom!.toUpperCase();
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -331,25 +318,23 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
             await HapticFeedback.vibrate();
             await Client_Dialog.Dialogs_Client(context);
           },
-          child:
-          AutoSizeText(
+          child: AutoSizeText(
             "${Srv_DbTools.DESC_Lib.length == 0 || Srv_DbTools.DESC_Lib == "---" ? DbTools.OrgLib : Srv_DbTools.DESC_Lib}",
             style: gColors.bodyTitle1_B_G_20,
             textAlign: TextAlign.center,
           ),
-
         ),
         leading: InkWell(
           onTap: () async {
             await HapticFeedback.vibrate();
             Navigator.of(context).pop();
           },
-          child:Padding(
+          child: Padding(
             padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
             child: DbTools.gBoolErrorSync
                 ? Image.asset(
-              "assets/images/IcoWErr.png",
-            )
+                    "assets/images/IcoWErr.png",
+                  )
                 : Image.asset("assets/images/IcoW.png"),
           ),
         ),
@@ -377,10 +362,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
         backgroundColor: gColors.white,
       ),
 
-
-
-      body:
-      SafeArea(
+      body: SafeArea(
         child: Stack(
           fit: StackFit.expand,
           children: <Widget>[
@@ -396,8 +378,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                         color: gColors.LinearGradient2,
                         height: 47,
                         padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
-                        child:
-                        Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                        child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
                           Container(
                             width: 60,
                             child: GestureDetector(
@@ -414,24 +395,19 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                             ),
                           ),
                           Expanded(
-                            child:
-                            Text (
+                            child: Text(
                               wTitre2,
-                            maxLines: 1,
-                            style: gColors.bodyTitle1_B_Gr,
+                              maxLines: 1,
+                              style: gColors.bodyTitle1_B_Gr,
                             ),
                           ),
                           Container(
                             width: 60,
-                            child:
-                            (Srv_DbTools.gIntervention.Intervention_Status == "En cours")
-                            ?
-                            CounterScreen() : Text("${StrTimer}"),
+                            child: (Srv_DbTools.gIntervention.Intervention_Status == "En cours") ? CounterScreen() : Text("${StrTimer}"),
                           ),
                         ]),
                       ),
                     ),
-
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -449,13 +425,13 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                           onTap: () async {
                             Client_Groupe_Parc_Inter_Entete_Dialog.DescAff = DescAff;
                             Client_Groupe_Parc_Inter_Entete_Dialog.DescAff2 = DescAff2;
-                            await Client_Groupe_Parc_Inter_Entete_Dialog.Dialogs_Entete(context, onMaj);
+                            await Client_Groupe_Parc_Inter_Entete_DialogNo.Dialogs_Entete(context, onMaj);
+                            await AffDesc();
                             setState(() {});
-
                           },
                           child:
 //                          Expanded(child:
-                          Container(
+                              Container(
 //                            width: 600,
                             padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
                             child: Column(
@@ -493,15 +469,15 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                             ),
                           ),
                         ),
- //   ),
+                        //   ),
                         IconButton(
                           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                           icon: isImage ? imgList[0] : Image.asset("assets/images/Icon_Photo.png"),
                           onPressed: () async {
                             print("on Photo");
-                            DbTools.gParc_Img_Type  = 0;
-                            DbTools.glfParc_Imgs =  await DbTools.getParc_Imgs(DbTools.gParc_Ent.ParcsId!, 0);
-                            await gDialogs.Dialog_Photo(context);
+                            DbTools.gParc_Img_Type = 0;
+                            DbTools.glfParc_Imgs = await DbTools.getParc_Imgs(DbTools.gParc_Ent.ParcsId!, 0);
+                            await gDialogs.Dialog_Photo(context, "Photo Organe", DescAff);
                             Reload();
                           },
                         ),
@@ -522,19 +498,13 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                                         ),
                                   child: Column(
                                     children: [
-/*
                                       Expanded(
-                                        child: wchildren,
+                                        child: PageView(
+                                          children: widgets,
+                                          controller: pageController,
+                                          onPageChanged: onBottomIconPressed,
+                                        ),
                                       ),
-*/
-
-                                  Expanded(
-                                  child: PageView(
-                                        children: widgets,
-                                        controller: pageController,
-                                        onPageChanged: onBottomIconPressed,
-                                      ),
-                                  ),
                                       Container(
                                         height: 1,
                                         color: gColors.greyDark,
@@ -582,20 +552,13 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
     );
   }
 
-
-
   void onBottomIconPressed(int index) async {
-
     if (DbTools.gCurrentIndex2 != index) {
       DbTools.gCurrentIndex2 = index;
 //      DbTools.gCurrentIndex3 = index;
       pageController.jumpToPage(index);
-
       FBroadcast.instance().broadcast("HandleBar2");
       Reload();
     }
   }
-
-
-
 }

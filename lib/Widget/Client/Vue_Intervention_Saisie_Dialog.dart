@@ -573,11 +573,11 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
     int nbBtn = 0;
     wAide = "Aide : ";
     Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
-      print("element.Param_Saisie_Param_Label A ${element.Param_Saisie_Param_Label} ${widget.param_Saisie.Param_Saisie_Value}");
+//      print("element.Param_Saisie_Param_Label A ${element.Param_Saisie_Param_Label} ${widget.param_Saisie.Param_Saisie_Value}");
 
       if (widget.param_Saisie.Param_Saisie_Value.compareTo("---") == 0) {
         if (element.Param_Saisie_Param_Default) {
-          print(" E Param_Saisie_Param_Default");
+//          print(" E Param_Saisie_Param_Default");
           widget.param_Saisie.Param_Saisie_Value = element.Param_Saisie_Param_Label;
         }
       }

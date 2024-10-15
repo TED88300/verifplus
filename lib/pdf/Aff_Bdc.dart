@@ -60,7 +60,7 @@ class Aff_BdcState extends State<Aff_Bdc> with SingleTickerProviderStateMixin {
         child:
         Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
           AutoSizeText(
-            "COMPTE-RENDU",
+            "BON DE COMMANDE",
             maxLines: 1,
             style: TextStyle(
               color: Colors.black87,
@@ -102,7 +102,7 @@ class Aff_BdcState extends State<Aff_Bdc> with SingleTickerProviderStateMixin {
       appBar: appBar(),
       body: PdfPreview(
         maxPageWidth: 700,
-        build: (format) => generateBdC(),
+        build: (format) => generateBC(),
         canDebug : false,
         canChangePageFormat : false,
         canChangeOrientation : false,

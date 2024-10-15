@@ -14,6 +14,7 @@ import 'package:verifplus/Widget/Client/Clients_Liste.dart';
 import 'package:verifplus/Widget/Import_ASync.dart';
 import 'package:verifplus/Widget/Import_Data.dart';
 import 'package:verifplus/Widget/Import_Menu.dart';
+import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_ArticleAV.dart';
 import 'package:verifplus/Widget/Intervention/Intervention_Liste.dart';
 import 'package:verifplus/Widget/P_Notifications.dart';
 import 'package:verifplus/Widget/Planning/Planning.dart';
@@ -39,7 +40,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   List<String> P_itemsTitre = <String>[
     "",
-    "INTERVENTION",
+    "INTERVENTIONS",
     "CATALOGUE",
     "PLANNING",
     "NOTIFICATIONS",
@@ -220,6 +221,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
             ),
             onPressed: () async {
               await Import_ASync_Dialog.Dialogs_ASync(context, onSaisie);
+
             },
           ),
 

@@ -5,6 +5,7 @@ import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Desc.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
+import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Entete_DialogNo.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Equip_Saisie.dart';
 
@@ -62,7 +63,9 @@ class _Client_Groupe_Parc_Inter_EnteteDialogState extends State<Client_Groupe_Pa
   String DescAff2 = "RDC - Bâtiment A1 - Bureau";
   String DescAff3 = "";
 
-
+  void onMaj() async {
+    print("•••••••••• Parent onMaj() Relaod()");
+  }
   void AffDesc() {
     DbTools.glfParcs_Desc.forEach((element2) async {
       print(" DbTools.glfParcs_Desc ${element2.toMap()}");
@@ -111,7 +114,7 @@ class _Client_Groupe_Parc_Inter_EnteteDialogState extends State<Client_Groupe_Pa
     ListParam_Saisie_Tmp.addAll(Srv_DbTools.ListParam_Saisie);
     ListParam_Saisie_Tmp.addAll(Srv_DbTools.ListParam_Saisie_Base);
 
-    DescAff = "N° ${DbTools.gParc_Ent.Parcs_order}";
+    DescAff = "N°${DbTools.gParc_Ent.Parcs_order} ${DbTools.gParc_Ent.Parcs_NoSpec!.isEmpty ? '': DbTools.gParc_Ent.Parcs_NoSpec}";
 
 //    PDT POIDS PRS MOB ANN FAB
 
@@ -365,7 +368,7 @@ class _Client_Groupe_Parc_Inter_EnteteDialogState extends State<Client_Groupe_Pa
       if (element.Param_Saisie_Controle.compareTo("Group") != 0) {
         if (ListChamps.contains(element.Param_Saisie_ID))
         {
-          print("Champs  ${element.Param_Saisie_ID}");
+          print("Champs  DESC Entete ${element.Param_Saisie_ID}");
           RowSaisies.add(RowSaisie(element, LargeurCol, LargeurCol2, H2));
         }
       }
@@ -393,10 +396,12 @@ class _Client_Groupe_Parc_Inter_EnteteDialogState extends State<Client_Groupe_Pa
 
   Widget RowSaisie(Param_Saisie param_Saisie, double LargeurCol,
       double LargeurCol2, double H2) {
-    print("RowSaisie A DbTools.gParc_Ent ${DbTools.gParc_Ent.toString()}");
+//    print("RowSaisie A DbTools.gParc_Ent ${DbTools.gParc_Ent.toString()}");
+//    print("RowSaisie A param_Saisie ${param_Saisie.toString()}");
 
     Parc_Desc wParc_Desc = DbTools.getParcs_Desc_Id_Type(
         DbTools.gParc_Ent.ParcsId!, param_Saisie.Param_Saisie_ID);
+
 
 //    print("RowSaisie Base 1 ${wParc_Desc.toString()}");
     if (wParc_Desc.ParcsDesc_Type!.compareTo("FREQ") == 0) {
@@ -501,16 +506,27 @@ class _Client_Groupe_Parc_Inter_EnteteDialogState extends State<Client_Groupe_Pa
       }
     }
 
+
+    if (wParc_Desc.ParcsDesc_Type!.compareTo("SPEC") == 0) {
+      wParc_Desc.ParcsDesc_Id = "";
+      wParc_Desc.ParcsDesc_Lib = "${DbTools.gParc_Ent.Parcs_NoSpec!}";
+    }
+
+
     if (wParc_Desc.ParcsDesc_Lib!.isEmpty) wParc_Desc.ParcsDesc_Lib = "---";
-    //   print("RowSaisie Base 2 ${wParc_Desc.toString()}");
+
+
+//       print("RowSaisie Base 2 ${wParc_Desc.toString()}");
 
     return InkWell(
       onTap: () async {
         await HapticFeedback.vibrate();
-        print(
-            "onTap >>>>>>>>>>>>> BBBBB ${wParc_Desc.toString()} ${wParc_Desc.ParcsDesc_Lib}");
-        await Client_Groupe_Parc_Inter_Equip_Saisie_Dialog.Dialogs_Saisie(
-            context, onSaisie, param_Saisie, wParc_Desc);
+        print("onTap >>>>>>>>>>>>> BBBBB ${wParc_Desc.toString()} ${wParc_Desc.ParcsDesc_Lib}");
+
+        if(wParc_Desc.ParcsDesc_Type == "SPEC")
+          await Client_Groupe_Parc_Inter_Entete_DialogNo.Dialogs_Entete(context, onMaj);
+        else
+          await Client_Groupe_Parc_Inter_Equip_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, param_Saisie, wParc_Desc);
 
         if (wParc_Desc.ParcsDesc_Type!.compareTo("FREQ") == 0) {
           DbTools.gParc_Ent.Parcs_FREQ_Id = wParc_Desc.ParcsDesc_Id;

@@ -36,6 +36,11 @@ class Client_Groupe_Parc_Inter_PieceState extends State<Client_Groupe_Parc_Inter
 //    lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "V");
 //    lParcs_Art.addAll(wlParcs_Art);
 
+    for (int ii = 0; ii < wlParcs_Art.length; ii++) {
+      Parc_Art element = wlParcs_Art[ii];
+      print("Art Liste ${element.ParcsArtId} ${element.ParcsArt_Id} ${element.ParcsArt_Lib}");
+    }
+
 
     lParcs_Art.clear();
     for (int i = 0; i < wlParcs_Art.length; i++) {
@@ -44,7 +49,6 @@ class Client_Groupe_Parc_Inter_PieceState extends State<Client_Groupe_Parc_Inter
         {
           lParcs_Art.add(element);
         }
-
     }
 
 
@@ -189,16 +193,15 @@ class Client_Groupe_Parc_Inter_PieceState extends State<Client_Groupe_Parc_Inter
     double H2 = 4;
 
     List<Widget> RowSaisies = [];
-    print("♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠ buildDesc ${lParcs_Art.length}");
 
 
     for (int i = 0; i < lParcs_Art.length; i++) {
       Parc_Art element = lParcs_Art[i];
- //     print("♠ buildDesc element ${element.Desc()}");
+
       RowSaisies.add(RowSaisie(element, H2));
     }
 
-    print("♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠♠ buildDesc RowSaisies ${RowSaisies.length}");
+
 
 
 

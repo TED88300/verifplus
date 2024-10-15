@@ -1,16 +1,19 @@
-import 'dart:io';
+import 'dart:convert';
+import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:image_painter/image_painter.dart';
-import 'package:open_file/open_file.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
-/*
+import 'package:verifplus/Tools/DbTools/Db_Parcs_Img.dart';
+
 
 
 
 class ImagePainterTools extends StatefulWidget {
-  final String imagePath;
-  const ImagePainterTools({super.key, required this.imagePath});
+  final Uint8List wUint8List;
+  final Parc_Img wParc_Img;
+  const ImagePainterTools({super.key, required this.wUint8List,  required this.wParc_Img});
 
   @override
   _ImagePainterToolsState createState() => _ImagePainterToolsState();
@@ -19,45 +22,37 @@ class ImagePainterTools extends StatefulWidget {
 class _ImagePainterToolsState extends State<ImagePainterTools> {
   final _imageKey = GlobalKey<ImagePainterState>();
   final _key = GlobalKey<ScaffoldState>();
+  final imagePainterController = ImagePainterController();
+
+
 
   Future saveImage() async {
-//    final image = await _imageKey.currentState!.exportImage();
-    final image = await _imageKey.currentState!.exportImage();
-    DbTools.gImageEdtFile = File(widget.imagePath);
-    print("writeAsBytesSync wWidget > ${widget.imagePath}");
-    DbTools.gImageEdtFile.writeAsBytesSync(image!, flush: true);
-    print("writeAsBytesSync wWidget >");
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: Colors.grey[700],
-        padding: const EdgeInsets.only(left: 10),
-        content: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text("Image sauvée.", style: TextStyle(color: Colors.white)),
-            TextButton(
-              onPressed: () => OpenFile.open(widget.imagePath),
-              child: Text(
-                "Open",
-                style: TextStyle(
-                  color: Colors.blue[200],
-                ),
-              ),
-            )
-          ],
-        ),
-      ),
-    );
+    Uint8List? wUint8List = await imagePainterController.exportImage();
+    widget.wParc_Img.Parc_Imgs_Data = await base64Encode(wUint8List!);
+    await DbTools.insertParc_Img(widget.wParc_Img);
+    Navigator.of(context).pop();
   }
 
   @override
   Widget build(BuildContext context) {
-    File imgFile = new File(widget.imagePath);
+
+    Uint8List byteArray = widget.wUint8List;
     return Scaffold(
       key: _key,
       appBar: AppBar(
-        title: const Text("Image Painter"),
+        title: const Text("Edition Photo"),
+
+        leading: InkWell(
+          onTap: () async {
+            await HapticFeedback.vibrate();
+            Navigator.of(context).pop();
+          },
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
+            child: Image.asset("assets/images/Ico.png"),
+          ),
+        ),
+
         actions: [
           IconButton(
             icon: const Icon(Icons.save),
@@ -65,16 +60,10 @@ class _ImagePainterToolsState extends State<ImagePainterTools> {
           )
         ],
       ),
-      body: ImagePainter.file(
-        imgFile,
-        key: _imageKey,
-        scalable: true,
-        initialStrokeWidth: 4,
-        initialColor: Colors.green,
-        initialPaintMode: PaintMode.freeStyle,
-      ),
+      body: ImagePainter.memory(byteArray, controller: imagePainterController)
+
     );
   }
 }
 
-*/
+

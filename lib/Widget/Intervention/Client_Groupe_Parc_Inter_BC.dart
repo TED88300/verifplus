@@ -8,6 +8,7 @@ import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Article.d
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Article_View.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
+import 'package:verifplus/pdf/Aff_Bdc.dart';
 
 class Client_Groupe_Parc_Inter_BC extends StatefulWidget {
   final VoidCallback onMaj;
@@ -82,6 +83,33 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
       wTitre2 = "";
 
     return Scaffold(
+      backgroundColor: Colors.white,
+      bottomNavigationBar: Container(
+        color: Colors.white,
+        child: Padding(
+          padding: EdgeInsets.fromLTRB(0, 10, 0, 55),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              new ElevatedButton(
+                onPressed: () async {
+                  await HapticFeedback.vibrate();
+
+                  await Navigator.push(context, MaterialPageRoute(builder: (context) => Aff_Bdc()));
+                },
+                style: ElevatedButton.styleFrom(
+                    backgroundColor: gColors.primaryGreen,
+                    side: const BorderSide(
+                      width: 1.0,
+                      color: gColors.primaryGreen,
+                    )),
+                child: Text('Imprimer', style: gColors.bodyTitle1_B_W),
+              ),
+            ],
+          ),
+        ),
+      ),
       body: Padding(
           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Column(
@@ -91,8 +119,10 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
               gObj.InterventionTitleWidget("${Srv_DbTools.gClient.Client_Nom.toUpperCase()}", wTitre2: wTitre2, wTimer: 0),
               Entete_Btn_Search(),
               Container(
-                height: 5,
+                height: 1,
+                color: gColors.greyDark,
               ),
+
               buildIcoTitre(context),
               (DbTools.lParcs_Art.length == 0 ) ? Container() :
               Expanded(
@@ -177,13 +207,13 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
       Container(
         width: 640,
         height: 770,
-        color: Colors.redAccent,
+        color: gColors.greyDark,
         child: Container(
             padding: EdgeInsets.fromLTRB(0, 1, 0, 0),
             color: gColors.greyDark,
             child: Container(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              color: gColors.greyLight,
+              color: gColors.white,
               child: ListView.separated(
                 padding: const EdgeInsets.all(0.0),
                 shrinkWrap: true,
@@ -311,7 +341,7 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
                 padding: EdgeInsets.fromLTRB(0, 2, 0, 0),
                 child: Text(
                   "${parc_Art.Qte}",
-                  style: gColors.bodyTitle1_N_Gr,
+                  style: gColors.bodyTitle1_B_Gr,
                   textAlign: TextAlign.center,
                 ),
               ),

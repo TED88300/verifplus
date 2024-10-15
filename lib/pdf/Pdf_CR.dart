@@ -1,20 +1,20 @@
-import 'dart:math';
 import 'dart:typed_data';
+
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Adresses.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Contacts.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Desc.dart';
-import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
-import 'package:verifplus/pdf/PdfTools.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
+import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
+import 'package:verifplus/pdf/PdfTools.dart';
 
 Future<Uint8List> generateCR() async {
+
+
+
   final lorem = pw.LoremText();
   PdfPageFormat pageFormat;
   final bdC = Pdf_CR();
@@ -80,12 +80,24 @@ class Pdf_CR {
         wMemoryImage,
       );
     }
-    var fontTheme = ThemeData.withFont(
+
+    var fontThemevp = ThemeData.withFont(
       base: Font.ttf(await rootBundle.load("assets/fonts/OpenSans-Regular.ttf")),
       bold: Font.ttf(await rootBundle.load("assets/fonts/OpenSans-Bold.ttf")),
       italic: Font.ttf(await rootBundle.load("assets/fonts/OpenSans-Italic.ttf")),
       boldItalic: Font.ttf(await rootBundle.load("assets/fonts/OpenSans-BoldItalic.ttf")),
     );
+
+
+    var fontTheme = ThemeData.withFont(
+      base: Font.ttf(await rootBundle.load("assets/fonts/Arial-Regular.ttf")),
+      bold: Font.ttf(await rootBundle.load("assets/fonts/Arial-Bold.ttf")),
+      italic: Font.ttf(await rootBundle.load("assets/fonts/Arial-Italic.ttf")),
+      boldItalic: Font.ttf(await rootBundle.load("assets/fonts/Arial-BoldItalic.ttf")),
+    );
+
+
+
 
     final doc = pw.Document(
       theme: fontTheme,
@@ -110,8 +122,9 @@ class Pdf_CR {
     await DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
     await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gSite.SiteId, "SITE");
 
+//    DbTools.glfParcs_Ent.clear();
+//    DbTools.glfParcs_Ent = await DbTools.getParcs_Ent(Srv_DbTools.gIntervention.InterventionId!);
 
-    print("♠︎♠︎♠︎♠︎ Srv_DbTools.ListParc_Ent.length ${Srv_DbTools.ListParc_Ent.length}");
 
     for (int i = 0; i < DbTools.lParcs_Ent.length; i++) {
       var wParcs_Ent = DbTools.lParcs_Ent[i];
@@ -127,13 +140,20 @@ class Pdf_CR {
       for (int j = 0; j < DbTools.glfParcs_Desc.length; j++) {
         Parc_Desc wParc_Desc = DbTools.glfParcs_Desc[j];
         if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "DESC") {
-          wDESC = gColors.AbrevTxt(wParc_Desc.ParcsDesc_Lib!);
+          wDESC = gColors.AbrevTxt_Param_Param(wParc_Desc.ParcsDesc_Lib!, wParc_Desc.ParcsDesc_Type!);
           if (wDESC != "---" && !wType.contains(wDESC)) {
             if (wType.length > 0) wType = wType + ",";
             wType = wType + " ${wDESC}";
           }
         }
-        if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "FAB") wFAB = gColors.AbrevTxt(wParc_Desc.ParcsDesc_Lib!);
+        if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "FAB")
+          {
+
+            wFAB = gColors.AbrevTxt_Param_Param(wParc_Desc.ParcsDesc_Lib!, wParc_Desc.ParcsDesc_Type!);
+            print("♠︎♠︎♠︎♠︎ wFAB $wFAB  ${wParc_Desc.ParcsDesc_Lib!}");
+          }
+
+
         if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "PRS") wPRS = gColors.AbrevTxt(wParc_Desc.ParcsDesc_Lib!);
         if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "CLF") wCLF = gColors.AbrevTxt(wParc_Desc.ParcsDesc_Lib!);
         if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "PDT") wPDT = gColors.AbrevTxt(wParc_Desc.ParcsDesc_Lib!);
@@ -157,7 +177,7 @@ class Pdf_CR {
       print("${wParcs_Ent.Parcs_Intervention_Timer}");
       if (wParcs_Ent.Parcs_Intervention_Timer != null) wParcs_Intervention_Timer += wParcs_Ent.Parcs_Intervention_Timer!;
 
-      Organe wOrgane = Organe("${wParcs_Ent.Parcs_order}", "${wDESC}", "$wFAB", "$wPRS", "$wCLF", "$wPDT", "$wPOIDS", "${wParcs_Ent.Parcs_FAB_Label}", "${wParcs_Ent.Parcs_NIV_Label}", "${wParcs_Ent.Parcs_ZNE_Label} / ${wParcs_Ent.Parcs_EMP_Label}", "${wParcs_Date_Rev}", "${wParcs_Ent.Action}");
+      Organe wOrgane = Organe("${wParcs_Ent.Parcs_order}", "${wDESC}", "$wFAB", "$wPRS", "$wCLF", "$wPDT", "$wPOIDS", "${wParcs_Ent.Parcs_FAB_Label}", "${wParcs_Ent.Parcs_NIV_Label}", "${wParcs_Ent.Parcs_ZNE_Label} / ${wParcs_Ent.Parcs_EMP_Label}${wParcs_Ent.Parcs_NoSpec!.isEmpty ? '': ' / ${wParcs_Ent.Parcs_NoSpec}'}", "${wParcs_Date_Rev}", "${wParcs_Ent.Action}");
       organes.add(wOrgane);
     }
 
@@ -796,8 +816,7 @@ class Pdf_CR {
   }
 
   pw.Widget _contentTable(pw.Context context) {
-    const tableHeaders = ['N°', 'Description', 'Fabricant', 'Pression', 'Classes de\nfeu', "Modèle", "Charge", "Année\nfabrication", "Niveau", "Zone/Emplacement", "Visite", "Action"];
-
+    const tableHeaders = ['N°', 'Description', 'Fabricant', 'Pression', 'Classes de\nfeu', "Modèle", "Charge", "Année\nfabrication", "Niveau", "Zone/Emplacement/N°", "Visite", "Action"];
     return pw.TableHelper.fromTextArray(
       headerDirection: pw.TextDirection.rtl,
       border: TableBorder.all(),
@@ -914,7 +933,10 @@ class Organe {
   String getIndex(int index) {
     switch (index) {
       case 0:
-        return no;
+        String wno = no;
+        if (ACT == "NEUF")
+          wno = "►";
+        return wno;
       case 1:
         return DESC;
       case 2:

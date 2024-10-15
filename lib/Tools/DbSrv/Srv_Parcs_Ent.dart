@@ -1,34 +1,4 @@
-/*
-ParcsId
-Parcs_order
-Parcs_InterventionId
-Parcs_Type
-Parcs_Date_Rev
-Parcs_QRCode
-Parcs_FREQ_Id
-Parcs_FREQ_Label
-Parcs_ANN_Id
-Parcs_ANN_Label
-Parcs_NIV_Id
-Parcs_NIV_Label
-Parcs_ZNE_Id
-Parcs_ZNE_Label
-Parcs_EMP_Id
-Parcs_EMP_Label
-Parcs_LOT_Id
-Parcs_LOT_Label
-Parcs_SERIE_Id
-Parcs_SERIE_Label
-Parcs_Audit_Note
-Parcs_Verif_Note
-Parcs_Intervention_Timer
-Parcs_MaintPrev
-Parcs_Install
-Parcs_MaintCorrect
-Parcs_Date_Desc
 
-
-   */
 
 import 'package:verifplus/Tools/DbSrv/Srv_Articles_Ebp.dart';
 
@@ -66,6 +36,10 @@ class Parc_Ent_Srv {
   String? Parcs_CodeArticle = "";
   String? Parcs_CODF = "";
   String? Parcs_NCERT = "";
+  String? Parcs_NoSpec = "";
+
+
+
 
   bool? Parcs_MaintPrev = true;
   bool? Parcs_Install = true;
@@ -112,6 +86,7 @@ class Parc_Ent_Srv {
       this.Parcs_CodeArticle,
       this.Parcs_CODF,
       this.Parcs_NCERT,
+      this.Parcs_NoSpec,
     this.Parcs_MaintPrev,
     this.Parcs_Install,
     this.Parcs_MaintCorrect,
@@ -151,6 +126,7 @@ class Parc_Ent_Srv {
     this.Parcs_CodeArticle = Parcs_CodeArticle;
     this.Parcs_CODF = Parcs_CODF;
     this.Parcs_NCERT = Parcs_NCERT;
+    this.Parcs_NoSpec = Parcs_NoSpec;
 
     this.Parcs_MaintPrev = Parcs_MaintPrev;
     this.Parcs_Install = Parcs_Install;
@@ -162,7 +138,7 @@ class Parc_Ent_Srv {
   }
 
   static Parc_EntInit(int Parcs_InterventionId, String Parcs_Type, int Parcs_order) {
-    Parc_Ent_Srv wParc_Ent = Parc_Ent_Srv(0 , Parcs_order, Parcs_InterventionId, Parcs_Type,"","","","","","","","","","","","","","","","","","","","",0,"","","","","",false,false,false,"","","","");
+    Parc_Ent_Srv wParc_Ent = Parc_Ent_Srv(0 , Parcs_order, Parcs_InterventionId, Parcs_Type,"","","","","","","","","","","","","","","","","","","","",0,"","","","","","",false,false,false,"","","","");
     return wParc_Ent;
   }
 
@@ -198,6 +174,7 @@ class Parc_Ent_Srv {
       'Parcs_CodeArticle': Parcs_CodeArticle,
       'Parcs_CODF': Parcs_CODF,
       'Parcs_NCERT': Parcs_NCERT,
+      'Parcs_NoSpec': Parcs_NoSpec,
       'Livr': Livr,
       'Devis': Devis,
       'Action': Action,
@@ -253,6 +230,7 @@ class Parc_Ent_Srv {
         json['Parcs_CodeArticle'],
         json['Parcs_CODF'],
         json['Parcs_NCERT'],
+      json['Parcs_NoSpec'],
         false,
         false,
         false,
@@ -285,6 +263,7 @@ class Parc_Ent_Srv {
         'Parcs_CodeArticle $Parcs_CodeArticle, '
         'Parcs_CODF $Parcs_CODF, '
         'Parcs_NCERT $Parcs_NCERT, '
+        'Parcs_NoSpec $Parcs_NoSpec, '
         '> Parcs_MaintPrev $Parcs_MaintPrev, '
         '> Parcs_Install $Parcs_Install, '
         '> Parcs_MaintCorrect $Parcs_MaintCorrect, '

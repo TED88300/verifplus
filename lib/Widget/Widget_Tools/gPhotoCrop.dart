@@ -76,7 +76,7 @@ class gPhotoCropState extends State<gPhotoCrop> {
     relaodImage();
 
     final cropController = CropController(
-//      aspectRatio: 1,
+      aspectRatio: 1,
 //    defaultCrop: const Rect.fromLTRB(0.1, 0.1, 0.9, 0.9),
     );
 
@@ -111,16 +111,10 @@ class gPhotoCropState extends State<gPhotoCrop> {
                     print(">>>>>>>> bytes");
                     final bytes = data!.buffer.asUint8List();
                     print(">>>>>>>> bytes ${bytes.length}");
-
                     print(">>>>>>>> ui.Image Size  ${croppedImage.width} ${croppedImage.height}");
 
 
 //                    Image wImage = Image(image: ResizeImage(MemoryImage(bytes), width: 300, height: 400));
-
-
-
-
-
 
                     File file = File(DbTools.gImagePath!);
                     await file.writeAsBytes(bytes);
@@ -130,8 +124,6 @@ class gPhotoCropState extends State<gPhotoCrop> {
                     wParc_Img.Parc_Imgs_Type = DbTools.gParc_Img_Type;
 
                     print(">>>>>>>>>>>>> Parc_Imgs_Data");
-
-
 
 
                     wParc_Img.Parc_Imgs_Data = await base64Encode(bytes);

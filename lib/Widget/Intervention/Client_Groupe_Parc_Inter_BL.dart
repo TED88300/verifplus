@@ -79,6 +79,7 @@ class Client_Groupe_Parc_Inter_BLState extends State<Client_Groupe_Parc_Inter_BL
 
 
     return Scaffold(
+      backgroundColor: Colors.white,
       bottomNavigationBar: Container(
         color: Colors.white,
         child: Padding(
@@ -114,8 +115,11 @@ class Client_Groupe_Parc_Inter_BLState extends State<Client_Groupe_Parc_Inter_BL
               gObj.InterventionTitleWidget("${Srv_DbTools.gClient.Client_Nom.toUpperCase()}", wTitre2: wTitre2, wTimer: 0),
               Entete_Btn_Search(),
               Container(
-                height: 5,
+                height: 1,
+                color: gColors.greyDark,
               ),
+
+
               buildIcoTitre(context),
               (searchParcs_Art.length == 0 ) ? Container() :
               Expanded(
@@ -200,13 +204,13 @@ class Client_Groupe_Parc_Inter_BLState extends State<Client_Groupe_Parc_Inter_BL
       Container(
         width: 640,
         height: 717,
-        color: Colors.redAccent,
+        color: gColors.greyDark,
         child: Container(
             padding: EdgeInsets.fromLTRB(0, 1, 0, 0),
             color: gColors.greyDark,
             child: Container(
               padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-              color: gColors.greyLight,
+              color: gColors.white,
               child: ListView.separated(
                 padding: const EdgeInsets.all(0.0),
                 shrinkWrap: true,
@@ -333,7 +337,7 @@ class Client_Groupe_Parc_Inter_BLState extends State<Client_Groupe_Parc_Inter_BL
                 padding: EdgeInsets.fromLTRB(0, 2, 0, 0),
                 child: Text(
                   "${parc_Art.Qte}",
-                  style: gColors.bodyTitle1_N_Gr,
+                  style: gColors.bodyTitle1_B_Gr,
                   textAlign: TextAlign.center,
                 ),
               ),

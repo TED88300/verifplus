@@ -417,6 +417,7 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
                 child: InkWell(
                   onTap: () async {
                     await HapticFeedback.vibrate();
+                    DbTools.gCurrentIndex3 = 0;
                     await Navigator.push(
                         context,
                         MaterialPageRoute(
@@ -686,6 +687,7 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
       child: ElevatedButton(
           onPressed: () async {
             await HapticFeedback.vibrate();
+            DbTools.gCurrentIndex3 = 0;
             await Navigator.push(
                 context,
                 MaterialPageRoute(

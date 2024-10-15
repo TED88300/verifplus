@@ -1007,17 +1007,13 @@ class gObj {
   static Future<Widget> getAssetImage(String path) async {
     try {
       await rootBundle.load(path);
-
-      print("getAssetImage path ${path}");
-
-
-      return Image.asset(
+//      print("getAssetImage path ${path}");
+      return await Image.asset(
         path,
         height: 140,
       );
-    } catch (_) {
-//      print("getAssetImage path ${path}");
-
+    } catch (e) {
+//      print("getAssetImage ERROR ${e}");
       return Container(); // Return this widget
     }
   }
