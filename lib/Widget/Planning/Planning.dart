@@ -1,4 +1,5 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:group_button/group_button.dart';
@@ -158,7 +159,11 @@ class PlanningState extends State<Planning> {
     Reload();
   }
 
-  void wScroll() {
+
+
+
+
+void wScroll() {
     print("••••••••••••••••• wScroll");
 
 /*
@@ -177,6 +182,10 @@ class PlanningState extends State<Planning> {
 
     initLib();
     super.initState();
+    FBroadcast.instance().register("Gen_Articles", (value, callback) {
+      initLib();
+    });
+
   }
 
   @override

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
@@ -130,6 +131,8 @@ class Import_MenuDialogState extends State<Import_MenuDialog> with TickerProvide
                 onPressed: () async {
                   DbTools.setBoolErrorSync(false);
                   await Import_Data_Dialog.Dialogs_Saisie(context, widget.onSaisie, "Listing");
+                  FBroadcast.instance().broadcast("MAJHOME");
+
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: gColors.primaryGreen,

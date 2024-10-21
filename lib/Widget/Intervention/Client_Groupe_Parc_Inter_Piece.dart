@@ -75,16 +75,7 @@ class Client_Groupe_Parc_Inter_PieceState extends State<Client_Groupe_Parc_Inter
     initLib();
     super.initState();
 
-    FBroadcast.instance().register("Gen_Articles", (value, callback) {
-      if (!initLibRun)
-        {
-          print(" PIECE FBroadcast Gen_Articles ");
-        initLibRun = true;
-        initLib();
-        }
-    });
-  }
-  @override
+@  @override
   void dispose() {
     FBroadcast.instance().unregister(this);
     super.dispose();

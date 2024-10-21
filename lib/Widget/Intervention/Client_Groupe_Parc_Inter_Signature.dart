@@ -54,7 +54,6 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
 
   int SatClient = 0;
 
-
   void initState() {
     ctrlTech.text = Srv_DbTools.gIntervention.Intervention_Signataire_Tech;
     ctrlClient.text = Srv_DbTools.gIntervention.Intervention_Signataire_Client;
@@ -76,8 +75,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
     Srv_DbTools.getParam_Saisie_ParamMem("Fact");
 
     String wTitre2 = "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}";
-    if (Srv_DbTools.gIntervention.Groupe_Nom == Srv_DbTools.gIntervention.Site_Nom)
-      wTitre2 = "";
+    if (Srv_DbTools.gIntervention.Groupe_Nom == Srv_DbTools.gIntervention.Site_Nom) wTitre2 = "";
 
     return Scaffold(
       bottomNavigationBar: Container(
@@ -91,10 +89,8 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
               new ElevatedButton(
                 onPressed: () async {
                   await HapticFeedback.vibrate();
-                  if (Srv_DbTools.gIntervention.Intervention_Parcs_Type == "Ext")
-                      await Navigator.push(context, MaterialPageRoute(builder: (context) => Aff_CR()));
-                  if (Srv_DbTools.gIntervention.Intervention_Parcs_Type == "Ria")
-                    await Navigator.push(context, MaterialPageRoute(builder: (context) => Aff_CR_Ria()));
+                  if (Srv_DbTools.gIntervention.Intervention_Parcs_Type == "Ext") await Navigator.push(context, MaterialPageRoute(builder: (context) => Aff_CR()));
+                  if (Srv_DbTools.gIntervention.Intervention_Parcs_Type == "Ria") await Navigator.push(context, MaterialPageRoute(builder: (context) => Aff_CR_Ria()));
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: gColors.primaryGreen,
@@ -119,14 +115,13 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 gObj.InterventionTitleWidget("${Srv_DbTools.gClient.Client_Nom.toUpperCase()}", wTitre2: wTitre2, wTimer: 0),
-
                 gColors.wLigne(),
                 buildTitreTech(context),
                 gColors.wLigne(),
-                SignTechOpen ? _buildSignTech() : _buildVueSignTech(),
+                _buildVueSignTech(),
                 buildTitreClient(context),
                 gColors.wLigne(),
-                SignClientOpen ? _buildSign() : _buildVueSign(),
+                _buildVueSign(),
                 buildTitreNote(context),
                 _buildNote(),
                 buildTitreSat(context),
@@ -138,8 +133,9 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
   }
 
   Widget _buildSign() => Container(
-      color: Colors.grey,
-      padding: EdgeInsets.fromLTRB(50, 20, 50, 0),
+      color: gColors.greyLight,
+      height : 500,
+      padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
       child: Column(
         children: [
           Row(
@@ -202,9 +198,6 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
           ),
           Row(
             children: <Widget>[
-              SizedBox(
-                width: 16.0,
-              ),
               ElevatedButton(
                 onPressed: () {
                   control.clear();
@@ -212,9 +205,13 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
                 },
                 child: Text('clear'),
               ),
-              Spacer(),
+              SizedBox(
+                width: 80.0,
+              ),
               _buildScaledImageView(),
-              Spacer(),
+              SizedBox(
+                width: 80.0,
+              ),
               new ElevatedButton(
                 onPressed: () async {
                   rawImageFit.value = await control.toImage(
@@ -242,6 +239,8 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
                   await DbTools.updateInterventions(Srv_DbTools.gIntervention);
 
                   setState(() {});
+                  Navigator.of(context).pop();
+
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: gColors.primaryGreen,
@@ -250,9 +249,6 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
                       color: gColors.primaryGreen,
                     )),
                 child: Text('Valider', style: gColors.bodyTitle1_B_W),
-              ),
-              SizedBox(
-                width: 16.0,
               ),
             ],
           ),
@@ -311,47 +307,83 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
         ],
       ));
 
-  Widget _buildVueSign() => Container(
-      color: Colors.black12,
-      padding: EdgeInsets.fromLTRB(50, 20, 50, 0),
-      child: Column(
-        children: [
-          Row(
-            children: <Widget>[
-              Spacer(),
-              _buildScaledImageView(),
-              Spacer(),
-            ],
-          ),
-          SizedBox(
-            height: 16.0,
-          ),
-          gColors.wLigne(),
-        ],
-      ));
 
-  Widget _buildVueSignTech() => Container(
-      color: Colors.black12,
-      padding: EdgeInsets.fromLTRB(50, 20, 50, 0),
-      child: Column(
-        children: [
-          Row(
-            children: <Widget>[
-              Spacer(),
-              _buildScaledImageViewTech(),
-              Spacer(),
-            ],
-          ),
-          SizedBox(
-            height: 16.0,
-          ),
-          gColors.wLigne(),
-        ],
-      ));
+
+  Widget _buildVueSign() {
+    return
+      InkWell(
+        onTap: () async {
+          await showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+              backgroundColor: gColors.greyLight,
+              content: _buildSign(),
+            ),
+          );
+        },
+        child:    Container(
+            color: Colors.black12,
+            padding: EdgeInsets.fromLTRB(50, 20, 50, 0),
+            child: Column(
+              children: [
+                Row(
+                  children: <Widget>[
+                    Spacer(),
+                    _buildScaledImageView(),
+                    Spacer(),
+                  ],
+                ),
+                SizedBox(
+                  height: 16.0,
+                ),
+                gColors.wLigne(),
+              ],
+            )),
+      );
+  }
+
+
+
+
+  Widget _buildVueSignTech() {
+    return
+      InkWell(
+        onTap: () async {
+          await showDialog(
+            context: context,
+            builder: (BuildContext context) => AlertDialog(
+              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+              backgroundColor: gColors.greyLight,
+              content: _buildSignTech(),
+            ),
+          );
+        },
+        child:     Container(
+            color: Colors.black12,
+            padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+            child: Column(
+              children: [
+                Row(
+                  children: <Widget>[
+                    Spacer(),
+                    _buildScaledImageViewTech(),
+                    Spacer(),
+                  ],
+                ),
+                SizedBox(
+                  height: 16.0,
+                ),
+                gColors.wLigne(),
+              ],
+            )),
+      );
+  }
 
   Widget _buildSignTech() => Container(
-      color: Colors.grey,
-      padding: EdgeInsets.fromLTRB(50, 20, 50, 0),
+      color: gColors.greyLight,
+      height : 500,
+      padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
       child: Column(
         children: [
           Row(
@@ -415,10 +447,11 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
             height: 16.0,
           ),
           Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+
             children: <Widget>[
-              SizedBox(
-                width: 50.0,
-              ),
+
               ElevatedButton(
                 onPressed: () {
                   controlTech.clear();
@@ -426,9 +459,13 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
                 },
                 child: Text('clear'),
               ),
-              Spacer(),
+              SizedBox(
+                width: 80.0,
+              ),
               _buildScaledImageViewTech(),
-              Spacer(),
+              SizedBox(
+                width: 80.0,
+              ),
               new ElevatedButton(
                 onPressed: () async {
                   rawImageFitTech.value = await controlTech.toImage(
@@ -453,7 +490,8 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
                   if (!wRes) DbTools.setBoolErrorSync(true);
                   await DbTools.updateInterventions(Srv_DbTools.gIntervention);
                   setState(() {});
-                },
+                  Navigator.of(context).pop();
+                  },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: gColors.primaryGreen,
                     side: const BorderSide(
@@ -462,15 +500,12 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
                     )),
                 child: Text('Valider', style: gColors.bodyTitle1_B_W),
               ),
-              SizedBox(
-                width: 50.0,
-              ),
             ],
           ),
           SizedBox(
             height: 16.0,
           ),
-          gColors.wLigne(),
+
         ],
       ));
 
@@ -516,23 +551,6 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
               ),
       );
 
-  static Widget InterventionTitleWidget2() {
-    return Material(
-      elevation: 4,
-      child: Container(
-        width: 640,
-        height: 57,
-        padding: EdgeInsets.fromLTRB(10, 12, 10, 10),
-        child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-          Text(
-            "${Srv_DbTools.gIntervention.Intervention_Type}/${Srv_DbTools.gIntervention.Intervention_Parcs_Type} - ${Srv_DbTools.gIntervention.Intervention_Status} - Cr N° : ${Srv_DbTools.gIntervention.InterventionId} -Anthony FUNDONI",
-            style: gColors.bodySaisie_B_G,
-            textAlign: TextAlign.center,
-          ),
-        ]),
-      ),
-    );
-  }
 
   Widget buildTitreTech(BuildContext context) {
     double IcoWidth = 30;
@@ -565,9 +583,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
               onTap: () async {
                 await HapticFeedback.vibrate();
                 SignTechOpen = !SignTechOpen;
-
                 if (SignTechOpen) SignClientOpen = false;
-
                 setState(() {});
               },
               child: Text(
@@ -700,15 +716,14 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
           InkWell(
             onTap: () async {
               await HapticFeedback.vibrate();
-              SatClient= 1;
+              SatClient = 1;
               Srv_DbTools.gIntervention.Intervention_Sat = SatClient;
               await DbTools.updateInterventions(Srv_DbTools.gIntervention);
               bool wRes = await Srv_DbTools.setIntervention(Srv_DbTools.gIntervention);
               Srv_DbTools.gIntervention.Intervention_isUpdate = wRes;
               if (!wRes) DbTools.setBoolErrorSync(true);
               await DbTools.updateInterventions(Srv_DbTools.gIntervention);
-              setState(()  {
-              });
+              setState(() {});
             },
             child: Image.asset(
               SatClient == 1 ? "assets/images/Sat_A.png" : "assets/images/Sat_Ans.png",
@@ -722,16 +737,14 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
           InkWell(
             onTap: () async {
               await HapticFeedback.vibrate();
-              SatClient= 2;
+              SatClient = 2;
               Srv_DbTools.gIntervention.Intervention_Sat = SatClient;
               await DbTools.updateInterventions(Srv_DbTools.gIntervention);
               bool wRes = await Srv_DbTools.setIntervention(Srv_DbTools.gIntervention);
               Srv_DbTools.gIntervention.Intervention_isUpdate = wRes;
               if (!wRes) DbTools.setBoolErrorSync(true);
               await DbTools.updateInterventions(Srv_DbTools.gIntervention);
-              setState(() {
-
-              });
+              setState(() {});
             },
             child: Image.asset(
               SatClient == 2 ? "assets/images/Sat_B.png" : "assets/images/Sat_Bns.png",
@@ -745,7 +758,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
           InkWell(
             onTap: () async {
               await HapticFeedback.vibrate();
-              SatClient= 3;
+              SatClient = 3;
               Srv_DbTools.gIntervention.Intervention_Sat = SatClient;
               await DbTools.updateInterventions(Srv_DbTools.gIntervention);
               bool wRes = await Srv_DbTools.setIntervention(Srv_DbTools.gIntervention);

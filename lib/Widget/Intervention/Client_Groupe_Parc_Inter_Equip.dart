@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Articles_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_NF074.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
@@ -1066,6 +1067,11 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
 
     String wTxt = "NCERT : ${DbTools.gParc_Ent.Parcs_NCERT}     REF : ${DbTools.gParc_Ent.Parcs_CodeArticle}     Gamme : ${Srv_DbTools.GAM_Lib}";
 
+    Article_Ebp wArticle_Ebp = Srv_DbTools.IMPORT_Article_Ebp( DbTools.gParc_Ent.Parcs_CodeArticle!);
+
+    String wTxt2 = "${wArticle_Ebp.Article_descriptionCommercialeEnClair}";
+
+
     return Container(
         padding: EdgeInsets.fromLTRB(0, 0, 0, 1),
         color: gColors.greyDark,
@@ -1078,7 +1084,7 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
             children: [
               InkWell(
                 onTap: () async {
-                  gColors.AffZoomImageArticle(context, wImageArt!, "Photo Article", wTxt);
+                  gColors.AffZoomImageArticle(context, wImageArt!, wTxt2, wTxt);
                 },
                 child: Container(
                     height: 42,

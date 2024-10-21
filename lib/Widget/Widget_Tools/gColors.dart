@@ -669,6 +669,10 @@ class gColors {
 
   static AffZoomImageArticle(BuildContext context, Image wImageArt, String wTxt, String wTxt2) async {
 
+
+
+
+
     return showDialog(
         context: context,
         builder: (_) =>  AlertDialog(
@@ -683,7 +687,7 @@ class gColors {
                 Text(
                   "$wTxt",
                   textAlign: TextAlign.center,
-                  style: gColors.bodyTitle1_B_G_20,
+                  style: gColors.bodyTitle1_B_Gr,
                 ),
                 Container(
                   height: 8,

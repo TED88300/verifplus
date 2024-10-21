@@ -8,6 +8,7 @@ import 'package:pdf/widgets.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
+import 'package:verifplus/Tools/DbTools/Db_Parcs_Ent.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/pdf/PdfTools.dart';
 
@@ -122,12 +123,14 @@ class Pdf_CR {
     await DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
     await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gSite.SiteId, "SITE");
 
-//    DbTools.glfParcs_Ent.clear();
-//    DbTools.glfParcs_Ent = await DbTools.getParcs_Ent(Srv_DbTools.gIntervention.InterventionId!);
+     List<Parc_Ent> wlParcs_Ent = [];
+    wlParcs_Ent = await DbTools.getParcs_Ent(Srv_DbTools.gIntervention.InterventionId!);
+
+    print("♠︎♠︎♠︎♠︎ wlParcs_Ent <<< ${wlParcs_Ent}");
 
 
-    for (int i = 0; i < DbTools.lParcs_Ent.length; i++) {
-      var wParcs_Ent = DbTools.lParcs_Ent[i];
+    for (int i = 0; i < wlParcs_Ent.length; i++) {
+      var wParcs_Ent = wlParcs_Ent[i];
 
       String wDESC = "";
       String wFAB = "";
@@ -934,8 +937,8 @@ class Organe {
     switch (index) {
       case 0:
         String wno = no;
-        if (ACT == "NEUF")
-          wno = "►";
+        if (ACT == "")
+          wno = "  └►";
         return wno;
       case 1:
         return DESC;
