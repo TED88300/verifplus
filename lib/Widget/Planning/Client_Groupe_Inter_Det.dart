@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:maps_launcher/maps_launcher.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_DCL_Ent.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Ent.dart';
@@ -57,6 +58,66 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
 
   @override
   Future initLib() async {
+
+//    await DbTools.TrunckDCL_Ent();
+
+
+    List<DCL_Ent> wList_DCL_Ent = await Srv_DbTools.getDCL_Ent_DCL_Ent_InterventionId(Srv_DbTools.gIntervention.InterventionId);
+    print("▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎ wList_DCL_Ent.length ${wList_DCL_Ent.length}   de   ${Srv_DbTools.gIntervention.InterventionId}");
+
+    if (wList_DCL_Ent.length == 0)
+      {
+        print("▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎ DCL_Ent INSERT ${Srv_DbTools.gIntervention.toMap()}");
+        DCL_Ent wDCL_Ent = DCL_Ent.DCL_EntInit();
+        wDCL_Ent.DCL_Ent_Type = "Devis";
+        wDCL_Ent.DCL_Ent_Version = 1;
+        wDCL_Ent.DCL_Ent_ClientId = Srv_DbTools.gClient.ClientId;
+        wDCL_Ent.DCL_Ent_GroupeId = Srv_DbTools.gGroupe.GroupeId;
+        wDCL_Ent.DCL_Ent_SiteId = Srv_DbTools.gSite.SiteId;
+        wDCL_Ent.DCL_Ent_ZoneId = Srv_DbTools.gZone.ZoneId;
+        wDCL_Ent.DCL_Ent_InterventionId = Srv_DbTools.gIntervention.InterventionId;
+        wDCL_Ent.DCL_Ent_Date  = DateFormat('dd/MM/yyyy').format(DateTime.now());
+        wDCL_Ent.DCL_Ent_Etat = "Préparation";
+        await  Srv_DbTools.InsertUpdateDCL_Ent(wDCL_Ent);
+
+        wDCL_Ent.DCL_Ent_Type = "Commande";
+        wDCL_Ent.DCL_Ent_Etat = "Non livrée";
+        await  Srv_DbTools.InsertUpdateDCL_Ent(wDCL_Ent);
+
+
+        wDCL_Ent.DCL_Ent_Type = "Bon de livraison";
+        wDCL_Ent.DCL_Ent_Etat = "Non facturé";
+        await  Srv_DbTools.InsertUpdateDCL_Ent(wDCL_Ent);
+
+
+
+      }
+
+    wList_DCL_Ent = await DbTools.getDCL_Ent_DCL_Ent_InterventionId(Srv_DbTools.gIntervention.InterventionId);
+    print("▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎ 222222222222 wList_DCL_Ent.length ${wList_DCL_Ent.length}");
+
+    if (wList_DCL_Ent.length > 0)
+      {
+        DCL_Ent wDCL_Ent = wList_DCL_Ent[0];
+        print("▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎ wDCL_Ent ${wDCL_Ent.toMapInsert()}");
+
+      }
+
+    if (wList_DCL_Ent.length > 1)
+    {
+      DCL_Ent wDCL_Ent = wList_DCL_Ent[1];
+     print("▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎ wDCL_Ent ${wDCL_Ent.toMapInsert()}");
+
+    }
+
+    if (wList_DCL_Ent.length > 2)
+    {
+      DCL_Ent wDCL_Ent = wList_DCL_Ent[2];
+      print("▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎ wDCL_Ent ${wDCL_Ent.toMapInsert()}");
+
+    }
+
+
     if (Srv_DbTools.gIntervention.Intervention_Responsable!.isNotEmpty) {
       await Srv_DbTools.getUserMat(
           Srv_DbTools.gIntervention.Intervention_Responsable!);
@@ -323,6 +384,9 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
     print("ListContact ${ListWidget.length}");
     Reload();
   }
+
+  ////
+
 
   void initState() {
     initLib();

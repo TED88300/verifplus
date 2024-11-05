@@ -166,26 +166,28 @@ class PlanningState extends State<Planning> {
 void wScroll() {
     print("••••••••••••••••• wScroll");
 
-/*
-    double listViewWidth = scrollController.position.maxScrollExtent;
-    int wCpt = buttonsWeeks.length;
-    double celWidth = listViewWidth / (wCpt - 1);
-    scrollController.jumpTo(celWidth * controllerWeeks.selectedIndex!);
-*/
     setState(() {});
   }
 
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
+    void initState() {
+      WidgetsBinding.instance.addPostFrameCallback((_)
+      {
       wScroll();
-    });
+      }
+    );
 
     initLib();
     super.initState();
-    FBroadcast.instance().register("Gen_Articles", (value, callback) {
+    FBroadcast.instance().register("Maj_Planning", (value, callback) {
       initLib();
     });
+  }
 
+
+  @override
+  void dispose() {
+    FBroadcast.instance().unregister(this);
+    super.dispose();
   }
 
   @override

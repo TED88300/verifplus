@@ -34,6 +34,7 @@ class Parc_Ent_Count {
   String? Parcs_UUID = "";
   String? Parcs_UUID_Parent = "";
   String? Parcs_CodeArticle = "";
+  String? Parcs_CodeArticleES = "";
   String? Parcs_CODF = "";
   String? Parcs_NCERT = "";
   String? Parcs_FAB = "";
@@ -83,6 +84,7 @@ class Parc_Ent_Count {
     this.Parcs_UUID,
     this.Parcs_UUID_Parent,
     this.Parcs_CodeArticle,
+    this.Parcs_CodeArticleES,
     this.Parcs_CODF,
     this.Parcs_NCERT,
     this.Parcs_NoSpec,
@@ -143,6 +145,7 @@ class Parc_Ent_Count {
     wParc_Ent.Parcs_UUID = "";
     wParc_Ent.Parcs_UUID_Parent = "";
     wParc_Ent.Parcs_CodeArticle = "";
+    wParc_Ent.Parcs_CodeArticleES = "";
     wParc_Ent.Parcs_CODF = "";
     wParc_Ent.Parcs_NCERT = "";
     wParc_Ent.Parcs_NoSpec = "";
@@ -192,6 +195,7 @@ class Parc_Ent_Count {
       'Parcs_UUID':     Parcs_UUID,
       'Parcs_UUID_Parent':     Parcs_UUID_Parent,
       'Parcs_CodeArticle':     Parcs_CodeArticle,
+      'Parcs_CodeArticleES':     Parcs_CodeArticleES,
       'Parcs_CODF':     Parcs_CODF,
       'Parcs_NCERT':     Parcs_NCERT,
       'Parcs_NoSpec':     Parcs_NoSpec,
@@ -243,6 +247,7 @@ class Parc_Ent_Count {
       Parcs_UUID: map["Parcs_UUID"],
       Parcs_UUID_Parent: map["Parcs_UUID_Parent"],
       Parcs_CodeArticle: map["Parcs_CodeArticle"],
+      Parcs_CodeArticleES: map["Parcs_CodeArticleES"],
       Parcs_CODF: map["Parcs_CODF"],
       Parcs_NCERT: map["Parcs_NCERT"],
       Parcs_NoSpec: map["Parcs_NoSpec"],
@@ -294,6 +299,7 @@ class Parc_Ent_Count {
     Parcs_UUID: Parcs_UUID,
     Parcs_UUID_Parent: Parcs_UUID_Parent,
     Parcs_CodeArticle: Parcs_CodeArticle,
+    Parcs_CodeArticleES: Parcs_CodeArticleES,
     Parcs_CODF: Parcs_CODF,
     Parcs_NCERT: Parcs_NCERT,
     Parcs_NoSpec: Parcs_NoSpec,
@@ -326,6 +332,7 @@ class Parc_Ent_Count {
         'Parcs_UUID $Parcs_UUID, '
         'Parcs_UUID_Parent $Parcs_UUID_Parent, '
         'Parcs_CodeArticle $Parcs_CodeArticle, '
+        'Parcs_CodeArticleES $Parcs_CodeArticleES, '
         'Parcs_CODF $Parcs_CODF, '
         'Parcs_NCERT $Parcs_NCERT, '
         'Parcs_NoSpec $Parcs_NoSpec, '

@@ -31,9 +31,28 @@ class Client_Groupe_Parc_Inter_Article_Dialog {
       builder: (BuildContext context) => Client_Groupe_Parc_Inter_ArticleDialog(
         onSaisie: onSaisie,
         art_Type: art_Type,
+          isDevis : false,
       ),
     );
   }
+
+  static Future<void> Dialogs_SaisieDevis(
+      BuildContext context,
+      VoidCallback onSaisie,
+      String art_Type,
+      ) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) => Client_Groupe_Parc_Inter_ArticleDialog(
+        onSaisie: onSaisie,
+        art_Type: art_Type,
+        isDevis : true,
+      ),
+    );
+  }
+
+
+
 }
 
 //**********************************
@@ -43,11 +62,15 @@ class Client_Groupe_Parc_Inter_Article_Dialog {
 class Client_Groupe_Parc_Inter_ArticleDialog extends StatefulWidget {
   final VoidCallback onSaisie;
   final String art_Type;
+  final bool isDevis;
+
 
   const Client_Groupe_Parc_Inter_ArticleDialog({
     Key? key,
     required this.onSaisie,
     required this.art_Type,
+    required this.isDevis,
+
   }) : super(key: key);
 
   @override
@@ -63,9 +86,6 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
   ];
 
   final List<bool> _selectedView = <bool>[true, false, false];
-
-
-
   final Search_TextController = TextEditingController();
 
   static List<String> ListParam_FiltreFam = [];
@@ -87,6 +107,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
   bool isRef = false;
   bool isGamme = false;
   bool isES = false;
+  bool isSO = false;
 
   bool affEdtFilter = false;
   double icoWidth = 40;
@@ -195,8 +216,6 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
     print("Filtre ListResult_Article_Link_Verif_PROP_Mixte ${Srv_DbTools.ListResult_Article_Link_Verif_PROP_Mixte.length}");
 
     if (isProp) {
-
-
       Srv_DbTools.ListArticle_Ebpsearchresult.clear();
 
       if (widget.art_Type.compareTo("P") == 0) {
@@ -210,8 +229,6 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
               break;
             }
           }
-
-
         }
       }
 
@@ -400,6 +417,9 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
     } else if (widget.art_Type.compareTo("ES") == 0) {
       isES = true;
     }
+    else if (widget.art_Type.compareTo("SO") == 0) {
+      isSO = true;
+    }
 
     initLib();
     super.initState();
@@ -415,6 +435,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
     wDialogHeight = MediaQuery.of(context).size.height;
     wDialogWidth = MediaQuery.of(context).size.width;
 
+    if (isSO) isProp = false;
 
     if (isProp)
       {
@@ -542,7 +563,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
           ),
 
 
-          !isRef
+          !isRef || isSO
               ? Container() :
           ToggleButtons(
             direction: Axis.horizontal,
@@ -586,6 +607,37 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
             onPressed: () async {
               await HapticFeedback.vibrate();
 
+              if (widget.art_Type.contains("SO")) {
+                print(" Saisie Article SOSOSOSOSOS ");
+
+                for (int i = 0; i < Srv_DbTools.ListArticle_Ebpsearchresult.length; i++) {
+                  Article_Ebp art = Srv_DbTools.ListArticle_Ebpsearchresult[i];
+                  if (art.Art_Sel) {
+                    print(" Saisie Article SOSOSOSOSOS ${art.Article_codeArticle}");
+
+
+                    Parc_Art wParc_Art = Parc_Art.Parc_ArtInit(Srv_DbTools.gIntervention.InterventionId);
+                    wParc_Art.ParcsArt_Id = art.Article_codeArticle;
+                    wParc_Art.ParcsArt_Type = widget.art_Type;
+                    wParc_Art.ParcsArt_Lib = "SO ${art.Article_descriptionCommercialeEnClair}";
+                    wParc_Art.ParcsArt_Qte = 1;
+                    wParc_Art.ParcsArt_lnk = "SO";
+                    if(widget.isDevis)
+                      {
+                        wParc_Art.ParcsArt_Fact = "Devis";
+                        wParc_Art.ParcsArt_Livr = "Reliquat";
+
+                      }
+                    print(" SOSOSOSOSOS > insertParc_Art ${wParc_Art.toString()}");
+                    await DbTools.insertParc_Art(wParc_Art);
+
+
+                  }
+                }
+                Navigator.of(context).pop();
+                return;
+              }
+
               DbTools.lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, widget.art_Type);
               if (widget.art_Type.contains("G")) {
                 print(" Saisie Article GGGGGGGGGGG ");
@@ -597,8 +649,6 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                   }
                 }
               } else if (widget.art_Type.contains("ES")) {
-
-
                 print(" SES deleteParc_Art");
 
                 // Effacement interne
@@ -620,6 +670,8 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                   if (art.Art_Sel) {
 
                     print(" SES Art_Sel ${art.toMap()}");
+                    DbTools.gParc_Ent.Parcs_CodeArticleES =  art.Article_codeArticle;
+                    DbTools.updateParc_Ent(DbTools.gParc_Ent);
 
 
                     Parc_Art wParc_Art = Parc_Art.Parc_ArtInit(DbTools.gParc_Ent.ParcsId!);
@@ -651,6 +703,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                     DateTime now = DateTime.now();
                     String formattedDate = DateFormat('MM-yyyy').format(now);
                     wParc_Ent.Parcs_ANN_Label = formattedDate;
+                    wParc_Ent.Parcs_FAB_Label = formattedDate;
 
                     wParc_Ent.Parcs_NIV_Id = DbTools.gParc_Ent.Parcs_NIV_Id;
                     wParc_Ent.Parcs_NIV_Label = DbTools.gParc_Ent.Parcs_NIV_Label;
@@ -658,6 +711,11 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                     wParc_Ent.Parcs_ZNE_Label = DbTools.gParc_Ent.Parcs_ZNE_Label;
                     wParc_Ent.Parcs_EMP_Id = DbTools.gParc_Ent.Parcs_EMP_Id;
                     wParc_Ent.Parcs_EMP_Label = DbTools.gParc_Ent.Parcs_EMP_Label;
+
+                    wParc_Ent.Parcs_CodeArticle =  art.Article_codeArticle;
+                    DbTools.updateParc_Ent(DbTools.gParc_Ent);
+
+
 
                     await DbTools.insertParc_Ent(wParc_Ent);
 

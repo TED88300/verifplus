@@ -28,7 +28,7 @@ class Aff_BLState extends State<Aff_BL> with SingleTickerProviderStateMixin {
 
   @override
   void initLib() async {
-    gwBdC = await generateCR();
+    gwBdC = await generateBL();
     genBdC = true;
     setState(() {});
   }

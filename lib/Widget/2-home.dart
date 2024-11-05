@@ -11,6 +11,7 @@ import 'package:verifplus/Tools/shared_pref.dart';
 import 'package:verifplus/Widget/1-login.dart';
 import 'package:verifplus/Widget/Catalogue_Grig/Catalogue_Grid.dart';
 import 'package:verifplus/Widget/Client/Clients_Liste.dart';
+import 'package:verifplus/Widget/GestCo/DCL_List.dart';
 import 'package:verifplus/Widget/Import_ASync.dart';
 import 'package:verifplus/Widget/Import_Data.dart';
 import 'package:verifplus/Widget/Import_Menu.dart';
@@ -43,7 +44,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     "INTERVENTIONS",
     "CATALOGUE",
     "PLANNING",
-    "NOTIFICATIONS",
+    "DEVIS / CDE / LIVR",
   ];
 
   List<Widget> P_children = [];
@@ -94,26 +95,44 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   @override
   void dispose() {
     super.dispose();
+    WidgetsBinding.instance.removeObserver(this);
+
   }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state)
+  {
+    print('');
+    print('  $state  ${state == AppLifecycleState.resumed}');
+    print('');
+
+    if (state == AppLifecycleState.resumed)
+      {
+        FBroadcast.instance().broadcast("Maj_Planning");
+        FBroadcast.instance().broadcast("MAJCLIENT");
+        FBroadcast.instance().broadcast("Maj_Intervention");
+
+      }
+
+
+
+  }
+
 
   Widget wListe_Clients = Container();
 
   @override
   void initState() {
 
-    print(">>>>>>>>>>>>>>>>>> HOME <<<<<<<<<<<<<<<<<<<<<<<<<<<");
-    print(">>>>>>>>>>>>>>>>>> HOME <<<<<<<<<<<<<<<<<<<<<<<<<<<");
-    print(">>>>>>>>>>>>>>>>>> HOME <<<<<<<<<<<<<<<<<<<<<<<<<<<");
-    print(">>>>>>>>>>>>>>>>>> HOME <<<<<<<<<<<<<<<<<<<<<<<<<<<");
-
-
+    WidgetsBinding.instance.addObserver(this);
 
     P_children = [
       Liste_Clients(onSaisie: onSaisie),
       Interventions_Liste(),
       Catalogue_Grid(),
       Planning(),
-      P_Notifications(),
+//      P_Notifications(),
+      DCL_List(),
     ];
 
     print("HOME initState");
@@ -122,11 +141,10 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     initConnectivity();
     _connectivitySubscription = _connectivity.onConnectivityChanged.listen(_updateConnectionStatus);
     initLib();
-
-
-
-
   }
+
+
+
 
   Future<void> initConnectivity() async {
     late ConnectivityResult result;
@@ -291,7 +309,6 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       pageController.jumpToPage(index);
       if (DbTools.gCurrentIndex == 1) await Srv_ImportExport.ImportClient();
     }
-
     reload();
   }
 

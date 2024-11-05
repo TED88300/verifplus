@@ -6,6 +6,7 @@ import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Article.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Article_View.dart';
+import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Piece_Saisie.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
@@ -31,7 +32,10 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
   Future initLib() async {
     print("initLib");
 
-    DbTools.lParcs_Art = await DbTools.getParcs_ArtInterSumDevis(Srv_DbTools.gIntervention.InterventionId!);
+    DbTools.lParcs_Art = await DbTools.getParcs_ArtSoDevis(Srv_DbTools.gIntervention.InterventionId!);
+    List<Parc_Art> wlParcs_Art = await DbTools.getParcs_ArtInterSumDevis(Srv_DbTools.gIntervention.InterventionId!);
+    DbTools.lParcs_Art.addAll(wlParcs_Art);
+
     print("DbTools.lParcs_Art ${DbTools.lParcs_Art.length}");
     Filtre();
   }
@@ -47,6 +51,7 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
         if (wParc_Art.Desc().contains(filterText)) searchParcs_Art.add(wParc_Art);
       }
     }
+
     setState(() {});
   }
 
@@ -54,6 +59,11 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
     DbTools.lParcs_Art.clear();
     initLib();
     super.initState();
+  }
+
+
+  void onDelete() async {
+    await initLib();
   }
 
   void onSaisie() async {
@@ -72,6 +82,17 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
 
     return Scaffold(
       backgroundColor: Colors.white,
+      floatingActionButton: Padding(
+          padding: const EdgeInsets.only(right: 0, bottom: 60.0),
+          child: FloatingActionButton(
+              elevation: 10.0,
+              child: new Icon(Icons.add),
+              backgroundColor: gColors.secondary,
+              onPressed: () async {
+                await Client_Groupe_Parc_Inter_Article_Dialog.Dialogs_SaisieDevis(context, onSaisie, "SO");
+                await initLib();
+              })),
+
       body: Padding(
           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Column(
@@ -156,12 +177,11 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
 
     for (int i = 0; i < searchParcs_Art.length; i++) {
       Parc_Art element = searchParcs_Art[i];
+
       RowSaisies.add(RowSaisie(element, H2));
     }
 
-    return
-//      Expanded(child:
-        Container(
+    return Container(
       width: 640,
       height: 770,
       color: gColors.greyDark,
@@ -181,11 +201,7 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
               separatorBuilder: (BuildContext context, int index) => Container(height: 1, width: double.infinity, color: gColors.greyDark),
             ),
           )),
-
-
-
-
-        );
+    );
   }
 
   Future<Image> GetImage(Parc_Art art) async {
@@ -238,6 +254,8 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
     String ParcsArt_Livr = parc_Art.ParcsArt_Livr!.substring(0, 1);
     if (ParcsArt_Livr.compareTo("R") != 0) ParcsArt_Livr = "";
 
+    print(" wParc_Art SO ${parc_Art.Desc()} ${parc_Art.Qte}");
+
     return Container(
         color: Colors.white,
         height: 45,
@@ -247,7 +265,11 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
             print("onTap ");
             print("onTap ${parc_Art.toString()} ");
 
-            await Client_Groupe_Parc_Inter_Article_View_Dialog.Dialogs_Saisie(context, parc_Art);
+            if (parc_Art.ParcsArt_lnk == "SO") {
+              await Client_Groupe_Parc_Inter_Piece_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, onSaisie, parc_Art);
+            } else {
+              await Client_Groupe_Parc_Inter_Article_View_Dialog.Dialogs_Saisie(context, parc_Art);
+            }
 
             setState(() {});
           },
@@ -295,7 +317,7 @@ class Client_Groupe_Parc_Inter_DevisState extends State<Client_Groupe_Parc_Inter
                 height: 20,
                 padding: EdgeInsets.fromLTRB(0, 2, 0, 0),
                 child: Text(
-                  "${parc_Art.Qte}",
+                  "${parc_Art.ParcsArt_Qte}",
                   style: gColors.bodyTitle1_B_Gr,
                   textAlign: TextAlign.center,
                 ),

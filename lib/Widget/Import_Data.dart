@@ -82,8 +82,6 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
 
 
 
-
-    
     //**********************************
     //**********************************
     //**********************************
@@ -104,7 +102,6 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
     //**********************************
     //**********************************
     //**********************************
-
     await Srv_ImportExport.ImportContact();
     setState(() {
       wSt += "► Contact : ${Srv_DbTools.ListContact.length} Contacts\n";
@@ -222,6 +219,20 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
     }
     setState(() {
       wSt += "► User : ${Srv_DbTools.ListUser.length} Utilisateurs\n";
+    });
+
+    //**********************************
+    //**********************************
+    //**********************************
+
+    await Srv_ImportExport.ImportDCL_Ent();
+    setState(() {
+      wSt += "► Devis Ent : ${Srv_DbTools.ListDCL_Ent.length} DCL_Ent\n";
+    });
+
+    await Srv_ImportExport.ImportDCL_Det();
+    setState(() {
+      wSt += "► Devis Det : ${Srv_DbTools.ListDCL_Det.length} DCL_Det\n";
     });
 
     //**********************************
@@ -515,8 +526,6 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
 
     Srv_DbTools.ListArticle_Ebp = await Article_Ebp.getArticle_Ebp();
     print("getArticle_Ebp ${Srv_DbTools.ListArticle_Ebp.length}");
-
-
 
 
     // Articles EBP ES (Echange Standard)

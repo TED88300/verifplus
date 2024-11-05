@@ -104,10 +104,6 @@ class Client_Groupe_Parc_Tools {
     print("<≈><≈><≈><≈><≈><≈><≈><≈><≈>  InitArt ART getParcs_ArtAll ${listResult_Article_Link_Verif_Deb.length}");
     await AddArt(listResult_Article_Link_Verif_Deb);
 
-
-
-
-
     zzwlParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "P");
     print("InitArt zzwlParcs_Art DDD  ${zzwlParcs_Art.length}");
     zzlParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "V");
@@ -189,8 +185,8 @@ class Client_Groupe_Parc_Tools {
   }
 
   static Future<List<Result_Article_Link_Verif>> getVerifLink() async {
-    bool wDbg = false;
-    bool wDbg2 = false;
+    bool wDbg = true;
+
 
     if (wDbg) print(" getVerifLink ");
 
@@ -209,6 +205,7 @@ class Client_Groupe_Parc_Tools {
     if (wDbg) print("πππππ DbTools.gParc_Ent.Parcs_UUID_Parent ${DbTools.gParc_Ent.Parcs_UUID_Parent}");
     if (DbTools.gParc_Ent.Parcs_UUID_Parent!.isNotEmpty) {
       wRef = wRefInst;
+      print(" MS > insertParc_Art ${DbTools.gParc_Art_MS.toString()}");
       if (wDbg) print("πππππ getVerifLink wRefInst ${wRefInst}");
     } else {
       for (int i = 0; i < DbTools.glfParcs_Desc.length; i++) {
@@ -243,7 +240,6 @@ class Client_Groupe_Parc_Tools {
       }
     }
 
-//    print(">>>>>>>>>>> getVerifLink wRef ${wRef} wVerif ${wVerif}");
 
     String sVerif = "";
     wVerif.forEach((verifDeb) {
@@ -251,7 +247,9 @@ class Client_Groupe_Parc_Tools {
       sVerif += "'$verifDeb'";
     });
 
-    if (DbTools.gParc_Ent.Parcs_UUID_Parent!.isNotEmpty) sVerif = "'Inst'";
+//    if (DbTools.gParc_Ent.Parcs_UUID_Parent!.isNotEmpty) sVerif = "'Inst'";
+
+    if (wDbg)     print(" getVerifLink wRef ${wRef}  sVerif ${sVerif}");
 
     if (wDbg) print(" ERASE ");
     Srv_DbTools.ListResult_Article_Link_Verif.clear();
@@ -259,7 +257,16 @@ class Client_Groupe_Parc_Tools {
     Srv_DbTools.ListResult_Article_Link_Verif_PROP_Mixte.clear();
     Srv_DbTools.ListResult_Article_Link_Verif_PROP_Service.clear();
 
-    if (Srv_DbTools.GAM_Lib.compareTo("---") == 0) return wVerifLink;
+    if (DbTools.gParc_Art_MS.ParcsArtId != null) {
+      if (DbTools.gParc_Art_MS.ParcsArtId != -99) {
+        return wVerifLink;
+      }
+    }
+
+
+
+
+    if (Srv_DbTools.GAM_Lib.compareTo("---") == 0)
 
     if (wDbg) print(" PIECE ACTION ");
     DbTools.glfNF074_Pieces_Actions_In = await DbTools.getNF074_Pieces_Actions_In(sVerif);
@@ -295,7 +302,6 @@ class Client_Groupe_Parc_Tools {
 
         if (wNF074_Pieces_Det_In.NF074_Pieces_Det_DescriptionPD1.contains("“OU“")) isOU = true;
         AddCumul_Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "P", wNF074_Pieces_Det_In.NF074_Pieces_Det_CodeArticlePD1, MaxQte, "Fact.", "Livré", isOU);
-
 
         if (wNF074_Pieces_Det_In.NF074_Pieces_Det_CodeArticlePD2.isNotEmpty) {
           AddCumul_Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "Mo", wNF074_Pieces_Det_In.NF074_Pieces_Det_CodeArticlePD2, wNF074_Pieces_Det_In.NF074_Pieces_Det_QtePD2.toDouble(), "Fact.", "Livré", false);
@@ -340,7 +346,6 @@ class Client_Groupe_Parc_Tools {
         if (wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_CodeArticlePD1.isNotEmpty) {
           if (wDbg) print(">>>>>>>>>>>>>>>>>>>>>>>>>> Pieces_Det_Inc P ${wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_CodeArticlePD1}  ${wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_DescriptionPD1}  1");
 
-
           bool isGrAde = false;
           if (wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_DescriptionPD1 == "Cartouche Ext. CO2 (Gr-Adef) - Fab Gen") isGrAde = true;
           print(" isGrAde  ${isGrAde}");
@@ -349,7 +354,6 @@ class Client_Groupe_Parc_Tools {
             AddCumul_Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "P", wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_CodeArticlePD1, wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_QtePD1.toDouble(), "Fact.", "Livré", false);
           else {
             List<NF074_Pieces_Det_Inc> G001_NF074_Pieces_Det_Inc = [];
-
 
             G001_NF074_Pieces_Det_Inc = await DbTools.getNF074_Pieces_Det_Inc_G110();
 
@@ -361,7 +365,6 @@ class Client_Groupe_Parc_Tools {
               NF074_Pieces_Det_Inc gNF074_Pieces_Det_Inc = G001_NF074_Pieces_Det_Inc[i];
               AddCumul_Result_Article_Link_Verif(Srv_DbTools.REF_Lib, "P", gNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_CodeArticlePD1, gNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_QtePD1.toDouble(), "Fact.", "Livré", true);
             }
-
           }
         }
         if (wNF074_Pieces_Det_Inc.NF074_Pieces_Det_Inc_CodeArticlePD2.isNotEmpty) {
@@ -432,8 +435,46 @@ class Client_Groupe_Parc_Tools {
       if (wDbg) print("\n\n");
     }
 
+
+/*
+    if (DbTools.gParc_Ent.Parcs_UUID_Parent!.isNotEmpty)
+      {
+        if (wDbg) print("πππππ getVerifLink DbTools.gParc_Ent.ParcsId ${DbTools.gParc_Ent.ParcsId}");
+        DbTools.lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "MS");
+        print(" DbTools.lParcs_Art  B ${DbTools.lParcs_Art.length}");
+        if (DbTools.lParcs_Art.length > 0) {
+          Parc_Art wParc_Art = DbTools.lParcs_Art[0];
+          print(" wParc_Art  B ${wParc_Art.toMap()}");
+          if (wParc_Art.ParcsArt_Fact == "Devis")
+          {
+            print("  ListResult_Article_Link_Verif len ${Srv_DbTools.ListResult_Article_Link_Verif.length}");
+            if (Srv_DbTools.ListResult_Article_Link_Verif.length > 0) wVerifLink.addAll(Srv_DbTools.ListResult_Article_Link_Verif);
+            Srv_DbTools.ListResult_Article_Link_Verif.clear();
+            Srv_DbTools.ListResult_Article_Link_Verif_PROP.clear();
+            Srv_DbTools.ListResult_Article_Link_Verif_PROP_Mixte.clear();
+            Srv_DbTools.ListResult_Article_Link_Verif_PROP_Service.clear();
+
+          }
+
+        }
+      }
+*/
+
+/*
+    for (int i = 0; i < Srv_DbTools.ListResult_Article_Link_Verif.length; i++) {
+      Result_Article_Link_Verif wResult_Article_Link_Verif = Srv_DbTools.ListResult_Article_Link_Verif[i];
+      print("❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖  wResult_Article_Link_Verif ${wResult_Article_Link_Verif.Desc()}");
+    }
+*/
+
+
     if (Srv_DbTools.ListResult_Article_Link_Verif.length > 0) wVerifLink.addAll(Srv_DbTools.ListResult_Article_Link_Verif);
 
+
+  /*  for (int i = 0; i < wVerifLink.length; i++) {
+      Result_Article_Link_Verif wResult_Article_Link_Verif = wVerifLink[i];
+      print("❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖  wVerifLink ${wResult_Article_Link_Verif.Desc()}");
+    }*/
 
 
 
@@ -565,6 +606,10 @@ class Client_Groupe_Parc_Tools {
 //    print(" BBB Gen_Articles >> Call getVerifLink");
     listResult_Article_Link_Verif_Fin = await getVerifLink();
 
+    print("<≈><≈><≈><≈><≈><≈><≈><≈><≈>  Gen_Articles()  listResult_Article_Link_Verif_Deb ${listResult_Article_Link_Verif_Deb.length}");
+    print("<≈><≈><≈><≈><≈><≈><≈><≈><≈>  Gen_Articles()  listResult_Article_Link_Verif_Fin ${listResult_Article_Link_Verif_Fin.length}");
+
+
     for (int i = 0; i < listResult_Article_Link_Verif_Deb.length; i++) {
       Result_Article_Link_Verif wLinkDeb = listResult_Article_Link_Verif_Deb[i];
       for (int i = 0; i < listResult_Article_Link_Verif_Fin.length; i++) {
@@ -578,17 +623,20 @@ class Client_Groupe_Parc_Tools {
 
     await DbTools.deleteParc_Art_ParcsArt_ParcsId(DbTools.gParc_Ent.ParcsId!);
 
-    print("<≈><≈><≈><≈><≈><≈><≈><≈><≈>  Gen_Articles() ART getParcs_ArtAll ${listResult_Article_Link_Verif_Fin.length}");
-    print("<≈><≈><≈><≈><≈><≈><≈><≈><≈> MS > insertParc_Art ${DbTools.gParc_Art_MS.toString()}");
+    print("<≈><≈><≈><≈><≈><≈><≈><≈><≈>  Gen_Articles()  listResult_Article_Link_Verif_Fin ${listResult_Article_Link_Verif_Fin.length}");
+
     await AddArt(listResult_Article_Link_Verif_Fin);
 
     // AJOUT MS
-    if (DbTools.gParc_Art_MS.ParcsArtId != -99)
-    {
-      print(" MS > insertParc_Art ${DbTools.gParc_Art_MS.toString()}");
-      await DbTools.insertParc_Art(DbTools.gParc_Art_MS);
-      print(" MS < insertParc_Art ");
-      DbTools.gParc_Art_MS.ParcsArtId = -99;
+
+    print("<≈><≈><≈><≈><≈><≈><≈><≈><≈>  Gen_Articles() ART DbTools.gParc_Art_MS ${DbTools.gParc_Art_MS}");
+    if (DbTools.gParc_Art_MS.ParcsArtId != null) {
+      if (DbTools.gParc_Art_MS.ParcsArtId != -99) {
+        print(" MS > insertParc_Art ${DbTools.gParc_Art_MS.toString()}");
+        await DbTools.insertParc_Art(DbTools.gParc_Art_MS);
+        print(" MS < insertParc_Art ");
+        DbTools.gParc_Art_MS.ParcsArtId = -99;
+      }
     }
 
     DbTools.lParcs_Art = await DbTools.getParcs_Art_AllType(DbTools.gParc_Ent.ParcsId!);

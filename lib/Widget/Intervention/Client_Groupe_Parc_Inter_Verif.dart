@@ -4,6 +4,7 @@ import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Articles_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Articles_Link_Verif_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
@@ -54,6 +55,8 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
   }
 
   Future Reload() async {
+    DbTools.gParc_Art_MS = Parc_Art();
+
     DbTools.glfParc_Imgs = await DbTools.getParc_Imgs(DbTools.gParc_Ent.ParcsId!, 1);
     print("glfParc_Imgs lenght ${DbTools.glfParc_Imgs.length}");
     if (DbTools.glfParc_Imgs.length > 0) {
@@ -79,21 +82,19 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
         }
       }
     }
-
     setState(() {});
   }
 
   @override
   Future initLib() async {
-//    print("initLib Client_Groupe_Parc_Inter_Verif >>> A ListParam_Verif_Base ${Srv_DbTools.ListParam_Verif_Base.length}");
+    print("initLib Parcs_CodeArticleES ${DbTools.gParc_Ent.Parcs_CodeArticleES}");
     DbTools.lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "ES");
+
     ParcsArt_Lib = "---";
-    if (DbTools.lParcs_Art.length > 0) {
-      parc_Art = DbTools.lParcs_Art[0];
-      print("parc_Art ${parc_Art.toString()}");
-      ParcsArt_Lib = "${parc_Art.ParcsArt_Id} ${parc_Art.ParcsArt_Lib}";
-      parc_ArtES = parc_Art;
-    }
+    Article_Ebp article_Ebp = Srv_DbTools.IMPORT_Article_Ebp(DbTools.gParc_Ent.Parcs_CodeArticleES!);
+    ParcsArt_Lib = "${DbTools.gParc_Ent.Parcs_CodeArticleES} ${article_Ebp.Article_descriptionCommercialeEnClair}";
+
+
 
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VERIF initLib");
 
@@ -542,7 +543,7 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                   height: 20,
                   padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
                   child: Text(
-                    param_Saisie.Param_Saisie_ID.compareTo("Ext") == 0 ? ">${ParcsArt_Lib}" : "${param_Saisie.Param_Saisie_Label}",
+                    param_Saisie.Param_Saisie_ID.compareTo("Ext") == 0 ? "➜ ${ParcsArt_Lib}" : "${param_Saisie.Param_Saisie_Label}",
                     style: param_Saisie.Param_Saisie_ID.compareTo("Ext") == 0 ? gColors.bodyTitle1_B_Gr.copyWith(color: Colors.green) : gColors.bodyTitle1_B_Gr,
                   ),
                 ),
@@ -651,13 +652,16 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                         DbTools.gParc_Art_MS = Parc_Art();
                         DbTools.gParc_Art_MS.ParcsArtId = -99;
                         await gDialogs.Dialog_MiseEnServ(context);
+
+                        if (DbTools.gParc_Art_MS.ParcsArtId == -98)
+                          {
+                            print(" &&&&&&&&&&& DbTools.gParc_Art_MS.ParcsArtId ${DbTools.gParc_Art_MS.ParcsArtId}");
+                            return;
+                          }
                       }
-
-
 
                       await HapticFeedback.vibrate();
                       Parc_Desc wParc_Desc = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, Param_Saisie_ID);
-
                       Parc_Desc wParc_Desc_Result = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, "Result");
 
                       if (wText.contains("---")) {
@@ -751,10 +755,6 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                       if (Param_Saisie_ID.compareTo("RES") == 0 && wText.contains("---")) {
                         await Client_Groupe_Parc_Inter_Verif_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, param_Saisie, wParc_Desc);
                       }
-
-
-
-
                       if (DbTools.gIsOU) {
                         await Client_Groupe_Parc_Inter_ArticleAss_Dialog.Dialogs_SaisieAss(context);
                       }

@@ -26,12 +26,13 @@ class Client_Groupe_Parc_Inter_SynthState extends State<Client_Groupe_Parc_Inter
   @override
   Future initLib() async {
     print("Client_Groupe_Parc_Inter_Synth initLib");
-//  lParcs_Art = await DbTools.getParcs_ArtAll(DbTools.gParc_Ent.ParcsId!);
-//    lParcs_Art = await DbTools.getParcs_Art_AllType(DbTools.gParc_Ent.ParcsId!);
-
     lParcs_Art = await DbTools.getParcs_Art_AllTypeSynth(DbTools.gParc_Ent.ParcsId!);
 
-    setState(() {});
+    try {
+      setState(() {});
+    } catch ( e) {
+    }
+
   }
 
   void initState() {

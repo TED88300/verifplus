@@ -8,6 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
+import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
 import 'package:verifplus/Widget/Client/Client_Dialog.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Audit.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Entete_Dialog.dart';
@@ -207,7 +208,10 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
       }
     });
 
-//    print("<<<<<<<<<<<<<<<<<<<DESC PDT>>>>>>>>>>>>>>>>>>>>>>>>  ${Srv_DbTools.DESC_Lib}  ${Srv_DbTools.PDT_Lib}");
+
+
+
+    print("⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ${Srv_DbTools.DESC_Lib}  ${Srv_DbTools.PDT_Lib}");
 
     List<Param_Saisie> ListParam_Saisie_Tmp = [];
     ListParam_Saisie_Tmp.addAll(Srv_DbTools.ListParam_Saisie);
@@ -225,6 +229,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
 
     ListParam_Saisie_Tmp.sort(Srv_DbTools.affL1SortComparison);
     ListParam_Saisie_Tmp.forEach((element) async {
+
       if (element.Param_Saisie_Affichage_L1) {
         if (element.Param_Saisie_ID.compareTo("FREQ") == 0) {
           DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FREQ_Label!, element.Param_Saisie_ID)}";
@@ -244,16 +249,29 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
         } else if (element.Param_Saisie_ID.compareTo("SERIE") == 0) {
           DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_SERIE_Label!, element.Param_Saisie_ID)}";
         } else {
-          DbTools.glfParcs_Desc.forEach((element2) async {
-            if (element.Param_Saisie_ID == element2.ParcsDesc_Type) {
-//              print(">>>>>>>>>>>>>>>>>>>>>>>> element2 ${element2.ParcsDesc_ParcsId} ${element2.ParcsDesc_Type} ${element2.ParcsDesc_Lib}");
-
-              DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, element.Param_Saisie_ID)}";
-              //DescAff = "${DescAff} ${element2.ParcsDesc_ParcsId}";
+          // !!! Suppression Doublon
+          bool trv = false;
+          for (int i = 0; i < DbTools.glfParcs_Desc.length; i++) {
+            Parc_Desc wParc_Desc = DbTools.glfParcs_Desc[i];
+            if (element.Param_Saisie_ID == wParc_Desc.ParcsDesc_Type) {
+              if (!trv)
+                {
+                  DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(wParc_Desc.ParcsDesc_Lib!, element.Param_Saisie_ID)}";
+                  print("⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ${wParc_Desc.toMap()}");
+                  trv = true;
+                }
+              else
+                {
+                  DbTools.deleteParc_Desc(wParc_Desc.ParcsDescId!);
+                }
             }
-          });
+          };
         }
       }
+
+     print(">>>>>>>>>>>>>>>>>>>>>>>> DescAff ${DescAff}");
+
+
     });
 
     DescAff2 = "";

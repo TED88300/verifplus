@@ -131,8 +131,7 @@ class Import_MenuDialogState extends State<Import_MenuDialog> with TickerProvide
                 onPressed: () async {
                   DbTools.setBoolErrorSync(false);
                   await Import_Data_Dialog.Dialogs_Saisie(context, widget.onSaisie, "Listing");
-                  FBroadcast.instance().broadcast("MAJHOME");
-
+                  FBroadcast.instance().broadcast("Maj_Planning");
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: gColors.primaryGreen,
@@ -209,12 +208,9 @@ class Import_MenuDialogState extends State<Import_MenuDialog> with TickerProvide
                   print(" ListParc_Art ${ListParc_Art.length}");
                   await DbTools.TrunckParcs_Art();
 
-
                   List<Parc_Img> ListParc_Imgs = await DbTools.getParcs_ImgsTout();
                   print(" ListParc_Imgs ${ListParc_Imgs.length}");
                   await DbTools.TrunckParcs_Imgs();
-
-
                 },
 
 

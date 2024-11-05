@@ -11,6 +11,8 @@ import 'package:uuid/uuid.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Adresses.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Clients.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Contacts.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_DCL_Det.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_DCL_Ent.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_InterMissions.dart';
@@ -41,6 +43,8 @@ import 'package:verifplus/Tools/DbTools/Db_Parcs_Img.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
 import '../../Widget/Widget_Tools/gColors.dart';
+import 'dart:convert';
+import 'dart:math';
 
 class SelLig {
   int Id = 0;
@@ -291,6 +295,7 @@ class DbTools {
         ", Parcs_UUID varchar(64) NOT NULL DEFAULT ''"
         ", Parcs_UUID_Parent varchar(64) NOT NULL DEFAULT ''"
         ", Parcs_CodeArticle varchar(128) NOT NULL DEFAULT ''"
+        ", Parcs_CodeArticleES varchar(128) NOT NULL DEFAULT ''"
         ", Parcs_CODF varchar(128) NOT NULL DEFAULT ''"
         ", Parcs_NCERT varchar(128) NOT NULL DEFAULT ''"
         ", Parcs_NoSpec varchar(128) NOT NULL DEFAULT ''"
@@ -361,6 +366,64 @@ class DbTools {
         ", Article_codeArticle_Parent varchar(128) NOT NULL DEFAULT ''"
         ")";
 
+
+    String wCREATE_DCL_Ent = "CREATE TABLE DCL_Ent ("
+    "DCL_EntID  INTEGER PRIMARY KEY AUTOINCREMENT,"
+    "DCL_Ent_Type varchar(1) NOT NULL DEFAULT 'D',"
+    "DCL_Ent_Version int(11) NOT NULL DEFAULT 1,"
+    "DCL_Ent_ClientId int(11) NOT NULL DEFAULT 0,"
+    "DCL_Ent_GroupeId int(11) NOT NULL DEFAULT 0,"
+    "DCL_Ent_SiteId int(11) NOT NULL DEFAULT 0,"
+    "DCL_Ent_ZoneId int(11) NOT NULL DEFAULT 0,"
+    "DCL_Ent_InterventionId int(11) NOT NULL DEFAULT 0,"
+    "DCL_Ent_Date varchar(32) NOT NULL DEFAULT '',"
+    "DCL_Ent_Statut varchar(16) NOT NULL DEFAULT '',"
+    "DCL_Ent_Etat varchar(16) NOT NULL DEFAULT '',"
+    "DCL_Ent_Etat_Motif varchar(128) NOT NULL DEFAULT '',"
+    "DCL_Ent_Etat_Note text NOT NULL DEFAULT '',"
+    "DCL_Ent_Etat_Action varchar(128) NOT NULL DEFAULT '',"
+    "DCL_Ent_Collaborateur varchar(128) NOT NULL DEFAULT '',"
+    "DCL_Ent_Affaire varchar(128) NOT NULL DEFAULT '',"
+    "DCL_Ent_Affaire_Note text NOT NULL DEFAULT '',"
+    "DCL_Ent_Validite varchar(32) NOT NULL DEFAULT '',"
+    "DCL_Ent_LivrPrev varchar(32) NOT NULL DEFAULT '',"
+    "DCL_Ent_ModeRegl varchar(64) NOT NULL DEFAULT '',"
+    "DCL_Ent_MoyRegl varchar(64) NOT NULL DEFAULT '',"
+    "DCL_Ent_Valo int(11) NOT NULL DEFAULT 1,"
+    "DCL_Ent_Relance int(11) NOT NULL DEFAULT 1,"
+    "DCL_Ent_Relance_Mode varchar(16) NOT NULL DEFAULT '',"
+    "DCL_Ent_Relance_Contact varchar(64) NOT NULL DEFAULT '',"
+    "DCL_Ent_Relance_Mail varchar(64) NOT NULL DEFAULT '',"
+    "DCL_Ent_Relance_Tel varchar(64) NOT NULL DEFAULT '',"
+    "DCL_Ent_Proba int(11) NOT NULL DEFAULT 100,"
+    "DCL_Ent_Concurent varchar(64) NOT NULL DEFAULT '',"
+    "DCL_Ent_Note text NOT NULL DEFAULT '',"
+    "DCL_Ent_Regl varchar(64) NOT NULL DEFAULT '',"
+    "DCL_Ent_Partage varchar(64) NOT NULL DEFAULT '',"
+    "DCL_Ent_Dem_Tech int(11) NOT NULL DEFAULT 1,"
+    "DCL_Ent_Dem_SsT int(11) NOT NULL DEFAULT 1"
+    ")";
+
+    String wCREATE_DCL_Det ="CREATE TABLE DCL_Det ("
+    "DCL_DetID  INTEGER PRIMARY KEY AUTOINCREMENT,"
+    "DCL_Det_EntID int(11) NOT NULL DEFAULT 0,"
+    "DCL_Det_ParcsArtId int(11) NOT NULL DEFAULT 0,"
+    "DCL_Det_Ordre int(11) NOT NULL DEFAULT 0,"
+    "DCL_Det_Type varchar(1) NOT NULL DEFAULT 'A',"
+    "DCL_Det_NoArt varchar(32) NOT NULL DEFAULT '',"
+    "DCL_Det_Lib varchar(1024) NOT NULL DEFAULT '',"
+    "DCL_Det_Qte int(11) NOT NULL DEFAULT 0,"
+    "DCL_Det_PU double NOT NULL DEFAULT 0,"
+    "DCL_Det_Rem_P double NOT NULL DEFAULT 0,"
+    "DCL_Det_Rem_Mt double NOT NULL DEFAULT 0,"
+    "DCL_Det_Livr int(1) NOT NULL DEFAULT 0,"
+    "DCL_Det_DateLivr varchar(32) NOT NULL DEFAULT '',"
+    "DCL_Det_Rel int(1) NOT NULL DEFAULT 0,"
+    "DCL_Det_DateRel varchar(32) NOT NULL DEFAULT '',"
+    "DCL_Det_Statut varchar(32) NOT NULL DEFAULT '',"
+    "DCL_Det_Note text NOT NULL DEFAULT ''"
+    ")";
+
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
     String wDbPath = "karavan2.db";
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
@@ -404,6 +467,9 @@ class DbTools {
         await db.execute(wCREATE_NF074_Pieces_Det_Inc);
         await db.execute(wCREATE_Articles_Ebp);
         await db.execute(wCREATE_RIA_Gammes);
+
+        await db.execute(wCREATE_DCL_Ent);
+        await db.execute(wCREATE_DCL_Det);
 
       },
       onUpgrade: (db, oldVersion, newVersion) {
@@ -594,6 +660,29 @@ class DbTools {
       }
     });
 
+    Srv_DbTools.ListParam_Param_Etat_Devis.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Etat_Devis") == 0) {
+        Srv_DbTools.ListParam_Param_Etat_Devis.add(element);
+      }
+    });
+
+    Srv_DbTools.ListParam_Param_Etat_Cde.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Etat_Commandes") == 0) {
+        Srv_DbTools.ListParam_Param_Etat_Cde.add(element);
+      }
+    });
+
+    Srv_DbTools.ListParam_Param_Etat_Livr.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Etat_Livraison") == 0) {
+        Srv_DbTools.ListParam_Param_Etat_Livr.add(element);
+      }
+    });
+
+
+
     Srv_DbTools.ListParam_ParamCiv.clear();
     Srv_DbTools.ListParam_ParamCiv.add("");
     for (int i = 0; i < Srv_DbTools.ListParam_Param_Civ.length; i++) {
@@ -722,8 +811,6 @@ class DbTools {
     if (Srv_DbTools.ListParam_Saisie_Base.length > 0) {
       int i = 1;
       Srv_DbTools.ListParam_Saisie_Base.forEach((element) {
-//        print("♦︎♦︎♦︎♦︎♦︎♦︎ ListParam_Saisie_Base ${element.Param_Saisie_Type} ${element.Param_Saisie_Triger}");
-
         element.Param_Saisie_Ordre = i++;
         setParam_Saisie(element);
       });
@@ -3537,7 +3624,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
 
   static Future<List<Parc_Ent>> getParcs_Ent_Upd(int Parcs_InterventionId) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query("Parcs_Ent", where: '"Parcs_InterventionId" = ${Parcs_InterventionId} AND Parcs_Update > 0', whereArgs: []);
+    final List<Map<String, dynamic>> maps = await db.query("Parcs_Ent", where: '"Parcs_InterventionId" = ${Parcs_InterventionId} AND Parcs_Update > 0',orderBy:"Parcs_order , Parcs_UUID_Parent", whereArgs: []);
     print("getParcs_Ent Parcs_Ent.length B ${maps.length} ${Parcs_InterventionId}");
     return List.generate(maps.length, (i) {
       print("getParcs Parcs ${maps[i]}");
@@ -3785,6 +3872,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
         //      print(">>> SEL B");
         int EltPO = element.Parcs_order! + 1;
         ParcB = element;
+        print("♦︎♦︎ IMPORT ♦︎♦︎ ParcB.Parcs_order = EltPO");
         ParcB.Parcs_order = EltPO;
         await updateParc_Ent_Ordre(ParcB);
 //        print("moveParc_Ent  from ${EltPO-1} to ${EltPO}");
@@ -3792,6 +3880,8 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
         // print(">>> SEL C");
         ParcB = element;
         int EltB = ParcB.Parcs_order!;
+
+        print("♦︎♦︎ IMPORT ♦︎♦︎ ParcB.Parcs_order = EltA");
 
         ParcB.Parcs_order = EltA;
         await updateParc_Ent_Ordre(ParcB);
@@ -3806,7 +3896,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
 //      print("wParc_Ent ${wParc_Ent.ParcsId} ${wParc_Ent.Parcs_order} ${wParc_Ent.Parcs_UUID} ${wParc_Ent.Parcs_UUID_Parent}");
       Parc_Ent wParc_EntChild = await getParcs_Ent_Parcs_UUID_Child(wParc_Ent.Parcs_UUID!);
       if (wParc_EntChild.Parcs_order! >= 0)
-//        print("wParc_EntChild ${wParc_EntChild.ParcsId} ${wParc_EntChild.Parcs_order} ${wParc_EntChild.Parcs_UUID} ${wParc_EntChild.Parcs_UUID_Parent}");
+        print("wParc_EntChild ${wParc_EntChild.ParcsId} ${wParc_EntChild.Parcs_order} ${wParc_EntChild.Parcs_UUID} ${wParc_EntChild.Parcs_UUID_Parent}");
         wParc_EntChild.Parcs_order = wParc_Ent.Parcs_order;
       await updateParc_Ent_Ordre(wParc_EntChild);
     }
@@ -3844,6 +3934,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
         'Parcs_UUID = "${parc.Parcs_UUID}", ' +
         'Parcs_UUID_Parent = "${parc.Parcs_UUID_Parent}", ' +
         'Parcs_CodeArticle = "${parc.Parcs_CodeArticle}", ' +
+        'Parcs_CodeArticleES = "${parc.Parcs_CodeArticleES}", ' +
         'Parcs_CODF = "${parc.Parcs_CODF}", ' +
         'Parcs_NCERT = "${parc.Parcs_NCERT}", ' +
         'Parcs_NoSpec = "${parc.Parcs_NoSpec}", ' +
@@ -3854,7 +3945,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
         'Parcs_Verif_Note = "${parc.Parcs_Verif_Note}"' +
         ' WHERE ParcsId = ${parc.ParcsId}';
 
-    print("updateParc_Ent_Update A ${wSlq}");
+
 
     await db.execute(wSlq);
   }
@@ -3875,7 +3966,27 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     await db.execute(wSlq);
   }
 
-  static Future<void> Parc_Ent_GetOrder() async {
+
+  static Future<int> Parc_Ent_GetLastOrder() async {
+    List<Parc_Ent> wParcs_Ent = await DbTools.getParcs_Ent(Srv_DbTools.gIntervention.InterventionId!);
+
+    int wRet = 0;
+
+    for (int j = 0; j < wParcs_Ent.length; j++) {
+      Parc_Ent wParc_Ent = wParcs_Ent[j];
+      wRet = max(wRet, wParc_Ent.Parcs_order!);
+    }
+
+
+    return wRet;
+
+  }
+
+    static Future<void> Parc_Ent_GetOrder() async {
+
+
+return
+
     DbTools.glfParcs_Ent.clear();
     List<Parc_Ent> wParcs_Ent = await DbTools.getParcs_Ent(Srv_DbTools.gIntervention.InterventionId!);
 //    List<Parc_Ent> wParcs_Ent = await DbTools.getParcs_EntAll();
@@ -3888,6 +3999,10 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
       if (wParc_Ent.Parcs_UUID_Parent!.length == 0) {
         o++;
       }
+
+
+      print("♦︎♦︎ IMPORT ♦︎♦︎ ParcB.Parcs_order = o");
+
       wParc_Ent.Parcs_order = o;
       await DbTools.updateParc_Ent_Ordre(wParc_Ent);
       DbTools.glfParcs_Ent.add(wParc_Ent);
@@ -4292,7 +4407,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
 
   static Future<List<Parc_Art>> getParcs_Art_AllType(int ParcsArt_ParcsId) async {
     final db = await database;
-    List<Map<String, dynamic>> maps = await db.rawQuery('SELECT Parcs_Art.* FROM Parcs_Art  WHERE ParcsArt_ParcsId = "${ParcsArt_ParcsId}" ORDER BY ParcsArt_Id', []);
+    List<Map<String, dynamic>> maps = await db.rawQuery('SELECT Parcs_Art.* FROM Parcs_Art  WHERE ParcsArt_ParcsId = "${ParcsArt_ParcsId}" and ParcsArt_lnk != "SO" ORDER BY ParcsArt_Id', []);
     return await List.generate(maps.length, (i) {
       return Parc_Art.fromMap(maps[i]);
     });
@@ -4300,7 +4415,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
 
   static Future<List<Parc_Art>> getParcs_Art_AllTypeSynth(int ParcsArt_ParcsId) async {
     final db = await database;
-    List<Map<String, dynamic>> maps = await db.rawQuery('SELECT Parcs_Art.* FROM Parcs_Art  WHERE ParcsArt_ParcsId = "${ParcsArt_ParcsId}" and ParcsArt_Type != "ES" ORDER BY ParcsArt_Id', []);
+    List<Map<String, dynamic>> maps = await db.rawQuery('SELECT Parcs_Art.* FROM Parcs_Art  WHERE ParcsArt_ParcsId = "${ParcsArt_ParcsId}" and ParcsArt_Type != "ES" and ParcsArt_lnk != "SO" ORDER BY ParcsArt_Id', []);
     return await List.generate(maps.length, (i) {
       return Parc_Art.fromMap(maps[i]);
     });
@@ -4323,6 +4438,22 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     });
   }
 
+  static Future<List<Parc_Art>> getParcs_ArtInterSO(int Parcs_InterventionId) async {
+    final db = await database;
+
+    String wTmp = "SELECT Parcs_Art.* FROM Parcs_Art  WHERE ParcsArt_ParcsId  = ${Parcs_InterventionId} and ParcsArt_lnk = 'SO' ORDER BY Parcs_Art.ParcsArt_Id ASC";
+
+//    print("getParcs_ArtInter ${wTmp}");
+    List<Map<String, dynamic>> maps = await db.rawQuery(wTmp);
+
+//    print("getParcs_ArtInter maps.length ${maps.length}");
+
+    return await List.generate(maps.length, (i) {
+      return Parc_Art.fromMap(maps[i]);
+    });
+  }
+
+
   static Future<List<Parc_Art>> getParcs_ArtInterSumBL(int Parcs_InterventionId) async {
     final db = await database;
 
@@ -4338,15 +4469,43 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     });
   }
 
+
   static Future<List<Parc_Art>> getParcs_ArtInterSumDevis(int Parcs_InterventionId) async {
     final db = await database;
 
     String wTmp = "SELECT Parcs_Art.*, SUM(ParcsArt_Qte) as Qte FROM Parcs_Art, Parcs_Ent WHERE ParcsArt_Fact = 'Devis' AND  ParcsArt_ParcsId = ParcsId AND Parcs_InterventionId = ${Parcs_InterventionId} and ParcsArt_Type != 'ES' GROUP BY ParcsArt_Id,ParcsArt_Fact,ParcsArt_Livr ORDER BY Parcs_Art.ParcsArt_Id ASC;";
-
     print("getParcs_ArtInter ${wTmp}");
     List<Map<String, dynamic>> maps = await db.rawQuery(wTmp);
 
-    print("getParcs_ArtInter maps.length ${maps.length}");
+    print("getParcs_ArtInterSumDevis maps.length ${maps.length}");
+
+    return await List.generate(maps.length, (i) {
+      return Parc_Art.fromMapQte(maps[i]);
+    });
+  }
+
+  static Future<List<Parc_Art>> getParcs_ArtSoDevis(int Parcs_InterventionId) async {
+    final db = await database;
+
+    String wTmp = "SELECT Parcs_Art.*, ParcsArt_Qte as Qte FROM Parcs_Art WHERE ParcsArt_Fact = 'Devis' and ParcsArt_lnk = 'SO' AND  ParcsArt_ParcsId =  ${Parcs_InterventionId}  ORDER BY Parcs_Art.ParcsArt_Id ASC;";
+    print("getParcs_ArtSumDevis ${wTmp}");
+    List<Map<String, dynamic>> maps = await db.rawQuery(wTmp);
+
+    print("getParcs_ArtSumDevis maps.length ${maps.length}");
+
+    return await List.generate(maps.length, (i) {
+      return Parc_Art.fromMapQte(maps[i]);
+    });
+  }
+
+  static Future<List<Parc_Art>> getParcs_ArtSoBL(int Parcs_InterventionId) async {
+    final db = await database;
+
+    String wTmp = "SELECT Parcs_Art.*, ParcsArt_Qte as Qte FROM Parcs_Art WHERE ParcsArt_Fact != 'Devis' and ParcsArt_lnk = 'SO' AND  ParcsArt_ParcsId =  ${Parcs_InterventionId}  ORDER BY Parcs_Art.ParcsArt_Id ASC;";
+    print("getParcs_ArtSumDevis ${wTmp}");
+    List<Map<String, dynamic>> maps = await db.rawQuery(wTmp);
+
+    print("getParcs_ArtSumDevis maps.length ${maps.length}");
 
     return await List.generate(maps.length, (i) {
       return Parc_Art.fromMapQte(maps[i]);
@@ -4354,10 +4513,12 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
   }
 
 
+
+
   static Future<List<Parc_Art>> getParcs_ArtInterSum(int Parcs_InterventionId) async {
     final db = await database;
 
-    String wTmp = "SELECT Parcs_Art.*, SUM(ParcsArt_Qte) as Qte FROM Parcs_Art, Parcs_Ent WHERE ParcsArt_ParcsId = ParcsId AND Parcs_InterventionId = ${Parcs_InterventionId} GROUP BY ParcsArt_Id,ParcsArt_Fact,ParcsArt_Livr ORDER BY Parcs_Art.ParcsArt_Id ASC;";
+    String wTmp = "SELECT Parcs_Art.*, ParcsArt_Qte as Qte FROM Parcs_Art, Parcs_Ent WHERE ParcsArt_ParcsId = ParcsId AND Parcs_InterventionId = ${Parcs_InterventionId} ORDER BY Parcs_Art.ParcsArt_Id ASC;";
 
     print("getParcs_ArtInter ${wTmp}");
     List<Map<String, dynamic>> maps = await db.rawQuery(wTmp);
@@ -4446,7 +4607,6 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     String wTmp = "DELETE FROM Parcs_Art WHERE ParcsArtId = $aID";
     print("deleteParc_Art ${wTmp}");
     List<Map<String, dynamic>> maps = await db.rawQuery(wTmp);
-
     print("maps ${maps}");
   }
 
@@ -4455,7 +4615,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
 
   static Future<void> deleteParc_Art_ParcsArt_ParcsId(int ParcsArt_ParcsId) async {
     final db = await database;
-    String wTmp = "DELETE FROM Parcs_Art WHERE ParcsArt_ParcsId = $ParcsArt_ParcsId AND ParcsArt_lnk = 'L' OR ParcsArt_Type = 'ES' OR ParcsArt_Type = 'MS'";
+    String wTmp = "DELETE FROM Parcs_Art WHERE ParcsArt_ParcsId = $ParcsArt_ParcsId AND (ParcsArt_lnk = 'L' OR ParcsArt_Type = 'ES' OR ParcsArt_Type = 'MS')";
     print("deleteParc_Art_ParcsArt_ParcsId ${wTmp}");
     List<Map<String, dynamic>> maps = await db.rawQuery(wTmp);
   }
@@ -4562,10 +4722,6 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     );
   }
 
-
-
-
-
   static Future<List<Parc_Img>> getParcs_ImgInter(int Parcs_InterventionId) async {
     final db = await database;
 
@@ -4580,6 +4736,126 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
       return Parc_Img.fromMap(maps[i]);
     });
   }
+
+
+  //************************************************
+  //******************** DCL_Ent  ******************
+  //************************************************
+
+  static Future<List<DCL_Ent>> getDCL_EntAll() async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query("DCL_Ent", orderBy: "DCL_EntId ASC");
+    return List.generate(maps.length, (i) {
+      return DCL_Ent.fromMap(maps[i]);
+    });
+  }
+
+  static Future<List<DCL_Ent>> getDCL_EntID(int ID) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query("DCL_Ent", orderBy: "DCL_EntId ASC", where: "DCL_EntId = $ID");
+    return List.generate(maps.length, (i) {
+      return DCL_Ent.fromMap(maps[i]);
+    });
+  }
+
+  static Future<List<DCL_Ent>> getDCL_Ent_DCL_Ent_InterventionId(int DCL_Ent_InterventionId) async {
+    final db = await database;
+    final List<Map<String, dynamic>> maps = await db.query("DCL_Ent", orderBy: "DCL_EntId ASC", where: "DCL_Ent_InterventionId = $DCL_Ent_InterventionId");
+    return List.generate(maps.length, (i) {
+      return DCL_Ent.fromMap(maps[i]);
+    });
+  }
+
+
+  static Future<void> inserDCL_Ent(DCL_Ent wDCL_Ent) async {
+    final db = await DbTools.database;
+    int? repid = await db.insert("DCL_Ent", wDCL_Ent.toMapInsert());
+    gLastID = repid!;
+  }
+
+  static Future<void> updateDCL_EntID(DCL_Ent wDCL_Ent, int OldID) async {
+    final db = await DbTools.database;
+    int? repid = await db.update("DCL_Ent", wDCL_Ent.toJson(), where: "DCL_EntId = ?", whereArgs: [OldID]);
+  }
+
+  static Future<void> updateDCL_Ent(DCL_Ent wDCL_Ent) async {
+    final db = await DbTools.database;
+    int? repid = await db.update("DCL_Ent", wDCL_Ent.toJson(), where: "DCL_EntId = ?", whereArgs: [wDCL_Ent.DCL_EntID]);
+  }
+
+  static Future<void> TrunckDCL_Ent() async {
+    final db = await DbTools.database;
+    int? repid = await db.delete("DCL_Ent");
+  }
+
+
+  //************************************************
+  //******************** DCL_Det  ******************
+  //************************************************
+
+  static Future<List<DCL_Det>> getDCL_DetAll() async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> maps = await db.query("DCL_Det", orderBy: "DCL_DetId ASC");
+
+    return List.generate(maps.length, (i) {
+
+
+      return DCL_Det(
+        DCL_DetID : maps[i]["DCL_DetId"],
+        DCL_Det_Type : maps[i]["DCL_DetId"],
+
+
+      );
+    });
+  }
+
+
+
+  static Future<List<DCL_Det>> getDCL_DetID(int ID) async {
+    final db = await database;
+
+    final List<Map<String, dynamic>> maps = await db.query("DCL_Det", orderBy: "DCL_DetId ASC", where: "DCL_DetId = $ID");
+
+    return List.generate(maps.length, (i) {
+      String wDCL_Det_Code = "";
+
+      try {
+        wDCL_Det_Code = maps[i]['DCL_Det_Code'];
+      } catch (e) {
+        print(e);
+      }
+      return DCL_Det(
+        DCL_DetID : maps[i]["DCL_DetId"],
+        DCL_Det_Type : maps[i]["DCL_DetId"],
+
+
+
+      );
+    });
+  }
+
+  static Future<void> inserDCL_Det(DCL_Det wDCL_Det) async {
+    final db = await DbTools.database;
+    int? repid = await db.insert("DCL_Det", wDCL_Det.toJson());
+    gLastID = repid!;
+  }
+
+  static Future<void> updateDCL_DetID(DCL_Det wDCL_Det, int OldID) async {
+    final db = await DbTools.database;
+    int? repid = await db.update("DCL_Det", wDCL_Det.toJson(), where: "DCL_DetId = ?", whereArgs: [OldID]);
+  }
+
+  static Future<void> updateDCL_Det(DCL_Det wDCL_Det) async {
+    final db = await DbTools.database;
+    int? repid = await db.update("DCL_Det", wDCL_Det.toJson(), where: "DCL_DetId = ?", whereArgs: [wDCL_Det.DCL_DetID]);
+  }
+
+  static Future<void> TrunckDCL_Det() async {
+    final db = await DbTools.database;
+    int? repid = await db.delete("DCL_Det");
+  }
+
   
   
   //***

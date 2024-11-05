@@ -33,7 +33,6 @@ class Client_InterventionStatusDialog extends StatefulWidget {
 }
 
 class _Client_InterventionStatusDialogState extends State<Client_InterventionStatusDialog> {
-
   static List<String> ListParam_Status = [];
   static List<String> ListParam_StatusID = [];
   String wStatus = "";
@@ -46,23 +45,22 @@ class _Client_InterventionStatusDialogState extends State<Client_InterventionSta
   @override
   void initLib() async {
     ListParam_Status.clear();
-      for (int i = 0; i < Srv_DbTools.ListParam_ParamAll.length; i++) {
-        Param_Param element = Srv_DbTools.ListParam_ParamAll[i];
-        if (element.Param_Param_Type.compareTo("Status_Interv") == 0) {
-          if (element.Param_Param_ID.compareTo("Base") != 0) {
-            ListParam_Status.add(element.Param_Param_Text);
-            ListParam_StatusID.add(element.Param_Param_ID);
-          }
+    for (int i = 0; i < Srv_DbTools.ListParam_ParamAll.length; i++) {
+      Param_Param element = Srv_DbTools.ListParam_ParamAll[i];
+      if (element.Param_Param_Type.compareTo("Status_Interv") == 0) {
+        if (element.Param_Param_ID.compareTo("Base") != 0) {
+          ListParam_Status.add(element.Param_Param_Text);
+          ListParam_StatusID.add(element.Param_Param_ID);
         }
-    };
+      }
+    }
+    ;
     wStatus = ListParam_Status[0];
     wStatusID = ListParam_StatusID[0];
 
-
     print("wStatus $wStatus");
-      print("wStatusID $wStatusID");
-      print("wStatus ${Srv_DbTools.gIntervention.Intervention_Status}");
-
+    print("wStatusID $wStatusID");
+    print("wStatus ${Srv_DbTools.gIntervention.Intervention_Status}");
 
     for (int i = 0; i < ListParam_StatusID.length; i++) {
       String element = ListParam_StatusID[i];
@@ -71,9 +69,8 @@ class _Client_InterventionStatusDialogState extends State<Client_InterventionSta
         wStatusID = ListParam_StatusID[i];
         break;
       }
-    };
-
-
+    }
+    ;
 
     Reload();
   }
@@ -89,16 +86,12 @@ class _Client_InterventionStatusDialogState extends State<Client_InterventionSta
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
       surfaceTintColor: Colors.white,
       backgroundColor: gColors.white,
-
       titlePadding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-
-
       title: Container(
         color: gColors.white,
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
         child: Column(
           children: [
-
             Container(
               width: 500,
               child: Text(
@@ -117,81 +110,65 @@ class _Client_InterventionStatusDialogState extends State<Client_InterventionSta
           ],
         ),
       ),
-
-
       contentPadding: EdgeInsets.zero,
-      content:
-      ListParam_Status.length == 0
+      content: ListParam_Status.length == 0
           ? Container()
           : Container(
+              width: 50.0,
+              height: 430,
+              padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+              child: Column(
+                children: [
+                  ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: ListParam_Status.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final item = ListParam_Status[index];
 
-        width: 50.0,
-        height: 430,
-        padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-        child:
-
-        Column(children: [
-          ListView.builder(
-            shrinkWrap: true,
-            itemCount: ListParam_Status.length,
-            itemBuilder: (BuildContext context, int index) {
-              final item = ListParam_Status[index];
-
-              return InkWell(
-                  onTap: () async {
-                    await HapticFeedback.vibrate();
-                    wStatus = item;
-                    wStatusID = ListParam_StatusID[index];
-                    setState(() {});
-                  },
-                  child:
-
-
+                      return InkWell(
+                          onTap: () async {
+                            await HapticFeedback.vibrate();
+                            wStatus = item;
+                            wStatusID = ListParam_StatusID[index];
+                            setState(() {});
+                          },
+                          child: Container(
+                              decoration: BoxDecoration(
+                                color: (item.compareTo(wStatus) == 0) ? gColors.primaryGreen : Colors.transparent,
+                                border: Border.all(
+                                  color: (item.compareTo(wStatus) == 0) ? gColors.primaryGreen : Colors.transparent,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(12.0),
+                                ),
+                              ),
+                              padding: EdgeInsets.fromLTRB(10, 15, 10, 5), // TED
+                              height: 45,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(item,
+                                      textAlign: TextAlign.left,
+                                      maxLines: 1,
+                                      style: gColors.bodyTitle1_B_Gr.copyWith(
+                                        color: (item.compareTo(wStatus) == 0) ? gColors.white : gColors.primary,
+                                      ))
+                                ],
+                              )));
+                    },
+                  ),
                   Container(
-                      decoration: BoxDecoration(
-                        color: (item.compareTo(wStatus) == 0) ? gColors.primaryGreen : Colors.transparent,
-                        border: Border.all(
-                          color: (item.compareTo(wStatus) == 0) ? gColors.primaryGreen : Colors.transparent,
-                        ),
-                        borderRadius: BorderRadius.all(
-                          Radius.circular(12.0),
-                        ),
-                      ),
-                      padding: EdgeInsets.fromLTRB(10, 15, 10, 5), // TED
-                      height: 45,
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(item,
-                              textAlign: TextAlign.left,
-                              maxLines: 1,
-                              style: gColors.bodyTitle1_B_Gr.copyWith(
-                                color: (item.compareTo(wStatus) == 0) ? gColors.white : gColors.primary,
-                              ))
-                        ],
-                      ))
-              );
-            },
-          ),
-          Container(
-            height: 10,
-          ),
-
-          Container(
-            color: gColors.black,
-            height: 1,
-          ),
-
-        ],)
-
-
-      ),
-
+                    height: 10,
+                  ),
+                  Container(
+                    color: gColors.black,
+                    height: 1,
+                  ),
+                ],
+              )),
       actionsPadding: const EdgeInsets.fromLTRB(0, 0, 20, 5),
-
       actions: <Widget>[
-
         ElevatedButton(
           style: ElevatedButton.styleFrom(
             backgroundColor: gColors.primaryRed,
@@ -220,15 +197,12 @@ class _Client_InterventionStatusDialogState extends State<Client_InterventionSta
             ),
           ),
           onPressed: () async {
-
-          Srv_DbTools.gIntervention.Intervention_Status = wStatusID;
-          await Srv_ImportExport.Intervention_Export_Update(Srv_DbTools.gIntervention);
-
-    Navigator.pop(context);
+            Srv_DbTools.gIntervention.Intervention_Status = wStatusID;
+            await Srv_ImportExport.Intervention_Export_Update(Srv_DbTools.gIntervention);
+            Navigator.pop(context);
           },
         )
       ],
-
     );
   }
 
@@ -250,8 +224,6 @@ class _Client_InterventionStatusDialogState extends State<Client_InterventionSta
       Timer(Duration(milliseconds: 1400), () => _scrollToBottom(index));
     }
   }
-
-
 
 //***************************
 //***************************

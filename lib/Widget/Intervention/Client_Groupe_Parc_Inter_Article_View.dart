@@ -100,15 +100,10 @@ class Client_Groupe_Parc_Inter_Article_ViewDialogState extends State<Client_Grou
   Widget build(BuildContext context) {
     double IcoWidth = 250;
 
-    double wDialogHeight = 250;
-    int nb = (ListParam_Saisie_ParamFact.length / 3).truncate();
-    int modnb = ListParam_Saisie_ParamFact.length % 3;
-    int nbL = nb;
-    if (modnb > 0) nbL++;
-    double wDialogBase = 220;
-    double wLigneHeight = 52;
-    wLigneHeight = 59;
-    wDialogHeight = wDialogBase + nbL * wLigneHeight + 85;
+    double wDialogHeight = 240;
+
+
+    print("wDialogHeight ${wDialogHeight}");
 
     return AlertDialog(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
@@ -165,7 +160,13 @@ class Client_Groupe_Parc_Inter_Article_ViewDialogState extends State<Client_Grou
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Commandés ${widget.parc_Art.ParcsArt_Qte}",
+                          "Devis ${widget.parc_Art.ParcsArt_Fact == 'Devis' ? widget.parc_Art.ParcsArt_Qte : 0}",
+                          textAlign: TextAlign.center,
+                          style: gColors.bodyTitle1_B_Sr,
+                        ),
+                        SizedBox(height: 12,),
+                        Text(
+                          "Commandés ${widget.parc_Art.ParcsArt_Fact != 'Devis' ? widget.parc_Art.ParcsArt_Qte : 0}",
                           textAlign: TextAlign.center,
                           style: gColors.bodyTitle1_B_G_20,
                         ),
@@ -209,26 +210,7 @@ class Client_Groupe_Parc_Inter_Article_ViewDialogState extends State<Client_Grou
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          Text(initParcsArt_Fact),
-          Container(
-            color: gColors.primary,
-            width: 8,
-          ),
-          new ElevatedButton(
-            onPressed: () async {
-              await HapticFeedback.vibrate();
 
-              Navigator.of(context).pop();
-            },
-            style: ElevatedButton.styleFrom(
-              backgroundColor: gColors.primaryRed,
-            ),
-            child: Text('Annuler', style: gColors.bodyTitle1_N_W),
-          ),
-          Container(
-            color: gColors.primary,
-            width: 8,
-          ),
           new ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();

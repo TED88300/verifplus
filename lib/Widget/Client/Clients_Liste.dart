@@ -37,16 +37,10 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
 
     await Srv_ImportExport.ImportAll();
     await Srv_ImportExport.getErrorSync();
-
-    print("   Liste_Clients reload ${DbTools.gBoolErrorSync}");
-    print("   Liste_Clients reload ${DbTools.gBoolErrorSync}");
-    print("   Liste_Clients reload ${DbTools.gBoolErrorSync}");
-    print("   Liste_Clients reload ${DbTools.gBoolErrorSync}");
-    print("   Liste_Clients reload ${DbTools.gBoolErrorSync}");
-
-
     CountTot = CountSel = Srv_DbTools.ListClientsearchresult.length;
     Filtre();
+
+
   }
 
   void Filtre() {
@@ -86,14 +80,13 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
     super.initState();
 
     FBroadcast.instance().register("MAJCLIENT", (value, callback) {
-      print(" MAJCLIENT MAJCLIENT MAJCLIENT ");
       Reload();
     });
   }
 
   @override
   void dispose() {
-    print("      CLIENT LISTE DISPOSE         ");
+    FBroadcast.instance().unregister(this);
     super.dispose();
   }
 

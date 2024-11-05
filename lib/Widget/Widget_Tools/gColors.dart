@@ -895,6 +895,67 @@ class gColors {
         ));
   }
 
+
+  static Color getColorEtatDevis(String Status) {
+    Color wColor = Colors.transparent;
+
+    for (int p = 0; p < Srv_DbTools.ListParam_Param_Etat_Devis.length; p++) {
+      Param_Param wParam_Param = Srv_DbTools.ListParam_Param_Etat_Devis[p];
+
+      print("getColorEtatDevis ${Status} ${wParam_Param.Param_Param_ID}");
+
+      if (wParam_Param.Param_Param_ID == Status)
+      {
+        wColor = gColors.getColor(wParam_Param.Param_Param_Color);
+        break;
+      }
+    }
+    return wColor;
+  }
+
+
+  static Color getColorEtatCde(String Status) {
+    Color wColor = Colors.transparent;
+
+    for (int p = 0; p < Srv_DbTools.ListParam_Param_Etat_Cde.length; p++) {
+      Param_Param wParam_Param = Srv_DbTools.ListParam_Param_Etat_Cde[p];
+
+      print("getColorEtatCde ${Status} ${wParam_Param.Param_Param_ID}");
+
+      if (wParam_Param.Param_Param_ID == Status)
+      {
+        wColor = gColors.getColor(wParam_Param.Param_Param_Color);
+        break;
+      }
+    }
+    return wColor;
+  }
+
+  static Color getColorEtatLivr(String Status) {
+    Color wColor = Colors.transparent;
+
+    for (int p = 0; p < Srv_DbTools.ListParam_Param_Etat_Livr.length; p++) {
+      Param_Param wParam_Param = Srv_DbTools.ListParam_Param_Etat_Livr[p];
+
+      print("getColorEtatLivr ${Status} ${wParam_Param.Param_Param_ID}");
+
+      if (wParam_Param.Param_Param_ID == Status)
+      {
+        wColor = gColors.getColor(wParam_Param.Param_Param_Color);
+        break;
+      }
+    }
+    return wColor;
+  }
+
+
+
+
+
+
+
+
+
   static Color getColorStatus(String Status) {
     Color wColor = Colors.transparent;
 
@@ -940,6 +1001,11 @@ class gColors {
   }
   return wColor;
 }
+
+
+
+
+
 
   static Future<Uint8List> getImage(String url) async {
     try {

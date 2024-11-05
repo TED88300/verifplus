@@ -83,12 +83,14 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
 
     print(">>>>>> ${Srv_DbTools.ListClient.length}");
     await Srv_DbTools.getClientRech(Search_Client_TextController.text, selDepot);
-    print(">>>>>> ${Srv_DbTools.ListClient.length}");
+
+    print(">>>>>> Srv_DbTools.ListClient.length ${Srv_DbTools.ListClient.length}");
+
     ListClient.addAll(Srv_DbTools.ListClient);
+
     if (ListClient.length == 1) {
       selClient = ListClient[0];
     }
-
     setState(() {});
   }
 
@@ -247,7 +249,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
 
 */
 
-  double SelHeight = 760;
+  double SelHeight = 560;
   double icoWidth = 40;
 
   @override
@@ -783,7 +785,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
       contentPadding: EdgeInsets.zero,
       content: Container(
         color: gColors.greyLight,
-        height: 900,
+        height: 700,
         child: Column(
           children: [
             Container(

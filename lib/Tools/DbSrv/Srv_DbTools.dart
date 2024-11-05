@@ -13,6 +13,8 @@ import 'package:verifplus/Tools/DbSrv/Srv_Articles_Fam_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Articles_Link_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Articles_Link_Verif_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Contacts.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_DCL_Det.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_DCL_Ent.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_InterMissions.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_InterMissions_Document.dart';
@@ -425,7 +427,6 @@ class Srv_DbTools {
   static List<Article_Ebp> ListArticle_Ebp_ES = [];
   static List<Article_Ebp> ListArticle_Ebpsearchresult = [];
   static Article_Ebp gArticle_Ebp = Article_Ebp.Article_EbpInit();
-
   static Article_Ebp gArticle_EbpEnt = Article_Ebp.Article_EbpInit();
   static Article_Ebp gArticle_EbpSelRef = Article_Ebp.Article_EbpInit();
 
@@ -778,13 +779,16 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
 
   static Future<bool> getClientRech(String wRech, String wDepot) async {
 
-    
-    String wSlq = 'SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays, CONCAT(Users.User_Nom, " " , Users.User_Prenom) as Users_Nom FROM Clients LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = "FACT" JOIN Users ON Clients.Client_Commercial = \"User_Matricule\"';
+
+   String User_Matricule = Srv_DbTools.gUserLogin.User_Matricule;
+
+    String wSlq = 'SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays FROM Clients  LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = "FACT" ';
+   print("getClientRech A");
 
     
     if (wRech.isNotEmpty)
       {
-        wSlq = 'SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays, CONCAT(Users.User_Nom, " " , Users.User_Prenom) as Users_Nom FROM Clients LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = "FACT" JOIN Users ON Clients.Client_Commercial = \"User_Matricule\"'
+        wSlq = 'SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays, FROM Clients LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = "FACT" '
             ' WHERE Clients.Client_Nom LIKE "%' +
             '${wRech}' +
             '%" OR Adresse_CP LIKE "%' +
@@ -797,7 +801,47 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     else
     if (wDepot.isNotEmpty)
     {
-       wSlq = 'SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays, CONCAT(Users.User_Nom, " " , Users.User_Prenom) as Users_Nom FROM Clients LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = "FACT" JOIN Users ON Clients.Client_Commercial = \"User_Matricule\" WHERE Clients.Client_Depot = "$wDepot"' ;
+       wSlq = 'SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays FROM Clients LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = "FACT" WHERE Clients.Client_Depot = "$wDepot"' ;
+
+    }
+
+
+
+    print("getClient wSlq $wSlq");
+    ListClient = await getClient_API_Post("select", wSlq);
+    if (ListClient == null) return false;
+    if (ListClient.length > 0) {
+      gClient = ListClient[0];
+      return true;
+    }
+    return false;
+  }
+
+  static Future<bool> getClientRechVP(String wRech, String wDepot) async {
+
+
+    String User_Matricule = Srv_DbTools.gUserLogin.User_Matricule;
+
+    String wSlq = 'SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays, CONCAT(Users.User_Nom, " " , Users.User_Prenom) as Users_Nom FROM Clients JOIN Users ON Clients.Client_Commercial = \"${User_Matricule}\" LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = "FACT" ';
+    print("getClientRech A");
+
+
+    if (wRech.isNotEmpty)
+    {
+      wSlq = 'SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays, CONCAT(Users.User_Nom, " " , Users.User_Prenom) as Users_Nom FROM Clients LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = "FACT" JOIN Users ON Clients.Client_Commercial = \"User_Matricule\"'
+          ' WHERE Clients.Client_Nom LIKE "%' +
+          '${wRech}' +
+          '%" OR Adresse_CP LIKE "%' +
+          '${wRech}' +
+          '%" OR Adresse_Ville LIKE "%' +
+          '${wRech}' +
+          '%" ORDER BY Client_Nom;';
+
+    }
+    else
+    if (wDepot.isNotEmpty)
+    {
+      wSlq = 'SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays, CONCAT(Users.User_Nom, " " , Users.User_Prenom) as Users_Nom FROM Clients JOIN Users ON Clients.Client_Commercial = \"User_Matricule\"  LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = "FACT" WHERE Clients.Client_Depot = "$wDepot"' ;
 
     }
 
@@ -1611,6 +1655,9 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     }
   }
 
+
+
+
   static Future<bool> getInterventionClientAll() async {
     String wTmp = "SELECT Clients.ClientId, Clients.Client_Nom, Groupes.GroupeId ,Groupes.Groupe_Nom, Sites.SiteId,Sites.Site_Nom, Zones.ZoneID, Zones.Zone_Nom,a.*, IFNULL(c.Cnt,0) as Cnt FROM Interventions a LEFT JOIN (SELECT Parcs_InterventionId, count(1) Cnt FROM Parcs_Ent GROUP BY Parcs_InterventionId) as c ON c.Parcs_InterventionId=a.InterventionId LEFT JOIN Zones ON ZoneId = Intervention_ZoneId LEFT JOIN Sites ON SiteId = Zone_SiteId LEFT JOIN Groupes ON GroupeId = Site_GroupeId LEFT JOIN Clients ON ClientId = Groupe_ClientId";
 
@@ -1619,12 +1666,13 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     print("getInterventionAll ${ListIntervention.length}");
     if (ListIntervention.length > 0) {
       print("getInterventionAll return TRUE");
-
-
       return true;
     }
     return false;
   }
+
+
+
   static Future<List<Intervention>> getIntervention_API_Post_Client(String aType, String aSQL) async {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
@@ -2295,6 +2343,7 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
         "Parcs_NCERT  = \"${Parc_Ent.Parcs_NCERT}\", " +
         "Parcs_NoSpec  = \"${Parc_Ent.Parcs_NoSpec}\", " +
         "Parcs_CodeArticle  = \"${Parc_Ent.Parcs_CodeArticle}\", " +
+        "Parcs_CodeArticleES  = \"${Parc_Ent.Parcs_CodeArticleES}\", " +
         "Parcs_CODF  = \"${Parc_Ent.Parcs_CODF}\", " +
         "Livr        = \"${Parc_Ent.Livr}\", " +
         "Devis        = \"${Parc_Ent.Devis}\", " +
@@ -2338,6 +2387,7 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     if (aParc_Ent.Parcs_NCERT == null) aParc_Ent.Parcs_NCERT = "";
     if (aParc_Ent.Parcs_NoSpec == null) aParc_Ent.Parcs_NoSpec = "";
     if (aParc_Ent.Parcs_CodeArticle == null) aParc_Ent.Parcs_CodeArticle = "";
+    if (aParc_Ent.Parcs_CodeArticleES == null) aParc_Ent.Parcs_CodeArticleES = "";
     if (aParc_Ent.Parcs_CODF == null) aParc_Ent.Parcs_CODF = "";
 
     if (aParc_Ent.Parcs_Intervention_Timer == null) aParc_Ent.Parcs_Intervention_Timer= 0;
@@ -2361,6 +2411,7 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
         "Parcs_NCERT, "
         "Parcs_NoSpec, "
         "Parcs_CodeArticle, "
+        "Parcs_CodeArticleES, "
         "Parcs_CODF, "
         "Livr, Devis, Action, "
         "Parcs_Intervention_Timer) VALUES ("
@@ -2391,6 +2442,7 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
         "'${aParc_Ent.Parcs_NCERT!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Parcs_NoSpec!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Parcs_CodeArticle!.replaceAll("'", "‘")}',"
+        "'${aParc_Ent.Parcs_CodeArticleES!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Parcs_CODF!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Livr!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Devis!.replaceAll("'", "‘")}',"
@@ -2428,6 +2480,7 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
         "Parcs_NCERT, "
         "Parcs_NoSpec, "
         "Parcs_CodeArticle, "
+        "Parcs_CodeArticleES, "
         "Parcs_CODF, "
         "Livr, Devis, Action, Parcs_Intervention_Timer) VALUES ("
         "NULL , ${aParc_Ent.Parcs_order}, ${aParc_Ent.Parcs_InterventionId},"
@@ -2457,6 +2510,7 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
         "'${aParc_Ent.Parcs_NCERT!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Parcs_NoSpec!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Parcs_CodeArticle!.replaceAll("'", "‘")}',"
+        "'${aParc_Ent.Parcs_CodeArticleES!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Parcs_CODF!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Livr!.replaceAll("'", "‘")}',"
         "'${aParc_Ent.Devis!.replaceAll("'", "‘")}',"
@@ -2673,6 +2727,7 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
   //******************************************
 
   static List<Parc_Art_Srv> ListParc_Art = [];
+  static List<Parc_Art_Srv> ListParc_ArtSO = [];
   static List<Parc_Art_Srv> ListParc_Artsearchresult = [];
   static Parc_Art_Srv gParc_Art = Parc_Art_Srv(0, 0, "", "", "", "", "", "", 0);
 
@@ -2709,6 +2764,22 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
       return false;
     }
   }
+
+  static Future<bool> getParcs_ArtInterSO(int Parcs_InterventionId) async {
+    try {
+      ListParc_ArtSO = await getParc_Art_API_Post("select", "SELECT Parcs_Art.* FROM Parcs_Art WHERE ParcsArt_lnk = 'SO' AND ParcsArt_ParcsId  = $Parcs_InterventionId");
+      if (ListParc_ArtSO == null) return false;
+      if (ListParc_ArtSO.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+
+
 
   static Future<bool> setParc_Art(Parc_Art_Srv Parc_Art) async {
     String wSlq = "UPDATE Parcs_Art SET "
@@ -3938,6 +4009,12 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
   static List<String> ListParam_ParamCiv = [];
   static List<String> ListParam_ParamForme = [];
   static List<Param_Param> ListParam_Param_Status_Interv = [];
+  static List<Param_Param> ListParam_Param_Etat_Devis = [];
+  static List<Param_Param> ListParam_Param_Etat_Cde = [];
+  static List<Param_Param> ListParam_Param_Etat_Livr = [];
+
+
+
 
   static List<Param_Param> ListParam_Paramsearchresult = [];
 
@@ -4348,6 +4425,503 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
     } catch (e) {
       return false;
     }
+  }
+
+
+  //******************************************
+  //************   DCL_Ent   ***************
+  //******************************************
+
+  static List<DCL_Ent> ListDCL_Ent = [];
+  static List<DCL_Ent> ListDCL_Entsearchresult = [];
+  static DCL_Ent gDCL_Ent = DCL_Ent();
+
+
+  static String gSelDCL_Ent = "";
+  static String gSelDCL_EntBase = "Tous les types de document";
+
+
+  static int affSortComparisonData_DCL(DCL_Ent a, DCL_Ent b) {
+    final wDCL_EntDateA = a.DCL_Ent_Date;
+    final wDCL_EntDateB = b.DCL_Ent_Date;
+
+    int wDCL_EntIdA = a.DCL_EntID!;
+    int wDCL_EntIdB = b.DCL_EntID!;
+
+
+
+    var inputFormat = DateFormat('dd/MM/yyyy');
+    var inputDateA = inputFormat.parse(wDCL_EntDateA!);
+    var inputDateB = inputFormat.parse(wDCL_EntDateB!);
+
+    if (inputDateA.isBefore(inputDateB)) {
+      return 1;
+    } else if (inputDateA.isAfter(inputDateB)) {
+      return -1;
+    } else {
+      if (wDCL_EntIdA < wDCL_EntIdB) {
+        return 1;
+      } else if (wDCL_EntIdA > wDCL_EntIdB) {
+        return -1;
+      }
+      return 0;
+    }
+  }
+
+
+  static Future<bool> getDCL_EntAll() async {
+    ListDCL_Ent = await getDCL_Ent_API_Post("select", "select * from DCL_Ent ORDER BY DCL_EntID");
+
+    if (ListDCL_Ent == null) return false;
+    print("getDCL_EntAll ${ListDCL_Ent.length}");
+    if (ListDCL_Ent.length > 0) {
+      print("getDCL_EntAll return TRUE");
+      return true;
+    }
+    return false;
+  }
+
+  static Future getDCL_EntID(int ID) async {
+    ListDCL_Ent.forEach((element) {
+      if (element.DCL_EntID == ID) {
+        gDCL_Ent = element;
+        return;
+      }
+    });
+  }
+
+
+
+  static Future<List<DCL_Ent>> getDCL_Ent_DCL_Ent_InterventionId(int DCL_Ent_InterventionId) async {
+
+
+    ListDCL_Ent = await getDCL_Ent_API_Post("select", "select * from DCL_Ent WHERE DCL_Ent_InterventionId = $DCL_Ent_InterventionId ORDER BY DCL_EntID");
+
+    if (ListDCL_Ent == null) return [];
+
+    return ListDCL_Ent;
+
+
+
+
+  }
+
+
+
+
+
+
+
+  static Future<bool> setDCL_Ent(DCL_Ent DCL_Ent) async {
+    String wSlq = "UPDATE DCL_Ent SET "
+        "DCL_EntID = '${DCL_Ent.DCL_EntID}', " +
+        "DCL_Ent_Type = '${DCL_Ent.DCL_Ent_Type}', " +
+        "DCL_Ent_Version = '${DCL_Ent.DCL_Ent_Version}', " +
+        "DCL_Ent_ClientId = '${DCL_Ent.DCL_Ent_ClientId}', " +
+        "DCL_Ent_GroupeId = '${DCL_Ent.DCL_Ent_GroupeId}', " +
+        "DCL_Ent_SiteId = '${DCL_Ent.DCL_Ent_SiteId}', " +
+        "DCL_Ent_ZoneId = '${DCL_Ent.DCL_Ent_ZoneId}', " +
+        "DCL_Ent_InterventionId = '${DCL_Ent.DCL_Ent_InterventionId}', " +
+        "DCL_Ent_Date = '${DCL_Ent.DCL_Ent_Date}', " +
+        "DCL_Ent_Statut = '${DCL_Ent.DCL_Ent_Statut}', " +
+        "DCL_Ent_Etat = '${DCL_Ent.DCL_Ent_Etat}', " +
+        "DCL_Ent_Etat_Motif = '${DCL_Ent.DCL_Ent_EtatMotif}', " +
+        "DCL_Ent_Etat_Note = '${DCL_Ent.DCL_Ent_EtatNote}', " +
+        "DCL_Ent_Etat_Action = '${DCL_Ent.DCL_Ent_EtatAction}', " +
+        "DCL_Ent_Collaborateur = '${DCL_Ent.DCL_Ent_Collaborateur}', " +
+        "DCL_Ent_Affaire = '${DCL_Ent.DCL_Ent_Affaire}', " +
+        "DCL_Ent_Affaire_Note = '${DCL_Ent.DCL_Ent_AffaireNote}', " +
+        "DCL_Ent_Validite = '${DCL_Ent.DCL_Ent_Validite}', " +
+        "DCL_Ent_LivrPrev = '${DCL_Ent.DCL_Ent_LivrPrev}', " +
+        "DCL_Ent_ModeRegl = '${DCL_Ent.DCL_Ent_ModeRegl}', " +
+        "DCL_Ent_MoyRegl = '${DCL_Ent.DCL_Ent_MoyRegl}', " +
+        "DCL_Ent_Valo = '${DCL_Ent.DCL_Ent_Valo}', " +
+        "DCL_Ent_Relance = '${DCL_Ent.DCL_Ent_Relance}', " +
+        "DCL_Ent_Relance_Mode = '${DCL_Ent.DCL_Ent_RelanceMode}', " +
+        "DCL_Ent_Relance_Contact = '${DCL_Ent.DCL_Ent_RelanceContact}', " +
+        "DCL_Ent_Relance_Mail = '${DCL_Ent.DCL_Ent_RelanceMail}', " +
+        "DCL_Ent_Relance_Tel = '${DCL_Ent.DCL_Ent_RelanceTel}', " +
+        "DCL_Ent_Proba = '${DCL_Ent.DCL_Ent_Proba}', " +
+        "DCL_Ent_Concurent = '${DCL_Ent.DCL_Ent_Concurent}', " +
+        "DCL_Ent_Note = '${DCL_Ent.DCL_Ent_Note}', " +
+        "DCL_Ent_Regl = '${DCL_Ent.DCL_Ent_Regl}', " +
+        "DCL_Ent_Partage = '${DCL_Ent.DCL_Ent_Partage}', " +
+        "DCL_Ent_Dem_Tech = '${DCL_Ent.DCL_Ent_DemTech}', " +
+        "DCL_Ent_Dem_SsT = '${DCL_Ent.DCL_Ent_DemSsT}'" ;
+
+    bool ret = await add_API_Post("upddel", wSlq);
+    print("setDCL_Ent ret " + ret.toString());
+    return ret;
+  }
+
+  static Future<bool> delDCL_Ent(int DCL_EntID) async {
+    String aSQL = "DELETE FROM DCL_Ent WHERE DCL_EntID = ${DCL_EntID} ";
+    print("delDCL_Ent " + aSQL);
+    bool ret = await add_API_Post("upddel", aSQL);
+    print("delDCL_Ent ret " + ret.toString());
+    return ret;
+  }
+
+  static String InsertUpdateDCL_Ent_GetSql(DCL_Ent aDCL_Ent) {
+    String wSql = "INSERT INTO DCL_Ent("
+        "DCL_EntID, "
+        "DCL_Ent_Type, "
+        "DCL_Ent_Version, "
+        "DCL_Ent_ClientId, "
+        "DCL_Ent_GroupeId, "
+        "DCL_Ent_SiteId, "
+        "DCL_Ent_ZoneId, "
+        "DCL_Ent_InterventionId, "
+        "DCL_Ent_Date, "
+        "DCL_Ent_Statut, "
+        "DCL_Ent_Etat, "
+        "DCL_Ent_Etat_Motif, "
+        "DCL_Ent_Etat_Note, "
+        "DCL_Ent_Etat_Action, "
+        "DCL_Ent_Collaborateur, "
+        "DCL_Ent_Affaire, "
+        "DCL_Ent_Affaire_Note, "
+        "DCL_Ent_Validite, "
+        "DCL_Ent_LivrPrev, "
+        "DCL_Ent_ModeRegl, "
+        "DCL_Ent_MoyRegl, "
+        "DCL_Ent_Valo, "
+        "DCL_Ent_Relance, "
+        "DCL_Ent_Relance_Mode, "
+        "DCL_Ent_Relance_Contact, "
+        "DCL_Ent_Relance_Mail, "
+        "DCL_Ent_Relance_Tel, "
+        "DCL_Ent_Proba, "
+        "DCL_Ent_Concurent, "
+        "DCL_Ent_Note, "
+        "DCL_Ent_Regl, "
+        "DCL_Ent_Partage, "
+        "DCL_Ent_Dem_Tech, "
+        "DCL_Ent_Dem_SsT, "
+
+        ") VALUES ("
+        "NULL ,  "
+        "'${aDCL_Ent.DCL_Ent_Type}',"
+        "${aDCL_Ent.DCL_Ent_Version},"
+        "${aDCL_Ent.DCL_Ent_ClientId},"
+        "${aDCL_Ent.DCL_Ent_GroupeId},"
+        "${aDCL_Ent.DCL_Ent_SiteId},"
+        "${aDCL_Ent.DCL_Ent_ZoneId},"
+        "${aDCL_Ent.DCL_Ent_InterventionId},"
+        "'${aDCL_Ent.DCL_Ent_Date}',"
+        "'${aDCL_Ent.DCL_Ent_Statut}',"
+        "'${aDCL_Ent.DCL_Ent_Etat}',"
+        "'${aDCL_Ent.DCL_Ent_EtatMotif}',"
+        "'${aDCL_Ent.DCL_Ent_EtatNote}',"
+        "'${aDCL_Ent.DCL_Ent_EtatAction}',"
+        "'${aDCL_Ent.DCL_Ent_Collaborateur}',"
+        "'${aDCL_Ent.DCL_Ent_Affaire}',"
+        "'${aDCL_Ent.DCL_Ent_AffaireNote}',"
+        "'${aDCL_Ent.DCL_Ent_Validite}',"
+        "'${aDCL_Ent.DCL_Ent_LivrPrev}',"
+        "'${aDCL_Ent.DCL_Ent_ModeRegl}',"
+        "'${aDCL_Ent.DCL_Ent_MoyRegl}',"
+        "${aDCL_Ent.DCL_Ent_Valo},"
+        "${aDCL_Ent.DCL_Ent_Relance},"
+        "'${aDCL_Ent.DCL_Ent_RelanceMode}',"
+        "'${aDCL_Ent.DCL_Ent_RelanceContact}',"
+        "'${aDCL_Ent.DCL_Ent_RelanceMail}',"
+        "'${aDCL_Ent.DCL_Ent_RelanceTel}',"
+        "${aDCL_Ent.DCL_Ent_Proba},"
+        "'${aDCL_Ent.DCL_Ent_Concurent}',"
+        "'${aDCL_Ent.DCL_Ent_Note}',"
+        "'${aDCL_Ent.DCL_Ent_Regl}',"
+        "'${aDCL_Ent.DCL_Ent_Partage}',"
+        "${aDCL_Ent.DCL_Ent_DemTech},"
+        "${aDCL_Ent.DCL_Ent_DemSsT},"
+
+
+        ")";
+    return wSql;
+  }
+
+  static Future<bool> InsertUpdateDCL_Ent_Sql(String wSql) async {
+    print("InsertUpdateDCL_Ent_Sql " + wSql);
+    bool ret = await add_API_Post("multi", wSql);
+    print("InsertUpdateDCL_Ent_Sql ret " + ret.toString());
+    return ret;
+  }
+
+  static Future<bool> InsertUpdateDCL_Ent(DCL_Ent aDCL_Ent) async {
+    String wSql = "INSERT INTO DCL_Ent("
+        "DCL_Ent_Type, "
+        "DCL_Ent_Version, "
+        "DCL_Ent_ClientId, "
+        "DCL_Ent_GroupeId, "
+        "DCL_Ent_SiteId, "
+        "DCL_Ent_ZoneId, "
+        "DCL_Ent_InterventionId, "
+        "DCL_Ent_Date, "
+        "DCL_Ent_Statut, "
+        "DCL_Ent_Etat, "
+        "DCL_Ent_Etat_Motif, "
+        "DCL_Ent_Etat_Note, "
+        "DCL_Ent_Etat_Action, "
+        "DCL_Ent_Collaborateur, "
+        "DCL_Ent_Affaire, "
+        "DCL_Ent_Affaire_Note, "
+        "DCL_Ent_Validite, "
+        "DCL_Ent_LivrPrev, "
+        "DCL_Ent_ModeRegl, "
+        "DCL_Ent_MoyRegl, "
+        "DCL_Ent_Valo, "
+        "DCL_Ent_Relance, "
+        "DCL_Ent_Relance_Mode, "
+        "DCL_Ent_Relance_Contact, "
+        "DCL_Ent_Relance_Mail, "
+        "DCL_Ent_Relance_Tel, "
+        "DCL_Ent_Proba, "
+        "DCL_Ent_Concurent, "
+        "DCL_Ent_Note, "
+        "DCL_Ent_Regl, "
+        "DCL_Ent_Partage, "
+        "DCL_Ent_Dem_Tech, "
+        "DCL_Ent_Dem_SsT "
+
+        ") VALUES ("
+        "'${aDCL_Ent.DCL_Ent_Type}',"
+        "${aDCL_Ent.DCL_Ent_Version},"
+        "${aDCL_Ent.DCL_Ent_ClientId},"
+        "${aDCL_Ent.DCL_Ent_GroupeId},"
+        "${aDCL_Ent.DCL_Ent_SiteId},"
+        "${aDCL_Ent.DCL_Ent_ZoneId},"
+        "${aDCL_Ent.DCL_Ent_InterventionId},"
+        "'${aDCL_Ent.DCL_Ent_Date}',"
+        "'${aDCL_Ent.DCL_Ent_Statut}',"
+        "'${aDCL_Ent.DCL_Ent_Etat}',"
+        "'${aDCL_Ent.DCL_Ent_EtatMotif}',"
+        "'${aDCL_Ent.DCL_Ent_EtatNote}',"
+        "'${aDCL_Ent.DCL_Ent_EtatAction}',"
+        "'${aDCL_Ent.DCL_Ent_Collaborateur}',"
+        "'${aDCL_Ent.DCL_Ent_Affaire}',"
+        "'${aDCL_Ent.DCL_Ent_AffaireNote}',"
+        "'${aDCL_Ent.DCL_Ent_Validite}',"
+        "'${aDCL_Ent.DCL_Ent_LivrPrev}',"
+        "'${aDCL_Ent.DCL_Ent_ModeRegl}',"
+        "'${aDCL_Ent.DCL_Ent_MoyRegl}',"
+        "${aDCL_Ent.DCL_Ent_Valo},"
+        "${aDCL_Ent.DCL_Ent_Relance},"
+        "'${aDCL_Ent.DCL_Ent_RelanceMode}',"
+        "'${aDCL_Ent.DCL_Ent_RelanceContact}',"
+        "'${aDCL_Ent.DCL_Ent_RelanceMail}',"
+        "'${aDCL_Ent.DCL_Ent_RelanceTel}',"
+        "${aDCL_Ent.DCL_Ent_Proba},"
+        "'${aDCL_Ent.DCL_Ent_Concurent}',"
+        "'${aDCL_Ent.DCL_Ent_Note}',"
+        "'${aDCL_Ent.DCL_Ent_Regl}',"
+        "'${aDCL_Ent.DCL_Ent_Partage}',"
+        "${aDCL_Ent.DCL_Ent_DemTech},"
+        "${aDCL_Ent.DCL_Ent_DemSsT}"
+        ")";
+    print("setDCL_Ent " + wSql);
+    bool ret = await add_API_Post("upddel", wSql);
+    print("setDCL_Ent ret " + ret.toString());
+    return ret;
+  }
+
+  static Future<List<DCL_Ent>> getDCL_Ent_API_Post(String aType, String aSQL) async {
+    setSrvToken();
+    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
+    var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      var parsedJson = json.decode(await response.stream.bytesToString());
+      final items = parsedJson['data'];
+
+      if (items != null) {
+        List<DCL_Ent> DCL_EntList = await items.map<DCL_Ent>((json) {
+          return DCL_Ent.fromJson(json);
+        }).toList();
+        return DCL_EntList;
+      }
+    } else {
+      print(response.reasonPhrase);
+    }
+    return [];
+  }
+
+
+  //******************************************
+  //************   DCL_Det   ***************
+  //******************************************
+
+  static List<DCL_Det> ListDCL_Det = [];
+  static List<DCL_Det> ListDCL_Detsearchresult = [];
+  static DCL_Det gDCL_Det = DCL_Det();
+
+  static Future<bool> getDCL_DetAll() async {
+    ListDCL_Det = await getDCL_Det_API_Post("select", "select * from DCL_Det ORDER BY DCL_DetID");
+
+    if (ListDCL_Det == null) return false;
+    print("getDCL_DetAll ${ListDCL_Det.length}");
+    if (ListDCL_Det.length > 0) {
+      print("getDCL_DetAll return TRUE");
+      return true;
+    }
+    return false;
+  }
+
+  static Future getDCL_DetID(int ID) async {
+    ListDCL_Det.forEach((element) {
+      if (element.DCL_DetID == ID) {
+        gDCL_Det = element;
+        return;
+      }
+    });
+  }
+
+
+  static Future<bool> setDCL_Det(DCL_Det DCL_Det) async {
+    String wSlq = "UPDATE DCL_Det SET "
+        "DCL_DetID = ${DCL_Det.DCL_DetID}, " +
+        "DCL_DetID = ${DCL_Det.DCL_Det_EntID}, " +
+        "DCL_DetID = ${DCL_Det.DCL_Det_ParcsArtId}, " +
+        "DCL_DetID = ${DCL_Det.DCL_Det_Ordre}, " +
+        "DCL_DetID = '${DCL_Det.DCL_Det_Type}', " +
+        "DCL_DetID = '${DCL_Det.DCL_Det_NoArt}', " +
+        "DCL_DetID = '${DCL_Det.DCL_Det_Lib}', " +
+        "DCL_DetID = ${DCL_Det.DCL_Det_Qte}, " +
+        "DCL_DetID = ${DCL_Det.DCL_Det_PU}, " +
+        "DCL_DetID = ${DCL_Det.DCL_Det_RemP}, " +
+        "DCL_DetID = ${DCL_Det.DCL_Det_RemMt}, " +
+        "DCL_DetID = ${DCL_Det.DCL_Det_Livr}, " +
+        "DCL_DetID = '${DCL_Det.DCL_Det_DateLivr}', " +
+        "DCL_DetID = ${DCL_Det.DCL_Det_Rel}, " +
+        "DCL_DetID = '${DCL_Det.DCL_Det_DateRel}', " +
+        "DCL_DetID = '${DCL_Det.DCL_Det_Statut}', " +
+        "DCL_DetID = '${DCL_Det.DCL_Det_Note}'";
+        
+    bool ret = await add_API_Post("upddel", wSlq);
+    print("setDCL_Det ret " + ret.toString());
+    return ret;
+  }
+
+  static Future<bool> delDCL_Det(int DCL_DetID) async {
+    String aSQL = "DELETE FROM DCL_Det WHERE DCL_DetID = ${DCL_DetID} ";
+    print("delDCL_Det " + aSQL);
+    bool ret = await add_API_Post("upddel", aSQL);
+    print("delDCL_Det ret " + ret.toString());
+    return ret;
+  }
+
+  static String InsertUpdateDCL_Det_GetSql(DCL_Det aDCL_Det) {
+    String wSql = "INSERT INTO DCL_Det("
+        "DCL_DetID, "
+        "DCL_Det_EntID, "
+        "DCL_Det_ParcsArtId, "
+        "DCL_Det_Ordre, "
+        "DCL_Det_Type, "
+        "DCL_Det_NoArt, "
+        "DCL_Det_Lib, "
+        "DCL_Det_Qte, "
+        "DCL_Det_PU, "
+        "DCL_Det_RemP, "
+        "DCL_Det_RemMt, "
+        "DCL_Det_Livr, "
+        "DCL_Det_DateLivr, "
+        "DCL_Det_Rel, "
+        "DCL_Det_DateRel, "
+        "DCL_Det_Statut, "
+        "DCL_Det_Note "
+        ") VALUES ("
+        "NULL ,  "
+        "${aDCL_Det.DCL_Det_EntID},"
+        "${aDCL_Det.DCL_Det_ParcsArtId},"
+        "${aDCL_Det.DCL_Det_Ordre},"
+        "'${aDCL_Det.DCL_Det_Type}',"
+        "'${aDCL_Det.DCL_Det_NoArt}',"
+        "'${aDCL_Det.DCL_Det_Lib}',"
+        "${aDCL_Det.DCL_Det_Qte},"
+        "${aDCL_Det.DCL_Det_PU},"
+        "${aDCL_Det.DCL_Det_RemP},"
+        "${aDCL_Det.DCL_Det_RemMt},"
+        "${aDCL_Det.DCL_Det_Livr},"
+        "'${aDCL_Det.DCL_Det_DateLivr}',"
+        "${aDCL_Det.DCL_Det_Rel},"
+        "'${aDCL_Det.DCL_Det_DateRel}',"
+        "'${aDCL_Det.DCL_Det_Statut}',"
+        "'${aDCL_Det.DCL_Det_Note}'"
+        ")";
+    return wSql;
+  }
+
+  static Future<bool> InsertUpdateDCL_Det_Sql(String wSql) async {
+    print("InsertUpdateDCL_Det_Sql " + wSql);
+    bool ret = await add_API_Post("multi", wSql);
+    print("InsertUpdateDCL_Det_Sql ret " + ret.toString());
+    return ret;
+  }
+
+  static Future<bool> InsertUpdateDCL_Det(DCL_Det aDCL_Det) async {
+    String wSql = "INSERT INTO DCL_Det("
+        "DCL_DetID, "
+        "DCL_Det_EntID, "
+        "DCL_Det_ParcsArtId, "
+        "DCL_Det_Ordre, "
+        "DCL_Det_Type, "
+        "DCL_Det_NoArt, "
+        "DCL_Det_Lib, "
+        "DCL_Det_Qte, "
+        "DCL_Det_PU, "
+        "DCL_Det_RemP, "
+        "DCL_Det_RemMt, "
+        "DCL_Det_Livr, "
+        "DCL_Det_DateLivr, "
+        "DCL_Det_Rel, "
+        "DCL_Det_DateRel, "
+        "DCL_Det_Statut, "
+        "DCL_Det_Note "
+        ") VALUES ("
+        "NULL ,  "
+        "${aDCL_Det.DCL_Det_EntID},"
+        "${aDCL_Det.DCL_Det_ParcsArtId},"
+        "${aDCL_Det.DCL_Det_Ordre},"
+        "'${aDCL_Det.DCL_Det_Type}',"
+        "'${aDCL_Det.DCL_Det_NoArt}',"
+        "'${aDCL_Det.DCL_Det_Lib}',"
+        "${aDCL_Det.DCL_Det_Qte},"
+        "${aDCL_Det.DCL_Det_PU},"
+        "${aDCL_Det.DCL_Det_RemP},"
+        "${aDCL_Det.DCL_Det_RemMt},"
+        "${aDCL_Det.DCL_Det_Livr},"
+        "'${aDCL_Det.DCL_Det_DateLivr}',"
+        "${aDCL_Det.DCL_Det_Rel},"
+        "'${aDCL_Det.DCL_Det_DateRel}',"
+        "'${aDCL_Det.DCL_Det_Statut}',"
+        "'${aDCL_Det.DCL_Det_Note}'"
+        ")";
+//    print("setDCL_Det " + wSql);
+    bool ret = await add_API_Post("upddel", wSql);
+    //  print("setDCL_Det ret " + ret.toString());
+    return ret;
+  }
+
+  static Future<List<DCL_Det>> getDCL_Det_API_Post(String aType, String aSQL) async {
+    setSrvToken();
+    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
+    var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
+    http.StreamedResponse response = await request.send();
+    if (response.statusCode == 200) {
+      var parsedJson = json.decode(await response.stream.bytesToString());
+      final items = parsedJson['data'];
+
+      if (items != null) {
+        List<DCL_Det> DCL_DetList = await items.map<DCL_Det>((json) {
+          return DCL_Det.fromJson(json);
+        }).toList();
+        return DCL_DetList;
+      }
+    } else {
+      print(response.reasonPhrase);
+    }
+    return [];
   }
 
 

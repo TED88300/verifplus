@@ -6,6 +6,7 @@ import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Article.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Article_View.dart';
+import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Piece_Saisie.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 import 'package:verifplus/pdf/Aff_BL.dart';
@@ -34,7 +35,9 @@ class Client_Groupe_Parc_Inter_BLState extends State<Client_Groupe_Parc_Inter_BL
   @override
   Future initLib() async {
     print("initLib");
-    DbTools.lParcs_Art = await DbTools.getParcs_ArtInterSumBL(Srv_DbTools.gIntervention.InterventionId!);
+    DbTools.lParcs_Art = await DbTools.getParcs_ArtSoBL(Srv_DbTools.gIntervention.InterventionId!);
+    List<Parc_Art> wlParcs_Art = await DbTools.getParcs_ArtInterSumBL(Srv_DbTools.gIntervention.InterventionId!);
+    DbTools.lParcs_Art.addAll(wlParcs_Art);
     print("DbTools.lParcs_Art ${DbTools.lParcs_Art.length}");
     Filtre();
   }
@@ -80,14 +83,26 @@ class Client_Groupe_Parc_Inter_BLState extends State<Client_Groupe_Parc_Inter_BL
 
     return Scaffold(
       backgroundColor: Colors.white,
+
+
+
       bottomNavigationBar: Container(
         color: Colors.white,
         child: Padding(
           padding: EdgeInsets.fromLTRB(0, 10, 0, 55),
           child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
+
+              Container(
+                padding: const EdgeInsets.only(left: 20, bottom: 20.0),
+                width: 60,
+                height: 50,
+
+              ),
+
+
               new ElevatedButton(
                 onPressed: () async {
                   await HapticFeedback.vibrate();
@@ -102,6 +117,20 @@ class Client_Groupe_Parc_Inter_BLState extends State<Client_Groupe_Parc_Inter_BL
                     )),
                 child: Text('Imprimer', style: gColors.bodyTitle1_B_W),
               ),
+
+              Padding(
+                  padding: const EdgeInsets.only(right: 16, bottom: 21.0),
+                  child: FloatingActionButton(
+                      elevation: 10.0,
+                      child: new Icon(Icons.add),
+                      backgroundColor: gColors.secondary,
+                      onPressed: () async {
+                        await Client_Groupe_Parc_Inter_Article_Dialog.Dialogs_Saisie(context, onSaisie, "SO");
+                        await initLib();
+                      })),
+
+
+
             ],
           ),
         ),
@@ -285,7 +314,12 @@ class Client_Groupe_Parc_Inter_BLState extends State<Client_Groupe_Parc_Inter_BL
             await HapticFeedback.vibrate();
             print("onTap ");
             print("onTap ${parc_Art.toString()} ");
-            await Client_Groupe_Parc_Inter_Article_View_Dialog.Dialogs_Saisie(context,  parc_Art);
+
+            if (parc_Art.ParcsArt_lnk == "SO") {
+              await Client_Groupe_Parc_Inter_Piece_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, onSaisie, parc_Art);
+            } else {
+              await Client_Groupe_Parc_Inter_Article_View_Dialog.Dialogs_Saisie(context, parc_Art);
+            }
 
 
             setState(() {});

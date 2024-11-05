@@ -38,33 +38,37 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
       height: 1,
     );
 
-    String wImgPath = "${Srv_DbTools.SrvImg}ArticlesImg_Ebp_${DbTools.gParc_Ent.Parcs_CodeArticle}.jpg";
-
-    print("❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖ initLib wImgPath ArticlesImg_Ebp_ ${wImgPath}");
-
-    gObj.pic = await gObj.networkImageToByte(wImgPath);
-    print("❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖ initLib wImgPath ArticlesImg_Ebp_  ${gObj.pic.length}");
-    if (gObj.pic.length > 0) {
-      wImageArt = await Image.memory(
-        gObj.pic,
-      );
-      print("❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖ initLib wImgPath ArticlesImg_Ebp_ ${wImageArt!.toString()} ");
-    }
-
     wImageGam = Image.memory(
       blankBytes,
       height: 1,
     );
 
-    wImgPath = "${Srv_DbTools.SrvImg}Gamme_${Srv_DbTools.GAM_ID}.jpg";
 
-    print("❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖ initLib wImgPath Gamme_${wImgPath}");
+    String wImgPath = "${Srv_DbTools.SrvImg}ArticlesImg_Ebp_${DbTools.gParc_Ent.Parcs_CodeArticle}.jpg";
+
+    print("❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖ initLib wImgPath ArticlesImg_Ebp_ wImgPath ${wImgPath}");
+
     gObj.pic = await gObj.networkImageToByte(wImgPath);
+    print("❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖ initLib wImgPath ArticlesImg_Ebp_ length ${gObj.pic.length}");
     if (gObj.pic.length > 0) {
-      wImageGam = await Image.memory(
+      wImageArt = await Image.memory(
         gObj.pic,
       );
+      print("❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖ initLib wImgPath ArticlesImg_Ebp_ H W ${wImageArt!.height} ${wImageArt!.width}");
     }
+    else
+      {
+        wImgPath = "${Srv_DbTools.SrvImg}Gamme_${Srv_DbTools.GAM_ID}.jpg";
+
+        print("❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖❖ initLib wImgPath Gamme_${wImgPath}");
+        gObj.pic = await gObj.networkImageToByte(wImgPath);
+        if (gObj.pic.length > 0) {
+          wImageGam = await Image.memory(
+            gObj.pic,
+          );
+        }
+
+      }
   }
 
   @override
@@ -103,6 +107,9 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
     await DbTools.updateParc_Ent(DbTools.gParc_Ent);
 
     await initImg();
+    setState(() {
+
+    });
   }
 
   Future UpdateChaine() async {
@@ -462,7 +469,7 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
   }
 
   Widget RowSaisieEntGroup(Param_Saisie param_Saisie, String wText, double LargeurCol, double LargeurCol2, double H2) {
-    print("RowSaisieEntGroup DbTools.gParc_Ent ${DbTools.gParc_Ent.toString()}");
+//    print("RowSaisieEntGroup DbTools.gParc_Ent ${DbTools.gParc_Ent.toString()}");
     double IcoWidth = 30;
 
     if (wText.isEmpty) {
@@ -558,15 +565,8 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
   Widget RowSaisieEnt(Param_Saisie param_Saisie, double LargeurCol, double LargeurCol2, double H2) {
     Parc_Desc wParc_Desc = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, param_Saisie.Param_Saisie_ID);
 
-    print("RowSaisieEnt DbTools.gParc_Ent ${DbTools.gParc_Ent.toString()}");
+    //print("RowSaisieEnt DbTools.gParc_Ent ${DbTools.gParc_Ent.toString()}");
 
-
-/*
-    if (wParc_Desc.ParcsDesc_Type!.compareTo("SPEC") == 0) {
-      wParc_Desc.ParcsDesc_Id = "";
-      wParc_Desc.ParcsDesc_Lib = DbTools.gParc_Ent.Parcs_NoSpec;
-    }
-*/
 
       if (wParc_Desc.ParcsDesc_Type!.compareTo("FREQ") == 0) {
       wParc_Desc.ParcsDesc_Id = DbTools.gParc_Ent.Parcs_FREQ_Id;

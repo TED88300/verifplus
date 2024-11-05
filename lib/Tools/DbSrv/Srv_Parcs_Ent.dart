@@ -34,6 +34,7 @@ class Parc_Ent_Srv {
   String? Parcs_UUID_Parent = "";
 
   String? Parcs_CodeArticle = "";
+  String? Parcs_CodeArticleES = "";
   String? Parcs_CODF = "";
   String? Parcs_NCERT = "";
   String? Parcs_NoSpec = "";
@@ -84,6 +85,7 @@ class Parc_Ent_Srv {
       this.Parcs_UUID,
       this.Parcs_UUID_Parent,
       this.Parcs_CodeArticle,
+      this.Parcs_CodeArticleES,
       this.Parcs_CODF,
       this.Parcs_NCERT,
       this.Parcs_NoSpec,
@@ -124,6 +126,7 @@ class Parc_Ent_Srv {
     this.Parcs_UUID = Parcs_UUID;
     this.Parcs_UUID_Parent = Parcs_UUID_Parent;
     this.Parcs_CodeArticle = Parcs_CodeArticle;
+    this.Parcs_CodeArticleES = Parcs_CodeArticleES;
     this.Parcs_CODF = Parcs_CODF;
     this.Parcs_NCERT = Parcs_NCERT;
     this.Parcs_NoSpec = Parcs_NoSpec;
@@ -138,7 +141,7 @@ class Parc_Ent_Srv {
   }
 
   static Parc_EntInit(int Parcs_InterventionId, String Parcs_Type, int Parcs_order) {
-    Parc_Ent_Srv wParc_Ent = Parc_Ent_Srv(0 , Parcs_order, Parcs_InterventionId, Parcs_Type,"","","","","","","","","","","","","","","","","","","","",0,"","","","","","",false,false,false,"","","","");
+    Parc_Ent_Srv wParc_Ent = Parc_Ent_Srv(0 , Parcs_order, Parcs_InterventionId, Parcs_Type,"","","","","","","","","","","","","","","","","","","","",0,"","","","","","","",false,false,false,"","","","");
     return wParc_Ent;
   }
 
@@ -172,6 +175,7 @@ class Parc_Ent_Srv {
       'Parcs_UUID': Parcs_UUID,
       'Parcs_UUID_Parent': Parcs_UUID_Parent,
       'Parcs_CodeArticle': Parcs_CodeArticle,
+      'Parcs_CodeArticleES': Parcs_CodeArticleES,
       'Parcs_CODF': Parcs_CODF,
       'Parcs_NCERT': Parcs_NCERT,
       'Parcs_NoSpec': Parcs_NoSpec,
@@ -228,6 +232,7 @@ class Parc_Ent_Srv {
         json['Parcs_UUID'],
         json['Parcs_UUID_Parent'],
         json['Parcs_CodeArticle'],
+      json['Parcs_CodeArticleES'],
         json['Parcs_CODF'],
         json['Parcs_NCERT'],
       json['Parcs_NoSpec'],
@@ -261,6 +266,7 @@ class Parc_Ent_Srv {
         'Parcs_UUID $Parcs_UUID, '
         'Parcs_UUID_Parent $Parcs_UUID_Parent, '
         'Parcs_CodeArticle $Parcs_CodeArticle, '
+        'Parcs_CodeArticleES $Parcs_CodeArticleES, '
         'Parcs_CODF $Parcs_CODF, '
         'Parcs_NCERT $Parcs_NCERT, '
         'Parcs_NoSpec $Parcs_NoSpec, '

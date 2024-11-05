@@ -161,7 +161,7 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
                 height: 8,
               ),
               Text(
-                "${widget.parc_Art.ParcsArt_Id}",
+                "${widget.parc_Art.ParcsArtId} ${widget.parc_Art.ParcsArt_Id}",
                 textAlign: TextAlign.center,
                 style: gColors.bodyTitle1_N_Gr,
               ),
@@ -478,17 +478,30 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
                 ),
                 onTap: () async {
 
+/*
                   List<Parc_Art> wlParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "P");
                   List<Parc_Art> lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "V");
                   lParcs_Art.addAll(wlParcs_Art);
                   print("deleteParc_Art lParcs_Art ${lParcs_Art.length}");
+*/
+
+
+
+                  List<Parc_Art> wlParcs_ArtDevis = await DbTools.getParcs_ArtSoDevis(Srv_DbTools.gIntervention.InterventionId!);
+                  print("deleteParc_Art wlParcs_ArtDevis Av ${wlParcs_ArtDevis.length}");
+
+                  print("deleteParc_Art widget.parc_Art.ParcsArtId ${widget.parc_Art.ParcsArtId}");
+
 
                   await DbTools.deleteParc_Art(widget.parc_Art.ParcsArtId!);
 
-                  wlParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "P");
+           /*       wlParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "P");
                   lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "V");
                   lParcs_Art.addAll(wlParcs_Art);
                   print("deleteParc_Art lParcs_Art ${lParcs_Art.length}");
+*/
+                  wlParcs_ArtDevis = await DbTools.getParcs_ArtSoDevis(Srv_DbTools.gIntervention.InterventionId!);
+                  print("deleteParc_Art wlParcs_ArtDevis Ap ${wlParcs_ArtDevis.length}");
 
 
                   widget.onDelete();

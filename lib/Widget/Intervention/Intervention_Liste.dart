@@ -1,54 +1,15 @@
 
-import 'package:flutter/cupertino.dart';
+import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Clients.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Sites.dart';
-import 'package:verifplus/Tools/DbTools/DbTools.dart';
-import 'package:verifplus/Widget/Client/Client_Interventions.dart';
-import 'package:verifplus/Widget/Intervention/SelectInterv.dart';
+import 'package:flutter/services.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Interventions.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
+import 'package:verifplus/Widget/Client/Client_Intervention_Type_Dialog.dart';
 import 'package:verifplus/Widget/Intervention/Select_Interventions_Add.dart';
-import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
-
-//class Intervention_Liste extends StatefulWidget {
-
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Interventions.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
-import 'package:verifplus/Tools/DbTools/DbTools.dart';
-import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
-import 'package:verifplus/Widget/Client/Client_Dialog.dart';
-import 'package:verifplus/Widget/Client/Client_Intervention_Type_Dialog.dart';
-import 'package:verifplus/Widget/Client/Client_Interventions_Add.dart';
-import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter.dart';
 import 'package:verifplus/Widget/Planning/Client_Groupe_Inter_Det.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
-import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
-
-//class Client_Interventions extends StatefulWidget {
-
-import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Interventions.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
-import 'package:verifplus/Tools/DbTools/DbTools.dart';
-import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
-import 'package:verifplus/Widget/Client/Client_Dialog.dart';
-import 'package:verifplus/Widget/Client/Client_Intervention_Type_Dialog.dart';
-import 'package:verifplus/Widget/Client/Client_Interventions_Add.dart';
-import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter.dart';
-import 'package:verifplus/Widget/Planning/Client_Groupe_Inter_Det.dart';
-import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
-import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
-
-import '../../Tools/DbSrv/Srv_Zones.dart';
 
 class Interventions_Liste extends StatefulWidget {
   @override
@@ -149,7 +110,17 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
   void initState() {
     initLib();
     super.initState();
+    FBroadcast.instance().register("Maj_Intervention", (value, callback) {
+      initLib();
+    });
   }
+
+  @override
+  void dispose() {
+    FBroadcast.instance().unregister(this);
+    super.dispose();
+  }
+
 
   @override
   Widget Entete_Btn_Search() {
@@ -307,8 +278,6 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
   //***************************
 
   Widget InterventionGridWidget() {
-
-
 
     return Column(
       children: <Widget>[

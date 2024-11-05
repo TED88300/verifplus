@@ -1,8 +1,5 @@
-PB timer
-Nom Client
-
-QRCODE
-Photo
 
 
+
+CR 1
 

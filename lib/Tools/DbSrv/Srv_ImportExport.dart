@@ -1,6 +1,8 @@
 import 'package:verifplus/Tools/DbSrv/Srv_Adresses.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Clients.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Contacts.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_DCL_Det.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_DCL_Ent.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_InterMissions.dart';
@@ -228,10 +230,8 @@ class Srv_ImportExport {
   }
 
   // ☀︎☀︎☀︎ INTERVENTION UPDATE ☀︎☀︎☀︎
-  static Future<bool> Intervention_Export_Update(
-      Intervention wIntervention) async {
-    print(
-        "Intervention à remonter ${wIntervention.Intervention_Type} ${wIntervention.InterventionId}");
+  static Future<bool> Intervention_Export_Update(Intervention wIntervention) async {
+    print("Intervention à remonter ${wIntervention.Intervention_Type} ${wIntervention.InterventionId}");
     bool wRes = await Srv_DbTools.setIntervention(wIntervention);
     wIntervention.Intervention_isUpdate = wRes;
     Srv_DbTools.gAdresse.Adresse_isUpdate = wRes;
@@ -849,8 +849,6 @@ class Srv_ImportExport {
 
     DbTools.glfParcs_Ent = await DbTools.getParcs_EntAll();
 
-    print(
-        "♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎ glfParcs_Ent lenght ${DbTools.glfParcs_Ent.length}");
 
     for (int j = 0; j < DbTools.glfParcs_Ent.length; j++) {
       Parc_Ent wParc_Ent = DbTools.glfParcs_Ent[j];
@@ -933,8 +931,6 @@ class Srv_ImportExport {
     await Srv_ImportExport.ImportPlanning();
 
     await Srv_ImportExport.ImportPlanning_Intervention();
-    print(
-        " ImportPlanning_Intervention ${Srv_DbTools.ListPlanning_Intervention.length}");
 
     for (int i = 0; i < Srv_DbTools.ListPlanning.length; i++) {
       Planning wPlanning = Srv_DbTools.ListPlanning[i];
@@ -947,15 +943,10 @@ class Srv_ImportExport {
         wPlanning_Intervention.Planning_Interv_InterventionendTime = wPlanning.Planning_InterventionendTime;
         wPlanning_Intervention.Planning_Libelle = wPlanning.Planning_Libelle;
         Srv_DbTools.ListPlanning_Intervention.add(wPlanning_Intervention);
-
-        print(" ImportPlanning To Planning_Intervention ${wPlanning.Planning_InterventionId}  ${wPlanning.Planning_Libelle} ");
-        print(" ImportPlanning To Planning_Intervention ${wPlanning.Desc()} ");
       }
     }
 
     await Srv_ImportExport.ImportInterMission();
-    print(
-        " ImportInterMission ${Srv_DbTools.ListInterMission.length}");
     await Srv_ImportExport.ImportIntervention();
     return true;
   }
@@ -983,17 +974,13 @@ class Srv_ImportExport {
   static Future<bool> ImportClient() async {
     bool wResult = false;
 
-    print("ImportClient ${Srv_DbTools.gUserLogin.User_TypeUser}");
 
     if (Srv_DbTools.gUserLogin.User_TypeUser
         .toLowerCase()
         .contains(("admin"))) {
-      print("ImportClient AAAAAAAAAAA");
       wResult = await Srv_DbTools.getClient_ALL();
-      print("ImportClient AAAAAAAAAAA");
     } else {
       print("ImportClient wResult ${wResult}");
-      print("ImportClient OTHER");
       wResult = await Srv_DbTools.getClient_User_CSIP(
           Srv_DbTools.gUserLogin.User_Matricule);
     }
@@ -1214,5 +1201,70 @@ class Srv_ImportExport {
     print(
         "Import_DataDialog Srv_DbTools.ListContact ${Srv_DbTools.ListContact}");
     return false;
+
   }
+
+ // **********************************
+
+  static Future<bool> ImportDCL_Ent() async {
+    bool wResult = false;
+
+      wResult = await Srv_DbTools.getDCL_EntAll();
+
+
+    print("ImportDCL_Ent wResult ${wResult}");
+    if (wResult) {
+
+      await DbTools.TrunckDCL_Ent();
+      for (int i = 0; i < Srv_DbTools.ListDCL_Ent.length; i++) {
+        print("ImportDCL_Ent i ${i}");
+        DCL_Ent wDCL_Ent = Srv_DbTools.ListDCL_Ent[i];
+        print("ImportDCL_Ent wDCL_Ent ${wDCL_Ent.toJson()}");
+        await DbTools.inserDCL_Ent(wDCL_Ent);
+      }
+      Srv_DbTools.ListDCL_Ent = await DbTools.getDCL_EntAll();
+      print("Import_DataDialog ON LINE Srv_DbTools.ListDCL_Ent len  ${Srv_DbTools.ListDCL_Ent.length}");
+      return true;
+    }
+    Srv_DbTools.ListDCL_Ent = await DbTools.getDCL_EntAll();
+    print("Import_DataDialog ON LINE Srv_DbTools.ListDCL_Ent len  ${Srv_DbTools.ListDCL_Ent.length}");
+    return false;
+  }
+
+
+
+
+  static Future<bool> ImportDCL_Det() async {
+    bool wResult = false;
+
+    wResult = await Srv_DbTools.getDCL_DetAll();
+
+
+    print("ImportDCL_Det wResult ${wResult}");
+    if (wResult) {
+
+      await DbTools.TrunckDCL_Det();
+      for (int i = 0; i < Srv_DbTools.ListDCL_Det.length; i++) {
+        print("ImportDCL_Det i ${i}");
+        DCL_Det wDCL_Det = Srv_DbTools.ListDCL_Det[i];
+        print("ImportDCL_Det wDCL_Det ${wDCL_Det.toJson()}");
+        await DbTools.inserDCL_Det(wDCL_Det);
+      }
+      Srv_DbTools.ListDCL_Det = await DbTools.getDCL_DetAll();
+      print("Import_DataDialog ON LINE Srv_DbTools.ListDCL_Det len  ${Srv_DbTools.ListDCL_Det.length}");
+      return true;
+    }
+    Srv_DbTools.ListDCL_Det = await DbTools.getDCL_DetAll();
+    print("Import_DataDialog ON LINE Srv_DbTools.ListDCL_Det len  ${Srv_DbTools.ListDCL_Det.length}");
+    return false;
+  }
+
+
+
+
+
+
+
 }
+
+

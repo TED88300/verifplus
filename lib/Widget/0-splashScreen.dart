@@ -87,6 +87,28 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
       }
     });
 
+    Srv_DbTools.ListParam_Param_Etat_Devis.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Etat_Devis") == 0) {
+        Srv_DbTools.ListParam_Param_Etat_Devis.add(element);
+      }
+    });
+
+
+    Srv_DbTools.ListParam_Param_Etat_Cde.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Etat_Commandes") == 0) {
+        Srv_DbTools.ListParam_Param_Etat_Cde.add(element);
+      }
+    });
+
+    Srv_DbTools.ListParam_Param_Etat_Livr.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Etat_Livraison") == 0) {
+        Srv_DbTools.ListParam_Param_Etat_Livr.add(element);
+      }
+    });
+
 
 
 
@@ -120,6 +142,9 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
     DbTools.glfNF074_Pieces_Actions = await  DbTools.getNF074_Pieces_Actions();
     Srv_DbTools.ListArticle_Ebp = await Article_Ebp.getArticle_Ebp();
     await Srv_DbTools.IMPORT_Article_Ebp_ES();
+
+    print("SplashScreen ListArticle_Ebp ${Srv_DbTools.ListArticle_Ebp.length}");
+
 
     DbTools.genParam();
 

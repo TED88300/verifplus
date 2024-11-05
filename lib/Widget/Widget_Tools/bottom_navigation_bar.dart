@@ -167,7 +167,7 @@ class _CustomBottomNavigationBarState extends State<CustomBottomNavigationBar>
                 _icon(Icons.view_module, _selectedIndex == 1, 1),
                 _icon(Icons.library_books_outlined, _selectedIndex == 2, 2),
                 _icon(Icons.calendar_today, _selectedIndex == 3, 3),
-                _icon(Icons.notifications_none, _selectedIndex == 4, 4),
+                _icon(Icons.format_list_numbered, _selectedIndex == 4, 4),
               ],
             ),
           ),

@@ -75,7 +75,18 @@ class Client_Groupe_Parc_Inter_PieceState extends State<Client_Groupe_Parc_Inter
     initLib();
     super.initState();
 
-@  @override
+    FBroadcast.instance().register("Gen_Articles", (value, callback) {
+      if (!initLibRun)
+      {
+        print(" PIECE FBroadcast Gen_Articles ");
+        initLibRun = true;
+        initLib();
+      }
+    });
+  }
+
+
+  @override
   void dispose() {
     FBroadcast.instance().unregister(this);
     super.dispose();
@@ -184,19 +195,10 @@ class Client_Groupe_Parc_Inter_PieceState extends State<Client_Groupe_Parc_Inter
     double H2 = 4;
 
     List<Widget> RowSaisies = [];
-
-
     for (int i = 0; i < lParcs_Art.length; i++) {
       Parc_Art element = lParcs_Art[i];
-
       RowSaisies.add(RowSaisie(element, H2));
     }
-
-
-
-
-
-
     return
 //      Expanded(child:
       Container(

@@ -32,9 +32,6 @@ class _CustomBottomNavigationBar2State extends State<CustomBottomNavigationBar2>
   }
 
 
-
-
-
   @override
   void didChangeDependencies() {
     _xController.value = _indexToPosition(_selectedIndex) / MediaQuery.of(context).size.width;
@@ -52,6 +49,7 @@ class _CustomBottomNavigationBar2State extends State<CustomBottomNavigationBar2>
 
   @override
   void dispose() {
+    FBroadcast.instance().unregister(this);
     _xController.dispose();
     _yController.dispose();
     super.dispose();

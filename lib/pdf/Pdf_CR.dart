@@ -7,6 +7,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/widgets.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
+import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Ent.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
@@ -132,6 +133,8 @@ class Pdf_CR {
     for (int i = 0; i < wlParcs_Ent.length; i++) {
       var wParcs_Ent = wlParcs_Ent[i];
 
+
+
       String wDESC = "";
       String wFAB = "";
       String wPRS = "";
@@ -151,7 +154,6 @@ class Pdf_CR {
         }
         if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "FAB")
           {
-
             wFAB = gColors.AbrevTxt_Param_Param(wParc_Desc.ParcsDesc_Lib!, wParc_Desc.ParcsDesc_Type!);
             print("♠︎♠︎♠︎♠︎ wFAB $wFAB  ${wParc_Desc.ParcsDesc_Lib!}");
           }
@@ -180,7 +182,28 @@ class Pdf_CR {
       print("${wParcs_Ent.Parcs_Intervention_Timer}");
       if (wParcs_Ent.Parcs_Intervention_Timer != null) wParcs_Intervention_Timer += wParcs_Ent.Parcs_Intervention_Timer!;
 
-      Organe wOrgane = Organe("${wParcs_Ent.Parcs_order}", "${wDESC}", "$wFAB", "$wPRS", "$wCLF", "$wPDT", "$wPOIDS", "${wParcs_Ent.Parcs_FAB_Label}", "${wParcs_Ent.Parcs_NIV_Label}", "${wParcs_Ent.Parcs_ZNE_Label} / ${wParcs_Ent.Parcs_EMP_Label}${wParcs_Ent.Parcs_NoSpec!.isEmpty ? '': ' / ${wParcs_Ent.Parcs_NoSpec}'}", "${wParcs_Date_Rev}", "${wParcs_Ent.Action}");
+      String Action = wParcs_Ent.Action!;
+      if (wParcs_Ent.Parcs_UUID_Parent!.isNotEmpty)
+      {
+        DbTools.lParcs_Art = await DbTools.getParcs_Art(wParcs_Ent.ParcsId!, "MS");
+        print(" DbTools.lParcs_Art  B ${DbTools.lParcs_Art.length}");
+        if (DbTools.lParcs_Art.length > 0) {
+          Parc_Art wParc_Art = DbTools.lParcs_Art[0];
+          print(" wParc_Art  B ${wParc_Art.toMap()}");
+          if (wParc_Art.ParcsArt_Fact == "Devis")
+          {
+            Action = "Devis/${wParcs_Ent.Action!}" ;
+          }
+          else
+          {
+            Action = "Neuf/${wParcs_Ent.Action!}" ;
+          }
+
+        }
+      }
+
+
+      Organe wOrgane = Organe("${wParcs_Ent.Parcs_order}", "${wDESC}", "$wFAB", "$wPRS", "$wCLF", "$wPDT", "$wPOIDS", "${wParcs_Ent.Parcs_FAB_Label}", "${wParcs_Ent.Parcs_NIV_Label}", "${wParcs_Ent.Parcs_ZNE_Label} / ${wParcs_Ent.Parcs_EMP_Label}${wParcs_Ent.Parcs_NoSpec!.isEmpty ? '': ' / ${wParcs_Ent.Parcs_NoSpec}'}", "${wParcs_Date_Rev}", "${Action}", wParcs_Ent.Parcs_UUID_Parent!.isNotEmpty);
       organes.add(wOrgane);
     }
 
@@ -855,8 +878,8 @@ class Pdf_CR {
         7: const FixedColumnWidth(5),
         8: const FixedColumnWidth(5),
         9: const FixedColumnWidth(16),
-        10: const FixedColumnWidth(7),
-        11: const FixedColumnWidth(6),
+        10: const FixedColumnWidth(6),
+        11: const FixedColumnWidth(7),
       },
       headerDirections: [
         0,
@@ -918,6 +941,7 @@ class Organe {
     this.ZONE,
     this.DATE,
     this.ACT,
+      this.LNK,
   );
 
   final String no;
@@ -932,12 +956,13 @@ class Organe {
   final String ZONE;
   final String DATE;
   final String ACT;
+  final bool LNK;
 
   String getIndex(int index) {
     switch (index) {
       case 0:
         String wno = no;
-        if (ACT == "")
+        if (LNK)
           wno = "  └►";
         return wno;
       case 1:

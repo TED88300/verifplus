@@ -48,12 +48,14 @@ class MiseEnServDialog extends StatefulWidget {
 }
 
 class _MiseEnServDialogState extends State<MiseEnServDialog> {
+  bool isSel = false;
+
   @override
   void initState() {
     print("_MiseEnServDialog  initState");
   }
 
-  List<bool> wSel = [false, false];
+  List<bool> wSel = [false, false, false];
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +86,7 @@ class _MiseEnServDialogState extends State<MiseEnServDialog> {
       contentPadding: EdgeInsets.zero,
       content: Container(
           color: gColors.greyLight,
-          height: 160,
+          height: 220,
           child: Column(
             children: [
               Container(
@@ -102,6 +104,13 @@ class _MiseEnServDialogState extends State<MiseEnServDialog> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         BtnCard("Mise en service Neuf", 0),
+                        BtnCard("Mise en service sur devis", 2),
+                      ],
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                         BtnCard("Mise en service sans organe", 1),
                       ],
                     ),
@@ -145,7 +154,9 @@ class _MiseEnServDialogState extends State<MiseEnServDialog> {
             await HapticFeedback.vibrate();
             wSel[0] = false;
             wSel[1] = false;
+            wSel[2] = false;
             wSel[iSel] = true;
+            isSel = true;
 
             print("iSel $iSel ${wSel[iSel]} ");
             setState(() {});
@@ -194,6 +205,8 @@ class _MiseEnServDialogState extends State<MiseEnServDialog> {
           new ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
+              DbTools.gParc_Art_MS.ParcsArtId = -98;
+
               Navigator.of(context).pop();
             },
             style: ElevatedButton.styleFrom(
@@ -207,26 +220,41 @@ class _MiseEnServDialogState extends State<MiseEnServDialog> {
           ),
           new ElevatedButton(
             onPressed: () async {
-              await HapticFeedback.vibrate();
+              if (isSel) {
+                await HapticFeedback.vibrate();
 
-              if(wSel[0])
-                {
-                  Article_Ebp wArticle_Ebp = Srv_DbTools.IMPORT_Article_Ebp( DbTools.gParc_Ent.Parcs_CodeArticle!);
+                if (wSel[0]) {
+                  print("MS MS MS DbTools.gParc_Ent.Parcs_CodeArticle! ${DbTools.gParc_Ent.Parcs_CodeArticle!}");
+                  Article_Ebp wArticle_Ebp = Srv_DbTools.IMPORT_Article_Ebp(DbTools.gParc_Ent.Parcs_CodeArticle!);
                   Parc_Art wParc_Art = Parc_Art.Parc_ArtInit(DbTools.gParc_Ent.ParcsId!);
                   wParc_Art.ParcsArt_Id = "${DbTools.gParc_Ent.Parcs_CodeArticle}";
                   wParc_Art.ParcsArt_Type = "MS";
                   wParc_Art.ParcsArt_Lib = "${wArticle_Ebp.Article_descriptionCommercialeEnClair}";
                   wParc_Art.ParcsArt_Qte = 1;
+                  wParc_Art.ParcsArt_Fact = "Fact.";
+                  wParc_Art.ParcsArt_Livr = "Livré";
                   DbTools.gParc_Art_MS = wParc_Art;
-
+                } else if (wSel[2]) {
+                  print("MS MS MS DbTools.gParc_Ent.Parcs_CodeArticle! ${DbTools.gParc_Ent.Parcs_CodeArticle!}");
+                  Article_Ebp wArticle_Ebp = Srv_DbTools.IMPORT_Article_Ebp(DbTools.gParc_Ent.Parcs_CodeArticle!);
+                  Parc_Art wParc_Art = Parc_Art.Parc_ArtInit(DbTools.gParc_Ent.ParcsId!);
+                  wParc_Art.ParcsArt_Id = "${DbTools.gParc_Ent.Parcs_CodeArticle}";
+                  wParc_Art.ParcsArt_Type = "MS";
+                  wParc_Art.ParcsArt_Lib = "${wArticle_Ebp.Article_descriptionCommercialeEnClair}";
+                  wParc_Art.ParcsArt_Qte = 1;
+                  wParc_Art.ParcsArt_Fact = "Devis";
+                  wParc_Art.ParcsArt_Livr = "Reliquat";
+                  DbTools.gParc_Art_MS = wParc_Art;
                 }
-              Navigator.of(context).pop();
+
+                Navigator.of(context).pop();
+              }
             },
             style: ElevatedButton.styleFrom(
-                backgroundColor: gColors.primaryGreen,
-                side: const BorderSide(
+                backgroundColor: isSel ? gColors.primaryGreen : gColors.GrdBtn_Colors3,
+                side:  BorderSide(
                   width: 1.0,
-                  color: gColors.primaryGreen,
+                  color: isSel ? gColors.primaryGreen : gColors.GrdBtn_Colors3,
                 )),
             child: Text('Valider', style: gColors.bodyTitle1_B_W),
           ),
