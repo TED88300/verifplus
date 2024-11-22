@@ -91,6 +91,7 @@ class DbTools {
   static int gCurrentIndex = 3;
   static int gCurrentIndex2 = 0;
   static int gCurrentIndex3 = 0;
+  static int gCurrentIndex4 = 0;
 
   static int gCountRel = 0;
   static int gCountDev = 0;
@@ -119,7 +120,6 @@ class DbTools {
 
   static String gDateMS = "";
   static String DescAff = "";
-
 
   static bool hasConnection = false;
   static Future<bool> checkConnection() async {
@@ -166,12 +166,7 @@ class DbTools {
 
     String wCREATE_Users_Desc = "CREATE TABLE User_Desc (User_DescID INTEGER NOT NULL, User_Desc_UserID INTEGER NOT NULL, User_Desc_Param_DescID INTEGER NOT NULL, User_Desc_MaintPrev INTEGER NOT NULL, User_Desc_Install INTEGER NOT NULL, User_Desc_MaintCorrect INTEGER NOT NULL, User_Desc_Ordre INTEGER NOT NULL DEFAULT 0);";
 
-
-
     String wCREATE_Param_Av = "CREATE TABLE Param_Av (Param_AvID TEXT NOT NULL, Param_Av_No TEXT NOT NULL, Param_Av_Det TEXT NOT NULL, Param_Av_Proc TEXT NOT NULL, Param_Av_Lnk TEXT NOT NULL );";
-
-
-
 
     String wCREATE_Users_Hab = "CREATE TABLE User_Hab (User_HabID INTEGER NOT NULL, User_Hab_UserID INTEGER NOT NULL, User_Hab_Param_HabID INTEGER NOT NULL, User_Hab_MaintPrev INTEGER NOT NULL, User_Hab_Install INTEGER NOT NULL, User_Hab_MaintCorrect INTEGER NOT NULL, User_Hab_Ordre INTEGER NOT NULL DEFAULT 0);";
 
@@ -199,17 +194,13 @@ class DbTools {
 
     String wCREATE_Clients =
         "CREATE TABLE Clients (ClientId INTEGER NOT NULL, Client_CodeGC TEXT NOT NULL DEFAULT '', Client_CL_Pr INTEGER NOT NULL, Client_Famille TEXT NOT NULL, Client_Rglt TEXT NOT NULL, Client_Depot TEXT NOT NULL DEFAULT '', Client_PersPhys INTEGER NOT NULL, Client_OK_DataPerso INTEGER NOT NULL, Client_Civilite TEXT NOT NULL DEFAULT '', Client_Nom TEXT NOT NULL DEFAULT '', Client_Siret TEXT NOT NULL DEFAULT '', Client_NAF TEXT NOT NULL DEFAULT '', Client_TVA TEXT NOT NULL DEFAULT '', Client_Commercial TEXT NOT NULL DEFAULT '', Client_Createur TEXT NOT NULL DEFAULT '', Client_Contrat INTEGER NOT NULL, Client_TypeContrat TEXT NOT NULL DEFAULT '', Client_Ct_Debut TEXT NOT NULL, Client_Ct_Fin TEXT NOT NULL, Client_Organes TEXT NOT NULL DEFAULT '', Users_Nom TEXT NOT NULL DEFAULT '', Livr TEXT NOT NULL,Client_isUpdate INTEGER NOT NULL DEFAULT 0 DEFAULT 0);";
-    String wCREATE_Adresses =
-        "CREATE TABLE Adresses (AdresseId int(11) NOT NULL,Adresse_ClientId int(11) NOT NULL,Adresse_Code varchar(24) NOT NULL DEFAULT '',Adresse_Type varchar(24) NOT NULL DEFAULT '',Adresse_Nom varchar(64) NOT NULL DEFAULT '',Adresse_Adr1 varchar(40) NOT NULL DEFAULT '',Adresse_Adr2 varchar(40) NOT NULL DEFAULT '',Adresse_Adr3 varchar(40) NOT NULL DEFAULT '',Adresse_Adr4 varchar(40) NOT NULL,Adresse_CP varchar(10) NOT NULL DEFAULT '',Adresse_Ville varchar(35) NOT NULL,Adresse_Pays varchar(40) NOT NULL DEFAULT '',Adresse_Acces varchar(128) NOT NULL,Adresse_Rem varchar(1024) NOT NULL DEFAULT '', Adresse_isUpdate INTEGER NOT NULL DEFAULT 0)";
-    String wCREATE_Contacts =
-        "CREATE TABLE Contacts (ContactId int(11) NOT NULL,Contact_ClientId int(11) NOT NULL,Contact_AdresseId int(11) NOT NULL,Contact_Code varchar(24) NOT NULL DEFAULT '',Contact_Type varchar(24) NOT NULL DEFAULT '',Contact_Civilite varchar(25) NOT NULL,Contact_Prenom varchar(60) NOT NULL,Contact_Nom varchar(60) NOT NULL,Contact_Fonction varchar(40) NOT NULL,Contact_Service varchar(40) NOT NULL,Contact_Tel1 varchar(20) NOT NULL,Contact_Tel2 varchar(20) NOT NULL,Contact_eMail varchar(100) NOT NULL,Contact_Rem varchar(1024) NOT NULL, Contact_isUpdate INTEGER NOT NULL DEFAULT 0)";
-    String wCREATE_Groupes =
-        "CREATE TABLE Groupes (GroupeId int(11) NOT NULL,Groupe_ClientId int(11) NOT NULL,Groupe_Code varchar(24) NOT NULL DEFAULT '',Groupe_Depot varchar(128) NOT NULL DEFAULT '',Groupe_Nom varchar(64) NOT NULL DEFAULT '',Groupe_Adr1 varchar(40) NOT NULL DEFAULT '',Groupe_Adr2 varchar(40) NOT NULL DEFAULT '',Groupe_Adr3 varchar(40) NOT NULL DEFAULT '',Groupe_Adr4 varchar(40) NOT NULL,Groupe_CP varchar(10) NOT NULL DEFAULT '',Groupe_Ville varchar(40) NOT NULL DEFAULT '',Groupe_Pays varchar(40) NOT NULL DEFAULT '',Groupe_Acces varchar(128) NOT NULL,Groupe_Rem varchar(1024) NOT NULL DEFAULT '',Livr varchar(8) NOT NULL, Groupe_isUpdate INTEGER NOT NULL DEFAULT 0)";
+    String wCREATE_Adresses = "CREATE TABLE Adresses (AdresseId int(11) NOT NULL,Adresse_ClientId int(11) NOT NULL,Adresse_Code varchar(24) NOT NULL DEFAULT '',Adresse_Type varchar(24) NOT NULL DEFAULT '',Adresse_Nom varchar(64) NOT NULL DEFAULT '',Adresse_Adr1 varchar(40) NOT NULL DEFAULT '',Adresse_Adr2 varchar(40) NOT NULL DEFAULT '',Adresse_Adr3 varchar(40) NOT NULL DEFAULT '',Adresse_Adr4 varchar(40) NOT NULL,Adresse_CP varchar(10) NOT NULL DEFAULT '',Adresse_Ville varchar(35) NOT NULL,Adresse_Pays varchar(40) NOT NULL DEFAULT '',Adresse_Acces varchar(128) NOT NULL,Adresse_Rem varchar(1024) NOT NULL DEFAULT '', Adresse_isUpdate INTEGER NOT NULL DEFAULT 0)";
+    String wCREATE_Contacts = "CREATE TABLE Contacts (ContactId int(11) NOT NULL,Contact_ClientId int(11) NOT NULL,Contact_AdresseId int(11) NOT NULL,Contact_Code varchar(24) NOT NULL DEFAULT '',Contact_Type varchar(24) NOT NULL DEFAULT '',Contact_Civilite varchar(25) NOT NULL,Contact_Prenom varchar(60) NOT NULL,Contact_Nom varchar(60) NOT NULL,Contact_Fonction varchar(40) NOT NULL,Contact_Service varchar(40) NOT NULL,Contact_Tel1 varchar(20) NOT NULL,Contact_Tel2 varchar(20) NOT NULL,Contact_eMail varchar(100) NOT NULL,Contact_Rem varchar(1024) NOT NULL, Contact_isUpdate INTEGER NOT NULL DEFAULT 0)";
+    String wCREATE_Groupes = "CREATE TABLE Groupes (GroupeId int(11) NOT NULL,Groupe_ClientId int(11) NOT NULL,Groupe_Code varchar(24) NOT NULL DEFAULT '',Groupe_Depot varchar(128) NOT NULL DEFAULT '',Groupe_Nom varchar(64) NOT NULL DEFAULT '',Groupe_Adr1 varchar(40) NOT NULL DEFAULT '',Groupe_Adr2 varchar(40) NOT NULL DEFAULT '',Groupe_Adr3 varchar(40) NOT NULL DEFAULT '',Groupe_Adr4 varchar(40) NOT NULL,Groupe_CP varchar(10) NOT NULL DEFAULT '',Groupe_Ville varchar(40) NOT NULL DEFAULT '',Groupe_Pays varchar(40) NOT NULL DEFAULT '',Groupe_Acces varchar(128) NOT NULL,Groupe_Rem varchar(1024) NOT NULL DEFAULT '',Livr varchar(8) NOT NULL, Groupe_isUpdate INTEGER NOT NULL DEFAULT 0)";
 
     String wCREATE_Sites =
         "CREATE TABLE Sites (SiteId int(11) NOT NULL,Site_GroupeId int(11) NOT NULL,Site_Code varchar(24) NOT NULL DEFAULT '',Site_Depot varchar(128) NOT NULL DEFAULT '',Site_Nom varchar(64) NOT NULL DEFAULT '',Site_Adr1 varchar(40) NOT NULL DEFAULT '',Site_Adr2 varchar(40) NOT NULL DEFAULT '',Site_Adr3 varchar(40) NOT NULL DEFAULT '',Site_Adr4 varchar(40) NOT NULL,Site_CP varchar(10) NOT NULL DEFAULT '',Site_Ville varchar(40) NOT NULL DEFAULT '',Site_Pays varchar(40) NOT NULL DEFAULT '',Site_Acces varchar(128) NOT NULL,Site_RT varchar(1024) NOT NULL DEFAULT '',Site_APSAD varchar(1024) NOT NULL DEFAULT '',Site_Rem varchar(1024) NOT NULL DEFAULT '',Site_ResourceId int(11) NOT NULL DEFAULT 0,Livr varchar(8) NOT NULL, Site_isUpdate INTEGER NOT NULL DEFAULT 0, Groupe_Nom varchar(64) NOT NULL)";
-    String wCREATE_Zones =
-        "CREATE TABLE Zones (ZoneId int(11) NOT NULL,Zone_SiteId int(11) NOT NULL,Zone_Code varchar(24) NOT NULL DEFAULT '',Zone_Depot varchar(128) NOT NULL DEFAULT '',Zone_Nom varchar(64) NOT NULL DEFAULT '',Zone_Adr1 varchar(40) NOT NULL DEFAULT '',Zone_Adr2 varchar(40) NOT NULL DEFAULT '',Zone_Adr3 varchar(40) NOT NULL DEFAULT '',Zone_Adr4 varchar(40) NOT NULL,Zone_CP varchar(10) NOT NULL DEFAULT '',Zone_Ville varchar(40) NOT NULL DEFAULT '',Zone_Pays varchar(40) NOT NULL DEFAULT '',Zone_Acces varchar(128) NOT NULL,Zone_Rem varchar(1024) NOT NULL DEFAULT '',Livr varchar(8) NOT NULL, Zone_isUpdate INTEGER NOT NULL DEFAULT 0)";
+    String wCREATE_Zones = "CREATE TABLE Zones (ZoneId int(11) NOT NULL,Zone_SiteId int(11) NOT NULL,Zone_Code varchar(24) NOT NULL DEFAULT '',Zone_Depot varchar(128) NOT NULL DEFAULT '',Zone_Nom varchar(64) NOT NULL DEFAULT '',Zone_Adr1 varchar(40) NOT NULL DEFAULT '',Zone_Adr2 varchar(40) NOT NULL DEFAULT '',Zone_Adr3 varchar(40) NOT NULL DEFAULT '',Zone_Adr4 varchar(40) NOT NULL,Zone_CP varchar(10) NOT NULL DEFAULT '',Zone_Ville varchar(40) NOT NULL DEFAULT '',Zone_Pays varchar(40) NOT NULL DEFAULT '',Zone_Acces varchar(128) NOT NULL,Zone_Rem varchar(1024) NOT NULL DEFAULT '',Livr varchar(8) NOT NULL, Zone_isUpdate INTEGER NOT NULL DEFAULT 0)";
     String wCREATE_Intervention = "CREATE TABLE Interventions (InterventionId int(11) NOT NULL,Intervention_ZoneId int(11) DEFAULT 0,"
         "Intervention_Date varchar(32) NOT NULL DEFAULT '',Intervention_Date_Visite varchar(32) NOT NULL DEFAULT '',Intervention_Type varchar(32) NOT NULL DEFAULT '',"
         "Intervention_Parcs_Type varchar(32) NOT NULL,Intervention_Status varchar(32) NOT NULL DEFAULT 'Planifiée',"
@@ -366,63 +357,63 @@ class DbTools {
         ", Article_codeArticle_Parent varchar(128) NOT NULL DEFAULT ''"
         ")";
 
-
     String wCREATE_DCL_Ent = "CREATE TABLE DCL_Ent ("
-    "DCL_EntID  INTEGER PRIMARY KEY AUTOINCREMENT,"
-    "DCL_Ent_Type varchar(1) NOT NULL DEFAULT 'D',"
-    "DCL_Ent_Version int(11) NOT NULL DEFAULT 1,"
-    "DCL_Ent_ClientId int(11) NOT NULL DEFAULT 0,"
-    "DCL_Ent_GroupeId int(11) NOT NULL DEFAULT 0,"
-    "DCL_Ent_SiteId int(11) NOT NULL DEFAULT 0,"
-    "DCL_Ent_ZoneId int(11) NOT NULL DEFAULT 0,"
-    "DCL_Ent_InterventionId int(11) NOT NULL DEFAULT 0,"
-    "DCL_Ent_Date varchar(32) NOT NULL DEFAULT '',"
-    "DCL_Ent_Statut varchar(16) NOT NULL DEFAULT '',"
-    "DCL_Ent_Etat varchar(16) NOT NULL DEFAULT '',"
-    "DCL_Ent_Etat_Motif varchar(128) NOT NULL DEFAULT '',"
-    "DCL_Ent_Etat_Note text NOT NULL DEFAULT '',"
-    "DCL_Ent_Etat_Action varchar(128) NOT NULL DEFAULT '',"
-    "DCL_Ent_Collaborateur varchar(128) NOT NULL DEFAULT '',"
-    "DCL_Ent_Affaire varchar(128) NOT NULL DEFAULT '',"
-    "DCL_Ent_Affaire_Note text NOT NULL DEFAULT '',"
-    "DCL_Ent_Validite varchar(32) NOT NULL DEFAULT '',"
-    "DCL_Ent_LivrPrev varchar(32) NOT NULL DEFAULT '',"
-    "DCL_Ent_ModeRegl varchar(64) NOT NULL DEFAULT '',"
-    "DCL_Ent_MoyRegl varchar(64) NOT NULL DEFAULT '',"
-    "DCL_Ent_Valo int(11) NOT NULL DEFAULT 1,"
-    "DCL_Ent_Relance int(11) NOT NULL DEFAULT 1,"
-    "DCL_Ent_Relance_Mode varchar(16) NOT NULL DEFAULT '',"
-    "DCL_Ent_Relance_Contact varchar(64) NOT NULL DEFAULT '',"
-    "DCL_Ent_Relance_Mail varchar(64) NOT NULL DEFAULT '',"
-    "DCL_Ent_Relance_Tel varchar(64) NOT NULL DEFAULT '',"
-    "DCL_Ent_Proba int(11) NOT NULL DEFAULT 100,"
-    "DCL_Ent_Concurent varchar(64) NOT NULL DEFAULT '',"
-    "DCL_Ent_Note text NOT NULL DEFAULT '',"
-    "DCL_Ent_Regl varchar(64) NOT NULL DEFAULT '',"
-    "DCL_Ent_Partage varchar(64) NOT NULL DEFAULT '',"
-    "DCL_Ent_Dem_Tech int(11) NOT NULL DEFAULT 1,"
-    "DCL_Ent_Dem_SsT int(11) NOT NULL DEFAULT 1"
-    ")";
+        "DCL_EntID  INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "DCL_Ent_Type varchar(1) NOT NULL DEFAULT 'D',"
+        "DCL_Ent_Num varchar(1) NOT NULL DEFAULT '',"
+        "DCL_Ent_Version int(11) NOT NULL DEFAULT 1,"
+        "DCL_Ent_ClientId int(11) NOT NULL DEFAULT 0,"
+        "DCL_Ent_GroupeId int(11) NOT NULL DEFAULT 0,"
+        "DCL_Ent_SiteId int(11) NOT NULL DEFAULT 0,"
+        "DCL_Ent_ZoneId int(11) NOT NULL DEFAULT 0,"
+        "DCL_Ent_InterventionId int(11) NOT NULL DEFAULT 0,"
+        "DCL_Ent_Date varchar(32) NOT NULL DEFAULT '',"
+        "DCL_Ent_Statut varchar(16) NOT NULL DEFAULT '',"
+        "DCL_Ent_Etat varchar(16) NOT NULL DEFAULT '',"
+        "DCL_Ent_Etat_Motif varchar(128) NOT NULL DEFAULT '',"
+        "DCL_Ent_Etat_Note text NOT NULL DEFAULT '',"
+        "DCL_Ent_Etat_Action varchar(128) NOT NULL DEFAULT '',"
+        "DCL_Ent_Collaborateur varchar(128) NOT NULL DEFAULT '',"
+        "DCL_Ent_Affaire varchar(128) NOT NULL DEFAULT '',"
+        "DCL_Ent_Affaire_Note text NOT NULL DEFAULT '',"
+        "DCL_Ent_Validite varchar(32) NOT NULL DEFAULT '',"
+        "DCL_Ent_LivrPrev varchar(32) NOT NULL DEFAULT '',"
+        "DCL_Ent_ModeRegl varchar(64) NOT NULL DEFAULT '',"
+        "DCL_Ent_MoyRegl varchar(64) NOT NULL DEFAULT '',"
+        "DCL_Ent_Valo int(11) NOT NULL DEFAULT 1,"
+        "DCL_Ent_Relance int(11) NOT NULL DEFAULT 1,"
+        "DCL_Ent_Relance_Mode varchar(16) NOT NULL DEFAULT '',"
+        "DCL_Ent_Relance_Contact varchar(64) NOT NULL DEFAULT '',"
+        "DCL_Ent_Relance_Mail varchar(64) NOT NULL DEFAULT '',"
+        "DCL_Ent_Relance_Tel varchar(64) NOT NULL DEFAULT '',"
+        "DCL_Ent_Proba int(11) NOT NULL DEFAULT 100,"
+        "DCL_Ent_Concurent varchar(64) NOT NULL DEFAULT '',"
+        "DCL_Ent_Note text NOT NULL DEFAULT '',"
+        "DCL_Ent_Regl varchar(64) NOT NULL DEFAULT '',"
+        "DCL_Ent_Partage varchar(64) NOT NULL DEFAULT '',"
+        "DCL_Ent_Dem_Tech int(11) NOT NULL DEFAULT 1,"
+        "DCL_Ent_Dem_SsT int(11) NOT NULL DEFAULT 1"
+        ")";
 
-    String wCREATE_DCL_Det ="CREATE TABLE DCL_Det ("
-    "DCL_DetID  INTEGER PRIMARY KEY AUTOINCREMENT,"
-    "DCL_Det_EntID int(11) NOT NULL DEFAULT 0,"
-    "DCL_Det_ParcsArtId int(11) NOT NULL DEFAULT 0,"
-    "DCL_Det_Ordre int(11) NOT NULL DEFAULT 0,"
-    "DCL_Det_Type varchar(1) NOT NULL DEFAULT 'A',"
-    "DCL_Det_NoArt varchar(32) NOT NULL DEFAULT '',"
-    "DCL_Det_Lib varchar(1024) NOT NULL DEFAULT '',"
-    "DCL_Det_Qte int(11) NOT NULL DEFAULT 0,"
-    "DCL_Det_PU double NOT NULL DEFAULT 0,"
-    "DCL_Det_Rem_P double NOT NULL DEFAULT 0,"
-    "DCL_Det_Rem_Mt double NOT NULL DEFAULT 0,"
-    "DCL_Det_Livr int(1) NOT NULL DEFAULT 0,"
-    "DCL_Det_DateLivr varchar(32) NOT NULL DEFAULT '',"
-    "DCL_Det_Rel int(1) NOT NULL DEFAULT 0,"
-    "DCL_Det_DateRel varchar(32) NOT NULL DEFAULT '',"
-    "DCL_Det_Statut varchar(32) NOT NULL DEFAULT '',"
-    "DCL_Det_Note text NOT NULL DEFAULT ''"
-    ")";
+    String wCREATE_DCL_Det = "CREATE TABLE DCL_Det ("
+        "DCL_DetID  INTEGER PRIMARY KEY AUTOINCREMENT,"
+        "DCL_Det_EntID int(11) NOT NULL DEFAULT 0,"
+        "DCL_Det_ParcsArtId int(11) NOT NULL DEFAULT 0,"
+        "DCL_Det_Ordre int(11) NOT NULL DEFAULT 0,"
+        "DCL_Det_Type varchar(1) NOT NULL DEFAULT 'A',"
+        "DCL_Det_NoArt varchar(32) NOT NULL DEFAULT '',"
+        "DCL_Det_Lib varchar(1024) NOT NULL DEFAULT '',"
+        "DCL_Det_Qte int(11) NOT NULL DEFAULT 0,"
+        "DCL_Det_PU double NOT NULL DEFAULT 0,"
+        "DCL_Det_Rem_P double NOT NULL DEFAULT 0,"
+        "DCL_Det_Rem_Mt double NOT NULL DEFAULT 0,"
+        "DCL_Det_Livr int(1) NOT NULL DEFAULT 0,"
+        "DCL_Det_DateLivr varchar(32) NOT NULL DEFAULT '',"
+        "DCL_Det_Rel int(1) NOT NULL DEFAULT 0,"
+        "DCL_Det_DateRel varchar(32) NOT NULL DEFAULT '',"
+        "DCL_Det_Statut varchar(32) NOT NULL DEFAULT '',"
+        "DCL_Det_Note text NOT NULL DEFAULT ''"
+        ")";
 
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
     String wDbPath = "karavan2.db";
@@ -431,8 +422,6 @@ class DbTools {
     database = openDatabase(
       join(await getDatabasesPath(), wDbPath),
       onCreate: (db, version) async {
-
-
         await db.execute(wCREATE_Param_Av);
         await db.execute(wCREATE_Users_Desc);
         await db.execute(wCREATE_Users_Hab);
@@ -470,7 +459,6 @@ class DbTools {
 
         await db.execute(wCREATE_DCL_Ent);
         await db.execute(wCREATE_DCL_Det);
-
       },
       onUpgrade: (db, oldVersion, newVersion) {
         print(">>>>>>>>>>>>>>>>>>>>>>>>>>> onUpgrade $oldVersion $newVersion");
@@ -563,7 +551,6 @@ class DbTools {
     int? repid = await db.delete("User_Desc");
   }
 
-
   //************************************************
   //**************  P A R A M  A V  **************
   //************************************************
@@ -580,15 +567,12 @@ class DbTools {
         maps[i]["Param_Av_Det"],
         maps[i]["Param_Av_Proc"],
         maps[i]["Param_Av_Lnk"],
-
       );
     });
   }
 
-
   static Future<List<Param_Av>> getParam_Av_NCERT(String wNo) async {
     final db = await database;
-
 
     final List<Map<String, dynamic>> maps = await db.query("Param_Av", where: "Param_Av_No = '${wNo}' ");
     return List.generate(maps.length, (i) {
@@ -598,12 +582,9 @@ class DbTools {
         maps[i]["Param_Av_Det"],
         maps[i]["Param_Av_Proc"],
         maps[i]["Param_Av_Lnk"],
-
       );
     });
   }
-
-
 
   static Future<void> inserParam_Av(SrvParam_Av wParam_Av) async {
     final db = await DbTools.database;
@@ -637,8 +618,7 @@ class DbTools {
     });
   }
 
-  static genParam()
-  {
+  static genParam() {
     Srv_DbTools.ListParam_Param_Abrev.clear();
     Srv_DbTools.ListParam_ParamAll.forEach((element) {
       if (element.Param_Param_Type.compareTo("Abrev") == 0) {
@@ -681,26 +661,71 @@ class DbTools {
       }
     });
 
+    Srv_DbTools.ListParam_Param_Validite_devis.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Validite_devis") == 0) {
+        Srv_DbTools.ListParam_Param_Validite_devis.add(element);
+      }
+    });
+
+    Srv_DbTools.ListParam_Param_Livraison_prev.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Livraison_prev") == 0) {
+        Srv_DbTools.ListParam_Param_Livraison_prev.add(element);
+      }
+    });
+
+    Srv_DbTools.ListParam_Param_Mode_rglt.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Mode_rglt") == 0) {
+        Srv_DbTools.ListParam_Param_Mode_rglt.add(element);
+      }
+    });
+
+
+    Srv_DbTools.ListParam_Param_Moyen_paiement.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Moyen_paiement") == 0) {
+        Srv_DbTools.ListParam_Param_Moyen_paiement.add(element);
+      }
+    });
+
+    Srv_DbTools.ListParam_Param_Pref_Aff.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Pref_Aff") == 0) {
+        Srv_DbTools.ListParam_Param_Pref_Aff.add(element);
+      }
+    });
+
+    Srv_DbTools.ListParam_Param_Rel_Auto.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Rel_Auto") == 0) {
+        Srv_DbTools.ListParam_Param_Rel_Auto.add(element);
+      }
+    });
+
+    Srv_DbTools.ListParam_Param_Rel_Anniv.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Rel_Anniv") == 0) {
+        Srv_DbTools.ListParam_Param_Rel_Anniv.add(element);
+      }
+    });
 
 
     Srv_DbTools.ListParam_ParamCiv.clear();
     Srv_DbTools.ListParam_ParamCiv.add("");
     for (int i = 0; i < Srv_DbTools.ListParam_Param_Civ.length; i++) {
       Param_Param wParam_Param = Srv_DbTools.ListParam_Param_Civ[i];
-      if (wParam_Param.Param_Param_Text == "C")
-        Srv_DbTools.ListParam_ParamCiv.add(wParam_Param.Param_Param_ID);
+      if (wParam_Param.Param_Param_Text == "C") Srv_DbTools.ListParam_ParamCiv.add(wParam_Param.Param_Param_ID);
     }
 
     Srv_DbTools.ListParam_ParamForme.clear();
     Srv_DbTools.ListParam_ParamForme.add("");
     for (int i = 0; i < Srv_DbTools.ListParam_Param_Civ.length; i++) {
       Param_Param wParam_Param = Srv_DbTools.ListParam_Param_Civ[i];
-      if (wParam_Param.Param_Param_Text != "C")
-        Srv_DbTools.ListParam_ParamForme.add(wParam_Param.Param_Param_ID);
+      if (wParam_Param.Param_Param_Text != "C") Srv_DbTools.ListParam_ParamForme.add(wParam_Param.Param_Param_ID);
     }
   }
-
-
 
   static Future<void> inserParam_Param(Param_Param wParam_Param) async {
     final db = await DbTools.database;
@@ -721,9 +746,7 @@ class DbTools {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query("Param_Saisie_Param");
     return List.generate(maps.length, (i) {
-
 //      print(" getParam_Saisie_ParamAll IMPORT ${maps[i]["Param_Saisie_Param_Id"]} ${maps[i]["Param_Saisie_Param_Label"]} ${maps[i]["Param_Saisie_Param_Init"]}");
-
 
       return Param_Saisie_Param(
         maps[i]["Param_Saisie_ParamId"],
@@ -925,7 +948,6 @@ class DbTools {
   static List<Maint> lMaints = [];
   static late Maint gMaint;
 
-
   //************************************************
   //******************** RIA_Gammes **************
   //************************************************
@@ -937,7 +959,7 @@ class DbTools {
     final db = await database;
     String wRef = "RIA_Gammes_FAB";
     String wSql = "SELECT ${wRef} FROM RIA_Gammes WHERE RIA_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
-      print("***********>>>   wSql ${wSql}");
+    print("***********>>>   wSql ${wSql}");
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
     return List.generate(maps.length, (i) {
 //      print("***********>>>   getParcs_DescInter maps ${maps[i]["${wRef}"]}");
@@ -971,7 +993,6 @@ class DbTools {
       Srv_DbTools.ListParam_Saisie_Param.add(Param_Saisie_Param(i, "ARM", i, maps[i]["${wRef}"], maps[i]["${wRef}"], maps[i]["${wRef}"], false, false, SizedBox(), "Noir"));
     });
   }
-
 
   static Future getRIA_Gammes_INOX() async {
     Srv_DbTools.ListParam_Saisie_Param.clear();
@@ -1012,7 +1033,6 @@ class DbTools {
     });
   }
 
-
   static Future getRIA_Gammes_DIF() async {
     Srv_DbTools.ListParam_Saisie_Param.clear();
     final db = await database;
@@ -1039,8 +1059,6 @@ class DbTools {
     });
   }
 
-
-
   static Future getRIA_Gammes_PREM() async {
     Srv_DbTools.ListParam_Saisie_Param.clear();
     final db = await database;
@@ -1060,12 +1078,12 @@ class DbTools {
     String wRef = "RIA_Gammes_REF, RIA_Gammes_NCERT";
     String wSql = "SELECT ${wRef} FROM RIA_Gammes WHERE RIA_Gammes_DESC = '${Srv_DbTools.DESC_Lib}' AND RIA_Gammes_FAB = '${Srv_DbTools.FAB_Lib}' AND RIA_Gammes_TYPE = '${Srv_DbTools.TYPE_Lib}' AND RIA_Gammes_ARM = '${Srv_DbTools.ARM_Lib}' AND RIA_Gammes_INOX = '${Srv_DbTools.INOX_Lib}' AND RIA_Gammes_DIAM = '${Srv_DbTools.DIAM_Lib}' AND RIA_Gammes_LONG = '${Srv_DbTools.LONG_Lib}' AND RIA_Gammes_DIF = '${Srv_DbTools.DIF_Lib}' AND RIA_Gammes_DISP = '${Srv_DbTools.DISP_Lib}' GROUP BY ${wRef} ORDER BY ${wRef};";
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
-     List.generate(maps.length, (i) {
+    List.generate(maps.length, (i) {
       Srv_DbTools.REF_Lib = maps[i]["RIA_Gammes_REF"];
       Srv_DbTools.NCERT_Lib = maps[i]["RIA_Gammes_NCERT"];
     });
 
-print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.NCERT_Lib}");
+    print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.NCERT_Lib}");
 
     DbTools.gParc_Ent.Parcs_CodeArticle = Srv_DbTools.REF_Lib;
     DbTools.gParc_Ent.Parcs_NCERT = Srv_DbTools.NCERT_Lib;
@@ -1074,7 +1092,6 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
   }
 
 //  SELECT RIA_Gammes_REF, RIA_Gammes_NCERT FROM RIA_Gammes WHERE RIA_Gammes_DESC = 'RIA' AND RIA_Gammes_FAB = 'RH-Mobiak SA/GEM' AND RIA_Gammes_TYPE = 'Pivotant' AND RIA_Gammes_ARM = 'Oui' AND RIA_Gammes_INOX = 'Non' AND RIA_Gammes_DIAM = '33/12mm' AND RIA_Gammes_LONG = '20' AND RIA_Gammes_DIF = 'DMFA' AND RIA_Gammes_DISP = 'DMFA' GROUP BY RIA_Gammes_REF, RIA_Gammes_NCERT ORDER BY RIA_Gammes_REF, RIA_Gammes_NCERT;
-
 
   //************************************************
   //******************** NF074_Gammes **************
@@ -1086,18 +1103,14 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
   static NF074_Gammes gNF074_Gammes = NF074_Gammes.NF074_GammesInit();
   static NF074_Gammes_Date gNF074_Gammes_Date = NF074_Gammes_Date.NF074_Gammes_DateInit();
 
-
   static Future getNF074_Gammes_Decs_Test() async {
     Srv_DbTools.ListParam_Saisie_Param.clear();
     final db = await database;
     String wRef = "NF074_Gammes_DESC";
     String wSql = "SELECT  *FROM NF074_Gammes Where NF074_Gammes_DESC = 'Extincteur automatique'";
 
-
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
-    return List.generate(maps.length, (i) {
-
-    });
+    return List.generate(maps.length, (i) {});
   }
 
   static Future getNF074_Gammes_Decs() async {
@@ -1200,10 +1213,6 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
       Srv_DbTools.ListParam_Saisie_Param.add(Param_Saisie_Param(i, "DESC", i, maps[i]["${wRef}"], maps[i]["${wRef}"], maps[i]["${wRef}"], false, false, SizedBox(), "Noir"));
     });
   }
-
-
-
-
 
   static Future getNF074_Gammes_Get_REF(String wRef) async {
     final db = await database;
@@ -1348,7 +1357,6 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     int? repid = await db.delete("NF074_Gammes");
   }
 
-
   static Future<List<RIA_Gammes>> getRIA_Gammes() async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query("RIA_Gammes", orderBy: "RIA_GammesId ASC");
@@ -1372,21 +1380,16 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     });
   }
 
-
-
-
   static Future<void> insertRIA_Gammes(RIA_Gammes RIA_Gammes) async {
     final db = await DbTools.database;
     int? repid = await db.insert("RIA_Gammes", RIA_Gammes.toMap());
     gLastID = repid!;
   }
 
-
   static Future<void> TrunckRIA_Gammes() async {
     final db = await DbTools.database;
     int? repid = await db.delete("RIA_Gammes");
   }
-
 
   //************************************************
   //******************** NF074_Histo_Normes ********
@@ -1499,12 +1502,11 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     else
       selSQL = "$selBase ($selTypeVerif)  AND  $selDESC ";
 
-  //  print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_In selSQL ${selSQL}");
+    //  print("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_In selSQL ${selSQL}");
 
     final List<Map<String, dynamic>> maps = await db.rawQuery(selSQL);
 
 //    gColors.printWrapped("≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈≈ getNF074_Pieces_Det_In maps ${maps}");
-
 
     return List.generate(maps.length, (i) {
       return NF074_Pieces_Det(
@@ -1880,13 +1882,10 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     });
   }
 
-
   static Future<List<NF074_Pieces_Det_Inc>> getNF074_Pieces_Det_Inc_G110() async {
     final db = await database;
 
-
     String selBase = "SELECT * FROM NF074_Pieces_Det_Inc where NF074_Pieces_Det_Inc_CodeArticlePD1 Like 'G110%'";
-
 
     final List<Map<String, dynamic>> maps = await db.rawQuery(selBase);
 
@@ -1920,8 +1919,6 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
       );
     });
   }
-
-
 
   static Future<void> insertNF074_Pieces_Det_Inc(NF074_Pieces_Det_Inc NF074_Pieces_Det_Inc) async {
     final db = await DbTools.database;
@@ -2484,7 +2481,6 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     return true;
   }
 
-
   static Future<bool> getAdresseType(String Type) async {
     final db = await database;
     final List<Map<String, dynamic>> maps = await db.query("Adresses", orderBy: "AdresseId ASC", where: "Adresse_Type = '$Type' ");
@@ -2518,9 +2514,6 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
 
     return true;
   }
-
-
-
 
   static Future<void> inserAdresse(Adresse wAdresse) async {
     final db = await DbTools.database;
@@ -2760,7 +2753,6 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     String wSql = "SELECT Users.User_Nom , Users.User_Prenom, SUM(ROUND((JULIANDAY(Planning_InterventionendTime) - JULIANDAY(Planning_InterventionstartTime)) * 24)  ) as H FROM Planning , Users where Planning_ResourceId = Users.UserID AND   Planning_InterventionId = $InterventionId GROUP BY Planning.Planning_ResourceId ORDER BY H DESC;";
 
     print(" DbTools getPlanning_InterventionIdRes ${wSql}");
-
 
     final List<Map<String, dynamic>> maps = await db.rawQuery(wSql);
     Srv_DbTools.ListUserH = List.generate(maps.length, (i) {
@@ -3095,7 +3087,6 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     });
   }
 
-
   static Future<List<Site>> getSiteGroupe(int ID) async {
     final db = await database;
 
@@ -3214,8 +3205,6 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     });
   }
 
-
-
   static Future<List<Zone>> getZone(int ID) async {
     final db = await database;
 
@@ -3249,7 +3238,6 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
       );
     });
   }
-
 
   static Future<List<Zone>> getZones(int ID) async {
     final db = await database;
@@ -3448,8 +3436,6 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
         maps[0]["Intervention_Signature_Tech"],
       );
 
-
-
     return Srv_DbTools.gIntervention;
   }
 
@@ -3624,7 +3610,7 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
 
   static Future<List<Parc_Ent>> getParcs_Ent_Upd(int Parcs_InterventionId) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query("Parcs_Ent", where: '"Parcs_InterventionId" = ${Parcs_InterventionId} AND Parcs_Update > 0',orderBy:"Parcs_order , Parcs_UUID_Parent", whereArgs: []);
+    final List<Map<String, dynamic>> maps = await db.query("Parcs_Ent", where: '"Parcs_InterventionId" = ${Parcs_InterventionId} AND Parcs_Update > 0', orderBy: "Parcs_order , Parcs_UUID_Parent", whereArgs: []);
     print("getParcs_Ent Parcs_Ent.length B ${maps.length} ${Parcs_InterventionId}");
     return List.generate(maps.length, (i) {
       print("getParcs Parcs ${maps[i]}");
@@ -3668,48 +3654,43 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
 
     Parc_Ent parc = Parc_Ent();
 
-
     print(" moveParc_EntNew ${Sens}");
 
     bool trv = false;
     if (Sens == -1) {
       for (int i = 0; i < wglfParcs_Ent.length; i++) {
         Parc_Ent element = wglfParcs_Ent.elementAt(i);
-        if (element.Parcs_order! < aparSel.Parcs_order!)
-          {
-            parc = element;
-            trv = true;
-          }
+        if (element.Parcs_order! < aparSel.Parcs_order!) {
+          parc = element;
+          trv = true;
+        }
       }
     } else
       for (int i = wglfParcs_Ent.length - 1; i >= 0; i--) {
         Parc_Ent element = wglfParcs_Ent.elementAt(i);
-        if (element.Parcs_order! > aparSel.Parcs_order!)
-          {
-            parc = element;
-            trv = true;
-          }
+        if (element.Parcs_order! > aparSel.Parcs_order!) {
+          parc = element;
+          trv = true;
+        }
       }
 
+    if (trv) {
+      print(" SaveparcParcs_order ${parc.toMap()}");
+      int SaveparcParcs_order = parc.Parcs_order!;
+      parc.Parcs_order = aparSel.Parcs_order!;
+      updateParc_Ent_Ordre(parc);
 
-      if (trv)
-        {
-          print(" SaveparcParcs_order ${parc.toMap()}");
-          int SaveparcParcs_order = parc.Parcs_order!;
-          parc.Parcs_order = aparSel.Parcs_order!;
-          updateParc_Ent_Ordre(parc);
+      aparSel.Parcs_order = SaveparcParcs_order;
+      updateParc_Ent_Ordre(aparSel);
 
-          aparSel.Parcs_order = SaveparcParcs_order;
-          updateParc_Ent_Ordre(aparSel);
-
-          for (int i = wglfParcs_Ent.length - 1; i >= 0; i--) {
-            Parc_Ent element = wglfParcs_Ent.elementAt(i);
-            Parc_Ent wParc_Ent = await DbTools.getParcs_Ent_Parcs_UUID_Child(element.Parcs_UUID!);
-            wParc_Ent.Parcs_order = element.Parcs_order;
-            updateParc_Ent_Ordre(wParc_Ent);
-          }
-          await DbTools.Parc_Ent_GetOrder();
-        }
+      for (int i = wglfParcs_Ent.length - 1; i >= 0; i--) {
+        Parc_Ent element = wglfParcs_Ent.elementAt(i);
+        Parc_Ent wParc_Ent = await DbTools.getParcs_Ent_Parcs_UUID_Child(element.Parcs_UUID!);
+        wParc_Ent.Parcs_order = element.Parcs_order;
+        updateParc_Ent_Ordre(wParc_Ent);
+      }
+      await DbTools.Parc_Ent_GetOrder();
+    }
   }
 
   static Future<void> moveParc_Ent(int aparcId, int Sens) async {
@@ -3895,9 +3876,8 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
       Parc_Ent wParc_Ent = wParcs_Ent[i];
 //      print("wParc_Ent ${wParc_Ent.ParcsId} ${wParc_Ent.Parcs_order} ${wParc_Ent.Parcs_UUID} ${wParc_Ent.Parcs_UUID_Parent}");
       Parc_Ent wParc_EntChild = await getParcs_Ent_Parcs_UUID_Child(wParc_Ent.Parcs_UUID!);
-      if (wParc_EntChild.Parcs_order! >= 0)
-        print("wParc_EntChild ${wParc_EntChild.ParcsId} ${wParc_EntChild.Parcs_order} ${wParc_EntChild.Parcs_UUID} ${wParc_EntChild.Parcs_UUID_Parent}");
-        wParc_EntChild.Parcs_order = wParc_Ent.Parcs_order;
+      if (wParc_EntChild.Parcs_order! >= 0) print("wParc_EntChild ${wParc_EntChild.ParcsId} ${wParc_EntChild.Parcs_order} ${wParc_EntChild.Parcs_UUID} ${wParc_EntChild.Parcs_UUID_Parent}");
+      wParc_EntChild.Parcs_order = wParc_Ent.Parcs_order;
       await updateParc_Ent_Ordre(wParc_EntChild);
     }
 
@@ -3945,8 +3925,6 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
         'Parcs_Verif_Note = "${parc.Parcs_Verif_Note}"' +
         ' WHERE ParcsId = ${parc.ParcsId}';
 
-
-
     await db.execute(wSlq);
   }
 
@@ -3966,7 +3944,6 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
     await db.execute(wSlq);
   }
 
-
   static Future<int> Parc_Ent_GetLastOrder() async {
     List<Parc_Ent> wParcs_Ent = await DbTools.getParcs_Ent(Srv_DbTools.gIntervention.InterventionId!);
 
@@ -3977,17 +3954,11 @@ print("***********>>>   getRIA_Gammes_Ref ${Srv_DbTools.REF_Lib} ${Srv_DbTools.N
       wRet = max(wRet, wParc_Ent.Parcs_order!);
     }
 
-
     return wRet;
-
   }
 
-    static Future<void> Parc_Ent_GetOrder() async {
-
-
-return
-
-    DbTools.glfParcs_Ent.clear();
+  static Future<void> Parc_Ent_GetOrder() async {
+    return DbTools.glfParcs_Ent.clear();
     List<Parc_Ent> wParcs_Ent = await DbTools.getParcs_Ent(Srv_DbTools.gIntervention.InterventionId!);
 //    List<Parc_Ent> wParcs_Ent = await DbTools.getParcs_EntAll();
 
@@ -3999,7 +3970,6 @@ return
       if (wParc_Ent.Parcs_UUID_Parent!.length == 0) {
         o++;
       }
-
 
       print("♦︎♦︎ IMPORT ♦︎♦︎ ParcB.Parcs_order = o");
 
@@ -4178,9 +4148,7 @@ return
     return wParc_Desc;
   }
 
-
   static Future<Parc_Desc> getParcs_Desc_Id_Type_Add(int ParcsDesc_ParcsId, ParcsDesc_Type) async {
-
     Parc_Desc wParc_Desc = Parc_Desc.Parc_DescInit(ParcsDesc_ParcsId, ParcsDesc_Type);
     for (int i = 0; i < glfParcs_Desc.length; i++) {
       Parc_Desc element = glfParcs_Desc[i];
@@ -4203,8 +4171,33 @@ return
     return wParc_Desc;
   }
 
-
   static Future<bool> updateParc_DescSimple(Parc_Desc parc, String InitLib) async {
+    final db = await database;
+    int? repid = await db.update(
+      "Parcs_Desc",
+      parc.toMap(),
+      where: "ParcsDescId = ?",
+      whereArgs: [parc.ParcsDescId],
+    );
+
+    return false;
+  }
+
+  static Future<bool> updateParc_Desc(Parc_Desc parc, String InitLib) async {
+    print("♠︎♠︎♠︎♠︎♠︎ updateParc_Desc ${parc.toMap()}");
+
+    bool isEq = false;
+    for (int i = 0; i < DbTools.glfParcs_Desc.length; i++) {
+      var element = DbTools.glfParcs_Desc[i];
+      if (element.ParcsDescId! == parc.ParcsDescId!) {
+        if (element.ParcsDesc_Lib!.compareTo(parc.ParcsDesc_Lib!) == 0) {
+          isEq = true;
+          //  return isEq;
+        }
+      }
+    }
+
+//    if (isEq) return isEq;
 
     final db = await database;
     int? repid = await db.update(
@@ -4214,46 +4207,10 @@ return
       whereArgs: [parc.ParcsDescId],
     );
 
-
-    return false;
-  }
-  
-  
-  
-    static Future<bool> updateParc_Desc(Parc_Desc parc, String InitLib) async {
-
-
-    print("♠︎♠︎♠︎♠︎♠︎ updateParc_Desc ${parc.toMap()}");
-
-    bool isEq = false;
-    for (int i = 0; i < DbTools.glfParcs_Desc.length; i++) {
-      var element = DbTools.glfParcs_Desc[i];
-      if (element.ParcsDescId! == parc.ParcsDescId!) {
-        if (element.ParcsDesc_Lib!.compareTo(parc.ParcsDesc_Lib!) == 0) {
-          isEq = true;
-        //  return isEq;
-        }
-      }
-    }
-
-
-//    if (isEq) return isEq;
-
-    final db = await database;
-      int? repid = await db.update(
-        "Parcs_Desc",
-        parc.toMap(),
-        where: "ParcsDescId = ?",
-        whereArgs: [parc.ParcsDescId],
-      );
-
     DbTools.glfParcs_Desc = await DbTools.getParcs_Desc(parc.ParcsDesc_ParcsId!);
 
-
-    if (parc.ParcsDesc_Type == "SIT")  return true;
-    if (parc.ParcsDesc_Type == "SRC")  return true;
-
-
+    if (parc.ParcsDesc_Type == "SIT") return true;
+    if (parc.ParcsDesc_Type == "SRC") return true;
 
     bool modifDesc = false;
     for (int i = 0; i < Srv_DbTools.ListParam_Saisie.length; i++) {
@@ -4280,15 +4237,11 @@ return
           }
         }
 
-        if (isDesc && element.ParcsDesc_Type == "SIT")  isDesc = false;
-        if (isDesc && element.ParcsDesc_Type == "SRC")  isDesc = false;
-
-
+        if (isDesc && element.ParcsDesc_Type == "SIT") isDesc = false;
+        if (isDesc && element.ParcsDesc_Type == "SRC") isDesc = false;
 
         if (isDesc) {
-
           print("   RESET ${element.ParcsDesc_Type}");
-
 
           element.ParcsDesc_Lib = "---";
           int? repid = await db.update(
@@ -4404,7 +4357,6 @@ return
     });
   }
 
-
   static Future<List<Parc_Art>> getParcs_Art_AllType(int ParcsArt_ParcsId) async {
     final db = await database;
     List<Map<String, dynamic>> maps = await db.rawQuery('SELECT Parcs_Art.* FROM Parcs_Art  WHERE ParcsArt_ParcsId = "${ParcsArt_ParcsId}" and ParcsArt_lnk != "SO" ORDER BY ParcsArt_Id', []);
@@ -4420,8 +4372,6 @@ return
       return Parc_Art.fromMap(maps[i]);
     });
   }
-
-
 
   static Future<List<Parc_Art>> getParcs_ArtInter(int Parcs_InterventionId) async {
     final db = await database;
@@ -4453,7 +4403,6 @@ return
     });
   }
 
-
   static Future<List<Parc_Art>> getParcs_ArtInterSumBL(int Parcs_InterventionId) async {
     final db = await database;
 
@@ -4468,7 +4417,6 @@ return
       return Parc_Art.fromMapQte(maps[i]);
     });
   }
-
 
   static Future<List<Parc_Art>> getParcs_ArtInterSumDevis(int Parcs_InterventionId) async {
     final db = await database;
@@ -4512,9 +4460,6 @@ return
     });
   }
 
-
-
-
   static Future<List<Parc_Art>> getParcs_ArtInterSum(int Parcs_InterventionId) async {
     final db = await database;
 
@@ -4529,7 +4474,6 @@ return
       return Parc_Art.fromMapQte(maps[i]);
     });
   }
-
 
   static Future<void> TrunckParcs_Art() async {
     final db = await DbTools.database;
@@ -4610,9 +4554,6 @@ return
     print("maps ${maps}");
   }
 
-
-
-
   static Future<void> deleteParc_Art_ParcsArt_ParcsId(int ParcsArt_ParcsId) async {
     final db = await database;
     String wTmp = "DELETE FROM Parcs_Art WHERE ParcsArt_ParcsId = $ParcsArt_ParcsId AND (ParcsArt_lnk = 'L' OR ParcsArt_Type = 'ES' OR ParcsArt_Type = 'MS')";
@@ -4628,7 +4569,6 @@ return
   static List<Parc_Img> lParc_Imgs = [];
   static Parc_Img gParc_Img = Parc_Img();
   static int gParc_Img_Type = 0;
-
 
   static Future<void> TrunckParcs_Imgs() async {
     final db = await DbTools.database;
@@ -4694,15 +4634,11 @@ return
     print("insertParc_Img ${repid} parc_Img.toMap() ${parc_Img.toMap()}");
   }
 
-
   static Future<void> insertParc_Img_Srv(Parc_Imgs_Srv parc_Img) async {
     parc_Img.Parc_Imgid = null;
     final db = await DbTools.database;
     int? repid = await db.insert("Parc_Imgs", parc_Img.toMap());
   }
-
-
-
 
   static Future<void> deleteParc_Img(int aID, int Type) async {
     final db = await database;
@@ -4713,7 +4649,7 @@ return
     );
   }
 
-  static Future<void> deleteParc_ImgAllType(int aID ) async {
+  static Future<void> deleteParc_ImgAllType(int aID) async {
     final db = await database;
     await db.delete(
       "Parc_Imgs",
@@ -4736,7 +4672,6 @@ return
       return Parc_Img.fromMap(maps[i]);
     });
   }
-
 
   //************************************************
   //******************** DCL_Ent  ******************
@@ -4766,7 +4701,6 @@ return
     });
   }
 
-
   static Future<void> inserDCL_Ent(DCL_Ent wDCL_Ent) async {
     final db = await DbTools.database;
     int? repid = await db.insert("DCL_Ent", wDCL_Ent.toMapInsert());
@@ -4788,7 +4722,6 @@ return
     int? repid = await db.delete("DCL_Ent");
   }
 
-
   //************************************************
   //******************** DCL_Det  ******************
   //************************************************
@@ -4799,18 +4732,12 @@ return
     final List<Map<String, dynamic>> maps = await db.query("DCL_Det", orderBy: "DCL_DetId ASC");
 
     return List.generate(maps.length, (i) {
-
-
       return DCL_Det(
-        DCL_DetID : maps[i]["DCL_DetId"],
-        DCL_Det_Type : maps[i]["DCL_DetId"],
-
-
+        DCL_DetID: maps[i]["DCL_DetId"],
+        DCL_Det_Type: maps[i]["DCL_DetId"],
       );
     });
   }
-
-
 
   static Future<List<DCL_Det>> getDCL_DetID(int ID) async {
     final db = await database;
@@ -4826,11 +4753,8 @@ return
         print(e);
       }
       return DCL_Det(
-        DCL_DetID : maps[i]["DCL_DetId"],
-        DCL_Det_Type : maps[i]["DCL_DetId"],
-
-
-
+        DCL_DetID: maps[i]["DCL_DetId"],
+        DCL_Det_Type: maps[i]["DCL_DetId"],
       );
     });
   }
@@ -4856,8 +4780,6 @@ return
     int? repid = await db.delete("DCL_Det");
   }
 
-  
-  
   //***
   //***
   //***

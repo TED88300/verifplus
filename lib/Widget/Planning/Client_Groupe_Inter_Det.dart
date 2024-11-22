@@ -76,7 +76,7 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
         wDCL_Ent.DCL_Ent_SiteId = Srv_DbTools.gSite.SiteId;
         wDCL_Ent.DCL_Ent_ZoneId = Srv_DbTools.gZone.ZoneId;
         wDCL_Ent.DCL_Ent_InterventionId = Srv_DbTools.gIntervention.InterventionId;
-        wDCL_Ent.DCL_Ent_Date  = DateFormat('dd/MM/yyyy').format(DateTime.now());
+        wDCL_Ent.DCL_Ent_Date  = Srv_DbTools.gIntervention.Intervention_Date; //  DateFormat('dd/MM/yyyy').format(DateTime.now());
         wDCL_Ent.DCL_Ent_Etat = "Préparation";
         await  Srv_DbTools.InsertUpdateDCL_Ent(wDCL_Ent);
 
@@ -445,15 +445,13 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
 
     String wTitre2 =
         "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}";
-    if (Srv_DbTools.gIntervention.Groupe_Nom ==
-        Srv_DbTools.gIntervention.Site_Nom)
+    if (Srv_DbTools.gIntervention.Groupe_Nom == Srv_DbTools.gIntervention.Site_Nom)
       wTitre2 = "";
     return Scaffold(
         appBar: appBar(),
         body: Stack(
           children: [
             Container(
-
                 padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: Column(children: [

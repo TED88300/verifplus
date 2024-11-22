@@ -4,6 +4,8 @@ import 'dart:io';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Articles_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
@@ -36,6 +38,690 @@ class gDialogs {
       builder: (BuildContext context) => MiseEnServDialog(),
     );
   }
+
+  static Future<void> Dialog_CdeDate(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) => CdeDateDialog(),
+    );
+  }
+
+  static Future<void> Dialog_SelPeriode(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) => SelPeriodeDialog(),
+    );
+  }
+}
+
+//**********************************
+//**********************************
+//**********************************
+
+class SelPeriodeDialog extends StatefulWidget {
+  @override
+  _SelPeriodeDialogState createState() => _SelPeriodeDialogState();
+}
+
+class _SelPeriodeDialogState extends State<SelPeriodeDialog> {
+  bool isSel = false;
+
+  @override
+  void initState() {
+    print(" _SelPeriodeDialog  initState");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print("  _SelPeriodeDialog build");
+
+
+    return SimpleDialog(
+      insetPadding: EdgeInsets.zero,
+      titlePadding: EdgeInsets.zero,
+      contentPadding: EdgeInsets.zero,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      surfaceTintColor: Colors.transparent,
+      backgroundColor: gColors.transparent,
+      shadowColor: gColors.transparent,
+      children: [
+        Container(
+            color: gColors.transparent,
+            height: 220,
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.fromLTRB(25, 25, 25, 0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                              width: 260,
+                              height: 800,
+                              padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child:
+
+                              PopupMenuButton(
+                                child: Tooltip(textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.normal), decoration: BoxDecoration(color: Colors.orange), message: "Filtre Date", child: Container(width: 10, height: 10, child: Image.asset("assets/images/DCL_Date.png"))),
+                                onSelected: (value) async {
+                                  if (value == "S0") {
+                                    Srv_DbTools.selDateTools(0);
+                                  }
+                                  if (value == "S1") {
+                                    Srv_DbTools.selDateTools(1);
+                                  }
+                                  if (value == "S2") {
+                                    Srv_DbTools.selDateTools(2);
+                                  }
+                                  if (value == "S3") {
+                                    Srv_DbTools.selDateTools(3);
+                                  }
+                                  if (value == "S4") {
+                                    Srv_DbTools.selDateTools(4);
+                                  }
+                                  if (value == "S5") {
+                                    Srv_DbTools.selDateTools(5);
+                                  }
+                                  if (value == "S6") {
+                                    Srv_DbTools.selDateTools(6);
+                                  }
+                                  if (value == "S7") {
+                                    Srv_DbTools.selDateTools(7);
+                                  }
+                                  if (value == "S8") {
+                                    Srv_DbTools.selDateTools(8);
+                                  }
+                                  if (value == "S9") {
+                                    Srv_DbTools.selDateTools(9);
+                                  }
+                                  if (value == "S1") {
+                                    Srv_DbTools.selDateTools(1);
+                                  }
+                                },
+                                itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+                                  PopupMenuItem(
+                                    value: "S0",
+                                    height: 36,
+                                    child: Row(
+                                      children: [
+                                        Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+                                        Text(
+                                          "Aujourd'hui",
+                                          style: gColors.bodySaisie_N_G,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: "S1",
+                                    height: 36,
+                                    child: Row(
+                                      children: [
+                                        Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+                                        Text(
+                                          "Hier",
+                                          style: gColors.bodySaisie_N_G,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: "S2",
+                                    height: 36,
+                                    child: Row(
+                                      children: [
+                                        Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+                                        Text(
+                                          "Avant hier",
+                                          style: gColors.bodySaisie_N_G,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: "S3",
+                                    height: 36,
+                                    child: Row(
+                                      children: [
+                                        Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+                                        Text(
+                                          "Semaine courante",
+                                          style: gColors.bodySaisie_N_G,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: "S4",
+                                    height: 36,
+                                    child: Row(
+                                      children: [
+                                        Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+                                        Text(
+                                          "Semaine précédente",
+                                          style: gColors.bodySaisie_N_G,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: "S5",
+                                    height: 36,
+                                    child: Row(
+                                      children: [
+                                        Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+                                        Text(
+                                          "Semaine précédent la précédente",
+                                          style: gColors.bodySaisie_N_G,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: "S6",
+                                    height: 36,
+                                    child: Row(
+                                      children: [
+                                        Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+                                        Text(
+                                          "Mois courant",
+                                          style: gColors.bodySaisie_N_G,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: "S7",
+                                    height: 36,
+                                    child: Row(
+                                      children: [
+                                        Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+                                        Text(
+                                          "Mois précédent",
+                                          style: gColors.bodySaisie_N_G,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: "S8",
+                                    height: 36,
+                                    child: Row(
+                                      children: [
+                                        Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+                                        Text(
+                                          "Mois précédent le précédent",
+                                          style: gColors.bodySaisie_N_G,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: "S9",
+                                    height: 36,
+                                    child: Row(
+                                      children: [
+                                        Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+                                        Text(
+                                          "Année courante",
+                                          style: gColors.bodySaisie_N_G,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  PopupMenuItem(
+                                    value: "S10",
+                                    height: 36,
+                                    child: Row(
+                                      children: [
+                                        Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+                                        Text(
+                                          "Année précédente",
+                                          style: gColors.bodySaisie_N_G,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              )
+
+
+
+
+                          )
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const Spacer(),
+              ],
+            )),
+      ],
+    );
+  }
+}
+
+//**********************************
+//**********************************
+//**********************************
+
+class CdeDateDialog extends StatefulWidget {
+  @override
+  _CdeDateDialogState createState() => _CdeDateDialogState();
+}
+
+class _CdeDateDialogState extends State<CdeDateDialog> {
+  bool isSel = false;
+
+  @override
+  void initState() {
+    print("_CdeDateDialog  initState");
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print(" Srv_DbTools.SelDCL_DateDeb ${Srv_DbTools.SelDCL_DateDeb}");
+
+
+    var formatter = DateFormat('dd/MM/yyyy');
+    String fSelDCL_DateDeb = formatter.format(Srv_DbTools.SelDCL_DateDeb);
+    String fSelDCL_DateFin = formatter.format(Srv_DbTools.SelDCL_DateFin);
+
+    return SimpleDialog(
+      insetPadding: EdgeInsets.only(bottom: 420, right: 400),
+      titlePadding: EdgeInsets.zero,
+      contentPadding: EdgeInsets.zero,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      surfaceTintColor: Colors.transparent,
+      backgroundColor: gColors.transparent,
+      shadowColor: gColors.transparent,
+      children: [
+        Container(
+            color: gColors.transparent,
+            height: 220,
+            child: Column(
+              children: [
+                Container(
+                  padding: const EdgeInsets.fromLTRB(25, 25, 25, 0),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                              width: 260,
+                              height: 80,
+                              padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Row(
+                                children: [
+                                  InkWell(
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          "Du ",
+                                          style: gColors.bodySaisie_B_G,
+                                        ),
+                                        Text(
+                                          "${fSelDCL_DateDeb}",
+                                          style: gColors.bodySaisie_N_G,
+                                        ),
+                                      ],
+                                    ),
+                                    onTap: () async {
+                                      selectedDate = Srv_DbTools.SelDCL_DateDeb;
+                                      await _selectDate(context, DateTime(1900), DateTime(DateTime.now().year, 12, 31));
+                                      Srv_DbTools.SelDCL_DateDeb = selectedDate;
+                                      isSel = true;
+                                      setState(() {});
+                                    },
+                                  ),
+                                  Container(
+                                    width: 30,
+                                  ),
+
+
+                                  popMenu(),
+
+
+                                  Container(
+                                    width: 10,
+                                  ),
+                                  InkWell(
+                                    child: Row(
+                                      children: [
+                                        Image.asset(
+                                          "assets/images/DCL_Date.png",
+                                          height: 40,
+                                          width: 40,
+                                        ),
+                                      ],
+                                    ),
+                                    onTap: () async {
+                                      selectedDate = Srv_DbTools.SelDCL_DateDeb;
+                                      await _selectDate(context, DateTime(1900), DateTime(DateTime.now().year, 12, 31));
+                                      Srv_DbTools.SelDCL_DateDeb = selectedDate;
+                                      isSel = true;
+                                      setState(() {});
+                                    },
+                                  ),
+                                ],
+                              ))
+                        ],
+                      ),
+                      Container(
+                        height: 20,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+
+
+                          Container(
+                              width: 260,
+                              height: 80,
+                              padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
+                              decoration: BoxDecoration(
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(15),
+                              ),
+                              child: Row(
+                                children: [
+                                  InkWell(
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          "Au ",
+                                          style: gColors.bodySaisie_B_G,
+                                        ),
+                                        Text(
+                                          "${fSelDCL_DateFin}",
+                                          style: gColors.bodySaisie_N_G,
+                                        ),
+                                      ],
+                                    ),
+                                    onTap: () async {
+                                      selectedDate = Srv_DbTools.SelDCL_DateFin;
+                                      await _selectDate(context, DateTime(1900), DateTime.now());
+                                      Srv_DbTools.SelDCL_DateFin = selectedDate;
+                                      isSel = true;
+                                      setState(() {});
+                                    },
+                                  ),
+                                  Container(
+                                    width: 30,
+                                  ),
+                                  popMenu(),
+                                  Container(
+                                    width: 10,
+                                  ),
+                                  InkWell(
+                                    child: Row(
+                                      children: [
+                                        Image.asset(
+                                          "assets/images/DCL_Date.png",
+                                          height: 40,
+                                          width: 40,
+                                        ),
+                                      ],
+                                    ),
+                                    onTap: () async {
+                                      selectedDate = Srv_DbTools.SelDCL_DateFin;
+                                      await _selectDate(context, DateTime(1900), DateTime.now());
+                                      Srv_DbTools.SelDCL_DateFin = selectedDate;
+                                      isSel = true;
+                                      setState(() {});
+                                    },
+                                  ),
+                                ],
+                              ))
+
+
+
+
+
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                const Spacer(),
+              ],
+            )),
+      ],
+    );
+  }
+
+  DateTime selectedDate = DateTime.now();
+  Future<void> _selectDate(BuildContext context, DateTime firstDate, DateTime lastDate) async {
+    print("selectedDate >> ${selectedDate}");
+
+    final DateTime? picked = await showDatePicker(context: context, initialDate: selectedDate, firstDate: firstDate, lastDate: lastDate);
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        print("selectedDate << ${selectedDate}");
+      });
+    }
+  }
+
+   Widget popMenu() {
+
+    double hLigne = 72;
+
+    return                                   PopupMenuButton(
+      child: Tooltip(textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.normal), decoration: BoxDecoration(color: Colors.orange), message: "Filtre Date", child: Container(width: 40, height: 40, child: SvgPicture.asset("assets/images/Icon_circle_down2.svg", height: 40, width: 40, colorFilter: ColorFilter.mode(Colors.grey, BlendMode.srcIn), semanticsLabel: 'A red up arrow'))),
+      onSelected: (value) async {
+
+        print(" onSelected ${value}");
+
+
+        if (value == "S0") {
+          Srv_DbTools.selDateTools(0);
+        }
+        if (value == "S1") {
+          Srv_DbTools.selDateTools(1);
+        }
+        if (value == "S2") {
+          Srv_DbTools.selDateTools(2);
+        }
+        if (value == "S3") {
+          Srv_DbTools.selDateTools(3);
+        }
+        if (value == "S4") {
+          Srv_DbTools.selDateTools(4);
+        }
+        if (value == "S5") {
+          Srv_DbTools.selDateTools(5);
+        }
+        if (value == "S6") {
+          Srv_DbTools.selDateTools(6);
+        }
+        if (value == "S7") {
+          Srv_DbTools.selDateTools(7);
+        }
+        if (value == "S8") {
+          Srv_DbTools.selDateTools(8);
+        }
+        if (value == "S9") {
+          Srv_DbTools.selDateTools(9);
+        }
+        if (value == "S10") {
+          Srv_DbTools.selDateTools(10);
+        }
+        setState(() {
+
+        });
+      },
+      itemBuilder: (BuildContext context) => <PopupMenuEntry>[
+        PopupMenuItem(
+          value: "S0",
+          height: hLigne,
+          child: Row(
+            children: [
+              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Text(
+                "Aujourd'hui",
+                style: gColors.bodySaisie_N_G,
+              ),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: "S1",
+          height: hLigne,
+          child: Row(
+            children: [
+              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Text(
+                "Hier",
+                style: gColors.bodySaisie_N_G,
+              ),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: "S2",
+          height: hLigne,
+          child: Row(
+            children: [
+              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Text(
+                "Avant hier",
+                style: gColors.bodySaisie_N_G,
+              ),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: "S3",
+          height: hLigne,
+          child: Row(
+            children: [
+              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Text(
+                "Semaine courante",
+                style: gColors.bodySaisie_N_G,
+              ),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: "S4",
+          height: hLigne,
+          child: Row(
+            children: [
+              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Text(
+                "Semaine précédente",
+                style: gColors.bodySaisie_N_G,
+              ),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: "S5",
+          height: hLigne,
+          child: Row(
+            children: [
+              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Text(
+                "Semaine précédent la précédente",
+                style: gColors.bodySaisie_N_G,
+              ),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: "S6",
+          height: hLigne,
+          child: Row(
+            children: [
+              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Text(
+                "Mois courant",
+                style: gColors.bodySaisie_N_G,
+              ),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: "S7",
+          height: hLigne,
+          child: Row(
+            children: [
+              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Text(
+                "Mois précédent",
+                style: gColors.bodySaisie_N_G,
+              ),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: "S8",
+          height: hLigne,
+          child: Row(
+            children: [
+              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Text(
+                "Mois précédent le précédent",
+                style: gColors.bodySaisie_N_G,
+              ),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: "S9",
+          height: hLigne,
+          child: Row(
+            children: [
+              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Text(
+                "Année courante",
+                style: gColors.bodySaisie_N_G,
+              ),
+            ],
+          ),
+        ),
+        PopupMenuItem(
+          value: "S10",
+          height: hLigne,
+          child: Row(
+            children: [
+              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Text(
+                "Année précédente",
+                style: gColors.bodySaisie_N_G,
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+
+
+  }
+
+
+
 }
 
 //**********************************
@@ -252,7 +938,7 @@ class _MiseEnServDialogState extends State<MiseEnServDialog> {
             },
             style: ElevatedButton.styleFrom(
                 backgroundColor: isSel ? gColors.primaryGreen : gColors.GrdBtn_Colors3,
-                side:  BorderSide(
+                side: BorderSide(
                   width: 1.0,
                   color: isSel ? gColors.primaryGreen : gColors.GrdBtn_Colors3,
                 )),

@@ -546,7 +546,8 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
           Container(
               width: 60,
               height: 60,
-              child: GestureDetector(
+              child:
+              GestureDetector(
                 child: Container(
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.all(
@@ -564,7 +565,8 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
                   initParcsArt_Qte++;
                   setState(() {});
                 },
-              )),
+              )
+          ),
           Container(
             width: 100,
           ),

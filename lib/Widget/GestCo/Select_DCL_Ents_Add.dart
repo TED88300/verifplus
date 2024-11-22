@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Clients.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_DCL_Ent.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Interventions.dart';
@@ -15,8 +16,8 @@ import '../../Tools/DbSrv/Srv_Zones.dart';
 // Freq
 // Année ....
 
-class Select_Interventions_Add {
-  Select_Interventions_Add();
+class Select_DCL_Ents_Add {
+  Select_DCL_Ents_Add();
   static Future<void> Dialogs_Add(BuildContext context, bool isNew) async {
     await showDialog(
       context: context,
@@ -43,11 +44,15 @@ class Select_InterventionsAdd extends StatefulWidget {
 class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
   final Search_Client_TextController = TextEditingController();
   final Search_Site_TextController = TextEditingController();
+  final Search_Groupe_TextController = TextEditingController();
 
   int iListe = 0;
 
   String selDepot = "";
   List<String> ListDepot = [];
+
+  String selDLC = "";
+  List<String> ListDCL = ["Devis", "Commande", "Bon de livraison"];
 
   Client selClient = Client.ClientInit();
   List<Client> ListClient = [];
@@ -94,6 +99,27 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
     setState(() {});
   }
 
+  Future FlitreGroupe() async {
+    ListClient.clear();
+    ListGroupe.clear();
+    ListSite.clear();
+    ListZone.clear();
+    ListIntervention.clear();
+
+    print(">>>>>> FlitreGroup");
+
+    await Srv_DbTools.getGroupeRech(selClient.ClientId, Search_Groupe_TextController.text);
+    print(">>>>>> ${Srv_DbTools.ListGroupe.length}");
+    ListGroupe.addAll(Srv_DbTools.ListGroupe);
+    print(">>>>>> ${ListGroupe.length}");
+
+    if (ListGroupe.length == 1) {
+      selGroupe = ListGroupe[0];
+    }
+
+    setState(() {});
+  }
+
   Future FlitreSite() async {
     ListClient.clear();
     ListGroupe.clear();
@@ -103,7 +129,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
 
     print(">>>>>> FlitreSite");
 
-    await Srv_DbTools.getSiteRech(selClient.ClientId, Search_Site_TextController.text);
+    await Srv_DbTools.getSiteRech(selGroupe.GroupeId, Search_Site_TextController.text);
     print(">>>>>> ${Srv_DbTools.ListSite.length}");
     ListSite.addAll(Srv_DbTools.ListSite);
     print(">>>>>> ${ListSite.length}");
@@ -111,7 +137,6 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
     if (ListSite.length == 1) {
       selSite = ListSite[0];
     }
-
 
     setState(() {});
   }
@@ -132,7 +157,6 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
 
     if (ListZone.length == 1) {
       selZone = ListZone[0];
-      iListe = 4;
     }
 
     setState(() {});
@@ -161,7 +185,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
 
         if (selGroupe.GroupeId > 0) {
           await Srv_DbTools.getSitesGroupe(selGroupe.GroupeId);
-          print(">>>>>> ${Srv_DbTools.ListSite.length}");
+          print(">>>>>> ${selGroupe.GroupeId} ${Srv_DbTools.ListSite.length}");
           ListSite.addAll(Srv_DbTools.ListSite);
 
           if (ListSite.length == 1) selSite = ListSite[0];
@@ -188,6 +212,8 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
   @override
   void initLib() async {
     await DbTools.getParam_Param();
+
+    selDLC = ListDCL[0];
 
     ListParam_Type.clear();
     Srv_DbTools.ListParam_ParamAll.forEach((element) {
@@ -249,8 +275,80 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
 
 */
 
-  double SelHeight = 560;
+  double SelHeight = 559;
   double icoWidth = 40;
+
+  @override
+  Widget ListeDCL(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 200,
+                height: 40,
+                child: Text(
+                  "Type de document",
+                  style: gColors.bodyTitle1_B_G,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
+          ListParam_Type.length == 0
+              ? Container()
+              : Container(
+                  width: 400.0, // Change as per your requirement
+                  height: 160, // Change as per your requirement
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: ListDCL.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final item = ListDCL[index];
+
+                      return InkWell(
+                          onTap: () async {
+                            await HapticFeedback.vibrate();
+                            selDLC = item;
+                            setState(() {});
+                          },
+                          child: Container(
+                              decoration: BoxDecoration(
+                                color: (item.compareTo(selDLC) == 0) ? gColors.primaryGreen : Colors.transparent,
+                                border: Border.all(
+                                  color: (item.compareTo(selDLC) == 0) ? gColors.primaryGreen : Colors.transparent,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(12.0),
+                                ),
+                              ),
+                              padding: EdgeInsets.fromLTRB(10, 12, 10, 5), // TED
+                              height: 45,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(item,
+                                      textAlign: TextAlign.left,
+                                      style: gColors.bodyTitle1_B_Gr.copyWith(
+                                        color: (item.compareTo(selDLC) == 0) ? gColors.white : gColors.primary,
+                                      ))
+                                ],
+                              )));
+                    },
+                  ),
+                ),
+        ],
+      ),
+    );
+  }
 
   @override
   Widget ListeAgences(BuildContext context) {
@@ -278,10 +376,8 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
           ListParam_Type.length == 0
               ? Container()
               : Container(
-
-
-            width: 400.0, // Change as per your requirement
-                  height: SelHeight, // Change as per your requirement
+                  width: 400.0, // Change as per your requirement
+                  height: SelHeight - 210, // Change as per your requirement
                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                   child: ListView.builder(
                     shrinkWrap: true,
@@ -383,9 +479,8 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
           ListParam_Type.length == 0
               ? Container()
               : Container(
-
                   width: 550.0,
-                  height: SelHeight - ((selClient.Client_Nom.length == 0 ) ? 17 : 47),
+                  height: SelHeight - ((selClient.Client_Nom.length == 0) ? 17 : 47),
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                   child: ListView.builder(
                     shrinkWrap: true,
@@ -417,8 +512,113 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
                                 children: [
                                   Text("${item.Client_Nom} / ${item.Adresse_CP} ${item.Adresse_Ville}",
                                       textAlign: TextAlign.left,
+                                      overflow: TextOverflow.ellipsis,
+                                      softWrap: false,
                                       style: gColors.bodyTitle1_B_Gr.copyWith(
                                         color: (item.Client_Nom.compareTo(selClient.Client_Nom) == 0) ? gColors.white : gColors.primary,
+                                      ))
+                                ],
+                              )));
+                    },
+                  ),
+                ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget ListeGroups(BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                width: 200,
+                height: 30,
+                child: Text(
+                  "Selection Groupe",
+                  style: gColors.bodyTitle1_B_G,
+                  textAlign: TextAlign.center,
+                ),
+              ),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                  width: 550.0,
+                  height: 30,
+                  child: TextField(
+                    style: gColors.bodyTitle1_B_Gr,
+                    onChanged: (text) {
+                      selDepot = "";
+                      FlitreGroupe();
+                    },
+                    controller: Search_Groupe_TextController,
+                    decoration: InputDecoration(
+                      suffixIcon: IconButton(
+                        onPressed: () {
+                          Search_Groupe_TextController.clear();
+                          selDepot = "";
+                          FlitreGroupe();
+                        },
+                        icon: Image.asset(
+                          "assets/images/Btn_Clear.png",
+                          height: icoWidth,
+                          width: icoWidth,
+                        ),
+                      ),
+                    ),
+                  )),
+            ],
+          ),
+          ListParam_Type.length == 0
+              ? Container()
+              : Container(
+                  width: 550.0,
+                  height: SelHeight - ((selGroupe.Groupe_Nom.length == 0) ? 107 : 137),
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  child: ListView.builder(
+                    shrinkWrap: true,
+                    itemCount: ListGroupe.length,
+                    itemBuilder: (BuildContext context, int index) {
+                      final item = ListGroupe[index];
+
+                      return InkWell(
+                          onTap: () async {
+                            await HapticFeedback.vibrate();
+                            selGroupe = item;
+                            setState(() {});
+                          },
+                          child: Container(
+                              decoration: BoxDecoration(
+                                color: (item.Groupe_Nom.compareTo(selGroupe.Groupe_Nom) == 0) ? gColors.primaryGreen : Colors.transparent,
+                                border: Border.all(
+                                  color: (item.Groupe_Nom.compareTo(selGroupe.Groupe_Nom) == 0) ? gColors.primaryGreen : Colors.transparent,
+                                ),
+                                borderRadius: BorderRadius.all(
+                                  Radius.circular(12.0),
+                                ),
+                              ),
+                              padding: EdgeInsets.fromLTRB(10, 12, 10, 5), // TED
+                              height: 45,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text("${item.Groupe_Nom} / ${item.Groupe_CP} ${item.Groupe_Ville}",
+                                      textAlign: TextAlign.left,
+                                      style: gColors.bodyTitle1_B_Gr.copyWith(
+                                        color: (item.Groupe_Nom.compareTo(selGroupe.Groupe_Nom) == 0) ? gColors.white : gColors.primary,
                                       ))
                                 ],
                               )));
@@ -487,15 +687,14 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
           ListParam_Type.length == 0
               ? Container()
               : Container(
-            width: 550.0,
-                  height: SelHeight - ((selSite.Site_Nom.length == 0 ) ? 47 : 77),
+                  width: 550.0,
+                  height: SelHeight - ((selSite.Site_Nom.length == 0) ? 107 : 177),
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                   child: ListView.builder(
                     shrinkWrap: true,
                     itemCount: ListSite.length,
                     itemBuilder: (BuildContext context, int index) {
                       final item = ListSite[index];
-
                       return InkWell(
                           onTap: () async {
                             await HapticFeedback.vibrate();
@@ -559,8 +758,8 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
           ListParam_Type.length == 0
               ? Container()
               : Container(
-            width: 550.0,
-            height: SelHeight - ((selZone.Zone_Nom.length == 0 ) ? 77 : 107),
+                  width: 550.0,
+                  height: SelHeight - ((selZone.Zone_Nom.length == 0) ? 107 : 177),
                   padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                   child: ListView.builder(
                     shrinkWrap: true,
@@ -633,8 +832,8 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
           ListParam_Type.length == 0
               ? Container()
               : Container(
-            width: 250.0, // Change as per your requirement
-            height: SelHeight - 72,
+                  width: 250.0, // Change as per your requirement
+                  height: SelHeight - 72,
 
                   padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
                   child: ListView.builder(
@@ -774,7 +973,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
             Container(
               width: 600,
               child: Text(
-                "Intervention : Création $iListe",
+                "DEVIS / CDE / LIVR : Création ${iListe}",
                 style: gColors.bodyTitle1_B_G32,
                 textAlign: TextAlign.center,
               ),
@@ -792,60 +991,72 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
               color: gColors.black,
               height: 1,
             ),
-
-
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Column(
                   children: [
-                    (selDepot.length == 0) ? Container() :
-                    Container(
+                    (selDepot.length == 0)
+                        ? Container()
+                        : Container(
+                            padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                            width: 600,
+                            height: 32,
+                            child: Text(
+                              iListe == 0 ? "${selDLC}" : "${selDLC} / ${selDepot}",
+                              style: gColors.bodyTitle1_N_G,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                    (selClient.Client_Nom.length == 0)
+                        ? Container()
+                        : Container(
+                            padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
+                            width: 600,
+                            height: 30,
+                            child: Text(
+                              "${selClient.Client_Nom}",
+                              style: gColors.bodyTitle1_N_G,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                    (selGroupe.Groupe_Nom.length == 0)
+                        ? Container()
+                        : Container(
                       padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
                       width: 600,
-                      height: 32,
+                      height: 30,
                       child: Text(
-                        "${selDepot}",
+                        "${selGroupe.Groupe_Nom}",
                         style: gColors.bodyTitle1_N_G,
                         textAlign: TextAlign.center,
                       ),
                     ),
-
-                    (selClient.Client_Nom.length == 0) ? Container() :
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-                      width: 600,
-                      height: 30,
-                      child: Text(
-                        "${selClient.Client_Nom}",
-                        style: gColors.bodyTitle1_N_G,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-
-                    (selSite.Site_Nom.length == 0) ? Container() :
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(0, 2, 0, 2),
-                      width: 600,
-                      height: 30,
-                      child: Text(
-                        "${selSite.Site_Nom}",
-                        style: gColors.bodyTitle1_B_G,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                    (selZone.Zone_Nom.length == 0 || selSite.Site_Nom == selZone.Zone_Nom) ? Container() :
-                    Container(
-                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-                      width: 600,
-                      height: 30,
-                      child: Text(
-                        "${selZone.Zone_Nom}",
-                        style: gColors.bodyTitle1_B_G,
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
+                    (selSite.Site_Nom.length == 0)
+                        ? Container()
+                        : Container(
+                            padding: const EdgeInsets.fromLTRB(0, 2, 0, 2),
+                            width: 600,
+                            height: 30,
+                            child: Text(
+                              "${selSite.Site_Nom}",
+                              style: gColors.bodyTitle1_N_G,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                    (selZone.Zone_Nom.length == 0 || selSite.Site_Nom == selZone.Zone_Nom)
+                        ? Container()
+                        : Container(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                            width: 600,
+                            height: 30,
+                            child: Text(
+                              "${selZone.Zone_Nom}",
+                              style: gColors.bodyTitle1_N_G,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
                   ],
                 )
               ],
@@ -853,7 +1064,6 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
             Container(
               height: 5,
             ),
-
             Container(
               color: gColors.black,
               height: 1,
@@ -861,18 +1071,21 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
             Row(
               children: [
                 Spacer(),
-                (iListe == 0) ? ListeAgences(context) : Container(),
-                (iListe == 1) ? ListeClients(context) : Container(),
-                (iListe == 2) ? ListeSites(context) : Container(),
-                (iListe == 3) ? ListeZones(context) : Container(),
-                (iListe == 4) ? ListeType(context) : Container(),
-                (iListe == 4) ? Spacer() : Container(),
-                (iListe == 4 && widget.isNew) ? ListeOrg(context) : Container(),
+                (iListe == 0) ? ListeDCL(context) : Container(),
+                (iListe == 1) ? ListeAgences(context) : Container(),
+                (iListe == 2) ? ListeClients(context) : Container(),
+                (iListe == 3) ? ListeGroups(context) : Container(),
+                (iListe == 4) ? ListeSites(context) : Container(),
+                (iListe == 5) ? ListeZones(context) : Container(),
                 Spacer(),
               ],
             ),
             Spacer(),
-            iListe == 4 ? Valider(context) : Suite(context),
+            iListe == 5
+                ? Valider(context)
+                : iListe >= 2
+                    ? SuiteCreer(context)
+                    : Suite(context),
             Container(
               color: gColors.black,
               height: 1,
@@ -925,28 +1138,27 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
           new ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
-              if (iListe > 0)
+              if (iListe > 0) {
                 iListe--;
-              else
-                {
-                  Navigator.of(context).pop();
-
-                }
-              if (iListe == 0) {
+                print(" Suite prec ${iListe}");
+              } else {
+                Navigator.of(context).pop();
+              }
+              if (iListe == 1) {
                 selClient = Client.ClientInit();
               }
-              if (iListe == 1) {                selZone = Zone.ZoneInit();
-
+              if (iListe == 2) {
+                selZone = Zone.ZoneInit();
                 selSite = Site.SiteInit();
                 Search_Client_TextController.clear();
                 FlitreClient();
               }
-              if (iListe == 2) {
+              if (iListe == 3) {
                 selZone = Zone.ZoneInit();
                 Search_Site_TextController.clear();
                 FlitreSite();
               }
-              if (iListe == 3) {
+              if (iListe == 4) {
                 FlitreZone();
               }
 
@@ -964,7 +1176,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
             color: gColors.primary,
             width: 8,
           ),
-          ((iListe == 1 && selClient.ClientId == 0) || (iListe == 2 && selSite.SiteId == 0) || (iListe == 3 && selZone.ZoneId == 0))
+          ((iListe == 2 && selClient.ClientId == 0) || (iListe == 3 && selGroupe.GroupeId == 0) || (iListe == 4 && selSite.SiteId == 0) || (iListe == 5 && selZone.ZoneId == 0))
               ? new ElevatedButton(
                   onPressed: () async {},
                   style: ElevatedButton.styleFrom(
@@ -979,17 +1191,22 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
                   onPressed: () async {
                     await HapticFeedback.vibrate();
                     iListe++;
-                    if (iListe == 1) {
+                    if (iListe == 2) {
                       selClient = Client.ClientInit();
                       Search_Client_TextController.clear();
                       FlitreClient();
                     }
-                    if (iListe == 2) {
+                    if (iListe == 3) {
+                      selGroupe = Groupe.GroupeInit();
+                      Search_Site_TextController.clear();
+                      FlitreSite();
+                    }
+                    if (iListe == 4) {
                       selSite = Site.SiteInit();
                       Search_Site_TextController.clear();
                       FlitreSite();
                     }
-                    if (iListe == 3) {
+                    if (iListe == 5) {
                       selZone = Zone.ZoneInit();
                       FlitreZone();
                     }
@@ -1002,6 +1219,193 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
                         color: gColors.primaryGreen,
                       )),
                   child: Text('Suivant', style: gColors.bodyTitle1_B_W),
+                ),
+        ],
+      ),
+    );
+  }
+
+  Widget SuiteCreer(BuildContext context) {
+    print("SuiteCreer (iListe ${selClient.Desc()} && selClient.ClientId ${selClient.ClientId}) ${iListe}");
+
+    return Container(
+      width: 440,
+      alignment: Alignment.centerRight,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisSize: MainAxisSize.max,
+        children: <Widget>[
+//          Text(widget.param_Saisie.Param_Saisie_Controle),
+          Container(
+            color: gColors.primary,
+            width: 8,
+          ),
+          new ElevatedButton(
+            onPressed: () async {
+              await HapticFeedback.vibrate();
+              Navigator.of(context).pop();
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: gColors.primaryRed,
+            ),
+            child: Text('Annuler', style: gColors.bodyTitle1_B_W),
+          ),
+          Container(
+            color: gColors.primary,
+            width: 8,
+          ),
+          new ElevatedButton(
+            onPressed: () async {
+              await HapticFeedback.vibrate();
+              if (iListe > 0) {
+                iListe--;
+                print(" SuiteCreer prec ${iListe}");
+              } else {
+                Navigator.of(context).pop();
+              }
+              if (iListe == 1) {
+                selClient = Client.ClientInit();
+              }
+              if (iListe == 2) {
+                selZone = Zone.ZoneInit();
+                selSite = Site.SiteInit();
+                Search_Client_TextController.clear();
+                FlitreClient();
+              }
+              if (iListe == 3) {
+                selGroupe = Groupe.GroupeInit();
+                Search_Groupe_TextController.clear();
+                FlitreGroupe();
+              }
+              if (iListe == 4) {
+                selZone = Zone.ZoneInit();
+                Search_Site_TextController.clear();
+                FlitreSite();
+              }
+              if (iListe == 5) {
+                FlitreZone();
+              }
+
+              setState(() {});
+            },
+            style: ElevatedButton.styleFrom(
+                backgroundColor: gColors.primaryGreen,
+                side: const BorderSide(
+                  width: 1.0,
+                  color: gColors.primaryGreen,
+                )),
+            child: Text('Précédent', style: gColors.bodyTitle1_B_W),
+          ),
+          Container(
+            color: gColors.primary,
+            width: 8,
+          ),
+          ((iListe == 2 && selClient.ClientId == 0) || (iListe == 3 && selGroupe.GroupeId == 0) || (iListe == 4 && selSite.SiteId == 0) || (iListe == 5 && selZone.ZoneId == 0))
+              ? new ElevatedButton(
+                  onPressed: () async {},
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: gColors.LinearGradient1,
+                      side: const BorderSide(
+                        width: 1.0,
+                        color: gColors.LinearGradient1,
+                      )),
+                  child: Text('Suivant', style: gColors.bodyTitle1_B_W),
+                )
+              : new ElevatedButton(
+                  onPressed: () async {
+                    await HapticFeedback.vibrate();
+                    iListe++;
+
+                    print(" SuiteCreer Suiv ${iListe}");
+
+                    if (iListe == 2) {
+                      selClient = Client.ClientInit();
+                      Search_Client_TextController.clear();
+                      FlitreClient();
+                    }
+                    if (iListe == 3) {
+                      selGroupe = Groupe.GroupeInit();
+                      Search_Groupe_TextController.clear();
+                      FlitreGroupe();
+                    }
+
+                    if (iListe == 4) {
+                      selSite = Site.SiteInit();
+                      Search_Site_TextController.clear();
+                      FlitreSite();
+                    }
+                    if (iListe == 5) {
+                      selZone = Zone.ZoneInit();
+                      FlitreZone();
+                    }
+                    setState(() {});
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: gColors.primaryGreen,
+                      side: const BorderSide(
+                        width: 1.0,
+                        color: gColors.primaryGreen,
+                      )),
+                  child: Text('Suivant', style: gColors.bodyTitle1_B_W),
+                ),
+          Container(
+            color: gColors.primary,
+            width: 32,
+          ),
+
+          ((iListe == 2 && selClient.ClientId == 0) || (iListe == 3 && selGroupe.GroupeId == 0) || (iListe == 4 && selSite.SiteId == 0) || (iListe == 5 && selZone.ZoneId == 0))
+              ? new ElevatedButton(
+                  onPressed: () async {},
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: gColors.LinearGradient1,
+                      side: const BorderSide(
+                        width: 1.0,
+                        color: gColors.LinearGradient1,
+                      )),
+                  child: Text('Créer', style: gColors.bodyTitle1_B_W),
+                )
+              : new ElevatedButton(
+                  onPressed: () async {
+                    await HapticFeedback.vibrate();
+
+                    var now = new DateTime.now();
+                    var formatter = new DateFormat('dd/MM/yyyy');
+                    String formattedDate = formatter.format(now);
+
+                    DCL_Ent wDCL_Ent = DCL_Ent.DCL_EntInit();
+                    wDCL_Ent.DCL_Ent_Date = formattedDate;
+                    wDCL_Ent.DCL_Ent_Type = selDLC;
+                    wDCL_Ent.DCL_Ent_Version = 1;
+                    wDCL_Ent.DCL_Ent_ClientId = iListe >= 2 ? selClient.ClientId : -1;
+                    wDCL_Ent.DCL_Ent_GroupeId = iListe >= 3 ? selGroupe.GroupeId : -1;
+                    wDCL_Ent.DCL_Ent_SiteId =   iListe >= 4 ? selSite.SiteId : -1;
+                    wDCL_Ent.DCL_Ent_ZoneId =   iListe >= 5 ? selZone.ZoneId : -1;
+                    wDCL_Ent.DCL_Ent_InterventionId = -1;
+                    if (selDLC == "Devis")
+                    {
+                      wDCL_Ent.DCL_Ent_Etat = Srv_DbTools.ListParam_Param_Etat_Devis[0].Param_Param_ID;
+                    }
+                    if (selDLC == "Commande")
+                    {
+                      wDCL_Ent.DCL_Ent_Etat = Srv_DbTools.ListParam_Param_Etat_Cde[0].Param_Param_ID;
+                    }
+                    if (selDLC == "Bon de livraison")
+                    {
+                      wDCL_Ent.DCL_Ent_Etat = Srv_DbTools.ListParam_Param_Etat_Livr[0].Param_Param_ID;
+                    }
+                    await Srv_DbTools.InsertUpdateDCL_Ent(wDCL_Ent);
+                    Navigator.of(context).pop();
+
+
+                  },
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: gColors.primaryGreen,
+                      side: const BorderSide(
+                        width: 1.0,
+                        color: gColors.primaryGreen,
+                      )),
+                  child: Text('Créer', style: gColors.bodyTitle1_B_W),
                 ),
         ],
       ),
@@ -1039,7 +1443,12 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
           new ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
-              if (iListe > 0) iListe--;
+              if (iListe > 0) {
+                {
+                  iListe--;
+                  print(" Valider prec ${iListe}");
+                }
+              }
               setState(() {});
             },
             style: ElevatedButton.styleFrom(
@@ -1049,9 +1458,10 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
                   color: gColors.primaryGreen,
                 )),
             child: Text('Précédent', style: gColors.bodyTitle1_B_W),
-          ),          Container(
+          ),
+          Container(
             color: gColors.primary,
-            width: 8,
+            width: 115,
           ),
           new ElevatedButton(
             onPressed: () async {
@@ -1061,30 +1471,30 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
               var formatter = new DateFormat('dd/MM/yyyy');
               String formattedDate = formatter.format(now);
 
-              Srv_DbTools.gIntervention = Intervention.InterventionInit();
-              bool wRet = await Srv_DbTools.addIntervention(Srv_DbTools.gSite.SiteId);
-              Srv_DbTools.gIntervention.Intervention_isUpdate = wRet;
-              if (!wRet) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
-              print("ADD Srv_DbTools.gLastID ${Srv_DbTools.gLastID}");
-              print("ADD wRet ${wRet}");
-
-              Srv_DbTools.gIntervention.InterventionId = Srv_DbTools.gLastID;
-              Srv_DbTools.gIntervention.Intervention_ZoneId = selZone.ZoneId;
-              Srv_DbTools.gIntervention.Intervention_Type = wType;
-              Srv_DbTools.gIntervention.Intervention_Parcs_Type = wOrgID;
-              Srv_DbTools.gIntervention.Intervention_Date = formattedDate;
-              Srv_DbTools.gIntervention.Livr = "";
-              Srv_DbTools.gSelIntervention = wOrgID;
-
-              await DbTools.inserInterventions(Srv_DbTools.gIntervention);
-              if (wRet) await Srv_DbTools.setIntervention(Srv_DbTools.gIntervention);
-
-              if (widget.isNew) {
-                Parc_Ent wParc_Ent = Parc_Ent.Parc_EntInit(Srv_DbTools.gIntervention.InterventionId!, wOrgID, 1);
-                wParc_Ent.Parcs_Update = 1;
-                await DbTools.insertParc_Ent(wParc_Ent);
-//                await Srv_DbTools.InsertUpdateParc_Ent_Srv(wParc_Ent);
+              DCL_Ent wDCL_Ent = DCL_Ent.DCL_EntInit();
+              wDCL_Ent.DCL_Ent_Date = formattedDate;
+              wDCL_Ent.DCL_Ent_Type = selDLC;
+              wDCL_Ent.DCL_Ent_Version = 1;
+              wDCL_Ent.DCL_Ent_ClientId = selClient.ClientId;
+              wDCL_Ent.DCL_Ent_GroupeId = selGroupe.GroupeId;
+              wDCL_Ent.DCL_Ent_SiteId = selSite.SiteId;
+              wDCL_Ent.DCL_Ent_ZoneId = selZone.ZoneId;
+              wDCL_Ent.DCL_Ent_InterventionId = -1;
+              if (selDLC == "Devis")
+              {
+                wDCL_Ent.DCL_Ent_Etat = Srv_DbTools.ListParam_Param_Etat_Devis[0].Param_Param_ID;
               }
+              if (selDLC == "Commande")
+              {
+                wDCL_Ent.DCL_Ent_Etat = Srv_DbTools.ListParam_Param_Etat_Cde[0].Param_Param_ID;
+              }
+              if (selDLC == "Bon de livraison")
+              {
+                wDCL_Ent.DCL_Ent_Etat = Srv_DbTools.ListParam_Param_Etat_Livr[0].Param_Param_ID;
+              }
+              await Srv_DbTools.InsertUpdateDCL_Ent(wDCL_Ent);
+
+              //*****
 
               Navigator.of(context).pop();
             },
@@ -1094,7 +1504,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
                   width: 1.0,
                   color: gColors.primaryGreen,
                 )),
-            child: Text('Valider', style: gColors.bodyTitle1_B_W),
+            child: Text('Créer', style: gColors.bodyTitle1_B_W),
           ),
         ],
       ),

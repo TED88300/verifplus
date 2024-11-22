@@ -22,6 +22,7 @@ class gColors {
   static const Color primaryRed = Color(0xFFb33333);
   static const Color primaryOrange = Color(0xFFed7d31);
   static const Color primaryBlue = Color(0xFF4472c4);
+  static Color backgroundColor = const Color.fromRGBO(0, 116, 227, 1);
 
   static const Color greyDark = Color(0xFF888888);
   static const Color greyLight = Color(0xFFf1f1f1);
@@ -247,6 +248,9 @@ class gColors {
         fontWeight: FontWeight.bold,
       );
 
+
+
+
   static TextStyle get bodyTitle1_B_G_20 => TextStyle(
         color: grey,
         fontSize: 20,
@@ -264,6 +268,12 @@ class gColors {
         fontSize: 24,
         fontWeight: FontWeight.normal,
       );
+
+  static TextStyle get bodyTitle1_B_W24 => TextStyle(
+    color: white,
+    fontSize: 24,
+    fontWeight: FontWeight.bold,
+  );
 
   static TextStyle get bodyTitle1_B_W => TextStyle(
         color: white,
@@ -902,7 +912,6 @@ class gColors {
     for (int p = 0; p < Srv_DbTools.ListParam_Param_Etat_Devis.length; p++) {
       Param_Param wParam_Param = Srv_DbTools.ListParam_Param_Etat_Devis[p];
 
-      print("getColorEtatDevis ${Status} ${wParam_Param.Param_Param_ID}");
 
       if (wParam_Param.Param_Param_ID == Status)
       {
@@ -920,8 +929,6 @@ class gColors {
     for (int p = 0; p < Srv_DbTools.ListParam_Param_Etat_Cde.length; p++) {
       Param_Param wParam_Param = Srv_DbTools.ListParam_Param_Etat_Cde[p];
 
-      print("getColorEtatCde ${Status} ${wParam_Param.Param_Param_ID}");
-
       if (wParam_Param.Param_Param_ID == Status)
       {
         wColor = gColors.getColor(wParam_Param.Param_Param_Color);
@@ -936,9 +943,6 @@ class gColors {
 
     for (int p = 0; p < Srv_DbTools.ListParam_Param_Etat_Livr.length; p++) {
       Param_Param wParam_Param = Srv_DbTools.ListParam_Param_Etat_Livr[p];
-
-      print("getColorEtatLivr ${Status} ${wParam_Param.Param_Param_ID}");
-
       if (wParam_Param.Param_Param_ID == Status)
       {
         wColor = gColors.getColor(wParam_Param.Param_Param_Color);

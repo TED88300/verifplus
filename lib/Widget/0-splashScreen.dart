@@ -109,7 +109,55 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
       }
     });
 
+    Srv_DbTools.ListParam_Param_Validite_devis.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Validite_devis") == 0) {
+        Srv_DbTools.ListParam_Param_Validite_devis.add(element);
+      }
+    });
 
+    Srv_DbTools.ListParam_Param_Livraison_prev.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Livraison_prev") == 0) {
+        Srv_DbTools.ListParam_Param_Livraison_prev.add(element);
+      }
+    });
+
+    Srv_DbTools.ListParam_Param_Mode_rglt.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Mode_rglt") == 0) {
+        Srv_DbTools.ListParam_Param_Mode_rglt.add(element);
+      }
+    });
+
+    Srv_DbTools.ListParam_Param_Moyen_paiement.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Moyen_paiement") == 0) {
+        Srv_DbTools.ListParam_Param_Moyen_paiement.add(element);
+      }
+    });
+
+    Srv_DbTools.ListParam_Param_Pref_Aff.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Pref_Aff") == 0) {
+        Srv_DbTools.ListParam_Param_Pref_Aff.add(element);
+      }
+    });
+
+    Srv_DbTools.ListParam_Param_Rel_Auto.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Rel_Auto") == 0) {
+        Srv_DbTools.ListParam_Param_Rel_Auto.add(element);
+      }
+    });
+
+
+    Srv_DbTools.ListParam_Param_Rel_Anniv.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Rel_Anniv") == 0) {
+        Srv_DbTools.ListParam_Param_Rel_Anniv.add(element);
+      }
+    });
 
 
     Srv_DbTools.ListParam_ParamCiv.clear();

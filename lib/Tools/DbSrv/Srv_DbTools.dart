@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:http/http.dart' as http;
 import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
@@ -77,9 +78,6 @@ class Srv_DbTools {
 
   static String simCountryCode = "";
 
-
-
-
   static List<String> List_UserInter = [];
   static List<String> List_UserInterID = [];
 
@@ -134,9 +132,6 @@ class Srv_DbTools {
     return [];
   }
 
-  
-  
-  
   //******************************************
   //************   NF074_Gammes   ************
   //******************************************
@@ -456,12 +451,10 @@ class Srv_DbTools {
   }
 
   static Future<bool> IMPORT_Article_Ebp_ES() async {
-
-
 //    String wSlq = "SELECT Articles_Ebp.* FROM Articles_Ebp, Articles_Fam_Grp_Ebp where Articles_Fam_Grp_Code_Fam = Article_codeFamilleArticles AND Articles_Fam_Grp_Grp = '01 - EXTINCTION' ORDER BY Article_codeArticle";
     String wSlq = "SELECT Articles_Ebp.* FROM Articles_Ebp where Article_codeFamilleArticles = '1'";
 
-print("IMPORT_Article_Ebp_ES ${wSlq}");
+    print("IMPORT_Article_Ebp_ES ${wSlq}");
 
     try {
       ListArticle_Ebp_ES = await getArticle_Ebp_API_Post("select", wSlq);
@@ -548,13 +541,10 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     return [];
   }
 
-
-
   static List<Result_Article_Link_Verif> ListResult_Article_Link_Verif = [];
   static List<Result_Article_Link_Verif> ListResult_Article_Link_Verif_PROP = [];
   static List<Result_Article_Link_Verif> ListResult_Article_Link_Verif_PROP_Mixte = [];
   static List<Result_Article_Link_Verif> ListResult_Article_Link_Verif_PROP_Service = [];
-
 
   //
   //
@@ -577,30 +567,23 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
   static List<Client> ListClient_CSIP = [];
   static List<Client> ListClient_CSIP_Total = [];
 
-
   static Future<bool> ListClient_CSIP_Total_Insert(Client wClient) async {
     bool wTrv = false;
     for (int i = 0; i < Srv_DbTools.ListClient_CSIP_Total.length; i++) {
       Client tClient = ListClient_CSIP_Total[i];
 
-      if (tClient.ClientId == wClient .ClientId)
-        {
-          wTrv = true;
-          break;
-        }
+      if (tClient.ClientId == wClient.ClientId) {
+        wTrv = true;
+        break;
+      }
     }
 
-    if (!wTrv)
-    {
+    if (!wTrv) {
       ListClient_CSIP_Total.add(wClient);
     }
 
-
     return true;
-
   }
-
-
 
   static Future<bool> getClient_ALL() async {
     ListClient_CSIP_Total.clear();
@@ -613,12 +596,11 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     ListClient.clear();
     ListClient.addAll(ListClient_CSIP_Total);
 
-
     ListClient_CSIP_Total.clear();
     return true;
   }
 
-    static Future<bool> getClient_All() async {
+  static Future<bool> getClient_All() async {
     String wSlq = "SELECT Clients.* FROM Clients, Groupes, Sites where  Groupe_ClientId = ClientId And Site_GroupeId = GroupeId";
     //print("getClient_User_S ${wSlq}");
     ListClient_CSIP = await getClient_CSIP_API_Post("select", wSlq);
@@ -631,16 +613,13 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     return false;
   }
 
-
   static Future<bool> getClient_User_CSIP(String User_Matricule) async {
-
     ListClient_CSIP_Total.clear();
     await getClient_User_C(User_Matricule);
     ListClient_CSIP.forEach((wClient) {
       //print("getClient_User_C ${wClient.Client_Nom}");
       ListClient_CSIP_Total_Insert(wClient);
     });
-
 
     await getClient_User_S(User_Matricule);
     ListClient_CSIP.forEach((wClient) {
@@ -666,14 +645,11 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
       ListClient_CSIP_Total_Insert(wClient);
     });
 
-
     ListClient.clear();
     ListClient.addAll(ListClient_CSIP_Total);
 
-
     ListClient_CSIP_Total.clear();
     return true;
-
   }
 /*
 
@@ -776,36 +752,24 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     return [];
   }
 
-
   static Future<bool> getClientRech(String wRech, String wDepot) async {
-
-
-   String User_Matricule = Srv_DbTools.gUserLogin.User_Matricule;
+    String User_Matricule = Srv_DbTools.gUserLogin.User_Matricule;
 
     String wSlq = 'SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays FROM Clients  LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = "FACT" ';
-   print("getClientRech A");
+    print("getClientRech A");
 
-    
-    if (wRech.isNotEmpty)
-      {
-        wSlq = 'SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays, FROM Clients LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = "FACT" '
-            ' WHERE Clients.Client_Nom LIKE "%' +
-            '${wRech}' +
-            '%" OR Adresse_CP LIKE "%' +
-            '${wRech}' +
-            '%" OR Adresse_Ville LIKE "%' +
-            '${wRech}' +
-            '%" ORDER BY Client_Nom;';
-
-      }
-    else
-    if (wDepot.isNotEmpty)
-    {
-       wSlq = 'SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays FROM Clients LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = "FACT" WHERE Clients.Client_Depot = "$wDepot"' ;
-
+    if (wRech.isNotEmpty) {
+      wSlq = 'SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays, FROM Clients LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = "FACT" '
+              ' WHERE Clients.Client_Nom LIKE "%' +
+          '${wRech}' +
+          '%" OR Adresse_CP LIKE "%' +
+          '${wRech}' +
+          '%" OR Adresse_Ville LIKE "%' +
+          '${wRech}' +
+          '%" ORDER BY Client_Nom;';
+    } else if (wDepot.isNotEmpty) {
+      wSlq = 'SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays FROM Clients LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = "FACT" WHERE Clients.Client_Depot = "$wDepot"';
     }
-
-
 
     print("getClient wSlq $wSlq");
     ListClient = await getClient_API_Post("select", wSlq);
@@ -818,34 +782,23 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
   }
 
   static Future<bool> getClientRechVP(String wRech, String wDepot) async {
-
-
     String User_Matricule = Srv_DbTools.gUserLogin.User_Matricule;
 
     String wSlq = 'SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays, CONCAT(Users.User_Nom, " " , Users.User_Prenom) as Users_Nom FROM Clients JOIN Users ON Clients.Client_Commercial = \"${User_Matricule}\" LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = "FACT" ';
     print("getClientRech A");
 
-
-    if (wRech.isNotEmpty)
-    {
+    if (wRech.isNotEmpty) {
       wSlq = 'SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays, CONCAT(Users.User_Nom, " " , Users.User_Prenom) as Users_Nom FROM Clients LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = "FACT" JOIN Users ON Clients.Client_Commercial = \"User_Matricule\"'
-          ' WHERE Clients.Client_Nom LIKE "%' +
+              ' WHERE Clients.Client_Nom LIKE "%' +
           '${wRech}' +
           '%" OR Adresse_CP LIKE "%' +
           '${wRech}' +
           '%" OR Adresse_Ville LIKE "%' +
           '${wRech}' +
           '%" ORDER BY Client_Nom;';
-
+    } else if (wDepot.isNotEmpty) {
+      wSlq = 'SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays, CONCAT(Users.User_Nom, " " , Users.User_Prenom) as Users_Nom FROM Clients JOIN Users ON Clients.Client_Commercial = \"User_Matricule\"  LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = "FACT" WHERE Clients.Client_Depot = "$wDepot"';
     }
-    else
-    if (wDepot.isNotEmpty)
-    {
-      wSlq = 'SELECT Clients.*, Adresse_Adr1, Adresse_CP,Adresse_Ville,Adresse_Pays, CONCAT(Users.User_Nom, " " , Users.User_Prenom) as Users_Nom FROM Clients JOIN Users ON Clients.Client_Commercial = \"User_Matricule\"  LEFT JOIN Adresses ON Clients.ClientId = Adresses.Adresse_ClientId AND Adresses.Adresse_Type = "FACT" WHERE Clients.Client_Depot = "$wDepot"' ;
-
-    }
-
-
 
     print("getClient wSlq $wSlq");
     ListClient = await getClient_API_Post("select", wSlq);
@@ -870,7 +823,6 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     }
     return false;
   }
-
 
   //*****************************
   //*****************************
@@ -929,7 +881,7 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
 
     try {
       bool ret = await add_API_Post("upddel", wSlq);
-  //    print("setClient ret " + ret.toString());
+      //    print("setClient ret " + ret.toString());
       return ret;
     } catch (e) {
 //      print("setClient ERROR " + e.toString());
@@ -1147,7 +1099,19 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
   static List<Groupe> ListGroupesearchresult = [];
   static Groupe gGroupe = Groupe.GroupeInit();
 
+  static Future<bool> getGroupeRech(int ID, String wRech) async {
+    String wSlq = 'SELECT Groupe_Nom , Groupes.* FROM Groupes, Clients WHERE (Groupe_Nom LIKE "%' + '${wRech}' + '%" OR Groupe_CP LIKE "%' + '${wRech}' + '%" OR Groupe_Ville LIKE "%' + '${wRech}' + '%" ) AND Groupe_ClientId = ClientId AND Groupe_ClientId = $ID ORDER BY Groupe_Nom ASC;';
 
+//    String wSlq = 'select * from Groupes WHERE Groupe_Nom LIKE "%' + '${wRech}' + '%" OR Groupe_CP LIKE "%' + '${wRech}' + '%" OR Groupe_Ville LIKE "%' + '${wRech}' + '%" ORDER BY Groupe_Nom;';
+    print("getGroupeRech wSlq $wSlq");
+    ListGroupe = await getGroupe_API_Post("select", wSlq);
+    if (ListGroupe == null) return false;
+    if (ListGroupe.length > 0) {
+      gGroupe = ListGroupe[0];
+      return true;
+    }
+    return false;
+  }
 
   static Future<bool> getGroupeAll() async {
     try {
@@ -1182,6 +1146,7 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
   }
 
   static Future getGroupeID(int ID) async {
+    print("getGroupeID ${ID}");
     ListGroupe.forEach((element) {
       if (element.GroupeId == ID) {
         gGroupe = element;
@@ -1209,10 +1174,10 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     try {
 //      gColors.printWrapped("setGroupe " + wSlq);
       bool ret = await add_API_Post("upddel", wSlq);
-  //    print("setGroupe ret " + ret.toString());
+      //    print("setGroupe ret " + ret.toString());
       return true;
     } catch (e) {
-    //  print("setGroupe ERROR " + e.toString());
+      //  print("setGroupe ERROR " + e.toString());
       return false;
     }
   }
@@ -1276,11 +1241,8 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
   static String gSelGroupe = "";
   static String gSelGroupeBase = "Tous les groupes";
 
-
-
-
   static Future<bool> getSiteRech(int ID, String wRech) async {
-    String wSlq = 'SELECT Groupe_Nom , Sites.* FROM Sites , Groupes, Clients WHERE (Site_Nom LIKE "%' + '${wRech}' + '%" OR Site_CP LIKE "%' + '${wRech}' + '%" OR Site_Ville LIKE "%' + '${wRech}' + '%" ) AND Site_GroupeId = GroupeId AND Groupe_ClientId = ClientId AND Groupe_ClientId = $ID ORDER BY Site_Nom ASC;';
+    String wSlq = 'SELECT Sites.* FROM Sites WHERE (Site_Nom LIKE "%' + '${wRech}' + '%" OR Site_CP LIKE "%' + '${wRech}' + '%" OR Site_Ville LIKE "%' + '${wRech}' + '%" ) AND Site_GroupeId = $ID ORDER BY Site_Nom ASC;';
 
 //    String wSlq = 'select * from Sites WHERE Site_Nom LIKE "%' + '${wRech}' + '%" OR Site_CP LIKE "%' + '${wRech}' + '%" OR Site_Ville LIKE "%' + '${wRech}' + '%" ORDER BY Site_Nom;';
     print("getSiteRech wSlq $wSlq");
@@ -1292,8 +1254,6 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     }
     return false;
   }
-
-
 
   static Future<bool> getSiteAll() async {
     try {
@@ -1329,7 +1289,6 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     }
   }
 
-
   static Future<bool> getClientSites(int ID) async {
     String wTmp = "SELECT Groupe_Nom , Sites.* FROM Sites , Groupes, Clients where Site_GroupeId = GroupeId AND Groupe_ClientId = ClientId AND Groupe_ClientId = $ID ORDER BY Site_Nom ASC;";
     print("SRV_DbTools getSitesGroupe ${wTmp}");
@@ -1346,7 +1305,6 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
       return false;
     }
   }
-
 
   static Future<bool> getGroupeSites(int ID) async {
     String wTmp = "SELECT Groupe_Nom , Sites.* FROM Sites , Groupes where Site_GroupeId = GroupeId AND Site_GroupeId = ${ID} ORDER BY Groupe_Nom ASC, Site_Nom ASC;";
@@ -1428,7 +1386,6 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
     request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
-
 
     http.StreamedResponse response = await request.send();
 
@@ -1596,7 +1553,7 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
       final items = parsedJson['data'];
 
       if (items != null) {
-          List<Zone> ZoneList = await items.map<Zone>((json) {
+        List<Zone> ZoneList = await items.map<Zone>((json) {
           return Zone.fromJson(json);
         }).toList();
         return ZoneList;
@@ -1623,8 +1580,6 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
   static String selectedUserInter6 = "";
   static String selectedUserInter4RC = "";
 
-
-
   static String gSelIntervention = "";
   static String gSelInterventionBase = "Tous les types d'organe";
 
@@ -1634,8 +1589,6 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
 
     int wInterventionIdA = a.InterventionId!;
     int wInterventionIdB = b.InterventionId!;
-
-
 
     var inputFormat = DateFormat('dd/MM/yyyy');
     var inputDateA = inputFormat.parse(wInterventionDateA!);
@@ -1655,9 +1608,6 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     }
   }
 
-
-
-
   static Future<bool> getInterventionClientAll() async {
     String wTmp = "SELECT Clients.ClientId, Clients.Client_Nom, Groupes.GroupeId ,Groupes.Groupe_Nom, Sites.SiteId,Sites.Site_Nom, Zones.ZoneID, Zones.Zone_Nom,a.*, IFNULL(c.Cnt,0) as Cnt FROM Interventions a LEFT JOIN (SELECT Parcs_InterventionId, count(1) Cnt FROM Parcs_Ent GROUP BY Parcs_InterventionId) as c ON c.Parcs_InterventionId=a.InterventionId LEFT JOIN Zones ON ZoneId = Intervention_ZoneId LEFT JOIN Sites ON SiteId = Zone_SiteId LEFT JOIN Groupes ON GroupeId = Site_GroupeId LEFT JOIN Clients ON ClientId = Groupe_ClientId";
 
@@ -1670,8 +1620,6 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     }
     return false;
   }
-
-
 
   static Future<List<Intervention>> getIntervention_API_Post_Client(String aType, String aSQL) async {
     setSrvToken();
@@ -1697,7 +1645,6 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     return [];
   }
 
-
   static Future<bool> getInterventionAll() async {
     try {
       ListIntervention = await getIntervention_API_Post("select", "select * from Interventions");
@@ -1715,14 +1662,14 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
   static Future<bool> getInterventionUID(String ResourceId) async {
     try {
       ListIntervention = await getIntervention_API_Post("select", "SELECT Interventions.* FROM Planning, Interventions WHERE Planning_InterventionId = InterventionId AND Planning_ResourceId = \"$ResourceId\" GROUP BY Interventions.InterventionId;");
-    if (ListIntervention == null) return false;
-    print("getInterventionAll ${ListIntervention.length}");
-    if (ListIntervention.length > 0) {
-    return true;
-    }
-    return false;
+      if (ListIntervention == null) return false;
+      print("getInterventionAll ${ListIntervention.length}");
+      if (ListIntervention.length > 0) {
+        return true;
+      }
+      return false;
     } catch (e) {
-    return false;
+      return false;
     }
   }
 
@@ -1768,9 +1715,6 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     });
   }
 
-
-
-
   static Future<bool> setIntervention(Intervention Intervention) async {
     String wSlq = "UPDATE Interventions SET "
             "InterventionId     =   ${Intervention.InterventionId}, " +
@@ -1784,7 +1728,7 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
         "Intervention_Signataire_Client        = \"${Intervention.Intervention_Signataire_Client}\", " +
         "Intervention_Signataire_Tech        = \"${Intervention.Intervention_Signataire_Tech}\", " +
         "Intervention_Signataire_Date        = \"${Intervention.Intervention_Signataire_Date}\", " +
-        "Intervention_Signataire_Date_Client	        = \"${Intervention.Intervention_Signataire_Date_Client	}\", " +
+        "Intervention_Signataire_Date_Client	        = \"${Intervention.Intervention_Signataire_Date_Client}\", " +
         "Intervention_Signature_Client        = \"${Intervention.Intervention_Signature_Client}\", " +
         "Intervention_Signature_Tech        = \"${Intervention.Intervention_Signature_Tech}\", " +
         "Intervention_Sat        = ${Intervention.Intervention_Sat}, " +
@@ -1797,7 +1741,7 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
 //      print("setIntervention ret " + ret.toString());
       return true;
     } catch (e) {
-  //    print("setIntervention ERROR " + e.toString());
+      //    print("setIntervention ERROR " + e.toString());
       return false;
     }
   }
@@ -1853,9 +1797,7 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     return [];
   }
 
-
 //  SELECT * FROM planning_link where Planning_ResourceId = 1
-
 
   //*************************************
   //************   PLANNING   ***********
@@ -1868,8 +1810,6 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
       String wSql = "SELECT Users.User_Nom , Users.User_Prenom, SUM(TIMEDIFF( Planning.Planning_InterventionendTime,Planning.Planning_InterventionstartTime) / 10000) as H FROM Planning , Users where Planning_ResourceId = Users.User_Matricule AND   Planning_InterventionId = $InterventionId GROUP BY Planning.Planning_ResourceId ORDER BY H DESC;";
 
       print(" Srv_DbTools getPlanning_InterventionIdRes ${wSql}");
-
-
 
       ListUserH = await getPlanningH_API_Post("select", wSql);
       if (ListPlanning == null) return false;
@@ -2030,8 +1970,6 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     }
   }
 
-
-
   static Future getPlanning_InterventionRes(String ResourceId) async {
     try {
       String wTmp = "SELECT PlanningId, Planning_InterventionId, Planning_ResourceId,Planning_InterventionstartTime, Planning_InterventionendTime, Planning_Libelle, InterventionId,Intervention_Type,Intervention_Parcs_Type,Intervention_Status, ZoneId, Zone_Nom, SiteId, Site_Nom, GroupeId, Groupe_Nom, ClientId, Client_Nom FROM Planning, Interventions, Zones, Sites, Groupes, Clients WHERE Planning_InterventionId = InterventionId AND Intervention_ZoneId = ZoneId AND Zone_SiteId = SiteId AND Site_GroupeId = GroupeId AND Groupe_ClientId = ClientId AND Planning_ResourceId = \"$ResourceId\" ORDER BY Planning_InterventionstartTime";
@@ -2039,8 +1977,6 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
       ListPlanning_Intervention = await getPlanning_Intervention_API_Post("select", wTmp);
       if (ListPlanning_Intervention == null) return false;
       if (ListPlanning_Intervention.length > 0) {
-
-
         return true;
       }
       return false;
@@ -2058,7 +1994,7 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
 //    print("getPlanning_Intervention_API_Post " + aSQL);
 
     http.StreamedResponse response = await request.send();
-  //  print("getPlanning_Intervention_API_Post response ${response.statusCode}");
+    //  print("getPlanning_Intervention_API_Post response ${response.statusCode}");
 
     if (response.statusCode == 200) {
       var parsedJson = json.decode(await response.stream.bytesToString());
@@ -2087,8 +2023,6 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
   static List<InterMissions_Document> ListInterMissions_Documentsearchresult = [];
   static InterMissions_Document gInterMissions_Document = InterMissions_Document();
 
-
-
   static Future<bool> getInterMissions_Document_MissonID(int ID) async {
     String wTmp = "select InterMissionsDocInterMissionId ,Documents.* from InterMissions_Doc join Documents where InterMissions_Doc.InterMissionsDocDocID = DocID AND InterMissionsDocInterMissionId = $ID";
     print("wTmp $wTmp");
@@ -2097,7 +2031,6 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     if (ListInterMissions_Document == null) return false;
     print("getInterMissions_Document_MissonID ListInterMissions_Document.length ${ListInterMissions_Document.length}");
     if (ListInterMissions_Document.length > 0) {
-
       gInterMissions_Document = ListInterMissions_Document[0];
       print("gInterMissions_Document ${gInterMissions_Document.DocID}");
       print("ListInterMissions_Document return TRUE");
@@ -2106,24 +2039,20 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     return false;
   }
 
-
-
   static Future<List<InterMissions_Document>> getInterMissions_Document_API_Post(String aType, String aSQL) async {
     setSrvToken();
     String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
     var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
     request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
 
-
-
     http.StreamedResponse response = await request.send();
-    print("getInterMissions_Document_API_Post response ${response.statusCode}" );
+    print("getInterMissions_Document_API_Post response ${response.statusCode}");
 
     if (response.statusCode == 200) {
       var parsedJson = json.decode(await response.stream.bytesToString());
       final items = parsedJson['data'];
 
-      print("getInterMissions_Document_API_Post items ${items}" );
+      print("getInterMissions_Document_API_Post items ${items}");
 
       if (items != null) {
         List<InterMissions_Document> InterMissions_DocumentList = await items.map<InterMissions_Document>((json) {
@@ -2136,7 +2065,6 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     }
     return [];
   }
-
 
   //******************************************
   //************   InterMissionS   ***********
@@ -2178,12 +2106,11 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     }
   }
 
-
   static Future<bool> getInterMissionUID(String ResourceId) async {
     try {
       String wSql = "SELECT InterMissions.* FROM Planning,  InterMissions WHERE Planning_InterventionId = Planning_InterventionId AND Planning_ResourceId = \"$ResourceId\" GROUP BY InterMissionId ASC;";
       print("getInterMissionUID ${wSql}");
-      ListInterMission = await getInterMission_API_Post("select",wSql);
+      ListInterMission = await getInterMission_API_Post("select", wSql);
       if (ListInterMission == null) return false;
       print("getInterMissionUID ${ListInterMission.length}");
       if (ListInterMission.length > 0) {
@@ -2194,9 +2121,6 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
       return false;
     }
   }
-
-
-
 
   static Future<bool> getInterMissionsIntervention(int ID) async {
     String wTmp = "SELECT * FROM InterMissions WHERE InterMission_InterventionId = $ID";
@@ -2390,8 +2314,7 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
     if (aParc_Ent.Parcs_CodeArticleES == null) aParc_Ent.Parcs_CodeArticleES = "";
     if (aParc_Ent.Parcs_CODF == null) aParc_Ent.Parcs_CODF = "";
 
-    if (aParc_Ent.Parcs_Intervention_Timer == null) aParc_Ent.Parcs_Intervention_Timer= 0;
-
+    if (aParc_Ent.Parcs_Intervention_Timer == null) aParc_Ent.Parcs_Intervention_Timer = 0;
 
     String wSql = "INSERT INTO Parcs_Ent(ParcsId, Parcs_order, Parcs_InterventionId, "
         "Parcs_Type, "
@@ -2449,9 +2372,7 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
         "'${aParc_Ent.Action!.replaceAll("'", "‘")}',"
         "${aParc_Ent.Parcs_Intervention_Timer})";
 
-
     gColors.printWrapped("setParc_Ent B " + wSql);
-
 
     bool ret = await add_API_Post("insert", wSql);
     print("setParc_Ent ret " + ret.toString());
@@ -2459,9 +2380,7 @@ print("IMPORT_Article_Ebp_ES ${wSlq}");
   }
 
   static Future<bool> InsertUpdateParc_Ent_Srv_Srv(Parc_Ent_Srv aParc_Ent) async {
-
-if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervention_Timer= 0;
-
+    if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervention_Timer = 0;
 
     String wSql = "INSERT INTO Parcs_Ent(ParcsId, Parcs_order, Parcs_InterventionId, "
         "Parcs_Type, "
@@ -2564,7 +2483,6 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
 
       if (items != null) {
         List<Parc_Ent_Srv> Parc_EntList = await items.map<Parc_Ent_Srv>((json) {
-
           print("getParc_Ent_API_Post json ${json}");
 
           return Parc_Ent_Srv.fromJson(json);
@@ -2778,9 +2696,6 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
     }
   }
 
-
-
-
   static Future<bool> setParc_Art(Parc_Art_Srv Parc_Art) async {
     String wSlq = "UPDATE Parcs_Art SET "
             "ParcsArtId            =   ${Parc_Art.ParcsArtId}, " +
@@ -2905,15 +2820,14 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
     return [];
   }
 
-
   //******************************************
   //************   Parcs_Imgs   ***************
   //******************************************
 
   static List<Parc_Imgs_Srv> ListParc_Imgs = [];
   static List<Parc_Imgs_Srv> ListParc_Imgssearchresult = [];
-  static Parc_Imgs_Srv gParc_Imgs = Parc_Imgs_Srv(0,0,0,"","");
-  
+  static Parc_Imgs_Srv gParc_Imgs = Parc_Imgs_Srv(0, 0, 0, "", "");
+
   static Future<bool> getParc_ImgsAll() async {
     ListParc_Imgs = await getParc_Imgs_API_Post("select", "select * from Parcs_Imgs ORDER BY Parcs_Type");
 
@@ -2937,7 +2851,6 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
 
   static Future<bool> getParcs_ImgsInter(int Parcs_InterventionId) async {
     try {
-
       print(" getParcs_ImgsInter SELECT Parcs_Imgs.* FROM Parcs_Imgs, Parcs_Ent  WHERE Parc_Imgs_ParcsId = ParcsId AND Parcs_InterventionId = $Parcs_InterventionId");
 
       ListParc_Imgs = await getParc_Imgs_API_Post("select", "SELECT Parcs_Imgs.* FROM Parcs_Imgs, Parcs_Ent  WHERE Parc_Imgs_ParcsId = ParcsId AND Parcs_InterventionId = $Parcs_InterventionId");
@@ -2951,10 +2864,9 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
     }
   }
 
-
   static Future<bool> setParc_Imgs(Parc_Imgs_Srv Parc_Imgs) async {
     String wSlq = "UPDATE Parcs_Imgs SET "
-        "Parc_Imgid            =   ${Parc_Imgs.Parc_Imgid}, " +
+            "Parc_Imgid            =   ${Parc_Imgs.Parc_Imgid}, " +
         "Parc_Imgs_ParcsId      =   ${Parc_Imgs.Parc_Imgs_ParcsId}, " +
         "Parc_Imgs_Type      =   ${Parc_Imgs.Parc_Imgs_Type}, " +
         "Parc_Imgs_Data         = \"${Parc_Imgs.Parc_Imgs_Data}\", " +
@@ -2974,13 +2886,11 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
     return ret;
   }
 
-
-  int?    Parc_Imgid = 0;
-  int?    Parc_Imgs_ParcsId = 0;
-  int?    Parc_Imgs_Type = 0;
+  int? Parc_Imgid = 0;
+  int? Parc_Imgs_ParcsId = 0;
+  int? Parc_Imgs_Type = 0;
   String? Parc_Imgs_Data = "";
   String? Parc_Imgs_Path = "";
-
 
   static String InsertUpdateParc_Imgs_Srv_GetSql(Parc_Img aParc_Imgs) {
     String wSql = "INSERT INTO Parcs_Imgs("
@@ -3065,8 +2975,7 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
     }
     return [];
   }
-  
-  
+
   //******************************************
   //************   CONTACTS   ****************
   //******************************************
@@ -3110,7 +3019,6 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
         }
         return wRes;
       }
-
     } catch (e) {
       bool wRes = await DbTools.getContactClientAdrType(ClientID, AdresseId, Type);
       if (!wRes) {
@@ -3204,13 +3112,11 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
       if (ListContact.length > 0) {
         gContact = ListContact[0];
         return true;
-      }      return false;
+      }
+      return false;
     } catch (e) {
       return false;
     }
-
-
-
   }
 
   static Future<bool> getContactSite(int contactClientid, int contactAdresseid) async {
@@ -3538,7 +3444,6 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
     return false;
   }
 
-
   static Future<bool> getUserMat(String id) async {
     print(">>>>> getUserid $id");
     List<User> ListUser = await getUser_API_Post("select", "select * from Users where User_Matricule = $id ");
@@ -3554,8 +3459,6 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
     }
     return false;
   }
-
-
 
   static Future<List<User>> getUser_API_Post(String aType, String aSQL) async {
     setSrvToken();
@@ -3709,8 +3612,6 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
     }
     return [];
   }
-
-
 
   //*****************************
   //*****************************
@@ -3880,11 +3781,9 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
   }
 
   static Future<bool> getParam_Saisie(String Param_Saisie_Organe, String Param_Saisie_Type) async {
-
     ListParam_Saisie.clear();
     try {
       ListParam_Saisie = await getParam_Saisie_API_Post("select", "select * from Param_Saisie WHERE Param_Saisie_Organe = '${Param_Saisie_Organe}' AND Param_Saisie_Type = '${Param_Saisie_Type}'  ORDER BY Param_Saisie_Organe, Param_Saisie_Type, Param_Saisie_Ordre,Param_Saisie_ID");
-
 
       if (ListParam_Saisie == null) return false;
       if (ListParam_Saisie.length > 0) {
@@ -3900,7 +3799,7 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
       return false;
     } catch (e) {
       print("•••• •••• •••• •••• error ${ListParam_Saisie.length}");
-      await DbTools.getParam_Saisie( Param_Saisie_Organe,  Param_Saisie_Type);
+      await DbTools.getParam_Saisie(Param_Saisie_Organe, Param_Saisie_Type);
       print("•••• •••• •••• •••• DbTools ${ListParam_Saisie.length}");
 
       return false;
@@ -4012,8 +3911,14 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
   static List<Param_Param> ListParam_Param_Etat_Devis = [];
   static List<Param_Param> ListParam_Param_Etat_Cde = [];
   static List<Param_Param> ListParam_Param_Etat_Livr = [];
+  static List<Param_Param> ListParam_Param_Validite_devis = [];
+  static List<Param_Param> ListParam_Param_Livraison_prev = [];
+  static List<Param_Param> ListParam_Param_Mode_rglt = [];
+  static List<Param_Param> ListParam_Param_Moyen_paiement = [];
+  static List<Param_Param> ListParam_Param_Pref_Aff = [];
+  static List<Param_Param> ListParam_Param_Rel_Auto = [];
 
-
+  static List<Param_Param> ListParam_Param_Rel_Anniv = [];
 
 
   static List<Param_Param> ListParam_Paramsearchresult = [];
@@ -4040,8 +3945,6 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
   static List<String> ListParam_ParamFamID = [];
   static List<String> ListParam_FiltreFam = [];
   static List<String> ListParam_FiltreFamID = [];
-
-
 
   static Future<bool> getParam_ParamFam(String wFam) async {
     ListParam_ParamFam.clear();
@@ -4208,7 +4111,6 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
   }
 
   static Future<bool> getParam_Saisie_ParamAll() async {
-
     ListParam_Saisie_ParamAll.clear();
     try {
       ListParam_Saisie_ParamAll = await getParam_Saisie_Param_API_Post("select", "select * from Param_Saisie_Param ORDER BY Param_Saisie_Param_Id,Param_Saisie_Param_Ordre");
@@ -4219,9 +4121,8 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
           element.Param_Saisie_Param_Ico = await gObj.getAssetImage("assets/images/Aide_Ico_${element.Param_Saisie_Param_Label}.png");
 //          if (element.Param_Saisie_Param_Ico.toString().contains("AssetImage"))
 //          print("Param_Saisie_Param_Ico ${element.Param_Saisie_Param_Ico.toString()}");
-
-
-        };
+        }
+        ;
         return true;
       }
       return false;
@@ -4229,8 +4130,6 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
       await DbTools.getParam_Saisie_ParamAll();
       return false;
     }
-
-
   }
 
   static Future<bool> getParam_Saisie_Param(String Param_Saisie_Param_Id) async {
@@ -4252,7 +4151,6 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
     ListParam_Saisie_Param.clear();
     ListParam_Saisie_ParamAll.forEach((element) {
       if (element.Param_Saisie_Param_Id.compareTo(Param_Saisie_Param_Id) == 0) {
-
         ListParam_Saisie_Param.add(element);
       }
     });
@@ -4288,9 +4186,7 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
     return param_Saisie_Param;
   }
 
-
   static String SIT_Lib = "";
-
 
   static String DESC_Lib = "";
   static String FAB_Lib = "";
@@ -4304,7 +4200,6 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
   static String PREM_Lib = "";
 
   static String NCERT_Lib = "";
-
 
   static String PRS_Lib = "";
   static String CLF_Lib = "";
@@ -4427,7 +4322,6 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
     }
   }
 
-
   //******************************************
   //************   DCL_Ent   ***************
   //******************************************
@@ -4436,41 +4330,113 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
   static List<DCL_Ent> ListDCL_Entsearchresult = [];
   static DCL_Ent gDCL_Ent = DCL_Ent();
 
-
   static String gSelDCL_Ent = "";
   static String gSelDCL_EntBase = "Tous les types de document";
 
 
+  static DateTime SelDCL_DateDeb = DateTime(DateTime.now().year);
+  static DateTime SelDCL_DateFin = DateTime(DateTime.now().year, 12, 31);
+  static DateTime getDate(DateTime d) => DateTime(d.year, d.month, d.day);
+
+
+  static void selDateTools(int aSel) {
+    DateTime date = DateTime.now();
+
+    switch (aSel) {
+      case 0: // Aujourd'hui
+        SelDCL_DateDeb = date;
+        SelDCL_DateFin = SelDCL_DateDeb;
+        break;
+      case 1: // Aujourd'hui
+        SelDCL_DateDeb = date.add(Duration(days: -1));
+        SelDCL_DateFin = SelDCL_DateDeb;
+        break;
+      case 2: // Avant hier
+        SelDCL_DateDeb = date.add(Duration(days: -2));
+        SelDCL_DateFin = SelDCL_DateDeb;
+        break;
+      case 3: // Semaine courante
+        SelDCL_DateDeb = getDate(date.subtract(Duration(days: date.weekday - 1)));
+        SelDCL_DateFin = getDate(date.add(Duration(days: DateTime.daysPerWeek - date.weekday)));
+        break;
+      case 4: // Semaine précédante
+        date = date.add(Duration(days: -7));
+        SelDCL_DateDeb = getDate(date.subtract(Duration(days: date.weekday - 1)));
+        SelDCL_DateFin = getDate(date.add(Duration(days: DateTime.daysPerWeek - date.weekday)));
+        break;
+      case 5: // Semaine précédant précédante
+        date = date.add(Duration(days: -14));
+        SelDCL_DateDeb = getDate(date.subtract(Duration(days: date.weekday - 1)));
+        SelDCL_DateFin = getDate(date.add(Duration(days: DateTime.daysPerWeek - date.weekday)));
+        break;
+      case 6: // Mois courant
+        SelDCL_DateDeb = DateTime(date.year, date.month, 1);
+        SelDCL_DateFin = DateTime(date.year, date.month + 1, 0);
+        break;
+      case 7: // Mois précédent
+        SelDCL_DateDeb = DateTime(date.year, date.month - 1, 1);
+        SelDCL_DateFin = DateTime(date.year, date.month, 0);
+        break;
+      case 8: // Mois précédent le précédent
+        SelDCL_DateDeb = DateTime(date.year, date.month - 2, 1);
+        SelDCL_DateFin = DateTime(date.year, date.month - 1, 0);
+        break;
+      case 9: // Année précédente
+        SelDCL_DateDeb = DateTime(date.year, 1, 1);
+        SelDCL_DateFin =  DateTime(date.year, 12, 31);;
+        break;
+      case 10: // Année précédent la précédente
+        SelDCL_DateDeb = DateTime(date.year - 1, 1, 1);
+        SelDCL_DateFin = DateTime(date.year - 1, 12, 31);
+        break;
+      default:
+        SelDCL_DateDeb = DateTime.now();
+        SelDCL_DateFin = DateTime.now();
+        break;
+    }
+
+    print(" Sel ${aSel} SelDCL_DateDeb ${DateFormat('dd/MM/yyyy').format(SelDCL_DateDeb)} ${DateFormat('dd/MM/yyyy').format(SelDCL_DateFin)}");
+  }
+
+  
   static int affSortComparisonData_DCL(DCL_Ent a, DCL_Ent b) {
     final wDCL_EntDateA = a.DCL_Ent_Date;
     final wDCL_EntDateB = b.DCL_Ent_Date;
-
     int wDCL_EntIdA = a.DCL_EntID!;
     int wDCL_EntIdB = b.DCL_EntID!;
-
-
 
     var inputFormat = DateFormat('dd/MM/yyyy');
     var inputDateA = inputFormat.parse(wDCL_EntDateA!);
     var inputDateB = inputFormat.parse(wDCL_EntDateB!);
-
     if (inputDateA.isBefore(inputDateB)) {
       return 1;
     } else if (inputDateA.isAfter(inputDateB)) {
       return -1;
     } else {
       if (wDCL_EntIdA < wDCL_EntIdB) {
-        return 1;
-      } else if (wDCL_EntIdA > wDCL_EntIdB) {
         return -1;
+      } else if (wDCL_EntIdA > wDCL_EntIdB) {
+        return 1;
       }
+      return 0;
+    }
+  }
+
+  static int idSortComparison(DCL_Ent a, DCL_Ent b) {
+    final DCL_EntA = a.DCL_EntID;
+    final DCL_EntB = b.DCL_EntID;
+    if (DCL_EntA! < DCL_EntB!) {
+      return -1;
+    } else if (DCL_EntA! > DCL_EntB!) {
+      return 1;
+    } else {
       return 0;
     }
   }
 
 
   static Future<bool> getDCL_EntAll() async {
-    ListDCL_Ent = await getDCL_Ent_API_Post("select", "select * from DCL_Ent ORDER BY DCL_EntID");
+    ListDCL_Ent = await getDCL_Ent_API_Post("select", "select * from DCL_Ent WHERE DCL_Ent_InterventionId != 0 ORDER BY DCL_EntID");
 
     if (ListDCL_Ent == null) return false;
     print("getDCL_EntAll ${ListDCL_Ent.length}");
@@ -4490,32 +4456,18 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
     });
   }
 
-
-
   static Future<List<DCL_Ent>> getDCL_Ent_DCL_Ent_InterventionId(int DCL_Ent_InterventionId) async {
-
-
     ListDCL_Ent = await getDCL_Ent_API_Post("select", "select * from DCL_Ent WHERE DCL_Ent_InterventionId = $DCL_Ent_InterventionId ORDER BY DCL_EntID");
 
     if (ListDCL_Ent == null) return [];
-
     return ListDCL_Ent;
-
-
-
-
   }
-
-
-
-
-
-
 
   static Future<bool> setDCL_Ent(DCL_Ent DCL_Ent) async {
     String wSlq = "UPDATE DCL_Ent SET "
-        "DCL_EntID = '${DCL_Ent.DCL_EntID}', " +
+
         "DCL_Ent_Type = '${DCL_Ent.DCL_Ent_Type}', " +
+        "DCL_Ent_Num = '${DCL_Ent.DCL_Ent_Num}', " +
         "DCL_Ent_Version = '${DCL_Ent.DCL_Ent_Version}', " +
         "DCL_Ent_ClientId = '${DCL_Ent.DCL_Ent_ClientId}', " +
         "DCL_Ent_GroupeId = '${DCL_Ent.DCL_Ent_GroupeId}', " +
@@ -4536,6 +4488,10 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
         "DCL_Ent_ModeRegl = '${DCL_Ent.DCL_Ent_ModeRegl}', " +
         "DCL_Ent_MoyRegl = '${DCL_Ent.DCL_Ent_MoyRegl}', " +
         "DCL_Ent_Valo = '${DCL_Ent.DCL_Ent_Valo}', " +
+        "DCL_Ent_PrefAff = '${DCL_Ent.DCL_Ent_PrefAff}', " +
+        "DCL_Ent_RelAuto = '${DCL_Ent.DCL_Ent_RelAuto}', " +
+        "DCL_Ent_RelAnniv = '${DCL_Ent.DCL_Ent_RelAnniv}', " +
+        "DCL_Ent_CopRel = '${DCL_Ent.DCL_Ent_CopRel}', " +
         "DCL_Ent_Relance = '${DCL_Ent.DCL_Ent_Relance}', " +
         "DCL_Ent_Relance_Mode = '${DCL_Ent.DCL_Ent_RelanceMode}', " +
         "DCL_Ent_Relance_Contact = '${DCL_Ent.DCL_Ent_RelanceContact}', " +
@@ -4547,10 +4503,12 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
         "DCL_Ent_Regl = '${DCL_Ent.DCL_Ent_Regl}', " +
         "DCL_Ent_Partage = '${DCL_Ent.DCL_Ent_Partage}', " +
         "DCL_Ent_Dem_Tech = '${DCL_Ent.DCL_Ent_DemTech}', " +
-        "DCL_Ent_Dem_SsT = '${DCL_Ent.DCL_Ent_DemSsT}'" ;
+        "DCL_Ent_Dem_SsT = '${DCL_Ent.DCL_Ent_DemSsT}' WHERE DCL_EntID = ${DCL_Ent.DCL_EntID}";
+
+    print(" setDCL_Ent wSlq " + wSlq);
 
     bool ret = await add_API_Post("upddel", wSlq);
-    print("setDCL_Ent ret " + ret.toString());
+    print(" setDCL_Ent ret " + ret.toString());
     return ret;
   }
 
@@ -4564,8 +4522,8 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
 
   static String InsertUpdateDCL_Ent_GetSql(DCL_Ent aDCL_Ent) {
     String wSql = "INSERT INTO DCL_Ent("
-        "DCL_EntID, "
         "DCL_Ent_Type, "
+        "DCL_Ent_Num, "
         "DCL_Ent_Version, "
         "DCL_Ent_ClientId, "
         "DCL_Ent_GroupeId, "
@@ -4585,6 +4543,10 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
         "DCL_Ent_LivrPrev, "
         "DCL_Ent_ModeRegl, "
         "DCL_Ent_MoyRegl, "
+        "DCL_Ent_PrefAff, "
+        "DCL_Ent_RelAuto, "
+        "DCL_Ent_RelAnniv, "
+        "DCL_Ent_CopRel, "
         "DCL_Ent_Valo, "
         "DCL_Ent_Relance, "
         "DCL_Ent_Relance_Mode, "
@@ -4598,10 +4560,9 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
         "DCL_Ent_Partage, "
         "DCL_Ent_Dem_Tech, "
         "DCL_Ent_Dem_SsT, "
-
         ") VALUES ("
-        "NULL ,  "
         "'${aDCL_Ent.DCL_Ent_Type}',"
+        "'${aDCL_Ent.DCL_Ent_Num}',"
         "${aDCL_Ent.DCL_Ent_Version},"
         "${aDCL_Ent.DCL_Ent_ClientId},"
         "${aDCL_Ent.DCL_Ent_GroupeId},"
@@ -4621,6 +4582,10 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
         "'${aDCL_Ent.DCL_Ent_LivrPrev}',"
         "'${aDCL_Ent.DCL_Ent_ModeRegl}',"
         "'${aDCL_Ent.DCL_Ent_MoyRegl}',"
+        "'${aDCL_Ent.DCL_Ent_PrefAff}',"
+        "'${aDCL_Ent.DCL_Ent_RelAuto}',"
+        "'${aDCL_Ent.DCL_Ent_RelAnniv}',"
+        "'${aDCL_Ent.DCL_Ent_CopRel}',"
         "${aDCL_Ent.DCL_Ent_Valo},"
         "${aDCL_Ent.DCL_Ent_Relance},"
         "'${aDCL_Ent.DCL_Ent_RelanceMode}',"
@@ -4634,8 +4599,6 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
         "'${aDCL_Ent.DCL_Ent_Partage}',"
         "${aDCL_Ent.DCL_Ent_DemTech},"
         "${aDCL_Ent.DCL_Ent_DemSsT},"
-
-
         ")";
     return wSql;
   }
@@ -4650,6 +4613,7 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
   static Future<bool> InsertUpdateDCL_Ent(DCL_Ent aDCL_Ent) async {
     String wSql = "INSERT INTO DCL_Ent("
         "DCL_Ent_Type, "
+        "DCL_Ent_Num, "
         "DCL_Ent_Version, "
         "DCL_Ent_ClientId, "
         "DCL_Ent_GroupeId, "
@@ -4669,6 +4633,10 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
         "DCL_Ent_LivrPrev, "
         "DCL_Ent_ModeRegl, "
         "DCL_Ent_MoyRegl, "
+        "DCL_Ent_PrefAff, "
+        "DCL_Ent_RelAuto, "
+        "DCL_Ent_RelAnniv, "
+        "DCL_Ent_CopRel, "
         "DCL_Ent_Valo, "
         "DCL_Ent_Relance, "
         "DCL_Ent_Relance_Mode, "
@@ -4682,9 +4650,9 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
         "DCL_Ent_Partage, "
         "DCL_Ent_Dem_Tech, "
         "DCL_Ent_Dem_SsT "
-
         ") VALUES ("
         "'${aDCL_Ent.DCL_Ent_Type}',"
+        "'${aDCL_Ent.DCL_Ent_Num}',"
         "${aDCL_Ent.DCL_Ent_Version},"
         "${aDCL_Ent.DCL_Ent_ClientId},"
         "${aDCL_Ent.DCL_Ent_GroupeId},"
@@ -4704,6 +4672,10 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
         "'${aDCL_Ent.DCL_Ent_LivrPrev}',"
         "'${aDCL_Ent.DCL_Ent_ModeRegl}',"
         "'${aDCL_Ent.DCL_Ent_MoyRegl}',"
+        "'${aDCL_Ent.DCL_Ent_PrefAff}',"
+        "'${aDCL_Ent.DCL_Ent_RelAuto}',"
+        "'${aDCL_Ent.DCL_Ent_RelAnniv}',"
+        "'${aDCL_Ent.DCL_Ent_CopRel}',"
         "${aDCL_Ent.DCL_Ent_Valo},"
         "${aDCL_Ent.DCL_Ent_Relance},"
         "'${aDCL_Ent.DCL_Ent_RelanceMode}',"
@@ -4723,6 +4695,25 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
     print("setDCL_Ent ret " + ret.toString());
     return ret;
   }
+
+  /**
+     BEGIN TRANSACTION;
+
+
+      DECLARE @new_id INT;
+
+      UPDATE param_table
+      SET current_id = current_id + 1
+      OUTPUT INSERTED.current_id - 1 INTO @new_id;
+
+      -- 2. Insérer dans la table cible avec le nouvel ID
+      INSERT INTO target_table (id, data_column)
+      VALUES (@new_id, 'Valeur à insérer');
+
+      COMMIT;
+
+   */
+
 
   static Future<List<DCL_Ent>> getDCL_Ent_API_Post(String aType, String aSQL) async {
     setSrvToken();
@@ -4745,7 +4736,6 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
     }
     return [];
   }
-
 
   //******************************************
   //************   DCL_Det   ***************
@@ -4776,10 +4766,9 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
     });
   }
 
-
   static Future<bool> setDCL_Det(DCL_Det DCL_Det) async {
     String wSlq = "UPDATE DCL_Det SET "
-        "DCL_DetID = ${DCL_Det.DCL_DetID}, " +
+            "DCL_DetID = ${DCL_Det.DCL_DetID}, " +
         "DCL_DetID = ${DCL_Det.DCL_Det_EntID}, " +
         "DCL_DetID = ${DCL_Det.DCL_Det_ParcsArtId}, " +
         "DCL_DetID = ${DCL_Det.DCL_Det_Ordre}, " +
@@ -4796,7 +4785,7 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
         "DCL_DetID = '${DCL_Det.DCL_Det_DateRel}', " +
         "DCL_DetID = '${DCL_Det.DCL_Det_Statut}', " +
         "DCL_DetID = '${DCL_Det.DCL_Det_Note}'";
-        
+
     bool ret = await add_API_Post("upddel", wSlq);
     print("setDCL_Det ret " + ret.toString());
     return ret;
@@ -4924,8 +4913,6 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
     return [];
   }
 
-
-
   //****************************************
   //****************************************
   //****************************************
@@ -5010,7 +4997,4 @@ if ("${aParc_Ent.Parcs_Intervention_Timer}" == "null") aParc_Ent.Parcs_Intervent
 
     //   print("VERIF $rR35");
   }
-
-
-
 }

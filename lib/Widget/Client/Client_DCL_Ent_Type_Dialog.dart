@@ -141,7 +141,7 @@ class _Client_DCL_EntTypeDialogState extends State<Client_DCL_EntTypeDialog> {
 
   Widget Liste(BuildContext context) {
     List<String> lDCL_Ent = [
-      "Tous les types d'organe",
+      "Tous les types de document",
     ];
     print("elementCount ${Srv_DbTools.ListDCL_Ent.length} ");
     double index = 0;

@@ -55,7 +55,6 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
     "Synthèse de maintance",
   ];
 
-  int _count = 0;
   List<Widget> widgets = [];
   final pageController = PageController(keepPage: false, initialPage: DbTools.gCurrentIndex2);
 
