@@ -1,13 +1,12 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:davi/davi.dart';
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
@@ -34,19 +33,12 @@ import 'package:verifplus/Widget/Widget_Tools/bottom_navigation_bar3.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
-/*
-
-SELECT PA.* FROM Parcs_Art PA LEFT JOIN Parcs_Ent ON ParcsId = PA.ParcsArt_ParcsId WHERE Parcs_InterventionId = 3;
-
-DELETE PA FROM Parcs_Art PA LEFT JOIN Parcs_Ent ON ParcsId = PA.ParcsArt_ParcsId WHERE ParcsId IS NULL;
-*/
-
-class Client_Groupe_Parc_Inter extends StatefulWidget {
+class Client_Groupe_Parc_Intervp extends StatefulWidget {
   @override
-  Client_Groupe_Parc_InterState createState() => Client_Groupe_Parc_InterState();
+  Client_Groupe_Parc_IntervpState createState() => Client_Groupe_Parc_IntervpState();
 }
 
-class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with TickerProviderStateMixin {
+class Client_Groupe_Parc_IntervpState extends State<Client_Groupe_Parc_Intervp> with TickerProviderStateMixin {
 //  late TabController _tabController;
   bool affEdtFilter = false;
 
@@ -121,17 +113,12 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
   List<Widget> widgets = [];
   final pageController = PageController(keepPage: false, initialPage: DbTools.gCurrentIndex3);
 
-  bool btnSel_Aff = true;
+  bool btnSel_Aff = false;
 
-  Widget wWidgetSvg = SvgPicture.asset(
-    "assets/images/Icon_Photo.svg",
-    height: 40,
-    width: 40,
-  );
 
   Future Reload() async {
     await Srv_ImportExport.getErrorSync();
-    await DbTools.Parc_Ent_GetOrder();
+//    await DbTools.Parc_Ent_GetOrder();
 
     await DbTools.getParam_Saisie_Base("Audit");
     Srv_DbTools.ListParam_Audit_Base.clear();
@@ -188,10 +175,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       Param_Saisie eP = Srv_DbTools.ListParam_Saisie[i];
     }
 
-    String DescAffnewParamBig = "";
-    Srv_DbTools.getParam_ParamMemDet("Param_Div", "${Srv_DbTools.gIntervention.Intervention_Parcs_Type}_Desc_Big");
-    if (Srv_DbTools.ListParam_Param.length > 0) DescAffnewParamBig = Srv_DbTools.ListParam_Param[0].Param_Param_Text;
-
     String DescAffnewParam = "";
     Srv_DbTools.getParam_ParamMemDet("Param_Div", "${Srv_DbTools.gIntervention.Intervention_Parcs_Type}_Desc");
     if (Srv_DbTools.ListParam_Param.length > 0) DescAffnewParam = Srv_DbTools.ListParam_Param[0].Param_Param_Text;
@@ -203,12 +186,17 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
     bool isRelEnt = false;
 
+
+
     countX = 0;
     countTot = 0;
     wTimer = 0;
 
     for (int jj = 0; jj < DbTools.glfParcs_Ent.length; jj++) {
       Parc_Ent elementEnt = DbTools.glfParcs_Ent[jj];
+
+      print("♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎♦︎ elementEnt ${elementEnt.Parcs_InterventionId} ${elementEnt.Parcs_order}");
+
       countTot++;
       if (!elementEnt.Parcs_Date_Rev!.isEmpty) countX++;
 
@@ -218,95 +206,9 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
         print(e);
       }
 
-      ///////////
-      // BIG ////
-      ///////////
-
-      DescAff = DescAffnewParamBig;
-      List<String?>? Parcs_Cols = [];
-      for (int j = 0; j < ListParam_Saisie_Tmp.length; j++) {
-        Param_Saisie param_Saisie = ListParam_Saisie_Tmp[j];
-        if (param_Saisie.Param_Saisie_Affichage.compareTo("DESC") == 0) {
-          if (param_Saisie.Param_Saisie_ID.compareTo("FREQ") == 0) {
-            DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(elementEnt.Parcs_FREQ_Label!, param_Saisie.Param_Saisie_ID)}");
-          } else if (param_Saisie.Param_Saisie_ID.compareTo("ANN") == 0) {
-            DbTools.gDateMS = elementEnt.Parcs_ANN_Label!;
-            String s = gColors.AbrevTxt_Param_Param(elementEnt.Parcs_ANN_Label!, param_Saisie.Param_Saisie_ID);
-            int pos = s.indexOf('-');
-            String ws = (pos != -1) ? s.substring(pos + 1) : s;
-            DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${ws}");
-          } else if (param_Saisie.Param_Saisie_ID.compareTo("AFAB") == 0) {
-            DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(elementEnt.Parcs_FAB_Label!, param_Saisie.Param_Saisie_ID)}");
-          } else if (param_Saisie.Param_Saisie_ID.compareTo("NIV") == 0) {
-            DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(elementEnt.Parcs_NIV_Label!, param_Saisie.Param_Saisie_ID)}");
-          } else if (param_Saisie.Param_Saisie_ID.compareTo("ZNE") == 0) {
-            DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(elementEnt.Parcs_ZNE_Label!, param_Saisie.Param_Saisie_ID)}");
-          } else if (param_Saisie.Param_Saisie_ID.compareTo("EMP") == 0) {
-            DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(elementEnt.Parcs_EMP_Label!, param_Saisie.Param_Saisie_ID)}");
-          } else if (param_Saisie.Param_Saisie_ID.compareTo("LOT") == 0) {
-            DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(elementEnt.Parcs_LOT_Label!, param_Saisie.Param_Saisie_ID)}");
-          } else if (param_Saisie.Param_Saisie_ID.compareTo("SERIE") == 0) {
-            DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(elementEnt.Parcs_SERIE_Label!, param_Saisie.Param_Saisie_ID)}");
-          } else {
-            bool trv = false;
-            for (int j = 0; j < DbTools.glfParcs_Desc.length; j++) {
-              Parc_Desc element2 = DbTools.glfParcs_Desc[j];
-              if (elementEnt.ParcsId == element2.ParcsDesc_ParcsId && param_Saisie.Param_Saisie_ID == element2.ParcsDesc_Type) {
-                if (param_Saisie.Param_Saisie_ID == "POIDS")
-                  DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, param_Saisie.Param_Saisie_ID)}");
-                else
-                  DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${element2.ParcsDesc_Lib}");
-
-                trv = true;
-              }
-            }
-            if (!trv) DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "");
-          }
-        } else if (param_Saisie.Param_Saisie_ID.compareTo("DESC2") == 0) {
-          bool trv = false;
-          for (int j = 0; j < DbTools.glfParcs_Desc.length; j++) {
-            Parc_Desc element2 = DbTools.glfParcs_Desc[j];
-            if (elementEnt.ParcsId == element2.ParcsDesc_ParcsId && param_Saisie.Param_Saisie_ID == element2.ParcsDesc_Type) {
-              DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, param_Saisie.Param_Saisie_ID)}");
-              trv = true;
-            }
-          }
-          if (!trv) DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "");
-        }
-
-        if (param_Saisie.Param_Saisie_Affichage.compareTo("COL") == 0) {
-          for (int j = 0; j < DbTools.glfParcs_Desc.length; j++) {
-            Parc_Desc element2 = DbTools.glfParcs_Desc[j];
-            if (elementEnt.ParcsId == element2.ParcsDesc_ParcsId && param_Saisie.Param_Saisie_ID == element2.ParcsDesc_Type) {
-              Parcs_Cols.add(element2.ParcsDesc_Lib);
-            }
-          }
-          ;
-        }
-      }
-
-      if (elementEnt.Parcs_NoSpec!.isNotEmpty)
-        DescAff = DescAff.replaceAll("SPEC ", "N°Sp : ${elementEnt.Parcs_NoSpec} / ");
-      else
-        DescAff = DescAff.replaceAll("SPEC ", "");
-
-      if (DescAff.compareTo(DescAffnewParam) == 0) DescAff = "";
-      String wTmp = DescAff;
-      wTmp = wTmp.replaceAll("---", "");
-      wTmp = wTmp.replaceAll("/", "");
-      wTmp = wTmp.replaceAll(" ", "");
-
-      if (wTmp.length == 0) DescAff = "";
-
-      elementEnt.Parcs_Date_DescBig = DescAff;
-
-//******************************
-//******************************
-//******************************
-//******************************
-
       DescAff = DescAffnewParam;
-      Parcs_Cols = [];
+      List<String?>? Parcs_Cols = [];
+
       for (int j = 0; j < ListParam_Saisie_Tmp.length; j++) {
         Param_Saisie param_Saisie = ListParam_Saisie_Tmp[j];
 
@@ -366,19 +268,13 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       }
 
       if (DescAff.compareTo(DescAffnewParam) == 0) DescAff = "";
-      wTmp = DescAff;
+      String wTmp = DescAff;
       wTmp = wTmp.replaceAll("---", "");
       wTmp = wTmp.replaceAll("/", "");
       wTmp = wTmp.replaceAll(" ", "");
 
       if (wTmp.length == 0) DescAff = "";
       elementEnt.Parcs_Date_Desc = DescAff;
-
-//******************************
-//******************************
-//******************************
-//******************************
-
       elementEnt.Parcs_Cols = Parcs_Cols;
 
       String ParcsDesc_Type_VerifTrim2 = "";
@@ -405,9 +301,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       String ParcsDesc_Type_Ech = "";
       String ParcsDesc_Type_EtatGen = "";
       String ParcsDesc_Type_Acc = "";
-
-      String ParcsDesc_Type_Fab = "";
-      String ParcsDesc_Type_Gam = "";
 
       elementEnt.Parcs_VRMC = "";
 
@@ -475,13 +368,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
           if (element2.ParcsDesc_Type!.compareTo("Acc") == 0) {
             ParcsDesc_Type_Acc = element2.ParcsDesc_Lib!;
-          }
-
-          if (element2.ParcsDesc_Type!.compareTo("FAB") == 0) {
-            ParcsDesc_Type_Fab = element2.ParcsDesc_Lib!;
-          }
-          if (element2.ParcsDesc_Type!.compareTo("GAM") == 0) {
-            ParcsDesc_Type_Gam = element2.ParcsDesc_Lib!;
           }
         }
       }
@@ -553,44 +439,9 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       } else
         elementEnt.Parcs_VRMC = "---";
 
-      elementEnt.Parcs_Date_Desc2 = "${ParcsDesc_Type_Fab} / ${ParcsDesc_Type_Gam}";
-      elementEnt.Parcs_Date_Desc3 =  "${elementEnt.Parcs_ZNE_Label} / ${elementEnt.Parcs_EMP_Label} / ${elementEnt.Parcs_NIV_Label}";
-
-    elementEnt.Parcs_Img = "";
-
-      DbTools.glfParc_Imgs = await DbTools.getParc_Imgs(elementEnt.ParcsId!, 1);
-      Widget wWidgetImg =
-          Container(
-            padding: EdgeInsets.all(13),
-            child: wWidgetSvg,
-          )
-          
-          ;
-
-      if (btnSel_Aff) {
-        if (DbTools.glfParc_Imgs.length > 0) {
-          var Parc_Img = DbTools.glfParc_Imgs[0];
-          elementEnt.Parcs_Img = Parc_Img.Parc_Imgs_Data!;
-          if (elementEnt.Parcs_Img != "") {
-            var bytes = base64Decode(elementEnt.Parcs_Img!);
-            if (bytes.length > 0) {
-              wWidgetImg = ClipRRect(
-                borderRadius: BorderRadius.circular(8.0),
-                child: Image.memory(
-                  bytes,
-                  fit: BoxFit.fill,
-                  height: 75,
-                  width: 75,
-                ),
-              );
-            }
-          }
-        }
-      }
-      elementEnt.Parcs_ImgWidget = wWidgetImg;
-
       elementEnt.Action = elementEnt.Parcs_VRMC;
       DbTools.updateParc_Ent_Action(elementEnt);
+//      if (elementEnt.Parcs_Date_Desc!.isEmpty) elementEnt.Parcs_VRMC = "---";
 
       bool Parcs_MaintPrev = true;
       bool Parcs_MaintCorrect = true;
@@ -625,36 +476,19 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       }
 
       if (elementEnt.Parcs_UUID_Parent!.isNotEmpty) {
-        if (btnSel_Aff) {
-          DbTools.lParcs_Art = await DbTools.getParcs_Art(elementEnt.ParcsId!, "MS");
-          if (DbTools.lParcs_Art.length > 0) {
-            Parc_Art wParc_Art = DbTools.lParcs_Art[0];
-            if (wParc_Art.ParcsArt_Fact == "Devis")
-              elementEnt.Parcs_Date_DescBig = "(Devis) ${elementEnt.Parcs_Date_DescBig}";
-            else
-              elementEnt.Parcs_Date_DescBig = "(Neuf) ${elementEnt.Parcs_Date_DescBig}";
-          } else
-            elementEnt.Parcs_Date_DescBig = "${elementEnt.Parcs_Date_DescBig}";
-        } else {
-          DbTools.lParcs_Art = await DbTools.getParcs_Art(elementEnt.ParcsId!, "MS");
-          if (DbTools.lParcs_Art.length > 0) {
-            Parc_Art wParc_Art = DbTools.lParcs_Art[0];
-            if (wParc_Art.ParcsArt_Fact == "Devis")
-              elementEnt.Parcs_Date_Desc = "➜ [Devis] ${elementEnt.Parcs_Date_Desc}";
-            else
-              elementEnt.Parcs_Date_Desc = "➜ [Neuf] ${elementEnt.Parcs_Date_Desc}";
-          } else
-            elementEnt.Parcs_Date_Desc = "➜ ${elementEnt.Parcs_Date_Desc}";
-        }
+        DbTools.lParcs_Art = await DbTools.getParcs_Art(elementEnt.ParcsId!, "MS");
+        print(" DbTools.lParcs_Art  B ${DbTools.lParcs_Art.length}");
+        if (DbTools.lParcs_Art.length > 0) {
+          Parc_Art wParc_Art = DbTools.lParcs_Art[0];
+          print(" wParc_Art  B ${wParc_Art.toMap()}");
+          if (wParc_Art.ParcsArt_Fact == "Devis")
+            elementEnt.Parcs_Date_Desc = "➜ [Devis] ${elementEnt.Parcs_Date_Desc}";
+          else
+            elementEnt.Parcs_Date_Desc = "➜ [Neuf] ${elementEnt.Parcs_Date_Desc}";
+        } else
+          elementEnt.Parcs_Date_Desc = "➜ ${elementEnt.Parcs_Date_Desc}";
       }
-
-      await DbTools.updateParc_Ent(elementEnt);
-
     }
-
-
-
-
 
     Srv_DbTools.gIntervention.Livr = isRelEnt ? "R" : "";
 
@@ -670,8 +504,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     print("Reload Fin");
   }
 
-
-
+  DaviModel<Parc_Ent>? _model;
 
   Future Filtre() async {
     int index = subLibArray.indexWhere((element) => element.compareTo(DbTools.ParamTypeOg) == 0);
@@ -721,7 +554,70 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
       }
     }
 
+    List<DaviColumn<Parc_Ent>> wColumns = [
+      new DaviColumn(
+          name: 'N°',
+          cellStyleBuilder: (row) => DbTools.gRowisSel && isInSels(row.data.ParcsId!)
+              ? CellStyle(background: gColors.GrdBtn_Colors1Sel, alignment: Alignment.center, textStyle: gColors.bodySaisie_B_W)
+              : isInSels(row.data.ParcsId!)
+                  ? CellStyle(background: gColors.tks, alignment: Alignment.center, textStyle: gColors.bodySaisie_B_W)
+                  : LastClickID == row.data.ParcsId
+                      ? CellStyle(background: Colors.blue, alignment: Alignment.center, textStyle: gColors.bodySaisie_B_G)
+                      : CellStyle(background: Colors.white, alignment: Alignment.center, textStyle: gColors.bodySaisie_N_G),
+          cellBuilder: (BuildContext context, DaviRow<Parc_Ent> row) {
+            int hab = 0;
+            bool upd = false;
 
+            if (row.data.Parcs_MaintCorrect!) hab = 1;
+            if (row.data.Parcs_MaintCorrect!) hab = 2;
+
+            if (row.data.Parcs_Install!) hab = 3;
+
+            upd = (row.data.Parcs_Update == 1);
+
+            return InkWell(
+              child: Container(
+                  alignment: Alignment.centerLeft,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      upd
+                          ? Container(
+                              width: 15,
+                              child: Icon(
+                                Icons.adjust,
+                                color: Colors.orange,
+                                size: 10,
+                              ))
+                          : Container(
+                              width: 15,
+                            ),
+                      Text(
+                        "${row.data.Parcs_order}",
+                        style: row.data.Livr!.isNotEmpty ? gColors.bodySaisie_B_O.copyWith(color: LastClickID == row.data.ParcsId ? Colors.white : null) : gColors.bodySaisie_B_G,
+                      ),
+                    ],
+                  )),
+              onLongPress: () => _onSelMove(row.data),
+              onTap: () => _onRowTap(context, row.data),
+            );
+          },
+          width: 60),
+      new DaviColumn(name: '${DbTools.ParamTypeOg}', stringValue: (row) => "${row.Parcs_Date_Desc}", width: gColors.MediaQuerysizewidth - 218, cellStyleBuilder: (row) => CellStyle(textStyle: row.data.Livr!.isNotEmpty ? gColors.bodySaisie_B_O.copyWith(color: LastClickID == row.data.ParcsId ? Colors.white : null) : gColors.bodySaisie_B_G.copyWith(color: LastClickID == row.data.ParcsId ? Colors.white : null))),
+      new DaviColumn(name: 'Visite', stringValue: (row) => "${row.Parcs_Date_Rev!.isEmpty ? '' : DateFormat('dd/MM/yy').format(DateTime.parse(row.Parcs_Date_Rev!))}", width: 75, cellStyleBuilder: (row) => CellStyle(textStyle: row.data.Livr!.isNotEmpty ? gColors.bodySaisie_B_O.copyWith(color: LastClickID == row.data.ParcsId ? Colors.white : null) : gColors.bodySaisie_B_G.copyWith(color: LastClickID == row.data.ParcsId ? Colors.white : null))),
+      new DaviColumn(
+          name: 'Action',
+          cellAlignment: Alignment.centerRight,
+          cellPadding: EdgeInsets.fromLTRB(2, 0, 2, 0),
+          cellBuilder: (BuildContext context, DaviRow<Parc_Ent> row) {
+            return Container(
+              child: row.data.Parcs_VRMC!.isEmpty ? Container() : Text("${row.data.Parcs_VRMC} >", textAlign: TextAlign.right, style: row.data.Livr!.isNotEmpty ? gColors.bodySaisie_B_O.copyWith(color: LastClickID == row.data.ParcsId ? Colors.white : null) : gColors.bodySaisie_B_G.copyWith(color: LastClickID == row.data.ParcsId ? Colors.white : Colors.green)),
+            );
+          },
+          width: 65),
+    ];
+
+    _model = DaviModel<Parc_Ent>(rows: DbTools.lParcs_Ent, columns: wColumns);
 
     setState(() {});
   }
@@ -898,6 +794,8 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
           Container(
             width: 8,
           ),
+
+
           InkWell(
               child: Container(
                 width: icoWidth + 10,
@@ -912,8 +810,13 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
               onTap: () async {
                 await HapticFeedback.vibrate();
                 btnSel_Aff = !btnSel_Aff;
-                Reload();
+                setState(() {
+
+                });
               }),
+
+
+
           Spacer(),
           Container(
             width: 50,
@@ -1068,14 +971,12 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                     await DbTools.deleteParc_EntInter(Srv_DbTools.gIntervention.InterventionId!);
 
                     List<Parc_Art> wParcs_Art = await DbTools.getParcs_ArtInter(Srv_DbTools.gIntervention.InterventionId!);
-                    print("***************** DELETE getParcs_ArtInter ${wParcs_Art.length}");
                     for (int i = 0; i < wParcs_Art.length; i++) {
                       Parc_Art xParc_Art = wParcs_Art[i];
                       await DbTools.deleteParc_Art(xParc_Art.ParcsArtId!);
                     }
 
                     wParcs_Art = await DbTools.getParcs_ArtInterSO(Srv_DbTools.gIntervention.InterventionId!);
-                    print("***************** DELETE getParcs_ArtInterSO ${wParcs_Art.length}");
                     for (int i = 0; i < wParcs_Art.length; i++) {
                       Parc_Art xParc_Art = wParcs_Art[i];
                       await DbTools.deleteParc_Art(xParc_Art.ParcsArtId!);
@@ -1155,7 +1056,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
                     await Reload();
                     List<Parc_Art> zParcs_Art = await DbTools.getParcs_ArtInter(Srv_DbTools.gIntervention.InterventionId!);
-                    List<Parc_Art> zParcs_ArtSO = await DbTools.getParcs_ArtInterSO(Srv_DbTools.gIntervention.InterventionId!);
                     List<Parc_Desc> zParcs_Desc = await DbTools.getParcs_DescInter(Srv_DbTools.gIntervention.InterventionId!);
                     List<Parc_Img> zParc_Img = await DbTools.getParcs_ImgInter(Srv_DbTools.gIntervention.InterventionId!);
 
@@ -1165,7 +1065,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                         "- ${Srv_DbTools.ListParc_Art.length} Articles - ${Srv_DbTools.ListParc_Imgs.length} zImages\n"
 */
                         "- ${zParcs_Desc.length} descriptions\n"
-                        "- ${zParcs_Art.length + zParcs_ArtSO.length} Articles\n"
+                        "- ${zParcs_Art.length} Articles\n"
                         "- ${zParc_Img.length} Images ";
 
                     print(" ${wStr}");
@@ -1237,13 +1137,13 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
 
                     DbTools.glfParc_Imgs = await DbTools.getParcs_ImgInter(Srv_DbTools.gIntervention.InterventionId!);
 
-
                     await Srv_DbTools.delParc_Ent_Srv_Upd(Srv_DbTools.gIntervention.InterventionId);
 
                     print("Export A glfParcs_Ent lenght ${DbTools.glfParcs_Ent.length}");
 
                     for (int i = 0; i < DbTools.glfParcs_Ent.length; i++) {
                       print("glfParcs_Ent ${i}");
+
                       var element = DbTools.glfParcs_Ent[i];
                       await Srv_DbTools.InsertUpdateParc_Ent_Srv(element);
                       int gLastID = Srv_DbTools.gLastID;
@@ -1258,6 +1158,7 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                           wSql = "${wSql} ${wTmp};";
                         }
                       }
+
                       if (wSql.isNotEmpty) {
                         await Srv_DbTools.InsertUpdateParc_Desc_Srv_Sql(wSql);
                       }
@@ -1293,7 +1194,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
                       await DbTools.updateParc_Ent_Update(element.ParcsId!, 0);
                     }
 
-                    // SO SO SO SO SO SO SO SO SO SO SO SO SO SO SO SO SO SO
                     String wSql = "";
                     List<Parc_Art> wlarcs_Art = await DbTools.getParcs_ArtSoDevis(Srv_DbTools.gIntervention.InterventionId!);
                     for (int i = 0; i < wlarcs_Art.length; i++) {
@@ -1339,50 +1239,54 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
     return Padding(
         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: Column(children: [
-          gObj.InterventionTitleWidget("${Srv_DbTools.gIntervention.Client_Nom!.toUpperCase()}", wTitre2: "${wTitre2}", wTimer: 0),
+          gObj.InterventionTitleWidget("${Srv_DbTools.gIntervention.Client_Nom!.toUpperCase()}", wTitre2: "aaa ${wTitre2}", wTimer: 0),
         ]));
   }
 
+  @override
   Widget Organes() {
     String wTitre2 = "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}";
     if (Srv_DbTools.gIntervention.Groupe_Nom! == Srv_DbTools.gIntervention.Site_Nom!) wTitre2 = "";
-    return Container(
+
+    return Padding(
         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             gObj.InterventionTitleWidget("${Srv_DbTools.gIntervention.Client_Nom!.toUpperCase()}", wTitre2: "${wTitre2}", wTimer: wTimer),
             Entete_Btn_Search(),
-            Parcs_EntHeader(),
-            Container(
-              height: 0,
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.9),
-                    spreadRadius: 1,
-                    blurRadius: 2,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              height: 3,
-            ),
             Expanded(
-              child: Parcs_EntGridWidget(),
+              child: ExtGridWidget(),
             ),
             (DbTools.gRowisSel && DbTools.gCurrentIndex3 == 1) ? PopupMove(context) : Container(),
           ],
         ));
   }
 
+  Widget Organes_New() {
+    String wTitre2 = "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}";
+    if (Srv_DbTools.gIntervention.Groupe_Nom! == Srv_DbTools.gIntervention.Site_Nom!) wTitre2 = "";
+    return Padding(
+        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        child: Column(
+          children: [
+            gObj.InterventionTitleWidget("${Srv_DbTools.gIntervention.Client_Nom!.toUpperCase()}", wTitre2: "${wTitre2}", wTimer: wTimer),
+            Entete_Btn_Search(),
+            Expanded(
+              child: ExtGridWidget(),
+            ),
+            (DbTools.gRowisSel && DbTools.gCurrentIndex3 == 1) ? PopupMove(context) : Container(),
+          ],
+        ));
+  }
+
+
+
+
   @override
   Widget Data() {
     String wTitre2 = "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}";
     if (Srv_DbTools.gIntervention.Groupe_Nom == Srv_DbTools.gIntervention.Site_Nom) wTitre2 = "";
+
     return Padding(
         padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: Column(
@@ -1414,8 +1318,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
           await Client_Dialog.Dialogs_Client(context);
         },
         child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-
-Container(width: 40,),
           AutoSizeText(
             affAll ? wTitle : "INFOS PRATIQUES",
             maxLines: 1,
@@ -1433,7 +1335,7 @@ Container(width: 40,),
             Navigator.of(context).pop();
           }
         },
-        child: Container(
+        child: Padding(
           padding: const EdgeInsets.fromLTRB(5, 10, 0, 10),
           child: DbTools.gBoolErrorSync
               ? Image.asset(
@@ -1605,6 +1507,8 @@ Container(width: 40,),
             backgroundColor: Colors.white,
             appBar: appBar(),
             body: Stack(fit: StackFit.expand, children: <Widget>[
+//              wchildren,
+
               (affAll)
                   ? PageView(
                       children: widgets,
@@ -1612,6 +1516,7 @@ Container(width: 40,),
                       onPageChanged: onBottomIconPressed,
                     )
                   : Enntete_Inter(),
+
               (DbTools.gRowisSel || !affAll)
                   ? Container()
                   : Positioned(
@@ -2284,6 +2189,7 @@ Container(width: 40,),
                         if (timer != null) {
                           timer!.cancel();
                         }
+
                         timer = Timer.periodic(const Duration(milliseconds: 200), (t) {
                           NbAdd++;
                           ctrlNbInsert.text = "${NbAdd}";
@@ -2312,14 +2218,13 @@ Container(width: 40,),
                     child: Btn("Aprés", Icons.keyboard_arrow_right),
                     onTap: () async {
                       await HapticFeedback.vibrate();
-                      print("Aprés A ${DbTools.gRowSels.length}");
-                      if (DbTools.gRowSels.length == 1 || DbTools.gRowSels.length == 2) {
-                        print("Aprés B");
+                      print("Aprés ");
+                      if (DbTools.gRowSels.length == 1) {
                         for (int i = 0; i < NbAdd; i++) {
-                          print("Aprés C");
-                          Parc_Ent wParc_Ent = Parc_Ent.Parc_EntInit(Srv_DbTools.gIntervention.InterventionId!, DbTools.gParc_Ent.Parcs_Type!, DbTools.gParc_Ent.Parcs_order! + i + 1);
+                          Parc_Ent wParc_Ent = Parc_Ent.Parc_EntInit(Srv_DbTools.gIntervention.InterventionId!, DbTools.gParc_Ent.Parcs_Type!, DbTools.gParc_Ent.Parcs_order!);
                           DbTools.insertParc_Ent(wParc_Ent);
                         }
+
                         Reload();
                       }
                     },
@@ -2346,6 +2251,7 @@ Container(width: 40,),
                       await HapticFeedback.vibrate();
                       print("isDelPos $isDelPos");
                       if (!isDelPos) return;
+
                       DbTools.gRowSels.forEach((eSel) async {
                         DbTools.lParcs_Ent.forEach((eParc) async {
                           if (eSel.Id == eParc.ParcsId) {
@@ -2359,6 +2265,7 @@ Container(width: 40,),
                       DbTools.gRowIndex = -1;
                       DbTools.gRowSels.clear();
                       print("Reload > PopupMove ${DbTools.gParc_Ent.Parcs_Cols.toString()}");
+
                       Reload();
                     },
                   )),
@@ -2550,508 +2457,102 @@ Container(width: 40,),
     );
   }
 
-  //***************************
-  //***************************
-  //***************************
+  Widget ExtGridWidget() {
+    Davi wDavi = Davi<Parc_Ent>(
+      _model,
+//      visibleRowsCount: 16,
+      onRowDoubleTap: (aParc_Ent) => _onRowDoubleTap(context, aParc_Ent),
+      onRowTap: (Parc_Ent) => _onRowDoubleTap(context, Parc_Ent),
+      rowColor: _rowColor,
+      onHover: _onHover,
+      unpinnedHorizontalScrollController: wHScrollController,
+      verticalScrollController: wVScrollController,
+    );
 
-  Widget Parcs_EntHeader() {
-    return Column(children: [
-      gColors.wLigne(),
-      Container(
-        height: 44,
-        width: 800,
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-        color: gColors.LinearGradient2,
-        child: Column(children: [
-          Container(
-            width: 800,
-            color: Colors.transparent,
-            height: 43,
-            padding: EdgeInsets.only(
-              top: 15,
-            ),
-            child: Row(children: <Widget>[
-              Container(
-                width: 8,
-              ),
-              Container(
-                  width: 50,
-                  child: Container(
-                      padding: EdgeInsets.only(left: 5),
-                      height: 43,
-                      child: Text(
-                        "N°",
-                        maxLines: 1,
-                        textAlign: TextAlign.left,
-                        style: gColors.bodySaisie_B_B,
-                      ))),
-              Container(
-                  width: gColors.MediaQuerysizewidth - 198,
-                  child: Container(
-                      padding: EdgeInsets.only(left: 5),
-                      height: 43,
-                      child: Text(
-                        "Organes",
-                        maxLines: 1,
-                        textAlign: TextAlign.center,
-                        style: gColors.bodySaisie_B_B,
-                      ))),
-              Container(
-                width: 75,
-                child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                  Container(
-                      padding: EdgeInsets.only(left: 5, right: 5),
-                      height: 43,
-                      child: Text(
-                        "Visite",
-                        textAlign: TextAlign.right,
-                        style: gColors.bodySaisie_B_B,
-                      ))
-                ]),
-              ),
-              Container(
-                width: 65,
-                child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                  Container(
-                      padding: EdgeInsets.only(left: 5, right: 5),
-                      height: 43,
-                      child: Text(
-                        "Action",
-                        textAlign: TextAlign.right,
-                        style: gColors.bodySaisie_B_B,
-                      ))
-                ]),
-              ),
-              Container(
-                height: 1,
-                color: gColors.LinearGradient2,
-              ),
-            ]),
-          ),
-        ]),
-      ),
-      gColors.wLigne(),
-    ]);
-  }
-
-  Widget Parcs_EntGridWidget() {
     return Container(
-        color: gColors.LinearGradient2,
-        padding: EdgeInsets.only(top : 10,bottom: (DbTools.gRowisSel && DbTools.gCurrentIndex3 == 1) ? 0 : 50),
-        child: GestureDetector(
-            onPanStart: (d) {
-              dxPosition = 0;
-              dyPosition = 0;
-            },
-            onPanUpdate: (details) {
-              hPosition = 0;
-              vPosition = 0;
+      padding: EdgeInsets.only(bottom: 50),
+      child: GestureDetector(
+          onPanStart: (d) {
+            dxPosition = 0;
+            dyPosition = 0;
+          },
+          onPanUpdate: (details) {
+            hPosition = 0;
+            vPosition = 0;
 
-              if (details.delta.dy < 0) {
-                final maxposition = wVScrollController.position.maxScrollExtent;
-                vPosition = wVScrollController.offset + 20; //details.delta.dy;
-                if (vPosition > maxposition) vPosition = maxposition;
-                wVScrollController.jumpTo(vPosition);
+            if (details.delta.dy < 0) {
+              final maxposition = wVScrollController.position.maxScrollExtent;
+              vPosition = wVScrollController.offset + 20; //details.delta.dy;
+              if (vPosition > maxposition) vPosition = maxposition;
+              wVScrollController.jumpTo(vPosition);
 
-                dyPosition = details.delta.dy;
+              dyPosition = details.delta.dy;
 //            print(">>>>> Dragging in -Y ${dyPosition} ${details.delta.dy} ${maxposition} ${vPosition}");
-              } else if (details.delta.dy > 0) {
-                final minposition = wVScrollController.position.minScrollExtent;
-                vPosition = wVScrollController.offset - 20; //details.delta.dy;
-                if (vPosition < minposition) vPosition = minposition;
-                wVScrollController.jumpTo(vPosition);
-                dyPosition = details.delta.dy;
-                // print(     ">>>>> Dragging in +Y ${details.delta.dy} ${minposition} ${vPosition}");
-              }
-            },
-            onPanEnd: (d) {
+            } else if (details.delta.dy > 0) {
+              final minposition = wVScrollController.position.minScrollExtent;
+              vPosition = wVScrollController.offset - 20; //details.delta.dy;
+              if (vPosition < minposition) vPosition = minposition;
+              wVScrollController.jumpTo(vPosition);
+              dyPosition = details.delta.dy;
+              // print(     ">>>>> Dragging in +Y ${details.delta.dy} ${minposition} ${vPosition}");
+            }
+          },
+          onPanEnd: (d) {
 //          print(">>>>> dyPosition ${dyPosition} ${vPosition} -- ${d.velocity.pixelsPerSecond.dy} ---- ${dxPosition} ${hPosition}");
-              if (dyPosition < 0) {
-                final maxposition = wVScrollController.position.maxScrollExtent;
-                final delta = d.velocity.pixelsPerSecond.dy / -100;
-                vPosition = wVScrollController.offset + 20 * delta; //details.delta.dy;
-                if (vPosition > maxposition) vPosition = maxposition;
-                if (vPosition <= maxposition) {
+            if (dyPosition < 0) {
+              final maxposition = wVScrollController.position.maxScrollExtent;
+              final delta = d.velocity.pixelsPerSecond.dy / -100;
+              vPosition = wVScrollController.offset + 20 * delta; //details.delta.dy;
+              if (vPosition > maxposition) vPosition = maxposition;
+              if (vPosition <= maxposition) {
 //              print(">>>>> d.velocity.pixelsPerSecond.dy  ${wVScrollController.offset} ----- ${vPosition} ----- ${delta}");
-                  wVScrollController.animateTo(vPosition, duration: Duration(milliseconds: 1000), curve: Curves.easeOutCubic);
-                }
-              } else if (dyPosition > 0) {
-                final delta = d.velocity.pixelsPerSecond.dy / -100;
-                vPosition = wVScrollController.offset + 20 * delta; //details.delta.dy;
-                final minposition = wVScrollController.position.minScrollExtent;
-                if (vPosition < minposition) vPosition = minposition;
-                if (vPosition >= minposition) {
-//              print(">>>>> d.velocity.pixelsPerSecond.dy  ${wVScrollController.offset} ----- ${vPosition} ----- ${delta}");
-                  wVScrollController.animateTo(vPosition, duration: Duration(milliseconds: 1000), curve: Curves.easeOutCubic);
-                }
+                wVScrollController.animateTo(vPosition, duration: Duration(milliseconds: 1000), curve: Curves.easeOutCubic);
               }
-            },
-            child: Column(
-              children: [
-                Expanded(
-                  child: ListView.builder(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                    itemCount: DbTools.lParcs_Ent.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      Parc_Ent dParcs_Ent = DbTools.lParcs_Ent[index];
-                      Color wColor = Colors.transparent;
-
-                      Color wColorBack2 = Colors.white;
-                      Color wColorText = Colors.black;
-                      if (LastClickID == dParcs_Ent.ParcsId) wColorText = Colors.white;
-
-                      if (DbTools.gRowisSel && isInSels(dParcs_Ent.ParcsId!)) {
-                        wColorBack2 = gColors.GrdBtn_Colors1Sel;
-                      }
-                      double wH = (!btnSel_Aff) ? 50 : 101;
-                      double rowh = btnSel_Aff ? 100 : 49;
-
-                      bool upd = false;
-                      upd = (dParcs_Ent.Parcs_Update == 1);
-
-                      return Column(
-                        children: [
-                          Container(
-                            height: wH,
-                            width: 800,
-                            margin: EdgeInsets.only(
-                              bottom: 12,
-                            ),
-                            decoration: BoxDecoration(
-                              color: LastClickID == dParcs_Ent.ParcsId ? gColors.backgroundColor : gColors.transparent,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 1,
-                                  blurRadius: 2,
-                                  offset: Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                            child: Stack(
-                              fit: StackFit.expand,
-                              children: <Widget>[
-                                Container(
-                                  color: Colors.white,
-                                  child: GestureDetector(
-                                    onLongPress: () => _onSelMove(dParcs_Ent),
-                                    onTap: () => _onRowDoubleTap(context, dParcs_Ent),
-                                    child: Column(children: [
-                                      btnSel_Aff
-                                          ? Container(
-                                              width: 800,
-                                              color: LastClickID == dParcs_Ent.ParcsId ? gColors.backgroundColor : gColors.white,
-                                              height: rowh,
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.start,
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: <Widget>[
-
-                                                  Container(
-                                                    color: DbTools.gRowisSel && isInSels(dParcs_Ent.ParcsId!) ? gColors.GrdBtn_Colors1Sel : gColors.transparent,
-                                                    child:
-                                                    Row(children: [
-                                                      // N°
-                                                      Container(
-                                                        child: InkWell(
-                                                            child: Container(
-                                                              width: 50,
-                                                              height: rowh,
-
-                                                              padding: EdgeInsets.only(
-                                                                top: (dParcs_Ent.Parcs_UUID_Parent!.isNotEmpty) ? 0 : 40,
-                                                              ),
-                                                              child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                                                                Container(
-                                                                  width: 5,
-                                                                ),
-                                                                if (dParcs_Ent.Parcs_UUID_Parent!.isNotEmpty)
-                                                                  Container(
-                                                                    width: 10,
-                                                                  ),
-                                                                Container(
-                                                                    width: 30,
-                                                                    height: rowh,
-                                                                    child: (dParcs_Ent.Parcs_UUID_Parent!.isNotEmpty)
-                                                                        ? SvgPicture.asset(
-                                                                      "assets/images/Ico_MS.svg",
-                                                                      height: 0,
-                                                                      width: 30,
-                                                                      color: dParcs_Ent.Livr!.isNotEmpty ? Colors.red : LastClickID == dParcs_Ent.ParcsId ? Colors.white : Colors.black,
-                                                                    )
-                                                                        : Text(
-                                                                      "${dParcs_Ent.Parcs_order}",
-                                                                      textAlign: TextAlign.right,
-                                                                      style: dParcs_Ent.Livr!.isNotEmpty ? gColors.bodySaisie_B_O.copyWith(color: LastClickID == dParcs_Ent.ParcsId ? Colors.white : null) : gColors.bodySaisie_B_G.copyWith(color: LastClickID == dParcs_Ent.ParcsId ? Colors.white : wColorText),
-                                                                    )),
-                                                              ]),
-                                                            ),
-                                                            onTap: () async {
-                                                              print("Selection");
-                                                              if (LastClickID == dParcs_Ent.ParcsId)
-                                                                LastClickID = -1;
-                                                              else
-                                                                LastClickID = dParcs_Ent.ParcsId!;
-
-                                                              setState(() {});
-                                                            }),
-                                                      ),
-
-                                                      Container(
-                                                        height: rowh,
-                                                        child: InkWell(
-                                                            child: Container(
-                                                              decoration: BoxDecoration(
-                                                                color: Colors.transparent,
-                                                                borderRadius: BorderRadius.circular(8),
-                                                                border: Border.all(
-                                                                  width: 1,
-                                                                  color: gColors.greyDark2,
-                                                                ),
-                                                              ),
-                                                              margin: EdgeInsets.only(
-                                                                top: 12,
-                                                                right: 12,
-                                                                bottom: 14,
-                                                              ),
-                                                              width: 75,
-                                                              height: 75,
-                                                              child: dParcs_Ent.Parcs_ImgWidget,
-                                                            ),
-                                                            onTap: () async {
-                                                              print("Selection");
-                                                              if (LastClickID == dParcs_Ent.ParcsId)
-                                                                LastClickID = -1;
-                                                              else
-                                                                LastClickID = dParcs_Ent.ParcsId!;
-
-                                                              setState(() {});
-                                                            }),
-                                                      ),
-
-
-                                                    ],)
-
-                                                    ,
-                                                  ),
-
-
-
-                                                  Container(
-
-                                                    height: 88,
-
-                                                    color: LastClickID == dParcs_Ent.ParcsId ? gColors.backgroundColor : gColors.transparent,
-                                                    child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                                                      Container(
-                                                          margin: EdgeInsets.only(
-                                                            top: 12,
-                                                          ),
-                                                          width: gColors.MediaQuerysizewidth - 198,
-                                                          child: Container(
-                                                              padding: EdgeInsets.only(left: 5),
-                                                              child: Text(
-                                                                "${dParcs_Ent.Parcs_Date_DescBig}",
-                                                                maxLines: 1,
-                                                                textAlign: TextAlign.left,
-                                                                style: dParcs_Ent.Livr!.isNotEmpty ? gColors.bodySaisie_B_O.copyWith(color: LastClickID == dParcs_Ent.ParcsId ? Colors.white : null) : gColors.bodySaisie_B_G.copyWith(color: LastClickID == dParcs_Ent.ParcsId ? Colors.white : wColorText),
-                                                              ))),
-                                                      Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                                                        Container(
-                                                          margin: EdgeInsets.only(
-                                                            top: 5,
-                                                          ),
-                                                          width: gColors.MediaQuerysizewidth - 315,
-                                                          child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                                                            Container(
-                                                                padding: EdgeInsets.only(left: 5, right: 5),
-                                                                child: Text(
-                                                                  "${dParcs_Ent.Parcs_Date_Desc2}",
-                                                                  textAlign: TextAlign.right,
-                                                                  style: dParcs_Ent.Livr!.isNotEmpty ? gColors.bodySaisie_N_O.copyWith(color: LastClickID == dParcs_Ent.ParcsId ? Colors.white : null) : gColors.bodySaisie_N_G.copyWith(color: LastClickID == dParcs_Ent.ParcsId ? Colors.white : wColorText),
-                                                                ))
-                                                          ]),
-                                                        ),
-                                                        Container(
-                                                          width: 32,
-                                                          child: upd
-                                                              ? SvgPicture.asset(
-                                                                  "assets/images/NotDownload.svg",
-                                                                  height: 24,
-                                                                  width: 24,
-                                                                )
-                                                              : Container(
-                                                                  width: 32,
-                                                                ),
-                                                        ),
-                                                        Container(
-                                                          margin: EdgeInsets.only(
-                                                            top: 5,
-                                                          ),
-                                                          width: 75,
-                                                          child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                                                            Container(
-                                                                padding: EdgeInsets.only(left: 5, right: 5),
-                                                                child: Text(
-                                                                  "${dParcs_Ent.Parcs_Date_Rev!.isEmpty ? '' : DateFormat('dd/MM/yy').format(DateTime.parse(dParcs_Ent.Parcs_Date_Rev!))}",
-                                                                  textAlign: TextAlign.right,
-                                                                  style: dParcs_Ent.Livr!.isNotEmpty ? gColors.bodySaisie_B_O.copyWith(color: LastClickID == dParcs_Ent.ParcsId ? Colors.white : null) : gColors.bodySaisie_B_G.copyWith(color: LastClickID == dParcs_Ent.ParcsId ? Colors.white : wColorText),
-                                                                ))
-                                                          ]),
-                                                        ),
-                                                        Container(
-                                                          padding: EdgeInsets.only(
-                                                            top: 5,
-                                                          ),
-                                                          width: 65,
-                                                          child: Row(mainAxisAlignment: MainAxisAlignment.end, crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                                                            Container(
-                                                              padding: EdgeInsets.only(left: 5, right: 5),
-                                                              child: Container(
-                                                                child: dParcs_Ent.Parcs_VRMC!.isEmpty ? Container() : Text("${dParcs_Ent.Parcs_VRMC} >", textAlign: TextAlign.right, style: dParcs_Ent.Livr!.isNotEmpty ? gColors.bodySaisie_B_O.copyWith(color: LastClickID == dParcs_Ent.ParcsId ? Colors.white : null) : gColors.bodySaisie_B_G.copyWith(color: LastClickID == dParcs_Ent.ParcsId ? Colors.white : Colors.green)),
-                                                              ),
-                                                            )
-                                                          ]),
-                                                        )
-                                                      ]),
-                                                      Container(
-                                                        padding: EdgeInsets.only(
-                                                          top: 5,
-                                                        ),
-                                                        width: gColors.MediaQuerysizewidth - 283,
-                                                        child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                                                          Container(
-                                                              padding: EdgeInsets.only(left: 5, right: 5),
-                                                              child: Text(
-                                                                "${dParcs_Ent.Parcs_Date_Desc3}",
-                                                                textAlign: TextAlign.right,
-                                                                style: dParcs_Ent.Livr!.isNotEmpty ? gColors.bodySaisie_N_O.copyWith(color: LastClickID == dParcs_Ent.ParcsId ? Colors.white : null) : gColors.bodySaisie_N_G.copyWith(color: LastClickID == dParcs_Ent.ParcsId ? Colors.white : wColorText),
-                                                              ))
-                                                        ]),
-                                                      ),
-                                                    ]),
-                                                  )
-                                                ],
-                                              ),
-                                            )
-                                          : Container(
-                                              width: 800,
-                                              color: LastClickID == dParcs_Ent.ParcsId ? gColors.backgroundColor : gColors.white,
-                                              height: rowh+1,
-                                              child: Row(
-                                                children: <Widget>[
-                                                  Container(
-                                                    width: 8,
-                                                  ),
-                                                  Container(
-                                                    width: 50,
-                                                    child: InkWell(
-                                                        child: Container(
-                                                          color: DbTools.gRowisSel && isInSels(dParcs_Ent.ParcsId!) ? gColors.GrdBtn_Colors1Sel : gColors.transparent,
-                                                          padding: EdgeInsets.only(
-                                                            top: 15,
-                                                          ),
-                                                          child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                                                            upd
-                                                                ? Container(
-                                                                padding: EdgeInsets.fromLTRB(0, 4, 0, 0),
-                                                                    width: 15,
-                                                                    child: Icon(
-                                                                      Icons.adjust,
-                                                                      color: Colors.orange,
-                                                                      size: 10,
-                                                                    ))
-                                                                : Container(
-                                                                    width: 15,
-                                                                  ),
-                                                            Container(
-                                                                padding: EdgeInsets.only(
-                                                                  left: 5,
-                                                                ),
-                                                                height: rowh,
-                                                                child: Text(
-                                                                  "${dParcs_Ent.Parcs_order}",
-                                                                  textAlign: TextAlign.right,
-                                                                  style: dParcs_Ent.Livr!.isNotEmpty ? gColors.bodySaisie_B_O.copyWith(color: LastClickID == dParcs_Ent.ParcsId ? Colors.white : null) : gColors.bodySaisie_B_G.copyWith(color: LastClickID == dParcs_Ent.ParcsId ? Colors.white : wColorText),
-                                                                )),
-                                                          ]),
-                                                        ),
-                                                        onTap: () async {
-                                                          print("Selection");
-                                                          LastClickID = dParcs_Ent.ParcsId!;
-
-                                                          setState(() {});
-                                                        }),
-                                                  ),
-                                                  Container(
-                                                      padding: EdgeInsets.only(
-                                                        top: 15,
-                                                      ),
-                                                      width: gColors.MediaQuerysizewidth - 198,
-                                                      child: Container(
-                                                          padding: EdgeInsets.only(left: 5),
-                                                          height: rowh,
-                                                          child: Text(
-                                                            "${dParcs_Ent.Parcs_Date_Desc}",
-                                                            maxLines: 1,
-                                                            textAlign: TextAlign.left,
-                                                            style: dParcs_Ent.Livr!.isNotEmpty ? gColors.bodySaisie_B_O.copyWith(color: LastClickID == dParcs_Ent.ParcsId ? Colors.white : null) : gColors.bodySaisie_B_G.copyWith(color: LastClickID == dParcs_Ent.ParcsId ? Colors.white : wColorText),
-                                                          ))),
-                                                  Container(
-                                                    padding: EdgeInsets.only(
-                                                      top: 15,
-                                                    ),
-                                                    width: 75,
-                                                    child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                                                      Container(
-                                                          padding: EdgeInsets.only(left: 5, right: 5),
-                                                          height: rowh,
-                                                          child: Text(
-                                                            "${dParcs_Ent.Parcs_Date_Rev!.isEmpty ? '' : DateFormat('dd/MM/yy').format(DateTime.parse(dParcs_Ent.Parcs_Date_Rev!))}",
-                                                            textAlign: TextAlign.right,
-                                                            style: dParcs_Ent.Livr!.isNotEmpty ? gColors.bodySaisie_B_O.copyWith(color: LastClickID == dParcs_Ent.ParcsId ? Colors.white : null) : gColors.bodySaisie_B_G.copyWith(color: LastClickID == dParcs_Ent.ParcsId ? Colors.white : wColorText),
-                                                          ))
-                                                    ]),
-                                                  ),
-                                                  Container(
-                                                    padding: EdgeInsets.only(
-                                                      top: 15,
-                                                    ),
-                                                    width: 65,
-                                                    child: Row(mainAxisAlignment: MainAxisAlignment.end, crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                                                      Container(
-                                                        padding: EdgeInsets.only(left: 5, right: 5),
-                                                        height: rowh,
-                                                        child: Container(
-                                                          child: dParcs_Ent.Parcs_VRMC!.isEmpty ? Container() : Text("${dParcs_Ent.Parcs_VRMC} >", textAlign: TextAlign.right, style: dParcs_Ent.Livr!.isNotEmpty ? gColors.bodySaisie_B_O.copyWith(color: LastClickID == dParcs_Ent.ParcsId ? Colors.white : null) : gColors.bodySaisie_B_G.copyWith(color: LastClickID == dParcs_Ent.ParcsId ? Colors.white : Colors.green)),
-                                                        ),
-                                                      )
-                                                    ]),
-                                                  )
-                                                ],
-                                              ),
-                                            ),
-                                      Container(
-                                        height: 0,
-                                        color: gColors.LinearGradient2,
-                                      ),
-                                    ]),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
+            } else if (dyPosition > 0) {
+              final delta = d.velocity.pixelsPerSecond.dy / -100;
+              vPosition = wVScrollController.offset + 20 * delta; //details.delta.dy;
+              final minposition = wVScrollController.position.minScrollExtent;
+              if (vPosition < minposition) vPosition = minposition;
+              if (vPosition >= minposition) {
+//              print(">>>>> d.velocity.pixelsPerSecond.dy  ${wVScrollController.offset} ----- ${vPosition} ----- ${delta}");
+                wVScrollController.animateTo(vPosition, duration: Duration(milliseconds: 1000), curve: Curves.easeOutCubic);
+              }
+            }
+          },
+          child: DaviTheme(
+              child: wDavi,
+              data: DaviThemeData(
+                columnDividerColor: Colors.transparent,
+                header: HeaderThemeData(
+                  color: gColors.greyLight,
+                  bottomBorderHeight: 2,
+                  bottomBorderColor: gColors.greyDark,
+                  columnDividerColor: Colors.transparent,
                 ),
-              ],
-            )));
+                headerCell: HeaderCellThemeData(height: 40, alignment: Alignment.center, textStyle: gColors.bodySaisie_B_B, resizeAreaWidth: 40, resizeAreaHoverColor: Colors.black, sortIconColors: SortIconColors.all(Colors.black), expandableName: true),
+                row: RowThemeData(
+                  hoverBackground: (rowIndex) => Colors.blue[50],
+                  dividerColor: gColors.greyDark,
+                ),
+                cell: CellThemeData(
+                  contentHeight: 44,
+                ),
+              ))),
+    );
   }
 
+  Color? _rowColor(DaviRow<Parc_Ent> row) {
+    if (LastClickID == row.data.ParcsId) {
+//      return gColors.greyLight;
+      return Colors.blue;
+    }
 
+    return null;
+  }
 
+  void _onHover(int? rowIndex) {
+    print("_onHover rowIndex ${rowIndex}");
+  }
 
   //**********************************
 //**********************************
@@ -3171,8 +2672,6 @@ Container(width: 40,),
   }
 
   Future _onRowTap(BuildContext context, Parc_Ent Parc_Ent) async {
-    print("_onRowTap DbTools.gRowisSel ${DbTools.gRowisSel}");
-
     if (DbTools.gRowisSel) {
       await HapticFeedback.vibrate();
       DbTools.gRowisSel = false;
@@ -3191,11 +2690,13 @@ Container(width: 40,),
   void _onRowDoubleTap(BuildContext context, Parc_Ent Parc_Ent) async {
     if (DbTools.gRowisSel) {
       await HapticFeedback.vibrate();
+
       DbTools.gRowisSel = false;
       DbTools.gRowIndex = -1;
       DbTools.gRowSels.clear();
       print(" ${DbTools.gRowSels.length}");
       print("setSt 17");
+
       setState(() {});
       return;
     }
@@ -3362,7 +2863,7 @@ Container(width: 40,),
     }
   }
 
-//*********************************************
+  //*********************************************
 //*********************************************
 //*********************************************
 }

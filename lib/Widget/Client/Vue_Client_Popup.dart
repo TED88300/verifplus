@@ -1330,17 +1330,10 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
         Expanded(
           child: Container(
               child: TypeAheadField(
-            animationStart: 0,
-            animationDuration: Duration.zero,
-            textFieldConfiguration: TextFieldConfiguration(
-              controller: textEditingController,
-              decoration: InputDecoration(
-                isDense: true,
-              ),
-            ),
-            suggestionsBoxDecoration: SuggestionsBoxDecoration(
-              color: Colors.white,
-            ),
+
+
+
+
             suggestionsCallback: (pattern) async {
               await Api_Gouv.ApiAdresse(textController_Adresse_Geo.text);
               List<String> matches = <String>[];
@@ -1356,7 +1349,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
                 child: Text(sone.toString()),
               ));
             },
-            onSuggestionSelected: (suggestion) {
+            onSelected: (suggestion) {
               Api_Gouv.properties.forEach((propertie) {
                 if (propertie.label!.compareTo(suggestion.toString()) == 0) {
                   Api_Gouv.gProperties = propertie;
@@ -1394,17 +1387,8 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
         Expanded(
           child: Container(
               child: TypeAheadField(
-            animationStart: 0,
-            animationDuration: Duration.zero,
-            textFieldConfiguration: TextFieldConfiguration(
-              controller: textEditingController,
-              decoration: InputDecoration(
-                isDense: true,
-              ),
-            ),
-            suggestionsBoxDecoration: SuggestionsBoxDecoration(
-              color: Colors.white,
-            ),
+
+
             suggestionsCallback: (pattern) async {
               await Api_Gouv.ApiAdresse(textController_Adresse_Geo.text);
               List<String> matches = <String>[];
@@ -1420,7 +1404,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
                 child: Text(sone.toString()),
               ));
             },
-            onSuggestionSelected: (suggestion) {
+            onSelected: (suggestion) {
               Api_Gouv.properties.forEach((propertie) {
                 if (propertie.label!.compareTo(suggestion.toString()) == 0) {
                   Api_Gouv.gProperties = propertie;

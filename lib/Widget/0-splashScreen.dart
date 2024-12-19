@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:verifplus/Tools/Api_Gouv.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Articles_Fam_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
@@ -160,6 +161,15 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
     });
 
 
+    Srv_DbTools.ListParam_Param_TitresRel.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((wParam_Param) {
+      if (wParam_Param.Param_Param_Type.compareTo("TitresRel") == 0) {
+        Srv_DbTools.ListParam_Param_TitresRel.add(wParam_Param);
+      }
+    });
+
+
+
     Srv_DbTools.ListParam_ParamCiv.clear();
     Srv_DbTools.ListParam_ParamCiv.add("");
     for (int i = 0; i < Srv_DbTools.ListParam_Param_Civ.length; i++) {
@@ -190,8 +200,30 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
     DbTools.glfNF074_Pieces_Actions = await  DbTools.getNF074_Pieces_Actions();
     Srv_DbTools.ListArticle_Ebp = await Article_Ebp.getArticle_Ebp();
     await Srv_DbTools.IMPORT_Article_Ebp_ES();
-
     print("SplashScreen ListArticle_Ebp ${Srv_DbTools.ListArticle_Ebp.length}");
+
+    await Srv_DbTools.IMPORT_Article_Fam_EbpAll();
+    print("SplashScreen ListArticle_Fam_Ebp ${Srv_DbTools.ListArticle_Fam_Ebp.length}");
+
+
+
+    Srv_DbTools.list_Article_GrpFamSsFam_Ebp.clear();
+
+    for (int i = 0; i < Srv_DbTools.ListArticle_Ebp.length; i++) {
+      Article_Ebp art = Srv_DbTools.ListArticle_Ebp[i];
+
+      Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Article_GrpFamSsFam_Ebp();
+
+      wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Groupe = art.Article_Groupe;
+      wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam = art.Article_Fam;
+      wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam = art.Article_Sous_Fam;
+
+
+      if(!Srv_DbTools.list_Article_GrpFamSsFam_Ebp.contains(wArticle_GrpFamSsFam_Ebp))
+        Srv_DbTools.list_Article_GrpFamSsFam_Ebp.add(wArticle_GrpFamSsFam_Ebp);
+    }
+
+    print("SplashScreen list_Article_Groupe ${Srv_DbTools.list_Article_Groupe.length}");
 
 
     DbTools.genParam();

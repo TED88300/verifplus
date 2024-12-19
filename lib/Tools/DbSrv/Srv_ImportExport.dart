@@ -871,7 +871,7 @@ class Srv_ImportExport {
         DbTools.lParcs_Art.addAll(DbTools.glfParcs_Art);
 
 //                    await Srv_DbTools.delParc_Ent_Srv(Srv_DbTools.gIntervention.InterventionId!);
-        await Srv_DbTools.delParc_Ent_Srv_Upd();
+        await Srv_DbTools.delParc_Ent_Srv_Upd(Srv_DbTools.gIntervention.InterventionId);
 
         for (int i = 0; i < DbTools.glfParcs_Ent.length; i++) {
           var element = DbTools.glfParcs_Ent[i];

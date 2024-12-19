@@ -112,12 +112,12 @@ class Client_Groupe_Parc_Inter_PieceState extends State<Client_Groupe_Parc_Inter
 
     return Scaffold(
       body: Padding(
-          padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              //buildEnt(context),
+
               Container(
                 height: 1,
                 color: gColors.greyDark,
@@ -129,22 +129,8 @@ class Client_Groupe_Parc_Inter_PieceState extends State<Client_Groupe_Parc_Inter
     );
   }
 
-  @override
-  Widget buildEnt(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(16, 5, 10, 8),
-      color: gColors.white,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Text(
-            "${widget.x_t}",
-            style: gColors.bodyTitle1_N_Gr,
-          ),
-        ],
-      ),
-    );
-  }
+
+
 
   Widget buildIcoTitre(BuildContext context) {
     double IcoWidth = 30;

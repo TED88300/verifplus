@@ -4,6 +4,7 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:camera/camera.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Img.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
@@ -195,6 +196,11 @@ class DisplayPictureScreen extends StatelessWidget {
           wParc_Img.Parc_Imgs_Path = imagePath;
           wParc_Img.Parc_Imgs_Type = 99;
           wParc_Img.Parc_Imgs_Data = "";
+          wParc_Img.Parc_Imgs_Principale = 0;
+
+          var now = new DateTime.now();
+          var formatter = new DateFormat('dd/MM/yyyy');
+          wParc_Img.Parc_Imgs_Date= formatter.format(now);
 
           DbTools.insertParc_Img(wParc_Img);
           DbTools.gImagePath = imagePath;

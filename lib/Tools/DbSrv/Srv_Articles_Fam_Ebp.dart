@@ -1,3 +1,15 @@
+import 'package:verifplus/Tools/DbTools/DbTools.dart';
+
+
+class Article_GrpFamSsFam_Ebp {
+
+  String Article_GrpFamSsFam_Groupe = "";
+  String Article_GrpFamSsFam_Fam = "";
+  String Article_GrpFamSsFam_Sous_Fam = "";
+
+
+}
+
 class Article_Fam_Ebp {
   int Article_FamId = 0;
   String Article_Fam_Code = "";
@@ -29,6 +41,17 @@ class Article_Fam_Ebp {
     this.Article_Fam_UUID = Article_Fam_UUID;
   }
 
+  Map<String, dynamic> toMap() {
+    return {
+      'Article_FamId': Article_FamId,
+      'Article_Fam_Code': Article_Fam_Code,
+      'Article_Fam_Code_Parent': Article_Fam_Code_Parent,
+      'Article_Fam_Description': Article_Fam_Description,
+      'Article_Fam_Libelle': Article_Fam_Libelle,
+      'Article_Fam_UUID': Article_Fam_UUID,
+    };
+  }
+
   factory Article_Fam_Ebp.fromJson(Map<String, dynamic> json) {
 //    print("json $json");
     Article_Fam_Ebp wArticle_Fam_Ebp = Article_Fam_Ebp(
@@ -46,4 +69,18 @@ class Article_Fam_Ebp {
   String Desc() {
     return '  $Article_FamId,$Article_Fam_Code,$Article_Fam_Code_Parent,$Article_Fam_Description,$Article_Fam_Libelle, $Article_Fam_UUID ';
   }
+
+  static Future<void> insertArticle_Fam_Ebp(Article_Fam_Ebp article_Fam_Ebp) async {
+    final db = await DbTools.database;
+    int? repid = await db.insert("Articles_Fam_Ebp", article_Fam_Ebp.toMap());
+
+  }
+
+  static Future<void> TrunckArticle_Fam_Ebp() async {
+    final db = await DbTools.database;
+    int? repid = await db.delete("Articles_Fam_Ebp");
+  }
+
+
+
 }

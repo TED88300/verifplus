@@ -7,6 +7,7 @@ import 'package:crop_image/crop_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 
 
 import 'dart:ui' as ui;
@@ -26,7 +27,10 @@ class gPhotoCropState extends State<gPhotoCrop> {
   final _formKey = GlobalKey<FormState>();
   ScrollController scrollController = ScrollController();
   ScrollController scrollControllerImg = ScrollController();
-
+  final cropController = CropController(
+    aspectRatio: 1,
+//    defaultCrop: const Rect.fromLTRB(0.1, 0.1, 0.9, 0.9),
+  );
   String gPhotoCropError = "";
 
   int IndexFilter = 0;
@@ -67,7 +71,12 @@ class gPhotoCropState extends State<gPhotoCrop> {
   }
 
   @override
-  void dispose() {}
+  void dispose() {
+
+    scrollController.dispose();
+    scrollControllerImg.dispose();
+    cropController.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -75,10 +84,7 @@ class gPhotoCropState extends State<gPhotoCrop> {
 
     relaodImage();
 
-    final cropController = CropController(
-      aspectRatio: 1,
-//    defaultCrop: const Rect.fromLTRB(0.1, 0.1, 0.9, 0.9),
-    );
+
 
     print("width $width");
 
@@ -122,6 +128,13 @@ class gPhotoCropState extends State<gPhotoCrop> {
                     wParc_Img.Parc_Imgs_ParcsId = DbTools.gParc_Ent.ParcsId;
                     wParc_Img.Parc_Imgs_Path = DbTools.gImagePath!;
                     wParc_Img.Parc_Imgs_Type = DbTools.gParc_Img_Type;
+                    wParc_Img.Parc_Imgs_Principale = 0;
+
+
+                    var now = new DateTime.now();
+                    var formatter = new DateFormat('dd/MM/yyyy');
+                    wParc_Img.Parc_Imgs_Date= formatter.format(now);
+
 
                     print(">>>>>>>>>>>>> Parc_Imgs_Data");
 
@@ -205,6 +218,12 @@ class gPhotoCropState extends State<gPhotoCrop> {
               wParc_Img.Parc_Imgs_ParcsId = DbTools.gParc_Ent.ParcsId;
               wParc_Img.Parc_Imgs_Path = DbTools.gImagePath!;
               wParc_Img.Parc_Imgs_Type = DbTools.gParc_Img_Type;
+              wParc_Img.Parc_Imgs_Principale = 0;
+
+              var now = new DateTime.now();
+              var formatter = new DateFormat('dd/MM/yyyy');
+              wParc_Img.Parc_Imgs_Date= formatter.format(now);
+
 
               print(">>>>>>>>>>>>> Parc_Imgs_Data");
 

@@ -88,7 +88,7 @@ class DbTools {
     FBroadcast.instance().broadcast("MAJHOME");
   }
 
-  static int gCurrentIndex = 3;
+  static int gCurrentIndex = 4;
   static int gCurrentIndex2 = 0;
   static int gCurrentIndex3 = 0;
   static int gCurrentIndex4 = 0;
@@ -120,6 +120,8 @@ class DbTools {
 
   static String gDateMS = "";
   static String DescAff = "";
+  static String DescAff2 = "";
+  static String DescAff3 = "";
 
   static bool hasConnection = false;
   static Future<bool> checkConnection() async {
@@ -254,7 +256,7 @@ class DbTools {
         "Planning_Interv_Client_Nom varchar(512) NOT NULL DEFAULT ''"
         ")";
 
-    String wCREATE_Parcimgs = "CREATE TABLE Parc_Imgs (Parc_Imgid  INTEGER PRIMARY KEY AUTOINCREMENT,Parc_Imgs_ParcsId  INTEGER, Parc_Imgs_Type  INTEGER,  Parc_Imgs_Data  TEXT,  Parc_Imgs_Path varchar(512) NOT NULL DEFAULT '')";
+    String wCREATE_Parcimgs = "CREATE TABLE Parc_Imgs (Parc_Imgid  INTEGER PRIMARY KEY AUTOINCREMENT,Parc_Imgs_ParcsId  INTEGER, Parc_Imgs_Type  INTEGER, Parc_Imgs_Principale  INTEGER, Parc_Imgs_Date  TEXT, Parc_Imgs_Data  TEXT, Parc_Imgs_Path varchar(512) NOT NULL DEFAULT '')";
 
     String wCREATE_Parcs_Ent = "CREATE TABLE Parcs_Ent (ParcsId  INTEGER PRIMARY KEY AUTOINCREMENT"
         ", Parcs_order INTEGER"
@@ -332,6 +334,20 @@ class DbTools {
 
     String wCREATE_RIA_Gammes = "CREATE TABLE RIA_Gammes (RIA_GammesId int(11) NOT NULL, RIA_Gammes_DESC varchar(128) NOT NULL DEFAULT '',RIA_Gammes_FAB varchar(128) NOT NULL DEFAULT '',RIA_Gammes_TYPE varchar(128) NOT NULL DEFAULT '',RIA_Gammes_ARM varchar(128) NOT NULL DEFAULT '',RIA_Gammes_INOX varchar(128) NOT NULL DEFAULT '',RIA_Gammes_PDT varchar(128) NOT NULL DEFAULT '',RIA_Gammes_DIAM varchar(128) NOT NULL DEFAULT '',RIA_Gammes_LONG varchar(128) NOT NULL DEFAULT '',RIA_Gammes_DIF varchar(128) NOT NULL DEFAULT '',RIA_Gammes_DISP varchar(128) NOT NULL DEFAULT '',RIA_Gammes_PREM varchar(128) NOT NULL DEFAULT '',RIA_Gammes_REF varchar(128) NOT NULL DEFAULT '',RIA_Gammes_NCERT varchar(128) NOT NULL DEFAULT '')";
 
+
+
+    String wCREATE_Articles_Fam_Ebp = "CREATE TABLE Articles_Fam_Ebp ("
+        " Article_FamId INTEGER PRIMARY KEY AUTOINCREMENT "
+        ", Article_Fam_Code varchar(128) NOT NULL DEFAULT ''"
+        ", Article_Fam_Code_Parent varchar(128) NOT NULL DEFAULT ''"
+        ", Article_Fam_Description varchar(1024) NOT NULL DEFAULT ''"
+        ", Article_Fam_Libelle varchar(128) NOT NULL DEFAULT ''"
+        ", Article_Fam_UUID varchar(128) NOT NULL DEFAULT ''"
+
+
+        ")";
+
+
     String wCREATE_Articles_Ebp = "CREATE TABLE Articles_Ebp ("
         " ArticleID INTEGER PRIMARY KEY AUTOINCREMENT "
         ", Article_codeArticle varchar(128) NOT NULL DEFAULT ''"
@@ -349,6 +365,7 @@ class DbTools {
         ", Article_stockVirtuel REAL"
         ", Article_Notes varchar(128) NOT NULL DEFAULT ''"
         ", Article_Pousse  INTEGER"
+        ", Article_New  INTEGER"
         ", Article_Promo_PVHT REAL"
         ", Article_Libelle     varchar(128) NOT NULL DEFAULT ''"
         ", Article_Groupe      varchar(128) NOT NULL DEFAULT ''"
@@ -356,6 +373,16 @@ class DbTools {
         ", Article_Sous_Fam    varchar(128) NOT NULL DEFAULT ''"
         ", Article_codeArticle_Parent varchar(128) NOT NULL DEFAULT ''"
         ")";
+
+
+
+    String wCREATE_ArticlesImg_Ebp = "CREATE TABLE ArticlesImg_Ebp ("
+        " ArticlesImg_codeArticle varchar(128) NOT NULL DEFAULT ''"
+        ", ArticlesImg_Image text NOT NULL DEFAULT ''"
+        ")";
+
+
+
 
     String wCREATE_DCL_Ent = "CREATE TABLE DCL_Ent ("
         "DCL_EntID  INTEGER PRIMARY KEY AUTOINCREMENT,"
@@ -381,6 +408,14 @@ class DbTools {
         "DCL_Ent_ModeRegl varchar(64) NOT NULL DEFAULT '',"
         "DCL_Ent_MoyRegl varchar(64) NOT NULL DEFAULT '',"
         "DCL_Ent_Valo int(11) NOT NULL DEFAULT 1,"
+
+        "DCL_Ent_PrefAff varchar(64) NOT NULL DEFAULT '',"
+        "DCL_Ent_RelAuto varchar(64) NOT NULL DEFAULT '',"
+        "DCL_Ent_RelAnniv	 varchar(64) NOT NULL DEFAULT '',"
+        "DCL_Ent_CopRel varchar(64) NOT NULL DEFAULT '',"
+
+
+
         "DCL_Ent_Relance int(11) NOT NULL DEFAULT 1,"
         "DCL_Ent_Relance_Mode varchar(16) NOT NULL DEFAULT '',"
         "DCL_Ent_Relance_Contact varchar(64) NOT NULL DEFAULT '',"
@@ -455,6 +490,8 @@ class DbTools {
         await db.execute(wCREATE_NF074_Pieces_Det);
         await db.execute(wCREATE_NF074_Pieces_Det_Inc);
         await db.execute(wCREATE_Articles_Ebp);
+        await db.execute(wCREATE_Articles_Fam_Ebp);
+        await db.execute(wCREATE_ArticlesImg_Ebp);
         await db.execute(wCREATE_RIA_Gammes);
 
         await db.execute(wCREATE_DCL_Ent);
@@ -660,6 +697,14 @@ class DbTools {
         Srv_DbTools.ListParam_Param_Etat_Livr.add(element);
       }
     });
+
+    Srv_DbTools.ListParam_Param_TitresRel.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("TitresRel") == 0) {
+        Srv_DbTools.ListParam_Param_TitresRel.add(element);
+      }
+    });
+
 
     Srv_DbTools.ListParam_Param_Validite_devis.clear();
     Srv_DbTools.ListParam_ParamAll.forEach((element) {
@@ -3581,7 +3626,7 @@ class DbTools {
 
   static Future<List<Parc_Ent>> getParcs_Ent(int Parcs_InterventionId) async {
     final db = await database;
-    final List<Map<String, dynamic>> maps = await db.query("Parcs_Ent", orderBy: "Parcs_order ASC", where: '"Parcs_InterventionId" = ${Parcs_InterventionId}', whereArgs: []);
+    final List<Map<String, dynamic>> maps = await db.query("Parcs_Ent", orderBy: "Parcs_order ASC, Parcs_UUID_Parent ASC", where: '"Parcs_InterventionId" = ${Parcs_InterventionId}', whereArgs: []);
     print("getParcs_Ent Parcs_Ent.length A ${maps.length} ${Parcs_InterventionId}");
     return List.generate(maps.length, (i) {
       return Parc_Ent.fromMap(maps[i]);
@@ -3958,7 +4003,8 @@ class DbTools {
   }
 
   static Future<void> Parc_Ent_GetOrder() async {
-    return DbTools.glfParcs_Ent.clear();
+
+    DbTools.glfParcs_Ent.clear();
     List<Parc_Ent> wParcs_Ent = await DbTools.getParcs_Ent(Srv_DbTools.gIntervention.InterventionId!);
 //    List<Parc_Ent> wParcs_Ent = await DbTools.getParcs_EntAll();
 
@@ -4584,7 +4630,9 @@ class DbTools {
         Parc_Imgid: maps[i]["Parc_Imgid"],
         Parc_Imgs_ParcsId: maps[i]["Parc_Imgs_ParcsId"],
         Parc_Imgs_Type: maps[i]["Parc_Imgs_Type"],
+        Parc_Imgs_Principale: maps[i]["Parc_Imgs_Principale"],
         Parc_Imgs_Path: maps[i]["Parc_Imgs_Path"],
+        Parc_Imgs_Date: maps[i]["Parc_Imgs_Date"],
         Parc_Imgs_Data: maps[i]["Parc_Imgs_Data"],
       );
     });
@@ -4599,7 +4647,9 @@ class DbTools {
         Parc_Imgid: maps[i]["Parc_Imgid"],
         Parc_Imgs_ParcsId: maps[i]["Parc_Imgs_ParcsId"],
         Parc_Imgs_Type: maps[i]["Parc_Imgs_Type"],
+        Parc_Imgs_Principale: maps[i]["Parc_Imgs_Principale"],
         Parc_Imgs_Path: maps[i]["Parc_Imgs_Path"],
+        Parc_Imgs_Date: maps[i]["Parc_Imgs_Date"],
         Parc_Imgs_Data: maps[i]["Parc_Imgs_Data"],
       );
     });
@@ -4614,7 +4664,9 @@ class DbTools {
         Parc_Imgid: maps[i]["Parc_Imgid"],
         Parc_Imgs_ParcsId: maps[i]["Parc_Imgs_ParcsId"],
         Parc_Imgs_Type: maps[i]["Parc_Imgs_Type"],
+        Parc_Imgs_Principale: maps[i]["Parc_Imgs_Principale"],
         Parc_Imgs_Path: maps[i]["Parc_Imgs_Path"],
+        Parc_Imgs_Date: maps[i]["Parc_Imgs_Date"],
         Parc_Imgs_Data: maps[i]["Parc_Imgs_Data"],
       );
     });
@@ -4638,6 +4690,17 @@ class DbTools {
     parc_Img.Parc_Imgid = null;
     final db = await DbTools.database;
     int? repid = await db.insert("Parc_Imgs", parc_Img.toMap());
+  }
+
+  static Future<void> setParc_Img(Parc_Img parc_Img) async {
+    final db = await DbTools.database;
+    int? repid = await db.update(
+      "Parc_Imgs",
+      parc_Img.toMap(),
+      where: "Parc_Imgid = ?",
+      whereArgs: [parc_Img.Parc_Imgid],
+    );
+    gLastID = repid!;
   }
 
   static Future<void> deleteParc_Img(int aID, int Type) async {

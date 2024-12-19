@@ -4,6 +4,13 @@ class DCL_Det {
   int? DCL_Det_ParcsArtId;
   int? DCL_Det_Ordre;
   String? DCL_Det_Type;
+  // A Article
+  // T Texte
+  // L Ligne
+  // P Saut de Page
+  // S Sous Total
+
+
   String? DCL_Det_NoArt;
   String? DCL_Det_Lib;
   int? DCL_Det_Qte;
@@ -78,4 +85,12 @@ class DCL_Det {
     data['DCL_Det_Note'] = this.DCL_Det_Note;
     return data;
   }
+
+  @override
+  String Desc() {
+    return "$DCL_Det_Lib";
+  }
+
+
+
 }

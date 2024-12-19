@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+
 class Parc_Ent_Count {
   String ParamType = "";
   String ParamTypeOg = "";
@@ -49,8 +51,16 @@ class Parc_Ent_Count {
   bool? Parcs_MaintCorrect = true;
 
   String? Parcs_Date_Desc = "";
+  String? Parcs_Date_DescBig = "";
+  String? Parcs_Date_Desc2 = "";
+  String? Parcs_Date_Desc3 = "";
+
+
+  String? Parcs_Img = "";
+  Widget?  Parcs_ImgWidget = Container();
   String? Parcs_VRMC = "";
   List<String?>? Parcs_Cols = [];
+
 
 
 

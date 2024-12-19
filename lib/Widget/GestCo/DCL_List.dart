@@ -6,6 +6,7 @@ import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
 import 'package:verifplus/Widget/Client/Client_DCL_Ent_Type_Dialog.dart';
+import 'package:verifplus/Widget/GestCo/DCL_Devis_Det.dart';
 import 'package:verifplus/Widget/GestCo/DCL_Ent_Param.dart';
 import 'package:verifplus/Widget/GestCo/Select_DCL_Ents_Add.dart';
 import 'package:verifplus/Widget/Planning/Client_Groupe_Inter_Det.dart';
@@ -33,10 +34,9 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
   bool onCellTap = false;
   String wAction = "";
 
-  bool btnSel_Aff = false;
+  bool btnSel_Aff = true;
 
   bool bSortDate = false;
-
 
   void Reload() async {
     await Srv_ImportExport.getErrorSync();
@@ -48,32 +48,39 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
       wDCL_Ent.DCL_Ent_ClientNom = "";
 
       if (await Srv_DbTools.getClient(wDCL_Ent.DCL_Ent_ClientId!)) {
-        wDCL_Ent.DCL_Ent_ClientNom = Srv_DbTools.gClient.Client_Nom;
+        wDCL_Ent.DCL_Ent_ClientNom = "${Srv_DbTools.gClient.Client_Nom}" ;
         wDCL_Ent.DCL_Ent_CCGSZ = "${wDCL_Ent.DCL_Ent_Num} / ${wDCL_Ent.DCL_Ent_ClientNom}";
         wDCL_Ent.DCL_Ent_Adr1 = "Adr Client";
         wDCL_Ent.DCL_Ent_Adr2 = "${Srv_DbTools.gClient.Adresse_Adr1}  ${Srv_DbTools.gClient.Adresse_CP} ${Srv_DbTools.gClient.Adresse_Ville}";
       }
 
       if (wDCL_Ent.DCL_Ent_GroupeId! >= 0) {
+        print("wDCL_Ent.DCL_Ent_CCGSZ g ${wDCL_Ent.DCL_Ent_GroupeId}");
+
         await Srv_DbTools.getGroupeID(wDCL_Ent.DCL_Ent_GroupeId!);
-        wDCL_Ent.DCL_Ent_GroupeNom = Srv_DbTools.gGroupe.Groupe_Nom;
-        wDCL_Ent.DCL_Ent_CCGSZ = "${wDCL_Ent.DCL_Ent_Num} / ${wDCL_Ent.DCL_Ent_ClientNom} / ${wDCL_Ent.DCL_Ent_GroupeNom}";
+        if (Srv_DbTools.gGroupe.Groupe_Nom.isNotEmpty)
+          wDCL_Ent.DCL_Ent_GroupeNom = "/ ${Srv_DbTools.gGroupe.Groupe_Nom}";
+        wDCL_Ent.DCL_Ent_CCGSZ = "${wDCL_Ent.DCL_Ent_Num} / ${wDCL_Ent.DCL_Ent_ClientNom} ${wDCL_Ent.DCL_Ent_GroupeNom}";
         wDCL_Ent.DCL_Ent_Adr1 = "Adr Groupe";
         wDCL_Ent.DCL_Ent_Adr2 = "${Srv_DbTools.gGroupe.Groupe_Adr1} ${Srv_DbTools.gGroupe.Groupe_Adr2} ${Srv_DbTools.gGroupe.Groupe_CP} ${Srv_DbTools.gGroupe.Groupe_Ville}";
       }
 
       if (wDCL_Ent.DCL_Ent_SiteId! >= 0) {
+        print("wDCL_Ent.DCL_Ent_CCGSZ s ${wDCL_Ent.DCL_Ent_SiteId}");
+
         await Srv_DbTools.getSiteID(wDCL_Ent.DCL_Ent_SiteId!);
-        wDCL_Ent.DCL_Ent_SiteNom = Srv_DbTools.gSite.Site_Nom;
-        wDCL_Ent.DCL_Ent_CCGSZ = "${wDCL_Ent.DCL_Ent_Num} / ${wDCL_Ent.DCL_Ent_ClientNom} / ${wDCL_Ent.DCL_Ent_GroupeNom} / ${wDCL_Ent.DCL_Ent_SiteNom}";
+        if (Srv_DbTools.gSite.Site_Nom.isNotEmpty)
+        wDCL_Ent.DCL_Ent_SiteNom = "/ ${Srv_DbTools.gSite.Site_Nom}";
+        wDCL_Ent.DCL_Ent_CCGSZ = "${wDCL_Ent.DCL_Ent_Num} / ${wDCL_Ent.DCL_Ent_ClientNom} ${wDCL_Ent.DCL_Ent_GroupeNom} ${wDCL_Ent.DCL_Ent_SiteNom}";
         wDCL_Ent.DCL_Ent_Adr1 = "Adr Site";
         wDCL_Ent.DCL_Ent_Adr2 = "${Srv_DbTools.gSite.Site_Adr1} ${Srv_DbTools.gSite.Site_Adr2} ${Srv_DbTools.gSite.Site_CP} ${Srv_DbTools.gSite.Site_Ville}";
       }
 
       if (wDCL_Ent.DCL_Ent_ZoneId! >= 0) {
         await Srv_DbTools.getZoneID(wDCL_Ent.DCL_Ent_ZoneId!);
-        wDCL_Ent.DCL_Ent_ZoneNom = Srv_DbTools.gZone.Zone_Nom;
-        wDCL_Ent.DCL_Ent_CCGSZ = "${wDCL_Ent.DCL_Ent_Num} / ${wDCL_Ent.DCL_Ent_ClientNom} / ${wDCL_Ent.DCL_Ent_GroupeNom} / ${wDCL_Ent.DCL_Ent_SiteNom} / ${wDCL_Ent.DCL_Ent_ZoneNom}";
+        if (Srv_DbTools.gZone.Zone_Nom.isNotEmpty)
+        wDCL_Ent.DCL_Ent_ZoneNom = "/ ${Srv_DbTools.gZone.Zone_Nom}";
+        wDCL_Ent.DCL_Ent_CCGSZ = "${wDCL_Ent.DCL_Ent_Num} / ${wDCL_Ent.DCL_Ent_ClientNom} ${wDCL_Ent.DCL_Ent_GroupeNom} ${wDCL_Ent.DCL_Ent_SiteNom} ${wDCL_Ent.DCL_Ent_ZoneNom} ";
         wDCL_Ent.DCL_Ent_Adr1 = "Adr Zone";
         wDCL_Ent.DCL_Ent_Adr2 = "${Srv_DbTools.gZone.Zone_Adr1} ${Srv_DbTools.gZone.Zone_Adr2} ${Srv_DbTools.gZone.Zone_CP} ${Srv_DbTools.gZone.Zone_Ville}";
       }
@@ -133,15 +140,11 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
         }
       });
 
-
-    if (bSortDate)
-      {
-        Srv_DbTools.ListDCL_Entsearchresult.sort(Srv_DbTools.idSortComparison);
-      }
-    else
-      {
-        Srv_DbTools.ListDCL_Entsearchresult.sort(Srv_DbTools.affSortComparisonData_DCL);
-      }
+    if (bSortDate) {
+      Srv_DbTools.ListDCL_Entsearchresult.sort(Srv_DbTools.idSortComparison);
+    } else {
+      Srv_DbTools.ListDCL_Entsearchresult.sort(Srv_DbTools.affSortComparisonData_DCL);
+    }
 
     setState(() {});
   }
@@ -229,8 +232,18 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
   @override
   Widget Entete_Ico_Search() {
     return Container(
+        decoration: BoxDecoration(
+          color: gColors.LinearGradient3,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.withOpacity(0.9),
+              spreadRadius: 1,
+              blurRadius: 4,
+              offset: Offset(0, 1), // changes position of shadow
+            ),
+          ],
+        ),
         height: 57,
-        color: gColors.LinearGradient3,
         child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.center, children: [
           Container(
             width: 16,
@@ -291,9 +304,7 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
                 await gDialogs.Dialog_CdeDate(context);
                 Filtre();
               }),
-          Container(
-            width: 32,
-          ),
+
           InkWell(
               child: Container(
                 width: icoWidth + 10,
@@ -418,6 +429,10 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
               Entete_Tot_Search(),
               gColors.wLigne(),
               Entete_Ico_Search(),
+
+          Container(
+            color: gColors.transparent,
+              height : 8,),
               Expanded(
                 child: DCL_EntGridWidget(),
               ),
@@ -444,301 +459,343 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
   //***************************
 
   Widget DCL_EntGridWidget() {
-    return Column(
-      children: <Widget>[
-        gColors.wLigne(),
-        gColors.wLigne(),
-        gColors.wLigne(),
-        SizedBox(height: 5.0),
-        Expanded(
-          child: ListView.builder(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-            itemCount: Srv_DbTools.ListDCL_Entsearchresult.length,
-            itemBuilder: (BuildContext context, int index) {
-              DCL_Ent dCL_Ent = Srv_DbTools.ListDCL_Entsearchresult[index];
-              Color wColor = Colors.transparent;
-              Color wColorBack = Colors.transparent;
-              Color wColorText = Colors.black;
+    return Container(
+        color: gColors.LinearGradient2,
+        child: Column(
+          children: <Widget>[
+//            gColors.wLigne(),
+            Expanded(
+              child: ListView.builder(
+                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                itemCount: Srv_DbTools.ListDCL_Entsearchresult.length,
+                itemBuilder: (BuildContext context, int index) {
+                  DCL_Ent dCL_Ent = Srv_DbTools.ListDCL_Entsearchresult[index];
+                  Color wColor = Colors.transparent;
+                  Color wColorBack = Colors.transparent;
+                  Color wColorBack2 = Colors.white;
+                  Color wColorText = Colors.black;
 
-              if (Srv_DbTools.gDCL_Ent == dCL_Ent) {
-                wColorBack = gColors.backgroundColor;
-                wColorText = Colors.white;
-              }
+                  if (Srv_DbTools.gDCL_Ent == dCL_Ent) {
+                    if (!btnSel_Aff) wColorBack = gColors.backgroundColor;
+                    wColorBack2 = gColors.backgroundColor;
+                    wColorText = Colors.white;
+                  }
 
-              if (dCL_Ent.DCL_Ent_Type == "Devis") {
-                wColor = gColors.getColorEtatDevis(dCL_Ent.DCL_Ent_Etat!);
-              }
-              if (dCL_Ent.DCL_Ent_Type == "Commande") {
-                wColor = gColors.getColorEtatCde(dCL_Ent.DCL_Ent_Etat!);
-              }
-              if (dCL_Ent.DCL_Ent_Type == "Bon de livraison") {
-                wColor = gColors.getColorEtatLivr(dCL_Ent.DCL_Ent_Etat!);
-              }
+                  if (dCL_Ent.DCL_Ent_Type == "Devis") {
+                    wColor = gColors.getColorEtatDevis(dCL_Ent.DCL_Ent_Etat!);
+                  }
+                  if (dCL_Ent.DCL_Ent_Type == "Commande") {
+                    wColor = gColors.getColorEtatCde(dCL_Ent.DCL_Ent_Etat!);
+                  }
+                  if (dCL_Ent.DCL_Ent_Type == "Bon de livraison") {
+                    wColor = gColors.getColorEtatLivr(dCL_Ent.DCL_Ent_Etat!);
+                  }
 
-              double rowh = 24;
-              String wNomClient = "${dCL_Ent.DCL_Ent_ClientNom}";
-              double wH = !btnSel_Aff ? 57 : 85;
-              return Container(
-                height: wH,
-                width: 800,
-                child: Stack(
-                  fit: StackFit.expand,
-                  children: <Widget>[
-                    Container(
-                      color: wColorBack,
-                      child: GestureDetector(
-                        onTap: () async {
-                          await HapticFeedback.vibrate();
-                          Srv_DbTools.gDCL_Ent = dCL_Ent;
-                          if (dCL_Ent.DCL_Ent_InterventionId! >= 0)
-                          {
-                            Srv_DbTools.gIntervention.Client_Nom = Srv_DbTools.gClient.Client_Nom;
-                            Srv_DbTools.gIntervention.Site_Nom = Srv_DbTools.gSite.Site_Nom;
-                            Srv_DbTools.gIntervention.Groupe_Nom = Srv_DbTools.gGroupe.Groupe_Nom;
-                            Srv_DbTools.gIntervention.Zone_Nom = Srv_DbTools.gZone.Zone_Nom;
-                            print(" Selection Intervention DCL_Ent_InterventionId ${dCL_Ent.DCL_Ent_InterventionId!} ${Srv_DbTools.gIntervention.Desc()}");
-                            await HapticFeedback.vibrate();
-                            await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Groupe_Inter_Det()));
-                            Reload();
-                          }
-                          else
-                          {
-                            print("Selection Param");
-                            await HapticFeedback.vibrate();
-                            await Navigator.push(context, MaterialPageRoute(builder: (context) => DCL_Ent_Param()));
-                            Reload();
-                          }
+                  double rowh = 24;
+                  String wNomClient = "${dCL_Ent.DCL_Ent_ClientNom}";
+                  double wH = !btnSel_Aff ? 57 : index == 0 ? 148 :160;
+                  return Column(
+                    children: [
+                      Container(
+                        height: wH,
+                        width: 800,
+                        child: Stack(
+                          fit: StackFit.expand,
+                          children: <Widget>[
+                            Container(
+                              color: wColorBack,
+                              child: GestureDetector(
+                                onTap: () async {
+                                  print(" GestureDetectorGestureDetectorGestureDetectorGestureDetectorGestureDetector");
 
-                        },
-                        child: Column(children: [
-                          (!btnSel_Aff)
-                              ? Container(
-                                  height: 56,
-                                  padding: EdgeInsets.only(
-                                    top: 10,
-                                  ),
-                                  child: Row(
-                                    children: <Widget>[
-                                      Container(
-                                        width: 8,
-                                      ),
-                                      Expanded(
-                                        flex: 6,
-                                        child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                                          gColors.gCircle(wColor),
-                                          InkWell(
-                                              child: Container(
-                                                  padding: EdgeInsets.only(
-                                                    left: 5,
-                                                  ),
-                                                  height: rowh,
-                                                  child: Text(
-                                                    "${dCL_Ent.DCL_Ent_Num}",
-                                                    textAlign: TextAlign.right,
-                                                    style: gColors.bodySaisie_B_B.copyWith(color: wColorText),
-                                                  )),
-                                              onTap: () async {
-                                                print("Selection");
-                                                Srv_DbTools.gDCL_Ent = dCL_Ent;
-
-                                                setState(() {});
-                                              }),
-                                        ]),
-                                      ),
-                                      Expanded(
-                                          flex: 6,
-                                          child: Container(
-                                              padding: EdgeInsets.only(left: 5),
-                                              height: rowh,
-                                              child: Text(
-                                                "${dCL_Ent.DCL_Ent_Date}",
-                                                maxLines: 1,
-                                                textAlign: TextAlign.left,
-                                                style: gColors.bodySaisie_B_B.copyWith(color: wColorText),
-                                              ))),
-                                      Expanded(
-                                        flex: 30,
-                                        child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                                          Container(
-                                              padding: EdgeInsets.only(left: 5, right: 5),
-                                              height: rowh,
-                                              child: Text(
-                                                "${dCL_Ent.DCL_Ent_InterventionId! > 0 ? "(${dCL_Ent.DCL_Ent_InterventionId}) " : ""}${wNomClient}",
-                                                textAlign: TextAlign.right,
-                                                style: gColors.bodySaisie_B_B.copyWith(color: wColorText),
-                                              ))
-                                        ]),
-                                      )
-                                    ],
-                                  ),
-                                )
-                              : Column(
-                                  children: [
-                                    Container(
-                                      height: 40,
-                                      padding: EdgeInsets.only(
-                                        top: 10,
-                                      ),
-                                      child: Row(
-                                        children: <Widget>[
-                                          Container(
-                                            width: 8,
+                                  await HapticFeedback.vibrate();
+                                  Srv_DbTools.gDCL_Ent = dCL_Ent;
+                                  if (dCL_Ent.DCL_Ent_InterventionId! >= 0) {
+                                    Srv_DbTools.gIntervention.Client_Nom = Srv_DbTools.gClient.Client_Nom;
+                                    Srv_DbTools.gIntervention.Site_Nom = Srv_DbTools.gSite.Site_Nom;
+                                    Srv_DbTools.gIntervention.Groupe_Nom = Srv_DbTools.gGroupe.Groupe_Nom;
+                                    Srv_DbTools.gIntervention.Zone_Nom = Srv_DbTools.gZone.Zone_Nom;
+                                    print(" Selection Intervention DCL_Ent_InterventionId ${dCL_Ent.DCL_Ent_InterventionId!} ${Srv_DbTools.gIntervention.Desc()}");
+                                    await HapticFeedback.vibrate();
+                                    await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Groupe_Inter_Det()));
+                                    Reload();
+                                  } else {
+                                    print("Selection DETAIL");
+                                    await HapticFeedback.vibrate();
+                                    await Navigator.push(context, MaterialPageRoute(builder: (context) => DCL_Devis_Det()));
+                                    Reload();
+                                  }
+                                },
+                                child: Column(children: [
+                                  (!btnSel_Aff)
+                                      ? Container(
+                                          width: 800,
+                                          color: Colors.transparent,
+                                          height: 56,
+                                          padding: EdgeInsets.only(
+                                            top: 10,
                                           ),
-                                          Expanded(
-                                            flex: 6,
-                                            child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                                              gColors.gCircle(wColor),
-                                              InkWell(
+                                          child: Row(
+                                            children: <Widget>[
+                                              Container(
+                                                width: 8,
+                                              ),
+                                              Expanded(
+                                                flex: 6,
+                                                child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+                                                  gColors.gCircle(wColor),
+                                                  InkWell(
+                                                      child: Container(
+                                                          padding: EdgeInsets.only(
+                                                            left: 5,
+                                                          ),
+                                                          height: rowh,
+                                                          child: Text(
+                                                            "${dCL_Ent.DCL_Ent_Num}",
+                                                            textAlign: TextAlign.right,
+                                                            style: gColors.bodySaisie_B_B.copyWith(color: wColorText),
+                                                          )),
+                                                      onTap: () async {
+                                                        print("Selection");
+                                                        Srv_DbTools.gDCL_Ent = dCL_Ent;
+
+                                                        setState(() {});
+                                                      }),
+                                                ]),
+                                              ),
+                                              Expanded(
+                                                  flex: 6,
                                                   child: Container(
-                                                      padding: EdgeInsets.only(
-                                                        left: 5,
-                                                      ),
+                                                      padding: EdgeInsets.only(left: 5),
                                                       height: rowh,
                                                       child: Text(
-                                                        "${dCL_Ent.DCL_Ent_Num}",
+                                                        "${dCL_Ent.DCL_Ent_Date}",
+                                                        maxLines: 1,
+                                                        textAlign: TextAlign.left,
+                                                        style: gColors.bodySaisie_B_B.copyWith(color: wColorText),
+                                                      ))),
+                                              Expanded(
+                                                flex: 30,
+                                                child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+                                                  Container(
+                                                      padding: EdgeInsets.only(left: 5, right: 5),
+                                                      height: rowh,
+                                                      child: Text(
+                                                        "${dCL_Ent.DCL_Ent_InterventionId! > 0 ? "(${dCL_Ent.DCL_Ent_InterventionId}) " : ""}${wNomClient}",
                                                         textAlign: TextAlign.right,
                                                         style: gColors.bodySaisie_B_B.copyWith(color: wColorText),
-                                                      )),
-                                                  onTap: () async {
-                                                    print("Selection");
-                                                    Srv_DbTools.gDCL_Ent = dCL_Ent;
+                                                      ))
+                                                ]),
+                                              )
+                                            ],
+                                          ),
+                                        )
+                                      : Column(
+                                          children: [
+                                            Container(
+                                              color: index == 0 ? Colors.white : Colors.transparent,
+                                              height: index == 0 ? 0 : 12,
+                                            ),
+                                            Container(
+                                              color: wColorBack2,
+                                              child: Column(
+                                                mainAxisAlignment: MainAxisAlignment.start,
+                                                crossAxisAlignment: CrossAxisAlignment.start,
+                                                children: [
+                                                  Container(
+                                                    width: 800,
+                                                    height: 42,
+                                                    margin: EdgeInsets.only(
+                                                      top: 20,
+                                                    ),
+                                                    child: Row(
+                                                      children: <Widget>[
+                                                        Container(
+                                                          width: 8,
+                                                        ),
+                                                        Expanded(
+                                                          flex: 7,
+                                                          child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+                                                            gColors.gCircle(wColor),
+                                                            InkWell(
+                                                                child: Container(
+                                                                    padding: EdgeInsets.only(
+                                                                      left: 5,
+                                                                    ),
+                                                                    height: rowh,
+                                                                    child: Text(
+                                                                      "${dCL_Ent.DCL_Ent_Num}",
+                                                                      textAlign: TextAlign.right,
+                                                                      style: gColors.bodySaisie_B_B.copyWith(color: wColorText),
+                                                                    )),
+                                                                onTap: () async {
+                                                                  print("Selection");
+                                                                  Srv_DbTools.gDCL_Ent = dCL_Ent;
 
-                                                    setState(() {});
-                                                  }),
-                                            ]),
-                                          ),
-                                          Expanded(
-                                              flex: 6,
-                                              child: Container(
-                                                  padding: EdgeInsets.only(left: 5),
-                                                  height: rowh,
-                                                  child: Text(
-                                                    "${dCL_Ent.DCL_Ent_Date}",
-                                                    maxLines: 1,
-                                                    textAlign: TextAlign.left,
-                                                    style: gColors.bodySaisie_B_B.copyWith(color: wColorText),
-                                                  ))),
-                                          Expanded(
-                                            flex: 30,
-                                            child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
-                                              Container(
-                                                  padding: EdgeInsets.only(left: 5, right: 5),
-                                                  height: rowh,
-                                                  child: Text(
-                                                    "${dCL_Ent.DCL_Ent_InterventionId! > 0 ? "(${dCL_Ent.DCL_Ent_InterventionId}) " : ""}${wNomClient}",
-                                                    textAlign: TextAlign.right,
-                                                    style: gColors.bodySaisie_B_B.copyWith(color: wColorText),
-                                                  ))
-                                            ]),
-                                          )
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 22,
-                                      child: Row(
-                                        children: <Widget>[
-                                          Container(
-                                            width: 8,
-                                          ),
-                                          Container(
-                                              padding: EdgeInsets.only(left: 5),
-                                              height: 22,
-                                              child: Text(
-                                                "${dCL_Ent.DCL_Ent_Adr1}",
-                                                maxLines: 1,
-                                                textAlign: TextAlign.left,
-                                                style: gColors.bodySaisie_B_B.copyWith(color: wColorText),
-                                              )),
-                                          Container(
-                                              padding: EdgeInsets.only(left: 5),
-                                              height: 22,
-                                              child: Text(
-                                                "${dCL_Ent.DCL_Ent_Adr2}",
-                                                maxLines: 1,
-                                                textAlign: TextAlign.left,
-                                                style: gColors.bodySaisie_N_B.copyWith(color: wColorText),
-                                              )),
-                                        ],
-                                      ),
-                                    ),
-                                    Container(
-                                      height: 22,
-                                      child: Row(
-                                        children: <Widget>[
-                                          Container(
-                                            width: 8,
-                                          ),
-                                          Container(
-                                              padding: EdgeInsets.only(left: 5),
-                                              height: 22,
-                                              child: Text(
-                                                "Intervention ",
-                                                maxLines: 1,
-                                                textAlign: TextAlign.left,
-                                                style: gColors.bodySaisie_B_B.copyWith(color: wColorText),
-                                              )),
-                                          (dCL_Ent.DCL_Ent_InterventionId! > 0)
-                                              ? Container(
-                                                  padding: EdgeInsets.only(left: 5),
-                                                  height: 22,
-                                                  child: Text(
-                                                    "${dCL_Ent.DCL_Ent_InterventionId}".padLeft(5, "0"),
-                                                    maxLines: 1,
-                                                    textAlign: TextAlign.left,
-                                                    style: gColors.bodySaisie_N_B.copyWith(color: wColorText),
-                                                  ))
-                                              : Container(
-                                                  padding: EdgeInsets.only(left: 5),
-                                                  height: 22,
-                                                  child: Text(
-                                                    "".padLeft(5, "0"),
-                                                    maxLines: 1,
-                                                    textAlign: TextAlign.left,
-                                                    style: gColors.bodySaisie_N_B.copyWith(color: wColorText),
-                                                  )),
-                                          Container(
-                                              padding: EdgeInsets.only(left: 5),
-                                              height: 22,
-                                              child: Text(
-                                                "Aff ",
-                                                maxLines: 1,
-                                                textAlign: TextAlign.left,
-                                                style: gColors.bodySaisie_B_B.copyWith(color: wColorText),
-                                              )),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                          gColors.wLigne(),
-                        ]),
-                      ),
-                    ),
-                    Positioned(
-                      top: 0,
-                      left: 0,
-                      child: Container(
-                        height: wH,
-                        width: 110,
-                        child: InkWell(
-                            child: Container(),
-                            onTap: () async {
-                              print("Selection");
-                              Srv_DbTools.gDCL_Ent = dCL_Ent;
+                                                                  setState(() {});
+                                                                }),
+                                                          ]),
+                                                        ),
+                                                        Expanded(
+                                                            flex: 6,
+                                                            child: Container(
+                                                                padding: EdgeInsets.only(left: 5),
+                                                                height: rowh,
+                                                                child: Text(
+                                                                  "${dCL_Ent.DCL_Ent_Date}",
+                                                                  maxLines: 1,
+                                                                  textAlign: TextAlign.left,
+                                                                  style: gColors.bodySaisie_B_B.copyWith(color: wColorText),
+                                                                ))),
+                                                        Expanded(
+                                                          flex: 30,
+                                                          child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
+                                                            Container(
+                                                                padding: EdgeInsets.only(left: 5, right: 5),
+                                                                height: rowh,
+                                                                child: Text(
+                                                                  "${dCL_Ent.DCL_Ent_InterventionId! > 0 ? "(${dCL_Ent.DCL_Ent_InterventionId}) " : ""}${wNomClient}",
+                                                                  textAlign: TextAlign.right,
+                                                                  style: gColors.bodySaisie_B_B.copyWith(color: wColorText),
+                                                                ))
+                                                          ]),
+                                                        )
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    height: 36,
+                                                    child: Row(
+                                                      children: <Widget>[
+                                                        Container(
+                                                          width: 8,
+                                                        ),
+                                                        Container(
+                                                            padding: EdgeInsets.only(left: 5),
+                                                            height: 22,
+                                                            child: Text(
+                                                              "${dCL_Ent.DCL_Ent_Adr1}",
+                                                              maxLines: 1,
+                                                              textAlign: TextAlign.left,
+                                                              style: gColors.bodySaisie_B_B.copyWith(color: wColorText),
+                                                            )),
+                                                        Container(
+                                                            padding: EdgeInsets.only(left: 5),
+                                                            height: 22,
+                                                            child: Text(
+                                                              "${dCL_Ent.DCL_Ent_Adr2}",
+                                                              maxLines: 1,
+                                                              textAlign: TextAlign.left,
+                                                              style: gColors.bodySaisie_N_B.copyWith(color: wColorText),
+                                                            )),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    height: 36,
+                                                    child: Row(
+                                                      children: <Widget>[
+                                                        Container(
+                                                          width: 8,
+                                                        ),
+                                                        Container(
+                                                            padding: EdgeInsets.only(left: 5),
+                                                            height: 22,
+                                                            child: Text(
+                                                              "Inter ",
+                                                              maxLines: 1,
+                                                              textAlign: TextAlign.left,
+                                                              style: gColors.bodySaisie_B_B.copyWith(color: wColorText),
+                                                            )),
+                                                        (dCL_Ent.DCL_Ent_InterventionId! > 0)
+                                                            ? Container(
+                                                                padding: EdgeInsets.only(left: 5),
+                                                                height: 22,
+                                                                child: Text(
+                                                                  "${dCL_Ent.DCL_Ent_InterventionId}".padLeft(5, "0"),
+                                                                  maxLines: 1,
+                                                                  textAlign: TextAlign.left,
+                                                                  style: gColors.bodySaisie_N_B.copyWith(color: wColorText),
+                                                                ))
+                                                            : Container(
+                                                                padding: EdgeInsets.only(left: 5),
+                                                                height: 22,
+                                                                child: Text(
+                                                                  "".padLeft(5, "0"),
+                                                                  maxLines: 1,
+                                                                  textAlign: TextAlign.left,
+                                                                  style: gColors.bodySaisie_N_B.copyWith(color: wColorText),
+                                                                )),
+                                                        Container(
+                                                            padding: EdgeInsets.only(left: 5),
+                                                            height: 22,
+                                                            child: Text(
+                                                              "Aff ",
+                                                              maxLines: 1,
+                                                              textAlign: TextAlign.left,
+                                                              style: gColors.bodySaisie_B_B.copyWith(color: wColorText),
+                                                            )),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  Container(
+                                                    height: 12,
+                                                  ),
+                                                ],
+                                              ),
+                                            )
+                                          ],
+                                        ),
+                                  Container(
+                                    height: 1,
+                                    color: gColors.LinearGradient4,
+                                  ),
+                                ]),
+                              ),
+                            ),
+                            Positioned(
+                              top: 0,
+                              left: 0,
+                              child: Container(
+                                height: wH,
+                                width: 110,
+                                child: InkWell(
+                                    child: Container(),
+                                    onTap: () async {
+                                      print("Selection");
+                                      if (Srv_DbTools.gDCL_Ent == dCL_Ent)
+                                        Srv_DbTools.gDCL_Ent == DCL_Ent();
+                                      else
+                                        Srv_DbTools.gDCL_Ent = dCL_Ent;
 
-                              setState(() {});
-                            }),
+                                      setState(() {});
+                                    }),
+                              ),
+                            )
+                          ],
+                        ),
                       ),
-                    )
-                  ],
-                ),
-              );
-            },
-          ),
-        ),
-        SizedBox(height: 45.0),
-      ],
-    );
+                      if (btnSel_Aff)
+                        Container(
+                          decoration: BoxDecoration(
+                            color: gColors.white,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.grey.withOpacity(0.9),
+                                spreadRadius: 1,
+                                blurRadius: 4,
+                                offset: Offset(0, 1), // changes position of shadow
+                              ),
+                            ],
+                          ),
+                        ),
+                    ],
+                  );
+                },
+              ),
+            ),
+            SizedBox(height: 45.0),
+          ],
+        ));
   }
 }

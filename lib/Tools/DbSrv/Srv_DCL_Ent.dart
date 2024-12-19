@@ -231,11 +231,6 @@ class DCL_Ent {
     );
   }
 
-
-
-
-
-
   @override
   String Desc() {
     return "$DCL_Ent_ClientNom $DCL_Ent_GroupeNom $DCL_Ent_SiteNom $DCL_Ent_ZoneNom $DCL_Ent_InterventionNom";

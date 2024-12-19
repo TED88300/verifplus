@@ -208,7 +208,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    title_string,
+                    "${title_string}",
                     maxLines: 1,
                     style: gColors.bodyTitle1_B_G24,
                   ),

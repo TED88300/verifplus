@@ -1,25 +1,11 @@
 import 'dart:async';
 
-import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:fbroadcast/fbroadcast.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:intl/intl.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Articles_Ebp.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Articles_Fam_Ebp.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Articles_Link_Ebp.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Articles_Link_Verif_Ebp.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_NF074.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
-import 'package:verifplus/Tools/DbTools/Db_Param_Av.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
-import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
-import 'package:verifplus/Tools/DbTools/Db_Parcs_Ent.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
-import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
 class Client_Groupe_Parc_Inter_ArticleAv_Dialog {
   Client_Groupe_Parc_Inter_ArticleAv_Dialog();

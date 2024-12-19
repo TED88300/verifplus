@@ -24,11 +24,16 @@ class gColors {
   static const Color primaryBlue = Color(0xFF4472c4);
   static Color backgroundColor = const Color.fromRGBO(0, 116, 227, 1);
 
+  static const Color blueCyan = const Color.fromRGBO(0, 176, 240, 1);
+
+
   static const Color greyDark = Color(0xFF888888);
   static const Color greyLight = Color(0xFFf1f1f1);
   static const Color greyLight2 = Color(0xFFf4f4f4);
   static const Color greyTrans = Color(0x22000000);
   static const Color greyTitre = Color(0xFFcecece);
+
+  static const Color greyDark2 = Color(0xFF666666);
 
 
   static const Color black = Color(0xFF000000);
@@ -55,6 +60,7 @@ class gColors {
   static const Color transparent = Colors.transparent;
 
   static const Color tks = Color(0xFFEE4444);
+  static const Color red = Color(0xFFEE4444);
 
   static const double height_Row = 40.0;
   static const double height_Header = 30.0;
@@ -195,6 +201,20 @@ class gColors {
 
   static TextStyle get bodyTitle1_N_G24 => TextStyle(
     color: grey,
+    fontSize: 24,
+    fontWeight: FontWeight.normal,
+  );
+
+  static TextStyle get bodyTitle1_N_GD24 => TextStyle(
+    color: greyDark2,
+    fontSize: 24,
+    fontWeight: FontWeight.normal,
+  );
+
+
+
+  static TextStyle get bodyTitle1_N_W24 => TextStyle(
+    color: white,
     fontSize: 24,
     fontWeight: FontWeight.normal,
   );
@@ -353,10 +373,13 @@ class gColors {
   );
 
   static TextStyle get bodySaisie_N_O => TextStyle(
-    color: Colors.red,
+    color: Colors.redAccent,
     fontSize: wNorm,
-    fontWeight: FontWeight.normal,
+    fontWeight: FontWeight.w500,
   );
+
+
+
 
   static TextStyle get bodySaisie_N_W => TextStyle(
         color: white,
@@ -759,6 +782,13 @@ class gColors {
 
 
   static AffUser(BuildContext context) {
+
+    double width = MediaQuery.of(context).size.width;
+    double height = MediaQuery.of(context).size.height;
+
+
+
+
     return showDialog(
         context: context,
         builder: (_) => new AlertDialog(
@@ -811,7 +841,8 @@ class gColors {
                 ),
               ),
               actions: <Widget>[
-                Text(DbTools.gVersion,
+                Text(
+                    "${DbTools.gVersion}\n${width}x${height}",
                     style: TextStyle(
                       fontSize: 12,
                     )),

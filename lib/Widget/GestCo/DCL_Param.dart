@@ -1,14 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Interventions.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Sites.dart';
-import 'package:verifplus/Tools/DbTools/DbTools.dart';
-import 'package:verifplus/Tools/DbTools/Db_Parcs_Ent.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
-import 'dart:async';
 
 class DCL_Param_Dialog {
   DCL_Param_Dialog();
@@ -55,6 +50,15 @@ class _DCLParamDialogState extends State<DCLParamDialog> {
   Widget build(BuildContext context) {
     print(" Srv_DbTools.SelDCL_DateDeb ${Srv_DbTools.SelDCL_DateDeb}");
 
+    double wWidth = 550;
+    double wHeight = 1024;
+    double wHeightDet = 585;
+    double wHeightDet2 = 610;
+
+    double wHeightBtn = 45;
+
+    double wHeightBtnValider = 40;
+
     return SimpleDialog(
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
@@ -66,16 +70,18 @@ class _DCLParamDialogState extends State<DCLParamDialog> {
         Stack(
           children: [
             Container(
-                color: gColors.transparent,
-                height: 700,
+                margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                color: Colors.transparent,
+                height: wHeight,
                 child: Column(
                   children: [
 // Titre
                     Container(
                         child: Container(
-                      width: 400,
-                      height: 90,
-                      padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),
+                      width: wWidth,
+                      height: 110,
+                          margin: const EdgeInsets.fromLTRB(0, 90, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
                       decoration: BoxDecoration(
                         color: Colors.yellowAccent,
                         borderRadius: BorderRadius.circular(15),
@@ -85,7 +91,7 @@ class _DCLParamDialogState extends State<DCLParamDialog> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
-                            width: 500,
+                            width: wWidth,
                             child: Text(
                               widget.wTitre,
                               style: gColors.bodyTitle1_B_G,
@@ -93,7 +99,7 @@ class _DCLParamDialogState extends State<DCLParamDialog> {
                             ),
                           ),
                           Container(
-                            height: 25,
+                            height: 30,
                           ),
                           Container(
                             color: gColors.black,
@@ -104,14 +110,14 @@ class _DCLParamDialogState extends State<DCLParamDialog> {
                     )),
 
                     Container(
-                      height: 474,
+                      height: wHeightDet,
                     ),
 
 // Pied
                     Container(
                         child: Container(
-                      width: 400,
-                      height: 90,
+                      width: wWidth,
+                      height: 110,
                       padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                       decoration: BoxDecoration(
                         color: gColors.LinearGradient3,
@@ -126,7 +132,7 @@ class _DCLParamDialogState extends State<DCLParamDialog> {
                             height: 1,
                           ),
                           Container(
-                            height: 10,
+                            height: 22,
                           ),
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -138,7 +144,7 @@ class _DCLParamDialogState extends State<DCLParamDialog> {
                                 ),
                                 child: Container(
                                   width: 140,
-                                  height: 40,
+                                  height: wHeightBtnValider,
                                   padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
                                   child: Text(
                                     "Annuler",
@@ -160,7 +166,7 @@ class _DCLParamDialogState extends State<DCLParamDialog> {
                                     )),
                                 child: Container(
                                   width: 140,
-                                  height: 40,
+                                  height: wHeightBtnValider,
                                   padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
                                   child: Text(
                                     "Valider",
@@ -179,15 +185,22 @@ class _DCLParamDialogState extends State<DCLParamDialog> {
                     )),
                   ],
                 )),
+
+
+
             Positioned(
-              top: 79,
-              left: 24,
-              child: Container(
+              top: 190,
+              left: 5,
+              child:
+
+
+              Container(
                   color: Colors.white,
                   padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                  height: 500,
-                  width: 400,
+                  height: wHeightDet2,
+                  width: wWidth,
                   child: Column(
+
                     children: [
                       ListView.builder(
                         shrinkWrap: true,
@@ -212,9 +225,9 @@ class _DCLParamDialogState extends State<DCLParamDialog> {
                                       Radius.circular(8.0),
                                     ),
                                   ),
-                                  margin: EdgeInsets.fromLTRB(50, 0, 50, 10), // TED
+                                  margin: EdgeInsets.fromLTRB(50, 0, 50, 20), // TED
                                   padding: EdgeInsets.fromLTRB(10, 0, 10, 0), // TED
-                                  height: 40,
+                                  height: wHeightBtn,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -234,139 +247,21 @@ class _DCLParamDialogState extends State<DCLParamDialog> {
 
                     ],
                   )),
+
+
+
             ),
+
+
+
           ],
         ),
       ],
     );
   }
 
-  @override
-  Widget buildvp(BuildContext context) {
-    return AlertDialog(
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
-      surfaceTintColor: Colors.white,
-      backgroundColor: gColors.white,
-      titlePadding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-      title: Container(
-        color: gColors.white,
-        padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
-        child: Column(
-          children: [
-            Container(
-              width: 500,
-              child: Text(
-                widget.wTitre,
-                style: gColors.bodyTitle1_B_G_20,
-                textAlign: TextAlign.center,
-              ),
-            ),
-            Container(
-              height: 15,
-            ),
-            Container(
-              color: gColors.black,
-              height: 1,
-            ),
-          ],
-        ),
-      ),
-      contentPadding: EdgeInsets.zero,
-      content: DCL_Param_Dialog.ListParam.length == 0
-          ? Container()
-          : Container(
-              width: 50.0,
-              height: 430,
-              padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
-              child: Column(
-                children: [
-                  ListView.builder(
-                    shrinkWrap: true,
-                    itemCount: DCL_Param_Dialog.ListParam.length,
-                    itemBuilder: (BuildContext context, int index) {
-                      final item = DCL_Param_Dialog.ListParam[index];
 
-                      return InkWell(
-                          onTap: () async {
-                            await HapticFeedback.vibrate();
-                            DCL_Param_Dialog.wSel = item;
-                            setState(() {});
-                          },
-                          child: Container(
-                              decoration: BoxDecoration(
-                                color: (item.compareTo(DCL_Param_Dialog.wSel) == 0) ? gColors.primaryGreen : Colors.transparent,
-                                border: Border.all(
-                                  color: (item.compareTo(DCL_Param_Dialog.wSel) == 0) ? gColors.primaryGreen : Colors.transparent,
-                                ),
-                                borderRadius: BorderRadius.all(
-                                  Radius.circular(12.0),
-                                ),
-                              ),
-                              margin: EdgeInsets.fromLTRB(10, 0, 10, 0), // TED
-                              padding: EdgeInsets.fromLTRB(10, 15, 10, 5), // TED
-                              height: 45,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(item,
-                                      textAlign: TextAlign.left,
-                                      maxLines: 1,
-                                      style: gColors.bodyTitle1_B_Gr.copyWith(
-                                        color: (item.compareTo(DCL_Param_Dialog.wSel) == 0) ? gColors.white : gColors.primary,
-                                      ))
-                                ],
-                              )));
-                    },
-                  ),
-                  Container(
-                    height: 10,
-                  ),
-                  Container(
-                    color: gColors.black,
-                    height: 1,
-                  ),
-                ],
-              )),
-      actionsPadding: const EdgeInsets.fromLTRB(0, 0, 20, 5),
-      actions: <Widget>[
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            backgroundColor: gColors.primaryRed,
-          ),
-          child: Text(
-            "Annuler",
-            style: TextStyle(
-              fontSize: 22,
-            ),
-          ),
-          onPressed: () async {
-            DCL_Param_Dialog.wSel = "";
-            Navigator.pop(context);
-          },
-        ),
-        ElevatedButton(
-          style: ElevatedButton.styleFrom(
-              backgroundColor: gColors.primaryGreen,
-              side: const BorderSide(
-                width: 1.0,
-                color: gColors.primaryGreen,
-              )),
-          child: Text(
-            "Valider",
-            style: TextStyle(
-              fontSize: 22,
-            ),
-          ),
-          onPressed: () async {
-            Navigator.pop(context);
-          },
-        )
-      ],
-    );
-  }
-
-//***************************
+  //***************************
 //***************************
 //***************************
 }

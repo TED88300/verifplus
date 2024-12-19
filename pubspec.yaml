@@ -2,7 +2,7 @@ name: verifplus
 description: Flutter project.
 
 publish_to: 'none'
-version: 1.1.169+169
+version: 1.1.181+181
 
 environment:
   sdk: ">=2.17.6 <3.0.0"
@@ -20,7 +20,7 @@ dependencies:
   package_info_plus: ^4.0.2
   maps_launcher: ^2.2.0
   flutter_spinkit: ^5.1.0
-  webview_flutter: ^3.0.4
+
   crop_image: ^1.0.12
   getwidget: ^ 2.0.4
 
@@ -41,7 +41,6 @@ dependencies:
   flutter_grid_button: ^2.0.0
   dropdown_button2: ^2.0.0
 
-  camera: ^0.11.0+1
   image_picker: ^0.8.5+3
   image: ^4.0.02
   mailto: ^2.0.0
@@ -56,8 +55,8 @@ dependencies:
   flutter_screenutil: ^5.9.0
   google_fonts: ^4.0.0
   davi: ^3.4.1
-  flutter_keyboard_visibility: ^5.4.1
-  flutter_typeahead: ^4.8.0
+  flutter_keyboard_visibility: ^6.0.0
+  flutter_typeahead: ^5.2.0
   rflutter_alert: ^2.0.7
   sticky_and_expandable_list: ^1.1.3
   cached_network_image: ^3.2.1
@@ -67,14 +66,27 @@ dependencies:
   fbroadcast: ^2.0.0
   hand_signature: ^3.0.2
 
-  camera_android_camerax: ^0.6.5+5
+#  camera_android_camerax: ^0.6.7+2
+  camera: ^0.11.0+2
+
   group_button: ^5.3.4
   carousel_slider: ^4.2.1
   time_machine: ^0.9.17
 
   flutter_svg: ^2.0.14
+  quill_html_editor: ^2.2.8
+
+  flutter_html: ^3.0.0-beta.2
+
+
+
 
 dependency_overrides:
+
+  camera_android_camerax: 0.6.7
+  camera: 0.11.0
+
+
   pdf:
     path: ./pdf
   printing:

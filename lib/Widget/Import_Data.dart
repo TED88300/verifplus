@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Articles_Ebp.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_Articles_Fam_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
@@ -406,6 +407,15 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
     //***********************************
     //***********************************
 
+/*
+    await Srv_DbTools.IMPORT_ArticlesImg_Ebp(500, 0);
+    print("Import_DataDialog ListArticlesImg_Ebp ${Srv_DbTools.ListArticlesImg_Ebp.length}");
+
+    setState(() {
+      wSt += "► ${Srv_DbTools.ListArticlesImg_Ebp.length} IMAGES Articles EBP\n";
+    });
+return;
+*/
 
     await Srv_DbTools.IMPORT_Srv_RIA_Gammes();
     print("IMPORT_DataDialog ListRIA_Gammes ${Srv_DbTools.ListRIA_Gammes.length}");
@@ -420,8 +430,6 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
       wSt += "► RIA : ${DbTools.glfRIA_Gammes.length} Gammes\n";
     });
 
-    
-    
     await Srv_DbTools.IMPORT_Srv_NF074_Gammes();
     print("IMPORT_DataDialog ListNF074_Gammes ${Srv_DbTools.ListNF074_Gammes.length}");
     DbTools.TrunckNF074_Gammes();
@@ -515,26 +523,88 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
 
     // Familles EBP
     await Srv_DbTools.IMPORT_Article_Fam_EbpAll();
+
+    await Srv_DbTools.IMPORT_Article_Ebp_ES();
+
+
+
+    await Article_Fam_Ebp.TrunckArticle_Fam_Ebp();
+    for (int i = 0; i < Srv_DbTools.ListArticle_Fam_Ebp.length; i++) {
+      Article_Fam_Ebp article_Fam_Ebp = Srv_DbTools.ListArticle_Fam_Ebp[i];
+      Article_Fam_Ebp.insertArticle_Fam_Ebp(article_Fam_Ebp);
+    }
+
+    
+
+    setState(() {
+      wSt += "► ${Srv_DbTools.ListArticle_Fam_Ebp.length} Famille EBP\n";
+    });
+
+
     // Articles EBP
     await Srv_DbTools.IMPORT_Article_EbpAll();
 
     await Article_Ebp.TrunckArticle_Ebp();
     for (int i = 0; i < Srv_DbTools.ListArticle_Ebp.length; i++) {
       Article_Ebp article_Ebp = Srv_DbTools.ListArticle_Ebp[i];
-      Article_Ebp.insertArticle_Ebp(article_Ebp);
+      if (article_Ebp.Article_Groupe.startsWith("0") || article_Ebp.Article_Groupe.startsWith("1"))
+        {
+          Article_Ebp.insertArticle_Ebp(article_Ebp);
+        }
     }
-
     Srv_DbTools.ListArticle_Ebp = await Article_Ebp.getArticle_Ebp();
     print("getArticle_Ebp ${Srv_DbTools.ListArticle_Ebp.length}");
-
-
-    // Articles EBP ES (Echange Standard)
-    await Srv_DbTools.IMPORT_Article_Ebp_ES();
-    print("Import_DataDialog ListArticle_Ebp ${Srv_DbTools.ListArticle_Ebp.length}");
 
     setState(() {
       wSt += "► ${Srv_DbTools.ListArticle_Ebp.length} Articles EBP\n";
     });
+
+
+
+    // Articles EBP ES (Echange Standard)
+    await Srv_DbTools.IMPORT_Article_Ebp_ES();
+    print("Import_DataDialog ListArticle_Ebp_ES ${Srv_DbTools.ListArticle_Ebp_ES.length}");
+
+    setState(() {
+      wSt += "► ${Srv_DbTools.ListArticle_Ebp_ES.length} Articles EBP ES\n";
+    });
+
+
+
+    Srv_DbTools.list_Article_GrpFamSsFam_Ebp.clear();
+
+    for (int i = 0; i < Srv_DbTools.ListArticle_Ebp.length; i++) {
+      Article_Ebp art = Srv_DbTools.ListArticle_Ebp[i];
+
+      Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Article_GrpFamSsFam_Ebp();
+
+      wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Groupe = art.Article_Groupe;
+      wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam = art.Article_Fam;
+      wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam = art.Article_Sous_Fam;
+
+
+      if(!Srv_DbTools.list_Article_GrpFamSsFam_Ebp.contains(wArticle_GrpFamSsFam_Ebp))
+        Srv_DbTools.list_Article_GrpFamSsFam_Ebp.add(wArticle_GrpFamSsFam_Ebp);
+    }
+
+    print("SplashScreen list_Article_Groupe ${Srv_DbTools.list_Article_Groupe.length}");
+
+
+/*
+
+
+    await Srv_DbTools.IMPORT_ArticlesImg_Ebp();
+    print("Import_DataDialog ListArticlesImg_Ebp ${Srv_DbTools.ListArticlesImg_Ebp.length}");
+
+    setState(() {
+      wSt += "► ${Srv_DbTools.ListArticlesImg_Ebp.length} IMAGES Articles EBP\n";
+    });
+*/
+
+
+
+
+
 
     //**********************************
     //**********************************

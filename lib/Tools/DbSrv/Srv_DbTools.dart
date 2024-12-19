@@ -9,6 +9,7 @@ import 'package:intl/intl.dart';
 import 'package:uuid/uuid.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Adresses.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Articles.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_ArticlesImg_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Articles_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Articles_Fam_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Articles_Link_Ebp.dart';
@@ -421,6 +422,11 @@ class Srv_DbTools {
   static List<Article_Ebp> ListArticle_Ebp = [];
   static List<Article_Ebp> ListArticle_Ebp_ES = [];
   static List<Article_Ebp> ListArticle_Ebpsearchresult = [];
+
+  static List<String> list_Article_Groupe = [];
+  static List<Article_GrpFamSsFam_Ebp> list_Article_GrpFamSsFam_Ebp = [];
+
+
   static Article_Ebp gArticle_Ebp = Article_Ebp.Article_EbpInit();
   static Article_Ebp gArticle_EbpEnt = Article_Ebp.Article_EbpInit();
   static Article_Ebp gArticle_EbpSelRef = Article_Ebp.Article_EbpInit();
@@ -496,10 +502,70 @@ class Srv_DbTools {
   //*****************************
   //*****************************
 
+
+
+
+  static List<ArticlesImg_Ebp> ListArticlesImg_Ebp = [];
+
+  static Future<bool> IMPORT_ArticlesImg_Ebp(int limit, int offset) async {
+    String wSlq = "SELECT * FROM ArticlesImg_Ebp limit $limit offset $offset";
+    print("IMPORT_ArticlesImg_Ebp ${wSlq}");
+    try {
+      ListArticlesImg_Ebp = await getListArticlesImg_Ebp_API_Post("select", wSlq);
+      if (ListArticlesImg_Ebp == null) return false;
+      if (ListArticlesImg_Ebp.length > 0) {
+        return true;
+      }
+      return false;
+    } catch (e) {
+      return false;
+    }
+  }
+
+  static Future<List<ArticlesImg_Ebp>> getListArticlesImg_Ebp_API_Post(String aType, String aSQL) async {
+    setSrvToken();
+    String eSQL = base64.encode(utf8.encode(aSQL)); // dXNlcm5hbWU6cGFzc3dvcmQ=
+    var request = http.MultipartRequest('POST', Uri.parse(SrvUrl.toString()));
+    request.fields.addAll({'tic12z': SrvToken, 'zasq': aType, 'resza12': eSQL, 'uid': "${Srv_DbTools.gLoginID}"});
+
+    http.StreamedResponse response = await request.send();
+    print("IMPORT_ArticlesImg_Ebp response ${response.statusCode}");
+
+
+    if (response.statusCode == 200) {
+
+      print("IMPORT_ArticlesImg_Ebp parsedJson >>>");
+
+      String wTmp = await response.stream.bytesToString();
+      print("IMPORT_ArticlesImg_Ebp wTmp ${wTmp}");
+      var parsedJson = json.decode(wTmp);
+
+
+
+      final items = parsedJson['data'];
+
+      if (items != null) {
+        List<ArticlesImg_Ebp> ArticlesImg_EbpList = await items.map<ArticlesImg_Ebp>((json) {
+          return ArticlesImg_Ebp.fromJson(json);
+        }).toList();
+        return ArticlesImg_EbpList;
+      }
+    } else {
+      print(response.reasonPhrase);
+    }
+    return [];
+  }
+
+  //*****************************
+  //*****************************
+  //*****************************
+
+
+
+
+
   static List<Article_Fam_Ebp> ListArticle_Fam_Ebp = [];
-
   static List<Article_Fam_Ebp> ListArticle_Fam_Ebp_Fam = [];
-
   static List<Article_Fam_Ebp> ListArticle_Fam_Ebpsearchresult = [];
   static Article_Fam_Ebp gArticle_Fam_Ebp = Article_Fam_Ebp.Article_Fam_EbpInit();
 
@@ -2288,7 +2354,7 @@ class Srv_DbTools {
     return ret;
   }
 
-  static Future<bool> delParc_Ent_Srv_Upd() async {
+  static Future<bool> delParc_Ent_Srv_Upd(int aParcs_InterventionId) async {
     String wIn = "";
 
     for (int i = 0; i < DbTools.glfParcs_Ent.length; i++) {
@@ -2304,6 +2370,15 @@ class Srv_DbTools {
       bool ret = await add_API_Post("upddel", aSQL);
       print("delParc_Ent_Srv ret " + ret.toString());
     }
+
+    String aSQL = "DELETE FROM Parcs_Art WHERE ParcsArt_ParcsId = '${aParcs_InterventionId}'and ParcsArt_lnk = 'SO';";
+    print("delParc_Art_Srv DEVIS SO " + aSQL);
+    bool ret = await add_API_Post("upddel", aSQL);
+    print("delParc_Art_Srv DEVIS SO  " + ret.toString());
+
+
+
+
     return true;
   }
 
@@ -2826,7 +2901,7 @@ class Srv_DbTools {
 
   static List<Parc_Imgs_Srv> ListParc_Imgs = [];
   static List<Parc_Imgs_Srv> ListParc_Imgssearchresult = [];
-  static Parc_Imgs_Srv gParc_Imgs = Parc_Imgs_Srv(0, 0, 0, "", "");
+  static Parc_Imgs_Srv gParc_Imgs = Parc_Imgs_Srv(0, 0, 0, 0,"", "", "");
 
   static Future<bool> getParc_ImgsAll() async {
     ListParc_Imgs = await getParc_Imgs_API_Post("select", "select * from Parcs_Imgs ORDER BY Parcs_Type");
@@ -2869,6 +2944,8 @@ class Srv_DbTools {
             "Parc_Imgid            =   ${Parc_Imgs.Parc_Imgid}, " +
         "Parc_Imgs_ParcsId      =   ${Parc_Imgs.Parc_Imgs_ParcsId}, " +
         "Parc_Imgs_Type      =   ${Parc_Imgs.Parc_Imgs_Type}, " +
+        "Parc_Imgs_Principale      =   ${Parc_Imgs.Parc_Imgs_Principale}, " +
+        "Parc_Imgs_Date         = \"${Parc_Imgs.Parc_Imgs_Date}\", " +
         "Parc_Imgs_Data         = \"${Parc_Imgs.Parc_Imgs_Data}\", " +
         "Parc_Imgs_Path           = \"${Parc_Imgs.Parc_Imgs_Path}\" ";
 
@@ -2889,6 +2966,8 @@ class Srv_DbTools {
   int? Parc_Imgid = 0;
   int? Parc_Imgs_ParcsId = 0;
   int? Parc_Imgs_Type = 0;
+  int? Parc_Imgs_Principale = 0;
+  String? Parc_Imgs_Date = "";
   String? Parc_Imgs_Data = "";
   String? Parc_Imgs_Path = "";
 
@@ -2897,6 +2976,8 @@ class Srv_DbTools {
         "Parc_Imgid, "
         "Parc_Imgs_ParcsId, "
         "Parc_Imgs_Type, "
+        "Parc_Imgs_Principale, "
+        "Parc_Imgs_Date, "
         "Parc_Imgs_Data, "
         "Parc_Imgs_Path "
         ") VALUES ("
@@ -2904,6 +2985,8 @@ class Srv_DbTools {
         "${aParc_Imgs.Parc_Imgid},"
         "${aParc_Imgs.Parc_Imgs_ParcsId},"
         "${aParc_Imgs.Parc_Imgs_Type},"
+        "${aParc_Imgs.Parc_Imgs_Principale},"
+        "'${aParc_Imgs.Parc_Imgs_Date!.replaceAll("'", "‘")}',"
         "'${aParc_Imgs.Parc_Imgs_Data!.replaceAll("'", "‘")}',"
         "'${aParc_Imgs.Parc_Imgs_Path!.replaceAll("'", "‘")}' "
         ")";
@@ -2922,12 +3005,16 @@ class Srv_DbTools {
         "Parc_Imgid, "
         "Parc_Imgs_ParcsId, "
         "Parc_Imgs_Type, "
+        "Parc_Imgs_Principale, "
+        "Parc_Imgs_Date, "
         "Parc_Imgs_Data, "
         "Parc_Imgs_Path "
         ") VALUES ("
         "NULL ,  "
         "${aParc_Imgs.Parc_Imgs_ParcsId},"
         "${aParc_Imgs.Parc_Imgs_Type},"
+        "${aParc_Imgs.Parc_Imgs_Principale},"
+        "'${aParc_Imgs.Parc_Imgs_Date!.replaceAll("'", "‘")}',"
         "'${aParc_Imgs.Parc_Imgs_Data!.replaceAll("'", "‘")}',"
         "'${aParc_Imgs.Parc_Imgs_Path!.replaceAll("'", "‘")}' "
         ")";
@@ -3919,9 +4006,11 @@ class Srv_DbTools {
   static List<Param_Param> ListParam_Param_Rel_Auto = [];
 
   static List<Param_Param> ListParam_Param_Rel_Anniv = [];
-
-
   static List<Param_Param> ListParam_Paramsearchresult = [];
+
+  static List<Param_Param> ListParam_Param_TitresRel = [];
+
+
 
   static Param_Param gParam_Param = Param_Param.Param_ParamInit();
 
@@ -4745,9 +4834,13 @@ class Srv_DbTools {
   static List<DCL_Det> ListDCL_Detsearchresult = [];
   static DCL_Det gDCL_Det = DCL_Det();
 
+  static String gSelDCL_Det = "";
+  static String gSelDCL_DetBase = "Tous les types de document";
+
+
+
   static Future<bool> getDCL_DetAll() async {
     ListDCL_Det = await getDCL_Det_API_Post("select", "select * from DCL_Det ORDER BY DCL_DetID");
-
     if (ListDCL_Det == null) return false;
     print("getDCL_DetAll ${ListDCL_Det.length}");
     if (ListDCL_Det.length > 0) {
@@ -4756,6 +4849,25 @@ class Srv_DbTools {
     }
     return false;
   }
+
+  static Future<bool> getDCL_All_DetID() async {
+
+    String wTmp = "select * from DCL_Det WHERE DCL_Det_EntID = ${Srv_DbTools.gDCL_Ent.DCL_EntID} ORDER BY DCL_DetID";
+
+    print("getDCL_DetAll wTmp ${wTmp}");
+
+
+    ListDCL_Det = await getDCL_Det_API_Post("select",wTmp );
+    if (ListDCL_Det == null) return false;
+    print("getDCL_DetAll ${ListDCL_Det.length}");
+    if (ListDCL_Det.length > 0) {
+      print("getDCL_DetAll return TRUE");
+      return true;
+    }
+    return false;
+  }
+
+
 
   static Future getDCL_DetID(int ID) async {
     ListDCL_Det.forEach((element) {
@@ -4790,6 +4902,19 @@ class Srv_DbTools {
     print("setDCL_Det ret " + ret.toString());
     return ret;
   }
+
+  static Future<bool> setDCL_Det_Lib(DCL_Det DCL_Det) async {
+    String wSlq = "UPDATE DCL_Det SET DCL_Det_Lib = '${DCL_Det.DCL_Det_Lib}' WHERE DCL_DetID = ${DCL_Det.DCL_DetID}";
+
+    print(" setDCL_Det_Lib ${wSlq}");
+
+
+    bool ret = await add_API_Post("upddel", wSlq);
+    print("setDCL_Det ret " + ret.toString());
+    return ret;
+  }
+
+
 
   static Future<bool> delDCL_Det(int DCL_DetID) async {
     String aSQL = "DELETE FROM DCL_Det WHERE DCL_DetID = ${DCL_DetID} ";

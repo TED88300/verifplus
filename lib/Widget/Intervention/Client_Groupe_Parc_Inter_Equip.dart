@@ -320,9 +320,8 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              buildEnt(context),
               Container(
-                height: 1,
+                height: 2,
                 color: gColors.greyDark,
               ),
               buildDescEnt(context),
@@ -334,34 +333,8 @@ class Client_Groupe_Parc_Inter_EquipState extends State<Client_Groupe_Parc_Inter
     );
   }
 
-  @override
-  Widget buildEnt(BuildContext context) {
-    String wDate = "";
-    try {
-      wDate = DateFormat('dd/MM/yy HH:mm').format(DateTime.parse(DbTools.gParc_Ent.Parcs_Date_Rev!));
-    } on FormatException {}
 
-    return Container(
-      width: gColors.MediaQuerysizewidth,
-//        margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-      padding: EdgeInsets.fromLTRB(16, 5, 10, 8),
-      color: gColors.white,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            "Dernière Visite périodique de l’organe : ",
-            style: gColors.bodyTitle1_N_Gr,
-          ),
-          Text(
-            wDate,
-            style: gColors.bodyTitle1_N_Gr,
-            textAlign: TextAlign.right,
-          ),
-        ],
-      ),
-    );
-  }
+
 
   //    print("DbTools.gParc_Ent.Parcs_LOT_Label ${DbTools.gParc_Ent.Parcs_LOT_Label }");
   //     if (DbTools.gParc_Ent.Parcs_LOT_Label!.isEmpty) {

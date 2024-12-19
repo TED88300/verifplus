@@ -761,7 +761,10 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
               side: const BorderSide(
                 width: 1.0,
                 color: gColors.primaryRed,
-              )),
+              )
+          ),
+
+
           child: Container(
             margin: EdgeInsets.only(top: 30, bottom: 30),
             child:

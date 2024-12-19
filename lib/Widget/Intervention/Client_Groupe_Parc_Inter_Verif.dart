@@ -43,12 +43,11 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
   List<String> wVerifDeb = [];
   List<String> wVerifFin = [];
 
-  double ImgSize = 155;
-
   bool isProp = true;
 
   bool isImage = false;
   List<Widget> imgList = [];
+  Widget imgPrinc = Container();
 
   Future onDelete() async {
     await initLib();
@@ -56,30 +55,70 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
 
   Future Reload() async {
     DbTools.gParc_Art_MS = Parc_Art();
-
+    isImage = false;
     DbTools.glfParc_Imgs = await DbTools.getParc_Imgs(DbTools.gParc_Ent.ParcsId!, 1);
-    print("glfParc_Imgs lenght ${DbTools.glfParc_Imgs.length}");
+    print(" Reload glfParc_Imgs lenght ${DbTools.glfParc_Imgs.length}");
     if (DbTools.glfParc_Imgs.length > 0) {
       imgList.clear();
 
       for (int i = 0; i < DbTools.glfParc_Imgs.length; i++) {
         var element = DbTools.glfParc_Imgs[i];
+
+
+        print(" Reload glfParc_Imgs $i ${DbTools.glfParc_Imgs[i].Parc_Imgid} ${DbTools.glfParc_Imgs[i].Parc_Imgs_Principale} isImage $isImage");
+
         var bytes = base64Decode(element.Parc_Imgs_Data!);
         Widget wWidget = Container();
         if (bytes.length > 0) {
-          wWidget = ClipRRect(
-            borderRadius: BorderRadius.circular(8.0),
-            child: Image.memory(
-              bytes,
-              fit: BoxFit.cover,
-              height: ImgSize,
-              width: ImgSize,
+          wWidget = Container(
+            decoration: BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                width: 1,
+                color: gColors.greyDark2,
+              ),
+            ),
+            margin: EdgeInsets.only(
+              top: 12,
+              right: 12,
+              bottom: 14,
+            ),
+            width: 155,
+            height: 155,
+            child: ClipRRect(
+              borderRadius: BorderRadius.circular(8.0),
+              child: Image.memory(
+                bytes,
+                fit: BoxFit.cover,
+                height: 155,
+                width: 155,
+              ),
             ),
           );
 
+
+
+          if (!isImage && element.Parc_Imgs_Principale == 1) {
+
+
+            print(" SET PRINCIPALE ${i}");
+
+            imgPrinc = wWidget;
+            isImage = true;
+          }
+
           imgList.add(wWidget);
-          isImage = true;
         }
+      }
+
+      if (!isImage) {
+
+        print(" SET PRINCIPALE NON TROUVE");
+
+
+        imgPrinc = imgList[0];
+        isImage = true;
       }
     }
     setState(() {});
@@ -93,8 +132,6 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
     ParcsArt_Lib = "---";
     Article_Ebp article_Ebp = Srv_DbTools.IMPORT_Article_Ebp(DbTools.gParc_Ent.Parcs_CodeArticleES!);
     ParcsArt_Lib = "${DbTools.gParc_Ent.Parcs_CodeArticleES} ${article_Ebp.Article_descriptionCommercialeEnClair}";
-
-
 
     print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> VERIF initLib");
 
@@ -132,7 +169,7 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
 
     return Scaffold(
       body: Padding(
-        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
         child: SingleChildScrollView(
             child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
@@ -152,22 +189,7 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
     );
   }
 
-  @override
-  Widget buildEnt(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.fromLTRB(16, 5, 10, 8),
-      color: gColors.white,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          Text(
-            "${widget.x_t}",
-            style: gColors.bodyTitle1_N_Gr,
-          ),
-        ],
-      ),
-    );
-  }
+
 
   Widget buildNote(BuildContext context) {
     return Row(
@@ -211,20 +233,19 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
               child: ClipRRect(
                 borderRadius: BorderRadius.circular(12.0),
                 child: isImage
-                    ? imgList[0]
+                    ? imgPrinc
                     : Image.asset(
                         "assets/images/Icon_Photo.png",
-                        height: ImgSize,
-                        width: ImgSize,
+                        height: 155,
+                        width: 155,
                       ),
               ),
             ),
             onTap: () async {
-              print("on Photo");
+
               DbTools.gParc_Img_Type = 1;
               DbTools.glfParc_Imgs = await DbTools.getParc_Imgs(DbTools.gParc_Ent.ParcsId!, 1);
-
-              await gDialogs.Dialog_Photo(context, "AAA", "AAAA");
+              await gDialogs.Dialog_Photo(context, "${DbTools.DescAff}", "${DbTools.DescAff2}", "${DbTools.DescAff3}");
               await Reload();
             }),
       ],
@@ -575,7 +596,6 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
           ));
   }
 
-
   Future Maj_Result_V() async {
     Parc_Desc wParc_DescAuto = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, "Result");
     print(" Maj_Result_V Result ${wParc_DescAuto.toMap()}");
@@ -647,17 +667,15 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                 ? Container()
                 : InkWell(
                     onTap: () async {
-
                       if (Param_Saisie_ID.compareTo("Inst") == 0 && wText.contains("---")) {
                         DbTools.gParc_Art_MS = Parc_Art();
                         DbTools.gParc_Art_MS.ParcsArtId = -99;
                         await gDialogs.Dialog_MiseEnServ(context);
 
-                        if (DbTools.gParc_Art_MS.ParcsArtId == -98)
-                          {
-                            print(" &&&&&&&&&&& DbTools.gParc_Art_MS.ParcsArtId ${DbTools.gParc_Art_MS.ParcsArtId}");
-                            return;
-                          }
+                        if (DbTools.gParc_Art_MS.ParcsArtId == -98) {
+                          print(" &&&&&&&&&&& DbTools.gParc_Art_MS.ParcsArtId ${DbTools.gParc_Art_MS.ParcsArtId}");
+                          return;
+                        }
                       }
 
                       await HapticFeedback.vibrate();
@@ -743,10 +761,10 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
                         }
                       }
 
-                      if (isVerif) await Maj_Result_V(); else await Maj_Result_NV();
-
-
-    print(" GENERATION DES ARTICLES ASSOCIES ");
+                      if (isVerif)
+                        await Maj_Result_V();
+                      else
+                        await Maj_Result_NV();
                       DbTools.gIsOU = false;
                       DbTools.gIsOUlParcs_Art.clear();
                       await Client_Groupe_Parc_Tools.Gen_Articles();
@@ -771,7 +789,6 @@ class Client_Groupe_Parc_Inter_VerifState extends State<Client_Groupe_Parc_Inter
       ),
     );
   }
-
 
   Valider(BuildContext context) {
     return Container(
