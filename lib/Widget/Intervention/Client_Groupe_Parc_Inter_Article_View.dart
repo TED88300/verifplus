@@ -71,8 +71,8 @@ class Client_Groupe_Parc_Inter_Article_ViewDialogState extends State<Client_Grou
       blankBytes,
       height: 1,
     );
-    String wImgPath = "${Srv_DbTools.SrvImg}ArticlesImg_Ebp_${widget.parc_Art.ParcsArt_Id}.jpg";
-    gObj.pic = await gObj.networkImageToByte(wImgPath);
+    await Srv_DbTools.getArticlesImg_Ebp( widget.parc_Art.ParcsArt_Id!);
+    gObj.pic = base64Decode(Srv_DbTools.gArticlesImg_Ebp.ArticlesImg_Image);
     if (gObj.pic.length > 0) {
       wImage = await Image.memory(
         gObj.pic,

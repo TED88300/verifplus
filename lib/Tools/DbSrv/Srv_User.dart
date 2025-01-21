@@ -40,9 +40,12 @@ class User {
   int User_NivHabID = 0;
   bool User_Niv_Isole = true;
   String User_TypeUser = "";
+  String User_Art_Fav = "";
+
+
 
   static UserInit() {
-    return User(0, false, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, false, "");
+    return User(0, false, "", "", "", "", "", "", "", "", "", "", "", "", "", "", "", 0, false, "", "");
   }
 
   User(
@@ -66,6 +69,7 @@ class User {
     int User_NivHabID,
     bool User_Niv_Isole,
       String User_TypeUser,
+      String User_Art_Fav,
   ) {
     this.UserID = UserID;
     this.User_Actif = User_Actif;
@@ -88,6 +92,7 @@ class User {
     this.User_NivHabID = User_NivHabID;
     this.User_Niv_Isole = User_Niv_Isole;
     this.User_TypeUser = User_TypeUser;
+    this.User_Art_Fav = User_Art_Fav;
   }
 
   Map<String, dynamic> toMap() {
@@ -111,7 +116,8 @@ class User {
       'User_Depot': User_Depot,
       'User_NivHabID': User_NivHabID,
       'User_Niv_Isole': User_Niv_Isole.toString(),
-      'User_TypeUser': User_TypeUser
+      'User_TypeUser': User_TypeUser,
+      'User_Art_Fav': User_Art_Fav
 
     };
 
@@ -142,6 +148,7 @@ class User {
        map["User_NivHabID"],
       map['User_Niv_Isole'].toString() == 'true',
       map["User_TypeUser"],
+      map["User_Art_Fav"],
 
     );
 
@@ -182,6 +189,7 @@ class User {
      int.parse(json['User_NivHabID'].toString()),
      bUser_Niv_Isole,
       json['User_TypeUser'],
+      json['User_Art_Fav'],
     );
     return wUser;
   }

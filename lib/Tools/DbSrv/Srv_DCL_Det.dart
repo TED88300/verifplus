@@ -9,8 +9,6 @@ class DCL_Det {
   // L Ligne
   // P Saut de Page
   // S Sous Total
-
-
   String? DCL_Det_NoArt;
   String? DCL_Det_Lib;
   int? DCL_Det_Qte;
@@ -44,7 +42,29 @@ class DCL_Det {
         this.DCL_Det_Note
       });
 
-  DCL_Det.fromJson(Map<String, dynamic> json) {
+static DCL_DetInit() {
+  return DCL_Det(
+      DCL_DetID : -1,
+      DCL_Det_EntID : 0,
+      DCL_Det_ParcsArtId : 0,
+      DCL_Det_Ordre : 0 ,
+      DCL_Det_Type : "",
+      DCL_Det_NoArt : "",
+      DCL_Det_Lib : "Saisir texte",
+      DCL_Det_Qte : 0,
+      DCL_Det_PU : 0,
+      DCL_Det_RemP : 0,
+      DCL_Det_RemMt : 0,
+      DCL_Det_Livr : 0,
+      DCL_Det_DateLivr : "",
+      DCL_Det_Rel : 0,
+      DCL_Det_DateRel : "",
+      DCL_Det_Statut : "",
+      DCL_Det_Note : ""
+      );
+}
+
+DCL_Det.fromJson(Map<String, dynamic> json) {
     DCL_DetID = int.parse(json['DCL_DetID']);
     DCL_Det_EntID = int.parse(json['DCL_Det_EntID']);
     DCL_Det_ParcsArtId = int.parse(json['DCL_Det_ParcsArtId']);

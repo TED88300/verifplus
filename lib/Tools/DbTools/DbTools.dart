@@ -123,6 +123,7 @@ class DbTools {
   static String DescAff2 = "";
   static String DescAff3 = "";
 
+
   static bool hasConnection = false;
   static Future<bool> checkConnection() async {
     try {
@@ -192,7 +193,9 @@ class DbTools {
         "User_Depot TEXT NOT NULL DEFAULT '',"
         "User_NivHabID INTEGER NOT NULL DEFAULT 0,"
         "User_Niv_Isole INTEGER NOT NULL DEFAULT 0,"
-        "User_TypeUser TEXT NOT NULL DEFAULT '');";
+        "User_TypeUser TEXT NOT NULL DEFAULT '', "
+        "User_Art_Fav TEXT NOT NULL DEFAULT ''"
+        ");";
 
     String wCREATE_Clients =
         "CREATE TABLE Clients (ClientId INTEGER NOT NULL, Client_CodeGC TEXT NOT NULL DEFAULT '', Client_CL_Pr INTEGER NOT NULL, Client_Famille TEXT NOT NULL, Client_Rglt TEXT NOT NULL, Client_Depot TEXT NOT NULL DEFAULT '', Client_PersPhys INTEGER NOT NULL, Client_OK_DataPerso INTEGER NOT NULL, Client_Civilite TEXT NOT NULL DEFAULT '', Client_Nom TEXT NOT NULL DEFAULT '', Client_Siret TEXT NOT NULL DEFAULT '', Client_NAF TEXT NOT NULL DEFAULT '', Client_TVA TEXT NOT NULL DEFAULT '', Client_Commercial TEXT NOT NULL DEFAULT '', Client_Createur TEXT NOT NULL DEFAULT '', Client_Contrat INTEGER NOT NULL, Client_TypeContrat TEXT NOT NULL DEFAULT '', Client_Ct_Debut TEXT NOT NULL, Client_Ct_Fin TEXT NOT NULL, Client_Organes TEXT NOT NULL DEFAULT '', Users_Nom TEXT NOT NULL DEFAULT '', Livr TEXT NOT NULL,Client_isUpdate INTEGER NOT NULL DEFAULT 0 DEFAULT 0);";
@@ -4739,6 +4742,8 @@ class DbTools {
   //************************************************
   //******************** DCL_Ent  ******************
   //************************************************
+
+  static String wStatusCde = "Tous";
 
   static Future<List<DCL_Ent>> getDCL_EntAll() async {
     final db = await database;

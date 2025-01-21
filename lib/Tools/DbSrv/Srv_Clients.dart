@@ -118,15 +118,8 @@ class Client {
       'Users_Nom': Users_Nom,
       'Livr': Livr,
       'Client_isUpdate': Client_isUpdate,
-
-
     };
-
-
   }
-
-
-
 
   factory Client.fromJson(Map<String, dynamic> json) {
 //    print("json $json");

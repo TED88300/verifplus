@@ -26,7 +26,7 @@ class ProductCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    var formatter = NumberFormat('#,##,###.00');
+    var formatter = NumberFormat('###,###.00');
 
     return Container(
       decoration: BoxDecoration(
@@ -74,13 +74,13 @@ class ProductCard extends StatelessWidget {
 
                   product.promo == 0 ?
                   TitleText(
-                    text: "${formatter.format(product.price).replaceAll(',', ' ')}€",
+                    text: "${formatter.format(product.price).replaceAll(',', ' ').replaceAll('.', ',')}€",
                     fontSize: 14,
                     color: LightColor.black,
                   )
                       :
                   TitleText(
-                    text: "${formatter.format(product.promo).replaceAll(',', ' ')}€",
+                    text: "${formatter.format(product.promo).replaceAll(',', ' ').replaceAll('.', ',')}€",
                     fontSize: 14,
                     color: LightColor.red,
                   ),
@@ -89,7 +89,7 @@ class ProductCard extends StatelessWidget {
                     ),
                   product.promo == 0 ? Container():
                   TitleText(
-                    text: "${formatter.format(product.price).replaceAll(',', ' ')}€",
+                    text: "${formatter.format(product.price).replaceAll(',', ' ').replaceAll('.', ',')}€",
                     fontSize: 12,
                     color: LightColor.black,
                     lineThrough: true,

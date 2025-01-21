@@ -189,7 +189,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
   }
 
   Widget _detailWidget() {
-    var formatter = NumberFormat('#,##,###.00');
+    var formatter = NumberFormat('###,###.00');
 
     return DraggableScrollableSheet(
       maxChildSize: .8,
@@ -235,21 +235,23 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: <Widget>[
 
+
+
                               product.promo == 0 ?
                               TitleText(
-                                text: "${formatter.format(product.promo).replaceAll(',', ' ')}€",
+                                text: "${formatter.format(product.promo).replaceAll(',', ' ').replaceAll('.', ',')}€",
                                 fontSize: 25,
                                 color: Colors.red,
                               )
                               :
                               TitleText(
-                                text: "${formatter.format(product.price).replaceAll(',', ' ')}€",
+                                text: "${formatter.format(product.price).replaceAll(',', ' ').replaceAll('.', ',')}€",
                                 fontSize: 25,
                                 color: Colors.red,
                               ),
                               product.promo == 0 ? Container():
                               TitleText(
-                                text: "${formatter.format(product.price).replaceAll(',', ' ')}€",
+                                text: "${formatter.format(product.price).replaceAll(',', ' ').replaceAll('.', ',')}€",
                                 fontSize: 19,
                                 color: Colors.red,
                               ),

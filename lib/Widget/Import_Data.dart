@@ -572,21 +572,26 @@ return;
 
 
     Srv_DbTools.list_Article_GrpFamSsFam_Ebp.clear();
-
     for (int i = 0; i < Srv_DbTools.ListArticle_Ebp.length; i++) {
       Article_Ebp art = Srv_DbTools.ListArticle_Ebp[i];
-
       Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Article_GrpFamSsFam_Ebp();
-
       wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Groupe = art.Article_Groupe;
-      wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam = art.Article_Fam;
-      wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam = art.Article_Sous_Fam;
+      wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam = art.Article_LibelleFamilleArticle;
+      wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam = art.Article_LibelleSousFamilleArticle;
 
+      var contain = Srv_DbTools.list_Article_GrpFamSsFam_Ebp.where((element) => element.Article_GrpFamSsFam_Groupe == wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Groupe && element.Article_GrpFamSsFam_Fam == wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam && element.Article_GrpFamSsFam_Sous_Fam == wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam);
+      if (contain.isEmpty)
+      {
+        if (wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Groupe.contains("03 - SERVICE"))
+        {
+          print("wArticle_GrpFamSsFam_Ebp ${wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Groupe} - ${wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam}  - ${wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam}");
 
-      if(!Srv_DbTools.list_Article_GrpFamSsFam_Ebp.contains(wArticle_GrpFamSsFam_Ebp))
+        }
         Srv_DbTools.list_Article_GrpFamSsFam_Ebp.add(wArticle_GrpFamSsFam_Ebp);
-    }
 
+      }
+
+    }
     print("SplashScreen list_Article_Groupe ${Srv_DbTools.list_Article_Groupe.length}");
 
 

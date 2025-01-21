@@ -1,11 +1,15 @@
+import 'dart:convert';
+
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DCL_Ent.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
-import 'package:verifplus/Widget/Client/Client_DCL_Ent_Type_Dialog.dart';
+import 'package:verifplus/Tools/DbTools/DbTools.dart';
+import 'package:verifplus/Widget/GestCo/DCL_Ent_Type_Dialog.dart';
 import 'package:verifplus/Widget/GestCo/DCL_Devis_Det.dart';
 import 'package:verifplus/Widget/GestCo/DCL_Ent_Param.dart';
 import 'package:verifplus/Widget/GestCo/Select_DCL_Ents_Add.dart';
@@ -39,6 +43,8 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
   bool bSortDate = false;
 
   void Reload() async {
+    DbTools.wStatusCde = 'Tous';
+
     await Srv_ImportExport.getErrorSync();
     bool wRes = await Srv_DbTools.getDCL_EntAll();
 
@@ -47,42 +53,33 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
       DCL_Ent wDCL_Ent = Srv_DbTools.ListDCL_Ent[i];
       wDCL_Ent.DCL_Ent_ClientNom = "";
 
-      if (await Srv_DbTools.getClient(wDCL_Ent.DCL_Ent_ClientId!)) {
-        wDCL_Ent.DCL_Ent_ClientNom = "${Srv_DbTools.gClient.Client_Nom}" ;
-        wDCL_Ent.DCL_Ent_CCGSZ = "${wDCL_Ent.DCL_Ent_Num} / ${wDCL_Ent.DCL_Ent_ClientNom}";
-        wDCL_Ent.DCL_Ent_Adr1 = "Adr Client";
-        wDCL_Ent.DCL_Ent_Adr2 = "${Srv_DbTools.gClient.Adresse_Adr1}  ${Srv_DbTools.gClient.Adresse_CP} ${Srv_DbTools.gClient.Adresse_Ville}";
+      /* if (wDCL_Ent.DCL_Ent_ZoneId! >= 0) {
+        await Srv_DbTools.getZoneID(wDCL_Ent.DCL_Ent_ZoneId!);
+        if (Srv_DbTools.gZone.Zone_Nom.isNotEmpty) wDCL_Ent.DCL_Ent_ZoneNom = "/ ${Srv_DbTools.gZone.Zone_Nom}";
+        wDCL_Ent.DCL_Ent_CCGSZ = "iA ${wDCL_Ent.DCL_Ent_Num} / ${wDCL_Ent.DCL_Ent_ClientNom} ${wDCL_Ent.DCL_Ent_GroupeNom} ${wDCL_Ent.DCL_Ent_SiteNom} ${wDCL_Ent.DCL_Ent_ZoneNom} ";
+        wDCL_Ent.DCL_Ent_Adr1 = "Adr Zone";
+        wDCL_Ent.DCL_Ent_Adr2 = "${Srv_DbTools.gZone.Zone_Adr1} ${Srv_DbTools.gZone.Zone_Adr2} ${Srv_DbTools.gZone.Zone_CP} ${Srv_DbTools.gZone.Zone_Ville}";
       }
-
-      if (wDCL_Ent.DCL_Ent_GroupeId! >= 0) {
-        print("wDCL_Ent.DCL_Ent_CCGSZ g ${wDCL_Ent.DCL_Ent_GroupeId}");
-
-        await Srv_DbTools.getGroupeID(wDCL_Ent.DCL_Ent_GroupeId!);
-        if (Srv_DbTools.gGroupe.Groupe_Nom.isNotEmpty)
-          wDCL_Ent.DCL_Ent_GroupeNom = "/ ${Srv_DbTools.gGroupe.Groupe_Nom}";
-        wDCL_Ent.DCL_Ent_CCGSZ = "${wDCL_Ent.DCL_Ent_Num} / ${wDCL_Ent.DCL_Ent_ClientNom} ${wDCL_Ent.DCL_Ent_GroupeNom}";
-        wDCL_Ent.DCL_Ent_Adr1 = "Adr Groupe";
-        wDCL_Ent.DCL_Ent_Adr2 = "${Srv_DbTools.gGroupe.Groupe_Adr1} ${Srv_DbTools.gGroupe.Groupe_Adr2} ${Srv_DbTools.gGroupe.Groupe_CP} ${Srv_DbTools.gGroupe.Groupe_Ville}";
-      }
-
-      if (wDCL_Ent.DCL_Ent_SiteId! >= 0) {
-        print("wDCL_Ent.DCL_Ent_CCGSZ s ${wDCL_Ent.DCL_Ent_SiteId}");
-
+      else if (wDCL_Ent.DCL_Ent_SiteId! >= 0) {
         await Srv_DbTools.getSiteID(wDCL_Ent.DCL_Ent_SiteId!);
-        if (Srv_DbTools.gSite.Site_Nom.isNotEmpty)
-        wDCL_Ent.DCL_Ent_SiteNom = "/ ${Srv_DbTools.gSite.Site_Nom}";
-        wDCL_Ent.DCL_Ent_CCGSZ = "${wDCL_Ent.DCL_Ent_Num} / ${wDCL_Ent.DCL_Ent_ClientNom} ${wDCL_Ent.DCL_Ent_GroupeNom} ${wDCL_Ent.DCL_Ent_SiteNom}";
+        if (Srv_DbTools.gSite.Site_Nom.isNotEmpty) wDCL_Ent.DCL_Ent_SiteNom = "/ ${Srv_DbTools.gSite.Site_Nom}";
+        wDCL_Ent.DCL_Ent_CCGSZ = "iB ${wDCL_Ent.DCL_Ent_Num} / ${wDCL_Ent.DCL_Ent_ClientNom} ${wDCL_Ent.DCL_Ent_GroupeNom} ${wDCL_Ent.DCL_Ent_SiteNom}";
         wDCL_Ent.DCL_Ent_Adr1 = "Adr Site";
         wDCL_Ent.DCL_Ent_Adr2 = "${Srv_DbTools.gSite.Site_Adr1} ${Srv_DbTools.gSite.Site_Adr2} ${Srv_DbTools.gSite.Site_CP} ${Srv_DbTools.gSite.Site_Ville}";
       }
+      else if (wDCL_Ent.DCL_Ent_GroupeId! >= 0) {
+        await Srv_DbTools.getGroupeID(wDCL_Ent.DCL_Ent_GroupeId!);
+        if (Srv_DbTools.gGroupe.Groupe_Nom.isNotEmpty) wDCL_Ent.DCL_Ent_GroupeNom = "/ ${Srv_DbTools.gGroupe.Groupe_Nom}";
+        wDCL_Ent.DCL_Ent_CCGSZ = "iC ${wDCL_Ent.DCL_Ent_Num} / ${wDCL_Ent.DCL_Ent_ClientNom} ${wDCL_Ent.DCL_Ent_GroupeNom}";
+        wDCL_Ent.DCL_Ent_Adr1 = "Adr Groupe";
+        wDCL_Ent.DCL_Ent_Adr2 = "${Srv_DbTools.gGroupe.Groupe_Adr1} ${Srv_DbTools.gGroupe.Groupe_Adr2} ${Srv_DbTools.gGroupe.Groupe_CP} ${Srv_DbTools.gGroupe.Groupe_Ville}";
+      }
+      else*/
 
-      if (wDCL_Ent.DCL_Ent_ZoneId! >= 0) {
-        await Srv_DbTools.getZoneID(wDCL_Ent.DCL_Ent_ZoneId!);
-        if (Srv_DbTools.gZone.Zone_Nom.isNotEmpty)
-        wDCL_Ent.DCL_Ent_ZoneNom = "/ ${Srv_DbTools.gZone.Zone_Nom}";
-        wDCL_Ent.DCL_Ent_CCGSZ = "${wDCL_Ent.DCL_Ent_Num} / ${wDCL_Ent.DCL_Ent_ClientNom} ${wDCL_Ent.DCL_Ent_GroupeNom} ${wDCL_Ent.DCL_Ent_SiteNom} ${wDCL_Ent.DCL_Ent_ZoneNom} ";
-        wDCL_Ent.DCL_Ent_Adr1 = "Adr Zone";
-        wDCL_Ent.DCL_Ent_Adr2 = "${Srv_DbTools.gZone.Zone_Adr1} ${Srv_DbTools.gZone.Zone_Adr2} ${Srv_DbTools.gZone.Zone_CP} ${Srv_DbTools.gZone.Zone_Ville}";
+      if (await Srv_DbTools.getClient(wDCL_Ent.DCL_Ent_ClientId!)) {
+        wDCL_Ent.DCL_Ent_ClientNom = "${Srv_DbTools.gClient.ClientId} - ${Srv_DbTools.gClient.Client_Nom}";
+        wDCL_Ent.DCL_Ent_Adr1 = "Adr Client";
+        wDCL_Ent.DCL_Ent_Adr2 = "${Srv_DbTools.gClient.Adresse_Adr1}  ${Srv_DbTools.gClient.Adresse_CP} ${Srv_DbTools.gClient.Adresse_Ville}";
       }
 
       if (lDCL_Ent.indexOf(wDCL_Ent.DCL_Ent_Type!) == -1) {
@@ -109,6 +106,7 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
     List<DCL_Ent> wListDCL_Ent = [];
     Srv_DbTools.ListDCL_Entsearchresult.clear();
 
+
     if (Srv_DbTools.gSelDCL_Ent.compareTo(Srv_DbTools.gSelDCL_EntBase) == 0) {
       wListDCL_Ent.addAll(Srv_DbTools.ListDCL_Ent);
     } else {
@@ -119,6 +117,41 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
         }
       });
     }
+
+
+    List<DCL_Ent> wListDCL_Ent_Tmp = [];
+    print("element SelDCL_DateDeb ${Srv_DbTools.SelDCL_DateDeb}");
+    print("element SelDCL_DateFin ${Srv_DbTools.SelDCL_DateFin}");
+    wListDCL_Ent.forEach((element) async {
+        DateTime wDate = new DateFormat("dd/MM/yyyy").parse(element.DCL_Ent_Date!);
+        if (wDate.compareTo(Srv_DbTools.SelDCL_DateDeb) >= 0 )
+            {
+              print("wDate ${Srv_DbTools.SelDCL_DateDeb} ${wDate.toString()}    ${wDate.compareTo(Srv_DbTools.SelDCL_DateDeb)}");
+              wListDCL_Ent_Tmp.add(element);
+            }
+          });
+
+    wListDCL_Ent.clear();
+    wListDCL_Ent.addAll(wListDCL_Ent_Tmp);
+
+    if (DbTools.wStatusCde != "Tous")
+      {
+        wListDCL_Ent_Tmp.clear();
+        wListDCL_Ent.forEach((element) async {
+          if (element.DCL_Ent_Statut == DbTools.wStatusCde )
+          {
+            wListDCL_Ent_Tmp.add(element);
+          }
+        });
+
+        wListDCL_Ent.clear();
+        wListDCL_Ent.addAll(wListDCL_Ent_Tmp);
+
+
+      }
+
+
+
 
     String wFilterText = filterText.trim().toUpperCase();
     if (wFilterText.isEmpty) {
@@ -140,6 +173,8 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
         }
       });
 
+//    Srv_DbTools.SelDCL_DateDeb
+
     if (bSortDate) {
       Srv_DbTools.ListDCL_Entsearchresult.sort(Srv_DbTools.idSortComparison);
     } else {
@@ -152,6 +187,7 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
   @override
   void initLib() async {
     Srv_DbTools.gSelDCL_Ent = "Ext";
+    print(" gUserLogin_Art_Fav ${Srv_DbTools.gUserLogin_Art_Fav}");
     Reload();
   }
 
@@ -171,6 +207,8 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
 
   @override
   Widget Entete_Btn_Search() {
+    print(" BUILD Entete_Btn_Search");
+
     return Container(
         height: 57,
         width: MediaQuery.of(context).size.width,
@@ -231,17 +269,28 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
 
   @override
   Widget Entete_Ico_Search() {
+    String wEtat = "Tous";
+    Color wEtatColors = gColors.LinearGradient4;
+    if (DbTools.wStatusCde == 'Préparation') {
+      wEtat = "Prépa";
+      wEtatColors = Colors.orangeAccent;
+    }
+    if (DbTools.wStatusCde == 'En cours') {
+      wEtat = "En cours";
+      wEtatColors = Colors.blueAccent;
+    }
+    if (DbTools.wStatusCde == 'Accepté') {
+      wEtat = "Accepté";
+      wEtatColors = gColors.primaryGreen;
+    }
+    if (DbTools.wStatusCde == 'Refusé') {
+      wEtat = "Refusé";
+      wEtatColors = gColors.red;
+    }
+
     return Container(
         decoration: BoxDecoration(
           color: gColors.LinearGradient3,
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.9),
-              spreadRadius: 1,
-              blurRadius: 4,
-              offset: Offset(0, 1), // changes position of shadow
-            ),
-          ],
         ),
         height: 57,
         child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -261,7 +310,7 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
               ),
               onTap: () async {
                 await HapticFeedback.vibrate();
-                await Client_DCL_Ent_Type_Dialog.Dialogs_DCL_Ent_Type(context);
+                await DCL_Ent_Type_Dialog.Dialogs_DCL_Ent_Type(context);
                 Filtre();
               }),
           Container(
@@ -304,7 +353,6 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
                 await gDialogs.Dialog_CdeDate(context);
                 Filtre();
               }),
-
           InkWell(
               child: Container(
                 width: icoWidth + 10,
@@ -333,6 +381,28 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
               ),
               onTap: () async {
                 await HapticFeedback.vibrate();
+                Filtre();
+              }),
+          InkWell(
+              child: Container(
+                padding: const EdgeInsets.fromLTRB(0, 5, 0, 5),
+                width: 120,
+                decoration: BoxDecoration(
+                  color: wEtatColors,
+                  borderRadius: BorderRadius.circular(24),
+                ),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '${wEtat}',
+                      style: gColors.bodyTitle1_N_W24,
+                    ),
+                  ],
+                ),
+              ),
+              onTap: () async {
+                await gDialogs.Dialog_ActionSel(context);
                 Filtre();
               }),
           Spacer(),
@@ -410,7 +480,6 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
   @override
   Widget build(BuildContext context) {
     double LargeurLabel = 140;
-
     Param_Param wParam_Param = Srv_DbTools.getParam_Param_in_Mem("Type_Organe", Srv_DbTools.gSelDCL_Ent);
 
     return Scaffold(
@@ -429,10 +498,8 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
               Entete_Tot_Search(),
               gColors.wLigne(),
               Entete_Ico_Search(),
-
-          Container(
-            color: gColors.transparent,
-              height : 8,),
+              gColors.wLigne(),
+              gColors.ombre(),
               Expanded(
                 child: DCL_EntGridWidget(),
               ),
@@ -452,6 +519,31 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
                   }),
             ),
     );
+  }
+
+  Future getNo(DCL_Ent dCL_Ent) async {
+    if (await Srv_DbTools.getClient(dCL_Ent.DCL_Ent_ClientId!)) {
+      dCL_Ent.DCL_Ent_ClientNom = "${Srv_DbTools.gClient.ClientId} - ${Srv_DbTools.gClient.Client_Nom}";
+      dCL_Ent.DCL_Ent_CCGSZ = "${dCL_Ent.DCL_Ent_ClientNom} ";
+    }
+
+    if (dCL_Ent.DCL_Ent_GroupeId! >= 0) {
+      await Srv_DbTools.getGroupeID(dCL_Ent.DCL_Ent_GroupeId!);
+      if (Srv_DbTools.gGroupe.Groupe_Nom.isNotEmpty) dCL_Ent.DCL_Ent_GroupeNom = "/ ${Srv_DbTools.gGroupe.Groupe_Nom}";
+      dCL_Ent.DCL_Ent_CCGSZ = "${dCL_Ent.DCL_Ent_ClientNom} ${dCL_Ent.DCL_Ent_GroupeNom}";
+    }
+
+    if (dCL_Ent.DCL_Ent_SiteId! >= 0) {
+      await Srv_DbTools.getSiteID(dCL_Ent.DCL_Ent_SiteId!);
+      if (Srv_DbTools.gSite.Site_Nom.isNotEmpty) dCL_Ent.DCL_Ent_SiteNom = "/ ${Srv_DbTools.gSite.Site_Nom}";
+      dCL_Ent.DCL_Ent_CCGSZ = "${dCL_Ent.DCL_Ent_ClientNom} ${dCL_Ent.DCL_Ent_GroupeNom} ${dCL_Ent.DCL_Ent_SiteNom}";
+    }
+
+    if (dCL_Ent.DCL_Ent_ZoneId! >= 0) {
+      await Srv_DbTools.getZoneID(dCL_Ent.DCL_Ent_ZoneId!);
+      if (Srv_DbTools.gZone.Zone_Nom.isNotEmpty) dCL_Ent.DCL_Ent_ZoneNom = "/ ${Srv_DbTools.gZone.Zone_Nom}";
+      dCL_Ent.DCL_Ent_CCGSZ = "${dCL_Ent.DCL_Ent_ClientNom} ${dCL_Ent.DCL_Ent_GroupeNom} ${dCL_Ent.DCL_Ent_SiteNom} ${dCL_Ent.DCL_Ent_ZoneNom} ";
+    }
   }
 
   //***************************
@@ -493,7 +585,11 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
 
                   double rowh = 24;
                   String wNomClient = "${dCL_Ent.DCL_Ent_ClientNom}";
-                  double wH = !btnSel_Aff ? 57 : index == 0 ? 148 :160;
+                  double wH = !btnSel_Aff
+                      ? 57
+                      : index == 0
+                          ? 146
+                          : 158;
                   return Column(
                     children: [
                       Container(
@@ -505,11 +601,20 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
                             Container(
                               color: wColorBack,
                               child: GestureDetector(
+                                onLongPress: () async {
+                                  await HapticFeedback.vibrate();
+                                  await gDialogs.Dialog_ActionDevis(context);
+                                  Reload();
+                                },
                                 onTap: () async {
                                   print(" GestureDetectorGestureDetectorGestureDetectorGestureDetectorGestureDetector");
 
                                   await HapticFeedback.vibrate();
                                   Srv_DbTools.gDCL_Ent = dCL_Ent;
+
+                                  await getNo(dCL_Ent);
+                                  setState(() {});
+
                                   if (dCL_Ent.DCL_Ent_InterventionId! >= 0) {
                                     Srv_DbTools.gIntervention.Client_Nom = Srv_DbTools.gClient.Client_Nom;
                                     Srv_DbTools.gIntervention.Site_Nom = Srv_DbTools.gSite.Site_Nom;
@@ -556,8 +661,8 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
                                                             style: gColors.bodySaisie_B_B.copyWith(color: wColorText),
                                                           )),
                                                       onTap: () async {
-                                                        print("Selection");
                                                         Srv_DbTools.gDCL_Ent = dCL_Ent;
+                                                        await getNo(dCL_Ent);
 
                                                         setState(() {});
                                                       }),
@@ -629,10 +734,8 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
                                                                       style: gColors.bodySaisie_B_B.copyWith(color: wColorText),
                                                                     )),
                                                                 onTap: () async {
-                                                                  print("Selection");
                                                                   Srv_DbTools.gDCL_Ent = dCL_Ent;
-
-                                                                  setState(() {});
+                                                                  await getNo(dCL_Ent);
                                                                 }),
                                                           ]),
                                                         ),
@@ -746,10 +849,6 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
                                             )
                                           ],
                                         ),
-                                  Container(
-                                    height: 1,
-                                    color: gColors.LinearGradient4,
-                                  ),
                                 ]),
                               ),
                             ),
@@ -762,11 +861,11 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
                                 child: InkWell(
                                     child: Container(),
                                     onTap: () async {
-                                      print("Selection");
                                       if (Srv_DbTools.gDCL_Ent == dCL_Ent)
                                         Srv_DbTools.gDCL_Ent == DCL_Ent();
                                       else
                                         Srv_DbTools.gDCL_Ent = dCL_Ent;
+                                      await getNo(dCL_Ent);
 
                                       setState(() {});
                                     }),
@@ -775,20 +874,7 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
                           ],
                         ),
                       ),
-                      if (btnSel_Aff)
-                        Container(
-                          decoration: BoxDecoration(
-                            color: gColors.white,
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.grey.withOpacity(0.9),
-                                spreadRadius: 1,
-                                blurRadius: 4,
-                                offset: Offset(0, 1), // changes position of shadow
-                              ),
-                            ],
-                          ),
-                        ),
+                      if (btnSel_Aff) gColors.ombre(),
                     ],
                   );
                 },

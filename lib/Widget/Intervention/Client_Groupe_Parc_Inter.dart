@@ -552,7 +552,6 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
         elementEnt.Parcs_VRMC = "MS";
       } else
         elementEnt.Parcs_VRMC = "---";
-
       elementEnt.Parcs_Date_Desc2 = "${ParcsDesc_Type_Fab} / ${ParcsDesc_Type_Gam}";
       elementEnt.Parcs_Date_Desc3 =  "${elementEnt.Parcs_ZNE_Label} / ${elementEnt.Parcs_EMP_Label} / ${elementEnt.Parcs_NIV_Label}";
 
@@ -1355,22 +1354,8 @@ class Client_Groupe_Parc_InterState extends State<Client_Groupe_Parc_Inter> with
             gObj.InterventionTitleWidget("${Srv_DbTools.gIntervention.Client_Nom!.toUpperCase()}", wTitre2: "${wTitre2}", wTimer: wTimer),
             Entete_Btn_Search(),
             Parcs_EntHeader(),
-            Container(
-              height: 0,
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.grey.withOpacity(0.9),
-                    spreadRadius: 1,
-                    blurRadius: 2,
-                    offset: Offset(0, 2),
-                  ),
-                ],
-              ),
-            ),
-            Container(
-              height: 3,
-            ),
+            gColors.wLigne(),
+            gColors.ombre(),
             Expanded(
               child: Parcs_EntGridWidget(),
             ),
@@ -2182,7 +2167,7 @@ Container(width: 40,),
                       }
                     },
                     onLongPressStart: (detail) {
-                      print("setSt 12");
+
 
                       setState(() {
                         if (timer != null) {
@@ -2622,15 +2607,19 @@ Container(width: 40,),
                       ))
                 ]),
               ),
+
+    /*
               Container(
                 height: 1,
                 color: gColors.LinearGradient2,
               ),
+*/
+
             ]),
           ),
         ]),
       ),
-      gColors.wLigne(),
+ //     gColors.wLigne(),
     ]);
   }
 
@@ -2646,7 +2635,6 @@ Container(width: 40,),
             onPanUpdate: (details) {
               hPosition = 0;
               vPosition = 0;
-
               if (details.delta.dy < 0) {
                 final maxposition = wVScrollController.position.maxScrollExtent;
                 vPosition = wVScrollController.offset + 20; //details.delta.dy;
@@ -2703,7 +2691,7 @@ Container(width: 40,),
                       if (DbTools.gRowisSel && isInSels(dParcs_Ent.ParcsId!)) {
                         wColorBack2 = gColors.GrdBtn_Colors1Sel;
                       }
-                      double wH = (!btnSel_Aff) ? 50 : 101;
+                      double wH = (!btnSel_Aff) ? 57 : 107;
                       double rowh = btnSel_Aff ? 100 : 49;
 
                       bool upd = false;
@@ -2719,14 +2707,6 @@ Container(width: 40,),
                             ),
                             decoration: BoxDecoration(
                               color: LastClickID == dParcs_Ent.ParcsId ? gColors.backgroundColor : gColors.transparent,
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.5),
-                                  spreadRadius: 1,
-                                  blurRadius: 2,
-                                  offset: Offset(0, 2),
-                                ),
-                              ],
                             ),
                             child: Stack(
                               fit: StackFit.expand,
@@ -2828,19 +2808,10 @@ Container(width: 40,),
                                                               setState(() {});
                                                             }),
                                                       ),
-
-
-                                                    ],)
-
-                                                    ,
+                                                    ],),
                                                   ),
-
-
-
                                                   Container(
-
                                                     height: 88,
-
                                                     color: LastClickID == dParcs_Ent.ParcsId ? gColors.backgroundColor : gColors.transparent,
                                                     child: Column(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.start, children: <Widget>[
                                                       Container(
@@ -3032,14 +3003,19 @@ Container(width: 40,),
                                               ),
                                             ),
                                       Container(
-                                        height: 0,
-                                        color: gColors.LinearGradient2,
+                                        height: 1,
+                                        color: LastClickID == dParcs_Ent.ParcsId ? gColors.backgroundColor : gColors.LinearGradient2,
                                       ),
+
+                                      gColors.ombre(),
+
+
                                     ]),
                                   ),
                                 ),
                               ],
                             ),
+
                           ),
                         ],
                       );

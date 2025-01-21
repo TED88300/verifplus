@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:fbroadcast/fbroadcast.dart';
@@ -1091,8 +1092,8 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
     if (art.wImgeTrv) return art.wImage!;
 
     if (art.Art_Sel || isProp) {
-      String wImgPath = "${Srv_DbTools.SrvImg}ArticlesImg_Ebp_${art.Article_codeArticle}.jpg";
-      gObj.pic = await gObj.networkImageToByte(wImgPath);
+      await Srv_DbTools.getArticlesImg_Ebp( art.Article_codeArticle);
+      gObj.pic = base64Decode(Srv_DbTools.gArticlesImg_Ebp.ArticlesImg_Image);
       if (gObj.pic.length > 0) {
         art.wImgeTrv = true;
         art.wImage = Image.memory(

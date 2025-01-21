@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
@@ -259,8 +261,8 @@ class Client_Groupe_Parc_Inter_BLState extends State<Client_Groupe_Parc_Inter_BL
       return art.wImage!;
 
 
-    String wImgPath = "${Srv_DbTools.SrvImg}ArticlesImg_Ebp_${art.ParcsArt_Id}s.jpg";
-    gObj.pic = await gObj.networkImageToByte(wImgPath);
+    await Srv_DbTools.getArticlesImg_Ebp( art.ParcsArt_Id!);
+    gObj.pic = base64Decode(Srv_DbTools.gArticlesImg_Ebp.ArticlesImg_Image);
 
     if (gObj.pic.length > 0) {
       art.wImgeTrv = true;

@@ -1,12 +1,15 @@
 import 'dart:async';
-
+import 'dart:convert';
 import 'package:dropdown_button2/dropdown_button2.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+
 import 'package:verifplus/Tools/DbSrv/Srv_Articles_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Articles_Fam_Ebp.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_DCL_Det.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
 import 'package:verifplus/Widget/GestCo/DCL_Article_Det.dart';
@@ -44,17 +47,16 @@ class DCL_ArticlesState extends State<DCL_Articles> {
   final List<bool> _selectedView = <bool>[true, false, false];
   final Search_TextController = TextEditingController();
 
-  String FiltreGrp = "Tous";
+  String FiltreGrp = "";
   static List<String> ListParam_FiltreGrp = [];
-
   static List<String> ListParam_FiltreFam = [];
   static List<String> ListParam_FiltreFamID = [];
-  String FiltreFam = "Tous";
+  String FiltreFam = "";
   String FiltreFamID = "";
 
   static List<String> ListParam_FiltreSousFam = [];
   static List<String> ListParam_FiltreSousFamID = [];
-  String FiltreSousFam = "Tous";
+  String FiltreSousFam = "";
   String FiltreSousFamID = "";
 
   double wDialogHeight = 0;
@@ -74,15 +76,13 @@ class DCL_ArticlesState extends State<DCL_Articles> {
 
   bool btnSel_Aff = true;
 
-  var formatter = NumberFormat('#,##,###.00');
-
-
+  var formatter = NumberFormat('###,###.00');
 
   Future Reload() async {
+
+/*
     ListParam_FiltreSousFam.clear();
     ListParam_FiltreSousFamID.clear();
-    ListParam_FiltreSousFam.add("Tous");
-    ListParam_FiltreSousFamID.add("");
 
     Srv_DbTools.ListArticle_Fam_Ebp_Fam.clear();
     for (int i = 0; i < Srv_DbTools.ListArticle_Fam_Ebp.length; i++) {
@@ -92,15 +92,15 @@ class DCL_ArticlesState extends State<DCL_Articles> {
         ListParam_FiltreSousFamID.add(wArticle_Fam_Ebp.Article_Fam_Code);
       }
     }
-    FiltreSousFam = ListParam_FiltreSousFam[0];
-    FiltreSousFamID = ListParam_FiltreSousFamID[0];
+*/
+    FiltreSousFam = ""; //ListParam_FiltreSousFam[0];
+    FiltreSousFamID = ""; //ListParam_FiltreSousFamID[0];
 
     ListParam_FiltreGrp.clear();
     ListParam_FiltreFam.clear();
     ListParam_FiltreSousFam.clear();
 
-    ListParam_FiltreGrp.add("Tous");
-    FiltreGrp = "Tous";
+    FiltreGrp = "";
     List<String> wListParam_FiltreGrp = [];
     for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
       Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
@@ -108,13 +108,18 @@ class DCL_ArticlesState extends State<DCL_Articles> {
     }
     wListParam_FiltreGrp.sort();
     ListParam_FiltreGrp.addAll(wListParam_FiltreGrp);
+
     await Filtre();
   }
 
   Future Filtre() async {
-    Srv_DbTools.ListArticle_Ebp.forEach((element) {
-      element.Art_Sel = false;
-    });
+    print(" FILTRE");
+
+    for (int i = 0; i < Srv_DbTools.ListArticle_Ebp.length; i++) {
+      Article_Ebp wArticle_Ebp = Srv_DbTools.ListArticle_Ebp[i];
+      wArticle_Ebp.Art_Sel = false;
+      wArticle_Ebp.Art_Qte = 1;
+    }
 
     List<Article_Ebp> ListArtsearchresultTmp = [];
     List<Article_Ebp> ListArtsearchresultTmpF = [];
@@ -124,6 +129,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
     Srv_DbTools.ListArticle_Ebpsearchresult.clear();
 
     if (filterText.isEmpty) {
+      print("_buildFieldTextSearch VIDE ${filterText}");
       ListArtsearchresultTmp.addAll(Srv_DbTools.ListArticle_Ebp);
     } else {
       print("_buildFieldTextSearch liste ${filterText}");
@@ -135,42 +141,61 @@ class DCL_ArticlesState extends State<DCL_Articles> {
       }
     }
 
-    if (FiltreGrp == "Tous" && FiltreFam == "Tous" && FiltreSousFam == "Tous") {
+
+
+    if (FiltreGrp == "" && FiltreFam == "" && FiltreSousFam == "") {
       Srv_DbTools.ListArticle_Ebpsearchresult.addAll(ListArtsearchresultTmp);
-      print("RECH et TOUS VIDES ${Srv_DbTools.ListArticle_Ebpsearchresult.length}");
+
+      print(" FILTRE  ListParam_FiltreGrp ${ListParam_FiltreGrp.length}");
+      print(" FILTRE  ListParam_FiltreFam ${ListParam_FiltreFam.length}");
+      print(" FILTRE  ListParam_FiltreSousFam ${ListParam_FiltreSousFam.length}");
 
       ListParam_FiltreFam.clear();
-      ListParam_FiltreFam.add("Tous");
-      FiltreFam = "Tous";
+      FiltreFam = "";
       for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
         Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
-        if (!ListParam_FiltreFam.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam)) ListParam_FiltreFam.add(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam);
+        if (!ListParam_FiltreFam.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam))
+          {
+
+            ListParam_FiltreFam.add(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam);
+          }
       }
-      print(" ListParam_FiltreFam ${ListParam_FiltreFam.length}");
 
       ListParam_FiltreSousFam.clear();
-      ListParam_FiltreSousFam.add("Tous");
-      FiltreSousFam = "Tous";
+      FiltreSousFam = "";
       for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
         Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
         if (!ListParam_FiltreSousFam.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam)) ListParam_FiltreSousFam.add(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam);
       }
-      print(" ListParam_FiltreSousFam ${ListParam_FiltreSousFam.length}");
+
+      print(" FILTRE VIDES ListParam_FiltreGrp ${ListParam_FiltreGrp.length}");
+      print(" FILTRE VIDES ListParam_FiltreFam ${ListParam_FiltreFam.length}");
+      print(" FILTRE VIDES ListParam_FiltreSousFam ${ListParam_FiltreSousFam.length}");
 
       setState(() {});
       return;
     }
 
+    print(" FILTRE  ListParam_FiltreGrp ${ListParam_FiltreGrp.length}");
+    print(" FILTRE  ListParam_FiltreFam ${ListParam_FiltreFam.length}");
+    print(" FILTRE  ListParam_FiltreSousFam ${ListParam_FiltreSousFam.length}");
+
+    print("FILTRE PAS VIDES FiltreGrp $FiltreGrp FiltreFam $FiltreFam FiltreSousFam $FiltreSousFam");
+
+    Srv_DbTools.ListArticle_Ebpsearchresult.clear();
     ListArtsearchresultTmp.forEach((element) {
-      bool TestGrp = (FiltreGrp == "Tous") || (FiltreGrp == element.Article_Groupe);
-      bool TestFam = (FiltreFam == "Tous") || (FiltreFam == element.Article_Fam);
-      bool TestSousFam = (FiltreSousFam == "Tous") || (FiltreSousFam == element.Article_Sous_Fam);
-      if (TestGrp && TestFam && TestSousFam) Srv_DbTools.ListArticle_Ebpsearchresult.add(element);
+      bool TestGrp = (FiltreGrp == "") || (FiltreGrp.contains(element.Article_Groupe));
+      bool TestFam = (FiltreFam == "") || (FiltreFam.contains(element.Article_LibelleFamilleArticle) && element.Article_LibelleFamilleArticle.isNotEmpty);
+      bool TestSousFam = (FiltreSousFam == "") || (FiltreSousFam.contains(element.Article_LibelleSousFamilleArticle)  && element.Article_LibelleSousFamilleArticle.isNotEmpty);
+
+      if (TestGrp && TestFam && TestSousFam)
+        {
+          Srv_DbTools.ListArticle_Ebpsearchresult.add(element);
+        }
+
     });
 
     print("Filtre ListArticle_Ebpsearchresult ${Srv_DbTools.ListArticle_Ebpsearchresult.length}");
-
-//    await GetImage();
 
     setState(() {});
   }
@@ -183,8 +208,6 @@ class DCL_ArticlesState extends State<DCL_Articles> {
 
     ListParam_FiltreFam.clear();
     ListParam_FiltreFamID.clear();
-    ListParam_FiltreFam.add("Tous");
-    ListParam_FiltreFamID.add("");
 
     Srv_DbTools.ListArticle_Fam_Ebp_Fam.clear();
     for (int i = 0; i < Srv_DbTools.ListArticle_Fam_Ebp.length; i++) {
@@ -194,8 +217,8 @@ class DCL_ArticlesState extends State<DCL_Articles> {
         ListParam_FiltreFamID.add(wArticle_Fam_Ebp.Article_Fam_Code);
       }
     }
-    FiltreFam = ListParam_FiltreFam[0];
-    FiltreFamID = ListParam_FiltreFamID[0];
+    FiltreFam = "";
+    FiltreFamID = "";
 
     await Reload();
   }
@@ -255,153 +278,192 @@ class DCL_ArticlesState extends State<DCL_Articles> {
         Stack(
           children: [
             Container(
-                margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                color: Colors.transparent,
-                height: wHeight,
-                child: Column(
-                  children: [
-// Titre
-                    Container(
-                      width: wWidthDialog,
-                      height: wHeightTitre,
-                      margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                      decoration: BoxDecoration(
-                        color: gColors.LinearGradient2,
-                        borderRadius: BorderRadius.circular(15),
+              margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+              color: Colors.transparent,
+              height: wHeight,
+              width: wWidthDialog,
+            ),
+
+////////////
+// ENTETE
+////////////
+
+            Positioned(
+              top: 0,
+              left: 0,
+              child: Material(
+                borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+                child: Container(
+                  height: wHeightTitre - 9,
+                  width: 560,
+                  decoration: BoxDecoration(color: gColors.LinearGradient2, borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                        child: Text(
+                          "Catalogue rapide",
+                          style: gColors.bodyTitle1_B_G_20,
+                          textAlign: TextAlign.center,
+                        ),
                       ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: wWidthDialog,
+                    ],
+                  ),
+                ),
+              ),
+            ),
+
+///////////
+// PIED
+///////////
+            Positioned(
+              top: wHeightTitre + wHeightDet2 - 30,
+              left: wLeft,
+              child: Container(
+                  child: Container(
+                width: 560,
+                height: wHeightPied,
+                padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                decoration: BoxDecoration(
+                  color: gColors.LinearGradient2,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      color: gColors.LinearGradient4,
+                      height: 1,
+                    ),
+                    Container(
+                      height: 18,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: gColors.primaryRed,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Container(
+                            width: 110,
+                            height: wHeightBtnValider,
+                            padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
                             child: Text(
-                              "Catalogue rapide",
-                              style: gColors.bodyTitle1_B_G_20,
+                              "Annuler",
+                              style: gColors.bodyTitle1_B_W24,
                               textAlign: TextAlign.center,
                             ),
                           ),
-                          Container(
-                            height: 10,
+                          onPressed: () async {
+                            Navigator.pop(context);
+                          },
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: ListArticle_Ebpsearchresult.length > 0 ? gColors.blueCyan : gColors.LinearGradient4,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              )),
+                          child: Container(
+                            width: 110,
+                            height: wHeightBtnValider,
+                            padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
+                            child: Text(
+                              "Ouvrir",
+                              style: gColors.bodyTitle1_B_W24,
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                        ],
-                      ),
-                    ),
-
-                    Container(
-                      height: wHeightDet2 - 30,
-                    ),
-
-// Pied
-                    Container(
-                        child: Container(
-                      width: wWidthDialog,
-                      height: wHeightPied,
-                      padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                      decoration: BoxDecoration(
-                        color: gColors.LinearGradient2,
-                        borderRadius: BorderRadius.circular(15),
-                      ),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            color: gColors.LinearGradient4,
-                            height: 1,
-                          ),
-                          Container(
-                            height: 18,
-                          ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                  backgroundColor: gColors.primaryRed,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  ),
+                          onPressed: () async {
+                            if (ListArticle_Ebpsearchresult.length > 0) {
+                              await showDialog(
+                                context: context,
+                                builder: (BuildContext context) => DCL_Article_Det(
+                                  wTitre: "Listing",
                                 ),
-                                child: Container(
-                                  width: 110,
-                                  height: wHeightBtnValider,
-                                  padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
-                                  child: Text(
-                                    "Annuler",
-                                    style: gColors.bodyTitle1_B_W24,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  Navigator.pop(context);
-                                },
+                              );
+                              setState(() {});
+                            }
+                          },
+                        ),
+                        ElevatedButton(
+                            style: ElevatedButton.styleFrom(
+                                backgroundColor: ListArticle_Ebpsearchresult.length > 0 ? gColors.primaryGreen : gColors.LinearGradient4,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(8),
+                                )),
+                            child: Container(
+                              width: 110,
+                              height: wHeightBtnValider,
+                              padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
+                              child: Text(
+                                "Ajouter",
+                                style: gColors.bodyTitle1_B_W24,
+                                textAlign: TextAlign.center,
                               ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: ListArticle_Ebpsearchresult.length > 0 ? gColors.blueCyan : gColors.LinearGradient4,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    )),
-                                child: Container(
-                                  width: 110,
-                                  height: wHeightBtnValider,
-                                  padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
-                                  child: Text(
-                                    "Ouvrir",
-                                    style: gColors.bodyTitle1_B_W24,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  if (ListArticle_Ebpsearchresult.length > 0) {
-                                    await showDialog(
-                                      context: context,
-                                      builder: (BuildContext context) => DCL_Article_Det(
-                                        wTitre: "Listing",
-                                      ),
-                                    );
-                                  }
-                                },
-                              ),
-                              ElevatedButton(
-                                style: ElevatedButton.styleFrom(
-                                    backgroundColor: gColors.primaryGreen,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(8),
-                                    )),
-                                child: Container(
-                                  width: 110,
-                                  height: wHeightBtnValider,
-                                  padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
-                                  child: Text(
-                                    "Ajouter",
-                                    style: gColors.bodyTitle1_B_W24,
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ),
-                                onPressed: () async {
-                                  Navigator.pop(context);
-                                },
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    )),
+                            ),
+                            onPressed: () async {
+                              if (ListArticle_Ebpsearchresult.length > 0) {
+                                int wOrder = Srv_DbTools.getLastOrder() + 1;
+                                if (Srv_DbTools.gDCL_Det.DCL_DetID != -1) {
+                                  wOrder = Srv_DbTools.gDCL_Det.DCL_Det_Ordre!;
+                                }
+
+                                for (int i = 0; i < Srv_DbTools.ListArticle_Ebpsearchresult.length; i++) {
+                                  Article_Ebp wArticle_Ebp = Srv_DbTools.ListArticle_Ebpsearchresult[i];
+
+                                  if (!wArticle_Ebp.Art_Sel) continue;
+
+                                  print(" wOrder $wOrder");
+
+                                  DCL_Det aDCL_Det = DCL_Det();
+                                  aDCL_Det.DCL_Det_EntID = Srv_DbTools.gDCL_Ent.DCL_EntID;
+                                  aDCL_Det.DCL_Det_Type = "A";
+                                  aDCL_Det.DCL_Det_ParcsArtId = 0;
+                                  aDCL_Det.DCL_Det_Ordre = wOrder++;
+                                  aDCL_Det.DCL_Det_NoArt = wArticle_Ebp.Article_codeArticle;
+                                  aDCL_Det.DCL_Det_Lib = wArticle_Ebp.Article_descriptionCommercialeEnClair;
+                                  aDCL_Det.DCL_Det_Qte = wArticle_Ebp.Art_Qte;
+                                  aDCL_Det.DCL_Det_PU = wArticle_Ebp.Article_PVHT;
+                                  aDCL_Det.DCL_Det_RemP = 0;
+                                  aDCL_Det.DCL_Det_RemMt = 0;
+                                  aDCL_Det.DCL_Det_Livr = 0;
+                                  aDCL_Det.DCL_Det_DateLivr = "";
+                                  aDCL_Det.DCL_Det_Rel = 0;
+                                  aDCL_Det.DCL_Det_DateRel = "";
+                                  aDCL_Det.DCL_Det_Statut = "";
+                                  aDCL_Det.DCL_Det_Note = "";
+                                  await Srv_DbTools.InsertUpdateDCL_Det(aDCL_Det);
+                                }
+                              }
+                              Navigator.pop(context);
+                            })
+                      ],
+                    )
                   ],
-                )),
+                ),
+              )),
+            ),
 
-            // Content
+///////////
+// Content
+///////////
+
             Positioned(
                 top: wHeightTitre - 15,
                 left: wLeft,
                 child: Container(
                   color: Colors.white,
                   height: wHeightDet2,
-                  width: wWidthDialog,
+                  width: 560,
                   child: Container(
                     child: Container(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
@@ -411,24 +473,8 @@ class DCL_ArticlesState extends State<DCL_Articles> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Entete_Btn_Search(),
-                          Container(
-                            height: 0,
-                            decoration: BoxDecoration(
-                              boxShadow: [
-                                BoxShadow(
-                                  color: Colors.grey.withOpacity(0.9),
-                                  spreadRadius: 1,
-                                  blurRadius: 2,
-                                  offset: Offset(0, 2),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Container(
-                            height: 3,
-                          ),
+                          gColors.ombre(),
                           buildDesc(context),
-
 //Spacer(),
                         ],
                       ),
@@ -494,7 +540,15 @@ class DCL_ArticlesState extends State<DCL_Articles> {
     );
   }
 
+  List<String> selectedItems_Grp = [];
+  final TextEditingController searchCtrl_Grp = TextEditingController();
+
   Widget DropdownFiltreGrp() {
+    print(" DropdownFiltreGrp ListParam_FiltreGrp ${ListParam_FiltreGrp.length}");
+
+
+    if (ListParam_FiltreGrp.length == 0) return Container();
+
     return Container(
         child: Row(children: [
       Container(
@@ -521,117 +575,140 @@ class DCL_ArticlesState extends State<DCL_Articles> {
           ],
         ),
       ),
-      if (ListParam_FiltreGrp.length > 0)
-        Container(
-          width: 308,
-          child: DropdownButtonHideUnderline(
-              child: DropdownButton2(
-            hint: Text(
-              '  Séléctionner un groupe',
-              style: gColors.bodyTitle1_N_Gr,
-            ),
-            items: ListParam_FiltreGrp.map((item) => DropdownMenuItem<String>(
-                  value: item,
-                  child: Container(
-                    width: 284,
-                    child: Text(
-                      "  ${item}",
-                      maxLines: 1,
-                      style: gColors.bodyTitle1_N_Gr,
+      Container(
+        width: 310,
+        child: DropdownButtonHideUnderline(
+            child: DropdownButton2(
+          hint: Text(
+            '  Séléctionner un groupe',
+            style: gColors.bodyTitle1_N_Gr,
+          ),
+          // isExpanded: true,
+          items: ListParam_FiltreGrp.map((item) {
+            return DropdownMenuItem(
+              value: item,
+              enabled: false,
+              child: StatefulBuilder(
+                builder: (context, menuSetState) {
+                  final isSelected = selectedItems_Grp.contains(item);
+                  return InkWell(
+                    onTap: () {
+                      isSelected ? selectedItems_Grp.remove(item) : selectedItems_Grp.add(item);
+                      onChangegrp();
+                      menuSetState(() {});
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                      color: Colors.white,
+                      height: 56,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              item,
+                              style: gColors.bodyTitle1_N_Gr,
+                            ),
+                          ),
+                          if (isSelected) const Icon(Icons.check)
+                        ],
+                      ),
                     ),
-                  ),
-                )).toList(),
-            value: FiltreGrp,
-            onChanged: (value) {
-              setState(() {
-                String sValue = value as String;
-                if (FiltreGrp != sValue) {
-                  FiltreGrp = sValue as String;
-                  print(">>>>>>>>>>>>>>>>> FiltreGrp ${FiltreGrp}");
-
-                  if (FiltreGrp == "Tous") {
-                    ListParam_FiltreFam.clear();
-                    ListParam_FiltreFam.add("Tous");
-                    FiltreFam = "Tous";
-                    for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
-                      Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
-                      if (!ListParam_FiltreFam.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam)) ListParam_FiltreFam.add(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam);
-                    }
-                    ListParam_FiltreSousFam.clear();
-                    ListParam_FiltreSousFam.add("Tous");
-                    FiltreSousFam = "Tous";
-                    for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
-                      Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
-                      if (!ListParam_FiltreSousFam.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam)) ListParam_FiltreSousFam.add(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam);
-                    }
-                  } else {
-                    ListParam_FiltreFam.clear();
-                    ListParam_FiltreFam.add("Tous");
-                    FiltreFam = "Tous";
-
-                    ListParam_FiltreSousFam.clear();
-                    ListParam_FiltreSousFam.add("Tous");
-                    FiltreSousFam = "Tous";
-                    for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
-                      Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_EbpGrp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
-
-                      if (wArticle_GrpFamSsFam_EbpGrp.Article_GrpFamSsFam_Groupe == FiltreGrp) {
-                        if (!ListParam_FiltreFam.contains(wArticle_GrpFamSsFam_EbpGrp.Article_GrpFamSsFam_Fam)) {
-                          ListParam_FiltreFam.add(wArticle_GrpFamSsFam_EbpGrp.Article_GrpFamSsFam_Fam);
-
-                          for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
-                            Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_EbpFam = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
-                            if (wArticle_GrpFamSsFam_EbpFam.Article_GrpFamSsFam_Fam == wArticle_GrpFamSsFam_EbpGrp.Article_GrpFamSsFam_Fam) {
-                              if (!ListParam_FiltreSousFam.contains(wArticle_GrpFamSsFam_EbpFam.Article_GrpFamSsFam_Sous_Fam)) ListParam_FiltreSousFam.add(wArticle_GrpFamSsFam_EbpFam.Article_GrpFamSsFam_Sous_Fam);
-                            }
-                          }
-                        }
-                      }
-                    }
-
-                    Filtre();
-                  }
-                }
-              });
-            },
-            buttonStyleData: ButtonStyleData(
-              height: 44,
-              width: wDropdown,
-            ),
-            menuItemStyleData: const MenuItemStyleData(
-              height: 32,
-            ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight: 750,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: Colors.black,
-                ),
-                color: Colors.white,
+                  );
+                },
               ),
+            );
+          }).toList(),
+          onChanged: (value) {
+            print("zz");
+          },
+          value: selectedItems_Grp.isEmpty ? null : selectedItems_Grp.last,
+          selectedItemBuilder: (context) {
+            return ListParam_FiltreGrp.map(
+              (item) {
+                return Container(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                  width: 252,
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text(
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                    selectedItems_Grp.join(', '),
+                    style: gColors.bodyTitle1_N_Gr,
+                    maxLines: 1,
+                  ),
+                );
+              },
+            ).toList();
+          },
+          menuItemStyleData: const MenuItemStyleData(
+            padding: const EdgeInsets.fromLTRB(1, 0, 0, 0),
+            height: 57,
+          ),
+          dropdownSearchData: DropdownSearchData(
+            searchController: searchCtrl_Grp,
+            searchInnerWidgetHeight: 40,
+            searchInnerWidget: Column(
+              children: [
+                Container(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Filter les éléments',
+                      style: gColors.bodyTitle1_B_Gr,
+                    ),
+                  ],
+                ),
+                Container(
+                  height: 10,
+                ),
+                Container(
+                  height: 1,
+                  color: gColors.LinearGradient3,
+                ),
+                gColors.ombre(),
+                Container(
+                  height: 2,
+                ),
+              ],
             ),
-          )),
-        ),
-      if (ListParam_FiltreGrp.length > 0)
+            searchMatchFn: (item, searchValue) {
+              return item.value.toString().toLowerCase().contains(searchValue.toLowerCase());
+            },
+          ),
+
+          dropdownStyleData: DropdownStyleData(
+            maxHeight: 750,
+            width: 358,
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+            scrollPadding: const EdgeInsets.fromLTRB(0, 0, 2, 0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: Colors.black,
+              ),
+              color: gColors.LinearGradient2,
+            ),
+          ),
+        )),
+      ),
+
+
+    if (ListParam_FiltreGrp.length > 0)
         InkWell(
           onTap: () async {
-            FiltreGrp = "Tous";
+            FiltreGrp = "";
+            selectedItems_Grp.clear();
+            selectedItems_Fam.clear();
             ListParam_FiltreFam.clear();
-            ListParam_FiltreFam.add("Tous");
-            FiltreFam = "Tous";
-            for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
-              Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
-              if (!ListParam_FiltreFam.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam)) ListParam_FiltreFam.add(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam);
-            }
+            FiltreFam = "";
+            selectedItems_SousFam.clear();
             ListParam_FiltreSousFam.clear();
-            ListParam_FiltreSousFam.add("Tous");
-            FiltreSousFam = "Tous";
-            for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
-              Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
-              if (!ListParam_FiltreSousFam.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam)) ListParam_FiltreSousFam.add(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam);
-            }
-            setState(() {});
+            FiltreSousFam = "";
+            onChangegrp();
           },
           child: Image.asset(
             "assets/images/Btn_Clear.png",
@@ -643,8 +720,66 @@ class DCL_ArticlesState extends State<DCL_Articles> {
     ]));
   }
 
+  void onChangegrp() {
+    print(" ONCHANGE ONCHANGE ONCHANGE ONCHANGE");
+
+    setState(() {
+      String sValue = selectedItems_Grp.join(', ');
+
+      FiltreGrp = sValue as String;
+      print(">>>>>>>>>>>>>>>>> FiltreGrp ${FiltreGrp}");
+
+      if (FiltreGrp == "") {
+        ListParam_FiltreFam.clear();
+        FiltreFam = "";
+        for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
+          Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
+          if (!ListParam_FiltreFam.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam)) ListParam_FiltreFam.add(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam);
+        }
+        ListParam_FiltreSousFam.clear();
+        FiltreSousFam = "";
+        for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
+          Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
+          if (!ListParam_FiltreSousFam.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam)) ListParam_FiltreSousFam.add(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam);
+        }
+      } else {
+        ListParam_FiltreFam.clear();
+        FiltreFam = "";
+
+        ListParam_FiltreSousFam.clear();
+        FiltreSousFam = "";
+        for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
+          Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_EbpGrp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
+
+          if (FiltreGrp.contains(wArticle_GrpFamSsFam_EbpGrp.Article_GrpFamSsFam_Groupe)) {
+            if (!ListParam_FiltreFam.contains(wArticle_GrpFamSsFam_EbpGrp.Article_GrpFamSsFam_Fam)) {
+              ListParam_FiltreFam.add(wArticle_GrpFamSsFam_EbpGrp.Article_GrpFamSsFam_Fam);
+
+              for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
+                Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_EbpFam = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
+                if (wArticle_GrpFamSsFam_EbpFam.Article_GrpFamSsFam_Fam == wArticle_GrpFamSsFam_EbpGrp.Article_GrpFamSsFam_Fam) {
+                  if (!ListParam_FiltreSousFam.contains(wArticle_GrpFamSsFam_EbpFam.Article_GrpFamSsFam_Sous_Fam)) ListParam_FiltreSousFam.add(wArticle_GrpFamSsFam_EbpFam.Article_GrpFamSsFam_Sous_Fam);
+                }
+              }
+            }
+          }
+        }
+
+        Filtre();
+      }
+    });
+  }
+
+  List<String> selectedItems_Fam = [];
+  final TextEditingController searchCtrl_Fam = TextEditingController();
+
   Widget DropdownFiltreFam() {
-    return Container(
+    print(" DropdownFiltreFam ListParam_FiltreFam ${ListParam_FiltreFam.length}");
+
+    if (ListParam_FiltreFam.length == 0) return Container();
+
+
+      return Container(
         child: Row(children: [
       Container(
         width: 140,
@@ -670,83 +805,136 @@ class DCL_ArticlesState extends State<DCL_Articles> {
           ],
         ),
       ),
-      if (ListParam_FiltreFam.length > 0)
-        Container(
-          width: 308,
-          child: DropdownButtonHideUnderline(
-              child: DropdownButton2(
-            hint: Text(
-              '  Séléctionner une Famille',
-              style: gColors.bodyTitle1_N_Gr,
-            ),
-            items: ListParam_FiltreFam.map((item) => DropdownMenuItem<String>(
-                  value: item,
-                  child: Container(
-                    width: 284,
-                    child: Text(
-                      "  ${item}",
-                      maxLines: 1,
-                      style: gColors.bodyTitle1_N_Gr,
+      Container(
+        width: 310,
+        child: DropdownButtonHideUnderline(
+            child: DropdownButton2(
+          hint: Text(
+            '  Séléctionner une famille',
+            style: gColors.bodyTitle1_N_Gr,
+          ),
+          // isExpanded: true,
+
+          items: ListParam_FiltreFam.map((item) {
+            return DropdownMenuItem(
+              value: item,
+              enabled: false,
+              child: StatefulBuilder(
+                builder: (context, menuSetState) {
+                  final isSelected = selectedItems_Fam.contains(item);
+                  return InkWell(
+                    onTap: () {
+                      isSelected ? selectedItems_Fam.remove(item) : selectedItems_Fam.add(item);
+                      onChangeFam();
+                      menuSetState(() {});
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                      color: Colors.white,
+                      height: 56,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              item,
+                              style: gColors.bodyTitle1_N_Gr,
+                            ),
+                          ),
+                          if (isSelected) const Icon(Icons.check)
+                        ],
+                      ),
                     ),
-                  ),
-                )).toList(),
-            value: FiltreFam,
-            onChanged: (value) {
-              setState(() {
-                String sValue = value as String;
-
-                if (FiltreFam != value) {
-                  FiltreFam = value as String;
-
-                  ListParam_FiltreSousFam.clear();
-                  ListParam_FiltreSousFam.add("Tous");
-                  FiltreSousFam = "Tous";
-                  for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
-                    Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
-                    if (wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam == FiltreFam) {
-                      if (!ListParam_FiltreSousFam.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam)) ListParam_FiltreSousFam.add(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam);
-                    }
-                  }
-                }
-                Filtre();
-              });
-            },
-            buttonStyleData: ButtonStyleData(
-              height: 44,
-              width: wDropdown,
-            ),
-            menuItemStyleData: const MenuItemStyleData(
-              height: 32,
-            ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight: 750,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: Colors.black,
-                ),
-                color: Colors.white,
+                  );
+                },
               ),
+            );
+          }).toList(),
+              onChanged: (value) {
+                print("zz");
+              },
+
+          value: selectedItems_Fam.isEmpty ? null : selectedItems_Fam.last,
+          selectedItemBuilder: (context) {
+            return ListParam_FiltreFam.map(
+              (item) {
+                return Container(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                  width: 252,
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text(
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                    selectedItems_Fam.join(', '),
+                    style: gColors.bodyTitle1_N_Gr,
+                    maxLines: 1,
+                  ),
+                );
+              },
+            ).toList();
+          },
+
+          menuItemStyleData: const MenuItemStyleData(
+            padding: const EdgeInsets.fromLTRB(1, 0, 0, 0),
+            height: 57,
+          ),
+          dropdownSearchData: DropdownSearchData(
+            searchController: searchCtrl_Fam,
+            searchInnerWidgetHeight: 40,
+            searchInnerWidget: Column(
+              children: [
+                Container(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Filter les éléments',
+                      style: gColors.bodyTitle1_B_Gr,
+                    ),
+                  ],
+                ),
+                Container(
+                  height: 10,
+                ),
+                Container(
+                  height: 1,
+                  color: gColors.LinearGradient3,
+                ),
+                gColors.ombre(),
+                Container(
+                  height: 2,
+                ),
+              ],
             ),
-          )),
-        ),
+            searchMatchFn: (item, searchValue) {
+              return item.value.toString().toLowerCase().contains(searchValue.toLowerCase());
+            },
+          ),
+
+          dropdownStyleData: DropdownStyleData(
+            maxHeight: 750,
+            width: 358,
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+            scrollPadding: const EdgeInsets.fromLTRB(0, 0, 2, 0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: Colors.black,
+              ),
+              color: gColors.LinearGradient2,
+            ),
+          ),
+        )),
+      ),
       if (ListParam_FiltreFam.length > 0)
         InkWell(
           onTap: () async {
+            FiltreFam = "";
+            selectedItems_Fam.clear();
             ListParam_FiltreFam.clear();
-            ListParam_FiltreFam.add("Tous");
-            FiltreFam = "Tous";
-            for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
-              Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
-              if (!ListParam_FiltreFam.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam)) ListParam_FiltreFam.add(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam);
-            }
-            ListParam_FiltreSousFam.clear();
-            ListParam_FiltreSousFam.add("Tous");
-            FiltreSousFam = "Tous";
-            for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
-              Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
-              if (!ListParam_FiltreSousFam.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam)) ListParam_FiltreSousFam.add(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam);
-            }
+            onChangeFam();
             setState(() {});
           },
           child: Image.asset(
@@ -759,7 +947,34 @@ class DCL_ArticlesState extends State<DCL_Articles> {
     ]));
   }
 
+  void onChangeFam() {
+    print(" ONCHANGE ONCHANGE ONCHANGE ONCHANGE");
+
+    String value = selectedItems_Fam.join(', ');
+
+    if (FiltreFam != value) {
+      FiltreFam = value as String;
+
+      ListParam_FiltreSousFam.clear();
+      FiltreSousFam = "";
+      for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
+        Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
+        if (FiltreFam.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam)) {
+          if (!ListParam_FiltreSousFam.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam)) ListParam_FiltreSousFam.add(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam);
+        }
+      }
+    }
+    Filtre();
+  }
+
+  List<String> selectedItems_SousFam = [];
+  final TextEditingController searchCtrl_SousFam = TextEditingController();
+
   Widget DropdownFiltreSousFam() {
+    print(" DropdownFiltreSousFam ListParam_FiltreSousFam ${ListParam_FiltreSousFam.length}");
+
+    if (ListParam_FiltreSousFam.length == 0) return Container();
+
     return Container(
         child: Row(children: [
       Container(
@@ -780,68 +995,142 @@ class DCL_ArticlesState extends State<DCL_Articles> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              'Sous-famille',
+              'SousFamille',
               style: gColors.bodyTitle1_B_W,
             ),
           ],
         ),
       ),
-      if (ListParam_FiltreSousFam.length > 0)
-        Container(
-          width: 308,
-          child: DropdownButtonHideUnderline(
-              child: DropdownButton2(
-            hint: Text(
-              '  Séléctionner une SousFamille',
-              style: gColors.bodyTitle1_N_Gr,
-            ),
-            items: ListParam_FiltreSousFam.map((item) => DropdownMenuItem<String>(
-                  value: item,
-                  child: Container(
-                    width: 284,
-                    child: Text(
-                      "  ${item}",
-                      maxLines: 1,
-                      style: gColors.bodyTitle1_N_Gr,
+      Container(
+        width: 310,
+        child: DropdownButtonHideUnderline(
+            child: DropdownButton2(
+          hint: Text(
+            '  Séléctionner une SousFamille',
+            style: gColors.bodyTitle1_N_Gr,
+          ),
+          // isExpanded: true,
+
+          items: ListParam_FiltreSousFam.map((item) {
+            return DropdownMenuItem(
+              value: item,
+              enabled: false,
+              child: StatefulBuilder(
+                builder: (context, menuSetState) {
+                  final isSelected = selectedItems_SousFam.contains(item);
+                  return InkWell(
+                    onTap: () {
+                      isSelected ? selectedItems_SousFam.remove(item) : selectedItems_SousFam.add(item);
+                      onChangeSousFam();
+                      menuSetState(() {});
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.fromLTRB(5, 0, 5, 0),
+                      color: Colors.white,
+                      height: 56,
+                      child: Row(
+                        children: [
+                          Expanded(
+                            child: Text(
+                              item,
+                              style: gColors.bodyTitle1_N_Gr,
+                            ),
+                          ),
+                          if (isSelected) const Icon(Icons.check)
+                        ],
+                      ),
                     ),
-                  ),
-                )).toList(),
-            value: FiltreSousFam,
-            onChanged: (value) {
-              String sValue = value as String;
-              FiltreSousFam = sValue as String;
-              Filtre();
-            },
-            buttonStyleData: ButtonStyleData(
-              height: 44,
-              width: wDropdown,
-            ),
-            menuItemStyleData: const MenuItemStyleData(
-              height: 32,
-            ),
-            dropdownStyleData: DropdownStyleData(
-              maxHeight: 750,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(8),
-                border: Border.all(
-                  color: Colors.black,
-                ),
-                color: Colors.white,
+                  );
+                },
               ),
+            );
+          }).toList(),
+              onChanged: (value) {
+                print("zz");
+              },
+
+          value: selectedItems_SousFam.isEmpty ? null : selectedItems_SousFam.last,
+          selectedItemBuilder: (context) {
+            return ListParam_FiltreSousFam.map(
+              (item) {
+                return Container(
+                  padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                  width: 252,
+                  alignment: AlignmentDirectional.centerStart,
+                  child: Text(
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: false,
+                    selectedItems_SousFam.join(', '),
+                    style: gColors.bodyTitle1_N_Gr,
+                    maxLines: 1,
+                  ),
+                );
+              },
+            ).toList();
+          },
+
+          menuItemStyleData: const MenuItemStyleData(
+            padding: const EdgeInsets.fromLTRB(1, 0, 0, 0),
+            height: 57,
+          ),
+          dropdownSearchData: DropdownSearchData(
+            searchController: searchCtrl_SousFam,
+            searchInnerWidgetHeight: 40,
+            searchInnerWidget: Column(
+              children: [
+                Container(
+                  height: 10,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      'Filter les éléments',
+                      style: gColors.bodyTitle1_B_Gr,
+                    ),
+                  ],
+                ),
+                Container(
+                  height: 10,
+                ),
+                Container(
+                  height: 1,
+                  color: gColors.LinearGradient3,
+                ),
+                gColors.ombre(),
+                Container(
+                  height: 2,
+                ),
+              ],
             ),
-          )),
-        ),
-      if (ListParam_FiltreFam.length > 0)
+            searchMatchFn: (item, searchValue) {
+              return item.value.toString().toLowerCase().contains(searchValue.toLowerCase());
+            },
+          ),
+
+          dropdownStyleData: DropdownStyleData(
+            maxHeight: 750,
+            width: 358,
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+            scrollPadding: const EdgeInsets.fromLTRB(0, 0, 2, 0),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(8),
+              border: Border.all(
+                color: Colors.black,
+              ),
+              color: gColors.LinearGradient2,
+            ),
+          ),
+        )),
+      ),
+      if (ListParam_FiltreSousFam.length > 0)
         InkWell(
           onTap: () async {
+            FiltreSousFam = "";
+            selectedItems_SousFam.clear();
             ListParam_FiltreSousFam.clear();
-            ListParam_FiltreSousFam.add("Tous");
-            FiltreSousFam = "Tous";
-            for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
-              Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
-              if (!ListParam_FiltreSousFam.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam)) ListParam_FiltreSousFam.add(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam);
-            }
-            setState(() {});
+            onChangeSousFam();
           },
           child: Image.asset(
             "assets/images/Btn_Clear.png",
@@ -851,6 +1140,17 @@ class DCL_ArticlesState extends State<DCL_Articles> {
           ),
         ),
     ]));
+  }
+
+  void onChangeSousFam() {
+    print(" ONCHANGE ONCHANGE ONCHANGE ONCHANGE");
+
+    String value = selectedItems_SousFam.join(', ');
+
+    if (FiltreSousFam != value) {
+      FiltreSousFam = value as String;
+    }
+    Filtre();
   }
 
   //********************************************************************
@@ -867,25 +1167,24 @@ class DCL_ArticlesState extends State<DCL_Articles> {
 
     int wCount = 0;
     bool bSup50 = false;
-    List<Article_Ebp> ListArticle_Ebpsearchresult = [];
-    for (int i = 0; i < Srv_DbTools.ListArticle_Ebpsearchresult.length; i++) {
-      Article_Ebp wArticle_Ebp = Srv_DbTools.ListArticle_Ebpsearchresult[i];
-      if (wBtn == 0) {
-        if (wCount++ > 50) {
-          bSup50 = true;
-          break;
-        }
-      }
 
-      if (wBtn == 1 && wArticle_Ebp.Article_New) {
-        if (wCount++ > 50) {
-          bSup50 = true;
-          break;
-        }
-      }
+    List<Article_Ebp> ListArticle_Ebpsearchresult = [];
+    if (wBtn == 1) {
+      ListArticle_Ebpsearchresult = Srv_DbTools.ListArticle_Ebpsearchresult.where((element) => element.Article_New == true).toList();
+    } else if (wBtn == 2) {
+      ListArticle_Ebpsearchresult = Srv_DbTools.ListArticle_Ebpsearchresult.where((element) => Srv_DbTools.gUserLogin_Art_Fav.contains(element.Article_codeArticle)).toList();
+      print("wBtn == 2 ${ListArticle_Ebpsearchresult.length}");
+    } else {
+      ListArticle_Ebpsearchresult = Srv_DbTools.ListArticle_Ebpsearchresult;
     }
 
-    double wHeigth = wHeightDet2 - 75;
+    int wLen = ListArticle_Ebpsearchresult.length;
+    if (ListArticle_Ebpsearchresult.length > 50) {
+      wLen = 52;
+      bSup50 = true;
+    }
+
+    double wHeigth = wHeightDet2 - 78;
     if (wBtnFam)
       wHeigth = wHeigth - 250;
     else if (wBtnSearch) wHeigth = wHeigth - 100;
@@ -904,9 +1203,10 @@ class DCL_ArticlesState extends State<DCL_Articles> {
               child: ListView.separated(
             padding: const EdgeInsets.all(0.0),
             shrinkWrap: true,
-            itemCount: bSup50 ? 52 : Srv_DbTools.ListArticle_Ebpsearchresult.length,
+//            itemCount: bSup50 ? 52 : Srv_DbTools.ListArticle_Ebpsearchresult.length,
+            itemCount: wLen,
             itemBuilder: (context, index) {
-              Article_Ebp element = Srv_DbTools.ListArticle_Ebpsearchresult[index];
+              Article_Ebp element = ListArticle_Ebpsearchresult[index];
               Widget wRowSaisie = Container();
 
               if (bSup50 && index == 51) {
@@ -920,11 +1220,9 @@ class DCL_ArticlesState extends State<DCL_Articles> {
                 );
               } else {
                 if (btnSel_Aff) {
-                  if (wBtn == 0) wRowSaisie = RowSaisieBig(element, LargeurCol, LargeurCol2, H2);
-                  if (wBtn == 1 && element.Article_New) wRowSaisie = RowSaisieBig(element, LargeurCol, LargeurCol2, H2);
+                  wRowSaisie = RowSaisieBig(element, LargeurCol, LargeurCol2, H2);
                 } else {
-                  if (wBtn == 0) wRowSaisie = RowSaisie(element, LargeurCol, LargeurCol2, H2);
-                  if (wBtn == 1 && element.Article_New) wRowSaisie = RowSaisie(element, LargeurCol, LargeurCol2, H2);
+                  wRowSaisie = RowSaisie(element, LargeurCol, LargeurCol2, H2);
                 }
               }
 
@@ -942,10 +1240,10 @@ class DCL_ArticlesState extends State<DCL_Articles> {
   Future<Image> GetImage(Article_Ebp art, double wIcoWidth) async {
     if (art.wImgeTrv) return art.wImage!;
 
-    print("  row ${art.Article_codeArticle}");
+    await Srv_DbTools.getArticlesImg_Ebp( art.Article_codeArticle);
+    gObj.pic = base64Decode(Srv_DbTools.gArticlesImg_Ebp.ArticlesImg_Image);
 
-    String wImgPath = "${Srv_DbTools.SrvImg}ArticlesImg_Ebp_${art.Article_codeArticle}.jpg";
-    gObj.pic = await gObj.networkImageToByte(wImgPath);
+
     if (gObj.pic.length > 0) {
       art.wImgeTrv = true;
       art.wImage = Image.memory(
@@ -987,7 +1285,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
         if (image.hasData) {
           return image.data!;
         } else {
-          return new Container(width: 100);
+          return new Container(height: 100);
         }
       },
     );
@@ -1067,7 +1365,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
           Container(
             height: 100,
             color: gColors.white,
-            padding: EdgeInsets.fromLTRB(0, 12, 0, 12),
+            padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -1085,12 +1383,12 @@ class DCL_ArticlesState extends State<DCL_Articles> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
-                      height: 40,
-                      padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+                      height: 68,
+                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: Text(
                         "${art.Article_descriptionCommercialeEnClair}",
                         style: gColors.bodyTitle1_B_Gr,
-                        maxLines: 2,
+                        maxLines: 3,
                       ),
                     ),
                     Row(
@@ -1098,18 +1396,18 @@ class DCL_ArticlesState extends State<DCL_Articles> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                          height: 20,
-                          padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+                          height: 16,
+                          padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
                           child: Text(
                             "${art.Article_codeArticle}",
                             style: gColors.bodyTitle1_N_Gr,
                           ),
                         ),
                         Container(
-                          height: 20,
-                          padding: EdgeInsets.fromLTRB(0, 2, 18, 0),
+                          height: 16,
+                          padding: EdgeInsets.fromLTRB(0, 0, 18, 0),
                           child: Text(
-                            "PV HT ${formatter.format(art.Article_PVHT).replaceAll(',', ' ')}€",
+                            "PV HT ${formatter.format(art.Article_PVHT).replaceAll(',', ' ').replaceAll('.', ',')}€",
                             style: gColors.bodyTitle1_N_Gr,
                           ),
                         ),
@@ -1139,24 +1437,9 @@ class DCL_ArticlesState extends State<DCL_Articles> {
           ),
           Container(
             height: 1,
-            color: gColors.LinearGradient4,
+            color: gColors.LinearGradient3,
           ),
-          Container(
-            height: 0,
-            decoration: BoxDecoration(
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.grey.withOpacity(0.9),
-                  spreadRadius: 1,
-                  blurRadius: 2,
-                  offset: Offset(0, 2),
-                ),
-              ],
-            ),
-          ),
-          Container(
-            height: 3,
-          ),
+          gColors.ombre(),
         ],
       ),
     );
@@ -1172,6 +1455,10 @@ class DCL_ArticlesState extends State<DCL_Articles> {
     if (wBtnFam)
       wHeigth = 307;
     else if (wBtnSearch) wHeigth = 147;
+
+    print(" BUILD ListParam_FiltreGrp ${ListParam_FiltreGrp.length}");
+    print(" BUILD ListParam_FiltreFam ${ListParam_FiltreFam.length}");
+    print(" BUILD ListParam_FiltreSousFam ${ListParam_FiltreSousFam.length}");
 
     return Container(
         color: gColors.LinearGradient2,
@@ -1311,22 +1598,18 @@ class DCL_ArticlesState extends State<DCL_Articles> {
                       children: [
                         InkWell(
                             onTap: () async {
-                              FiltreGrp = "Tous";
+                              FiltreGrp = "";
+                              selectedItems_Grp.clear();
+                              ListParam_FiltreGrp.clear();
+
+                              FiltreFam = "";
+                              selectedItems_Fam.clear();
                               ListParam_FiltreFam.clear();
-                              ListParam_FiltreFam.add("Tous");
-                              FiltreFam = "Tous";
-                              for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
-                                Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
-                                if (!ListParam_FiltreFam.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam)) ListParam_FiltreFam.add(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam);
-                              }
+
+                              FiltreSousFam = "";
+                              selectedItems_SousFam.clear();
                               ListParam_FiltreSousFam.clear();
-                              ListParam_FiltreSousFam.add("Tous");
-                              FiltreSousFam = "Tous";
-                              for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
-                                Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
-                                if (!ListParam_FiltreSousFam.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam)) ListParam_FiltreSousFam.add(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam);
-                              }
-                              Filtre();
+                              Reload();
                             },
                             child: Row(
                               children: [

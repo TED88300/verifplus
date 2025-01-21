@@ -218,6 +218,7 @@ class _HTMLTextState extends State<HTMLText> {
                                 ),
                                 onPressed: () async {
                                   HTML_Text.gHTML_Text = await controller.getText();
+
                                   Navigator.pop(context);
                                 },
                               )
@@ -265,6 +266,7 @@ gColors.wLigne(),
                         ensureVisible: false,
                         minHeight: 500,
                         autoFocus: true,
+                        hintText : 'Saisir texte',
                         textStyle: _editorTextStyle,
                         hintTextStyle: _hintTextStyle,
                         hintTextAlign: TextAlign.start,

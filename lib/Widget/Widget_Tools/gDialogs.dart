@@ -7,10 +7,12 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Articles_Ebp.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_DCL_Det.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Img.dart';
+import 'package:verifplus/Widget/GestCo/DCL_Devis_Det.dart';
 import 'package:verifplus/Widget/Widget_Tools/ImagePainterTools.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gPhotos.dart';
@@ -32,14 +34,12 @@ class gDialogs {
     );
   }
 
-  static Future<void> Dialog_MsgBox(BuildContext context, String wTxt, String wTxt2, String wTxt3, String wImg,  String wLabel1,  String wLabel2) async {
+  static Future<void> Dialog_MsgBox(BuildContext context, String wTxt, String wTxt2, String wTxt3, String wImg, String wLabel1, String wLabel2) async {
     await showDialog(
       context: context,
-      builder: (BuildContext context) => MsgBoxDialog(wTxt: wTxt, wTxt2: wTxt2, wTxt3: wTxt3, wImg :wImg, wLabel1 :wLabel1, wLabel2 :wLabel2),
+      builder: (BuildContext context) => MsgBoxDialog(wTxt: wTxt, wTxt2: wTxt2, wTxt3: wTxt3, wImg: wImg, wLabel1: wLabel1, wLabel2: wLabel2),
     );
   }
-
-
 
   static Future<void> Dialog_MiseEnServ(BuildContext context) async {
     await showDialog(
@@ -59,6 +59,286 @@ class gDialogs {
     await showDialog(
       context: context,
       builder: (BuildContext context) => SelPeriodeDialog(),
+    );
+  }
+
+  static Future<void> Dialog_Action(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) => ActionDialog(),
+    );
+  }
+
+  static Future<void> Dialog_ActionSel(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) => ActionDialogSel(),
+    );
+  }
+
+
+  static Future<void> Dialog_ActionLigne(BuildContext context) async {
+    await showDialog(
+      context: context,
+      barrierColor: Color(0xC8000000),
+      builder: (BuildContext context) => ActionLigneDialog(),
+    );
+  }
+
+  static Future<void> Dialog_ActionDevis(BuildContext context) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) => ActionDialogDevis(),
+    );
+  }
+}
+
+//**********************************
+//**********************************
+//**********************************
+
+class ActionLigneDialog extends StatefulWidget {
+  @override
+  _ActionLigneDialogState createState() => _ActionLigneDialogState();
+}
+
+class _ActionLigneDialogState extends State<ActionLigneDialog> {
+  bool isSel = false;
+
+  @override
+  void initState() {}
+
+  @override
+  Widget build(BuildContext context) {
+    DCL_Devis_Det.gLongPressAction = 0;
+
+    return SimpleDialog(
+      insetPadding: EdgeInsets.only(left: 180, top: 240),
+      titlePadding: EdgeInsets.zero,
+      contentPadding: EdgeInsets.zero,
+      surfaceTintColor: Colors.transparent,
+      backgroundColor: gColors.transparent,
+      shadowColor: gColors.transparent,
+      children: [
+        Container(
+          color: gColors.transparent,
+          height: 550,
+          child: Stack(
+            children: [
+              Positioned(
+                right: 0,
+                bottom: 0,
+                width: 60,
+                height: 550,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30),
+                  ),
+                ),
+              ),
+              Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  InkWell(
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(0, 65, 15, 10),
+                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              width: 270,
+                              padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
+                              child: Text(
+                                'Ajouter ligne de texte',
+                                textAlign: TextAlign.right,
+                                style: gColors.bodyTitle1_N_W24,
+                              ),
+                            ),
+                            gColors.gCircle(gColors.TextColor2, wSize: 30),
+                          ],
+                        ),
+                      ),
+                      onTap: () async {
+                        DCL_Devis_Det.gLongPressAction = 1;
+                        Navigator.pop(context);
+                      }),
+                  InkWell(
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(0, 10, 15, 10),
+                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              width: 270,
+                              padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
+                              child: Text(
+                                'Dupliquer la ligne',
+                                textAlign: TextAlign.right,
+                                style: Srv_DbTools.gDCL_Det.DCL_DetID == -1 ? gColors.bodyTitle1_N_GD24 : gColors.bodyTitle1_N_W24,
+                              ),
+                            ),
+                            gColors.gCircle(gColors.TextColor2, wSize: 30),
+                          ],
+                        ),
+                      ),
+                      onTap: () async {
+                        if (Srv_DbTools.gDCL_Det.DCL_DetID == -1) return;
+                        DCL_Devis_Det.gSaveDCL_Det = Srv_DbTools.gDCL_Det;
+                        DCL_Devis_Det.gLongPressAction = 2;
+                        Navigator.pop(context);
+                      }),
+                  InkWell(
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(0, 10, 15, 10),
+                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              width: 270,
+                              padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
+                              child: Text(
+                                'Copier',
+                                textAlign: TextAlign.right,
+                                style: Srv_DbTools.gDCL_Det.DCL_DetID == -1 ? gColors.bodyTitle1_N_GD24 : gColors.bodyTitle1_N_W24,
+                              ),
+                            ),
+                            gColors.gCircle(gColors.TextColor2, wSize: 30),
+                          ],
+                        ),
+                      ),
+                      onTap: () async {
+                        if (Srv_DbTools.gDCL_Det.DCL_DetID == -1) return;
+                        DCL_Devis_Det.gSaveDCL_Det = Srv_DbTools.gDCL_Det;
+                        DCL_Devis_Det.gLongPressAction = 3;
+                        Navigator.pop(context);
+                      }),
+                  InkWell(
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(0, 10, 15, 10),
+                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              width: 270,
+                              padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
+                              child: Text(
+                                'Coller',
+                                textAlign: TextAlign.right,
+                                style: DCL_Devis_Det.gSaveDCL_Det.DCL_DetID == -1 ? gColors.bodyTitle1_N_GD24 : gColors.bodyTitle1_N_W24,
+                              ),
+                            ),
+                            gColors.gCircle(gColors.TextColor2, wSize: 30),
+                          ],
+                        ),
+                      ),
+                      onTap: () async {
+                        if (DCL_Devis_Det.gSaveDCL_Det.DCL_DetID == -1) return;
+                        DCL_Devis_Det.gLongPressAction = 4;
+                        Navigator.pop(context);
+                      }),
+                  InkWell(
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(0, 10, 15, 10),
+                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              width: 270,
+                              padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
+                              child: Text(
+                                'Couper',
+                                textAlign: TextAlign.right,
+                                style: Srv_DbTools.gDCL_Det.DCL_DetID == -1 ? gColors.bodyTitle1_N_GD24 : gColors.bodyTitle1_N_W24,
+                              ),
+                            ),
+                            gColors.gCircle(gColors.TextColor2, wSize: 30),
+                          ],
+                        ),
+                      ),
+                      onTap: () async {
+                        if (Srv_DbTools.gDCL_Det.DCL_DetID == -1) return;
+                        DCL_Devis_Det.gSaveDCL_Det = Srv_DbTools.gDCL_Det;
+                        DCL_Devis_Det.gLongPressAction = 5;
+                        Navigator.pop(context);
+                      }),
+                  InkWell(
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(0, 10, 15, 10),
+                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              width: 270,
+                              padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
+                              child: Text(
+                                'Ajouter sous-total',
+                                textAlign: TextAlign.right,
+                                style: gColors.bodyTitle1_N_W24,
+                              ),
+                            ),
+                            gColors.gCircle(gColors.TextColor2, wSize: 30),
+                          ],
+                        ),
+                      ),
+                      onTap: () async {
+                        DCL_Devis_Det.gLongPressAction = 6;
+                        Navigator.pop(context);
+                      }),
+                  InkWell(
+                      child: Container(
+                        margin: const EdgeInsets.fromLTRB(0, 10, 15, 10),
+                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Container(
+                              width: 270,
+                              padding: const EdgeInsets.fromLTRB(0, 0, 30, 0),
+                              child: Text(
+                                'Ajouter saut de page',
+                                textAlign: TextAlign.right,
+                                style: gColors.bodyTitle1_N_W24,
+                              ),
+                            ),
+                            gColors.gCircle(gColors.TextColor2, wSize: 30),
+                          ],
+                        ),
+                      ),
+                      onTap: () async {
+                        DCL_Devis_Det.gLongPressAction = 7;
+                        Navigator.pop(context);
+                      }),
+                ],
+              ),
+              Positioned(
+                right: 0,
+                top: 8,
+                width: 60,
+                height: 60,
+                child: InkWell(
+                    child: SvgPicture.asset(
+                      DCL_Devis_Det.wUpDown ? "assets/images/DCL_FlH.svg" : "assets/images/DCL_FlB.svg",
+                      height: 40,
+                      width: 40,
+                    ),
+                    onTap: () async {
+                      print("wUpDown");
+                      DCL_Devis_Det.wUpDown = !DCL_Devis_Det.wUpDown;
+                      setState(() {});
+                    }),
+              ),
+            ],
+          ),
+        ),
+      ],
     );
   }
 }
@@ -308,6 +588,458 @@ class _SelPeriodeDialogState extends State<SelPeriodeDialog> {
   }
 }
 
+//**********************************
+//**********************************
+//**********************************
+
+class ActionDialog extends StatefulWidget {
+  @override
+  _ActionDialogState createState() => _ActionDialogState();
+}
+
+class _ActionDialogState extends State<ActionDialog> {
+  bool isSel = false;
+
+  @override
+  void initState() {}
+
+  @override
+  Widget build(BuildContext context) {
+    return SimpleDialog(
+      insetPadding: EdgeInsets.only(left: 200, bottom: 300),
+      titlePadding: EdgeInsets.zero,
+      contentPadding: EdgeInsets.zero,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      surfaceTintColor: Colors.transparent,
+      backgroundColor: gColors.transparent,
+      shadowColor: gColors.transparent,
+      children: [
+        Container(
+            color: gColors.transparent,
+            height: 272,
+            margin: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+            child: Column(
+              children: [
+                Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InkWell(
+                          child: Container(
+                            margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                            decoration: BoxDecoration(
+                              color: Colors.orangeAccent,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '${Srv_DbTools.gDCL_Ent.DCL_Ent_Statut == 'Préparation' ? '✔︎ ' : ''}Préparation',
+                                  style: gColors.bodyTitle1_N_W24,
+                                ),
+                              ],
+                            ),
+                          ),
+                          onTap: () async {
+                            Srv_DbTools.gDCL_Ent.DCL_Ent_Statut = 'Préparation';
+                            Srv_DbTools.setDCL_Ent(Srv_DbTools.gDCL_Ent);
+                            Navigator.pop(context);
+                          }),
+                      InkWell(
+                          child: Container(
+                            margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                            decoration: BoxDecoration(
+                              color: Colors.blueAccent,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '${Srv_DbTools.gDCL_Ent.DCL_Ent_Statut == 'En cours' ? '✔︎ ' : ''}En cours',
+                                  style: gColors.bodyTitle1_N_W24,
+                                ),
+                              ],
+                            ),
+                          ),
+                          onTap: () async {
+                            Srv_DbTools.gDCL_Ent.DCL_Ent_Statut = 'En cours';
+                            Srv_DbTools.setDCL_Ent(Srv_DbTools.gDCL_Ent);
+                            Navigator.pop(context);
+                          }),
+                      InkWell(
+                          child: Container(
+                            margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                            decoration: BoxDecoration(
+                              color: gColors.primaryGreen,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '${Srv_DbTools.gDCL_Ent.DCL_Ent_Statut == 'Accepté' ? '✔︎ ' : ''}Accepté',
+                                  style: gColors.bodyTitle1_N_W24,
+                                ),
+                              ],
+                            ),
+                          ),
+                          onTap: () async {
+                            Srv_DbTools.gDCL_Ent.DCL_Ent_Statut = 'Accepté';
+                            Srv_DbTools.setDCL_Ent(Srv_DbTools.gDCL_Ent);
+                            Navigator.pop(context);
+                          }),
+                      InkWell(
+                          child: Container(
+                            margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                            decoration: BoxDecoration(
+                              color: gColors.red,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  '${Srv_DbTools.gDCL_Ent.DCL_Ent_Statut == 'Refusé' ? '✔︎ ' : ''}Refusé',
+                                  style: gColors.bodyTitle1_N_W24,
+                                ),
+                              ],
+                            ),
+                          ),
+                          onTap: () async {
+                            Srv_DbTools.gDCL_Ent.DCL_Ent_Statut = 'Refusé';
+                            Srv_DbTools.setDCL_Ent(Srv_DbTools.gDCL_Ent);
+                            Navigator.pop(context);
+                          }),
+                    ],
+                  ),
+                ),
+              ],
+            )),
+      ],
+    );
+  }
+}
+//**********************************
+//**********************************
+//**********************************
+
+class ActionDialogSel extends StatefulWidget {
+  @override
+  _ActionDialogSelState createState() => _ActionDialogSelState();
+}
+
+class _ActionDialogSelState extends State<ActionDialogSel> {
+  bool isSel = false;
+
+  @override
+  void initState() {}
+
+  @override
+  Widget build(BuildContext context) {
+    return SimpleDialog(
+      insetPadding: EdgeInsets.only(left: 90, bottom: 220),
+      titlePadding: EdgeInsets.zero,
+      contentPadding: EdgeInsets.zero,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      surfaceTintColor: Colors.transparent,
+      backgroundColor: gColors.transparent,
+      shadowColor: gColors.transparent,
+      children: [
+        Container(
+            color: gColors.transparent,
+            height: 342,
+            margin: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+            child: Column(
+              children: [
+                Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      InkWell(
+                          child: Container(
+                            margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                            decoration: BoxDecoration(
+                              color: gColors.LinearGradient4,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Tous',
+                                  style: gColors.bodyTitle1_N_W24,
+                                ),
+                              ],
+                            ),
+                          ),
+                          onTap: () async {
+                            DbTools.wStatusCde = 'Tous';
+
+                            Navigator.pop(context);
+                          }),
+                      InkWell(
+                          child: Container(
+                            margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                            decoration: BoxDecoration(
+                              color: Colors.orangeAccent,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Préparation',
+                                  style: gColors.bodyTitle1_N_W24,
+                                ),
+                              ],
+                            ),
+                          ),
+                          onTap: () async {
+                            DbTools.wStatusCde = 'Préparation';
+
+                            Navigator.pop(context);
+                          }),
+                      InkWell(
+                          child: Container(
+                            margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                            decoration: BoxDecoration(
+                              color: Colors.blueAccent,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'En cours',
+                                  style: gColors.bodyTitle1_N_W24,
+                                ),
+                              ],
+                            ),
+                          ),
+                          onTap: () async {
+                            DbTools.wStatusCde = 'En cours';
+                            Navigator.pop(context);
+                          }),
+                      InkWell(
+                          child: Container(
+                            margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                            decoration: BoxDecoration(
+                              color: gColors.primaryGreen,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Accepté',
+                                  style: gColors.bodyTitle1_N_W24,
+                                ),
+                              ],
+                            ),
+                          ),
+                          onTap: () async {
+                            DbTools.wStatusCde = 'Accepté';
+                            Navigator.pop(context);
+                          }),
+                      InkWell(
+                          child: Container(
+                            margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                            decoration: BoxDecoration(
+                              color: gColors.red,
+                              borderRadius: BorderRadius.circular(24),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  'Refusé',
+                                  style: gColors.bodyTitle1_N_W24,
+                                ),
+                              ],
+                            ),
+                          ),
+                          onTap: () async {
+                            DbTools.wStatusCde = 'Refusé';
+                            Navigator.pop(context);
+                          }),
+                    ],
+                  ),
+                ),
+              ],
+            )),
+      ],
+    );
+  }
+}
+//**********************************
+//**********************************
+//**********************************
+class ActionDialogDevis extends StatefulWidget {
+  @override
+  _ActionDialogDevisState createState() => _ActionDialogDevisState();
+}
+
+class _ActionDialogDevisState extends State<ActionDialogDevis> {
+  bool isSel = false;
+
+  @override
+  void initState() {}
+
+  @override
+  Widget build(BuildContext context) {
+    return SimpleDialog(
+      titlePadding: EdgeInsets.zero,
+      contentPadding: EdgeInsets.zero,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(48.0))),
+      surfaceTintColor: Colors.transparent,
+      backgroundColor: gColors.white,
+      shadowColor: gColors.transparent,
+      children: [
+        Container(
+            color: gColors.transparent,
+            height: 372,
+            child: Stack(
+              children: [
+                Positioned(
+                    top: 30,
+                    right: 10,
+                    child: InkWell(
+                      child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            color: gColors.LinearGradient4,
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          child: Icon(
+                            Icons.clear,
+                            size: 18,
+                            color: Colors.white,
+                          )),
+                      onTap: () async {
+                        Navigator.pop(context);
+                      },
+                    )),
+                Positioned(
+                  top: 90,
+                  left: 0,
+                  child: Container(
+                    width: 280,
+                    color: Colors.white,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        InkWell(
+                            child: Container(
+                                child: Column(
+                              children: [
+                                gColors.wLigne(),
+                                Container(
+                                  color: Colors.white,
+                                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  height: 57,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Relancer le devis maintenant',
+                                        style: gColors.bodyTitle1_N_Gr,
+                                      ),
+                                      SvgPicture.asset(
+                                        "assets/images/DCL_Relance.svg",
+                                        width: 28,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            )),
+                            onTap: () async {
+                              Navigator.pop(context);
+                            }),
+                        InkWell(
+                            child: Container(
+                                child: Column(
+                              children: [
+                                gColors.wLigne(),
+                                Container(
+                                  color: Colors.white,
+                                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  height: 57,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Duppliquer le devis',
+                                        style: gColors.bodyTitle1_N_Gr,
+                                      ),
+                                      SvgPicture.asset(
+                                        "assets/images/DCL_Dupliquer.svg",
+                                        width: 28,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ],
+                            )),
+                            onTap: () async {
+                              Navigator.pop(context);
+                            }),
+                        InkWell(
+                            child: Container(
+                                child: Column(
+                              children: [
+                                gColors.wLigne(),
+                                Container(
+                                  color: Colors.white,
+                                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  height: 57,
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.center,
+                                    children: [
+                                      Text(
+                                        'Réviser le devis ',
+                                        style: gColors.bodyTitle1_N_Gr,
+                                      ),
+                                      SvgPicture.asset(
+                                        "assets/images/DCL_Reviser.svg",
+                                        width: 28,
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                                gColors.wLigne(),
+                              ],
+                            )),
+                            onTap: () async {
+                              Navigator.pop(context);
+                            }),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
+            )),
+      ],
+    );
+  }
+}
 
 //**********************************
 //**********************************
@@ -322,22 +1054,16 @@ class MsgBoxDialog extends StatefulWidget {
   final String wLabel1;
   final String wLabel2;
 
-
-
   const MsgBoxDialog({Key? key, required this.wTxt, required this.wTxt2, required this.wTxt3, required this.wImg, required this.wLabel1, required this.wLabel2}) : super(key: key);
   @override
   _MsgBoxDialogState createState() => _MsgBoxDialogState();
 }
 
 class _MsgBoxDialogState extends State<MsgBoxDialog> {
-
-
   static bool gRep = false;
 
   @override
-  Future initLib() async {
-
-  }
+  Future initLib() async {}
 
   @override
   void initState() {
@@ -358,47 +1084,39 @@ class _MsgBoxDialogState extends State<MsgBoxDialog> {
     double wHeightBtnValider = 40;
 
     Widget Ctrl = Container(
-      child:
-      Column(
-
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
             padding: EdgeInsets.only(bottom: 8),
-          child: Image.asset(
-            "assets/images/${widget.wImg}.png",
-            fit: BoxFit.cover,
-            height: 100,
-            width: 100,
+            child: Image.asset(
+              "assets/images/${widget.wImg}.png",
+              fit: BoxFit.cover,
+              height: 100,
+              width: 100,
+            ),
           ),
-        ),
-        Container(
-          padding: EdgeInsets.only(bottom: 4),
-          width: wWidth,
-          child: Text(
-            widget.wLabel1,
-            style: gColors.bodyTitle1_B_G,
-            textAlign: TextAlign.center,
+          Container(
+            padding: EdgeInsets.only(bottom: 4),
+            width: wWidth,
+            child: Text(
+              widget.wLabel1,
+              style: gColors.bodyTitle1_B_G,
+              textAlign: TextAlign.center,
+            ),
           ),
-        ),
-        Container(
-
-          width: wWidth,
-          child: Text(
-            widget.wLabel2,
-            style: gColors.bodyTitle1_B_G,
-            textAlign: TextAlign.center,
+          Container(
+            width: wWidth,
+            child: Text(
+              widget.wLabel2,
+              style: gColors.bodyTitle1_B_G,
+              textAlign: TextAlign.center,
+            ),
           ),
-        ),
-      ],)
-      ,
+        ],
+      ),
     );
-
-
-
-
-
 
     return SimpleDialog(
       titlePadding: EdgeInsets.zero,
@@ -419,129 +1137,128 @@ class _MsgBoxDialogState extends State<MsgBoxDialog> {
 // Titre
                     Container(
                         child: Container(
-                          width: wWidth,
-                          height: 155,
-                          margin: const EdgeInsets.fromLTRB(0, 50, 0, 0),
-                          padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                          decoration: BoxDecoration(
-                            color: Colors.yellowAccent,
-                            borderRadius: BorderRadius.circular(15),
+                      width: wWidth,
+                      height: 155,
+                      margin: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                      decoration: BoxDecoration(
+                        color: Colors.yellowAccent,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            width: wWidth,
+                            child: Text(
+                              widget.wTxt,
+                              style: gColors.bodyTitle1_B_G,
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Container(
-                                width: wWidth,
-                                child: Text(
-                                  widget.wTxt,
-                                  style: gColors.bodyTitle1_B_G,
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              Container(
-                                width: wWidth,
-                                child: Text(
-                                  widget.wTxt2,
-                                  style: gColors.bodyTitle1_N_G,
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              Container(
-                                width: wWidth,
-                                child: Text(
-                                  widget.wTxt3,
-                                  style: gColors.bodyTitle1_N_G,
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              Container(
-                                height: 15,
-                              ),
-                              Container(
-                                color: gColors.black,
-                                height: 1,
-                              ),
-                            ],
+                          Container(
+                            width: wWidth,
+                            child: Text(
+                              widget.wTxt2,
+                              style: gColors.bodyTitle1_N_G,
+                              textAlign: TextAlign.center,
+                            ),
                           ),
-                        )),
+                          Container(
+                            width: wWidth,
+                            child: Text(
+                              widget.wTxt3,
+                              style: gColors.bodyTitle1_N_G,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Container(
+                            height: 15,
+                          ),
+                          Container(
+                            color: gColors.black,
+                            height: 1,
+                          ),
+                        ],
+                      ),
+                    )),
 
                     Container(
                       height: wHeightDet,
                     ),
 
-
 // Pied
                     Container(
                         child: Container(
-                          width: wWidth,
-                          height: 106,
-                          padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                          decoration: BoxDecoration(
-                            color: gColors.LinearGradient3,
-                            borderRadius: BorderRadius.circular(15),
+                      width: wWidth,
+                      height: 106,
+                      padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                      decoration: BoxDecoration(
+                        color: gColors.LinearGradient3,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            color: gColors.black,
+                            height: 1,
                           ),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
+                          Container(
+                            height: 22,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Container(
-                                color: gColors.black,
-                                height: 1,
-                              ),
-                              Container(
-                                height: 22,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: gColors.primaryRed,
-                                    ),
-                                    child: Container(
-                                      width: 140,
-                                      height: wHeightBtnValider,
-                                      padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
-                                      child: Text(
-                                        "Annuler",
-                                        style: gColors.bodyTitle1_B_W24,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                    onPressed: () async {
-                                      gRep = false;
-                                      Navigator.pop(context);
-                                    },
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: gColors.primaryRed,
+                                ),
+                                child: Container(
+                                  width: 140,
+                                  height: wHeightBtnValider,
+                                  padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
+                                  child: Text(
+                                    "Annuler",
+                                    style: gColors.bodyTitle1_B_W24,
+                                    textAlign: TextAlign.center,
                                   ),
-                                  ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                        backgroundColor: gColors.primaryGreen,
-                                        side: const BorderSide(
-                                          width: 1.0,
-                                          color: gColors.primaryGreen,
-                                        )),
-                                    child: Container(
-                                      width: 140,
-                                      height: wHeightBtnValider,
-                                      padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
-                                      child: Text(
-                                        "Valider",
-                                        style: gColors.bodyTitle1_B_W24,
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                    onPressed: () async {
-                                      gRep = true;
-                                      Navigator.pop(context);
-                                    },
-                                  )
-                                ],
+                                ),
+                                onPressed: () async {
+                                  gRep = false;
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: gColors.primaryGreen,
+                                    side: const BorderSide(
+                                      width: 1.0,
+                                      color: gColors.primaryGreen,
+                                    )),
+                                child: Container(
+                                  width: 140,
+                                  height: wHeightBtnValider,
+                                  padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
+                                  child: Text(
+                                    "Valider",
+                                    style: gColors.bodyTitle1_B_W24,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  gRep = true;
+                                  Navigator.pop(context);
+                                },
                               )
                             ],
-                          ),
-                        )),
+                          )
+                        ],
+                      ),
+                    )),
                   ],
                 )),
 
@@ -566,9 +1283,7 @@ class _MsgBoxDialogState extends State<MsgBoxDialog> {
                           const Spacer(),
                           Container(
                             padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                            child:
-                            Ctrl,
-
+                            child: Ctrl,
                           ),
                           const Spacer(),
                           Container(
@@ -583,11 +1298,7 @@ class _MsgBoxDialogState extends State<MsgBoxDialog> {
       ],
     );
   }
-
-
 }
-
-
 
 //**********************************
 //**********************************
@@ -620,7 +1331,6 @@ class _PhotoDialogState extends State<PhotoDialog> {
 
     bool isPrinc = false;
 
-
     DbTools.glfParc_Imgs = await DbTools.getParc_Imgs(DbTools.gParc_Ent.ParcsId!, 1);
 
     for (int i = 0; i < DbTools.glfParc_Imgs.length; i++) {
@@ -631,7 +1341,6 @@ class _PhotoDialogState extends State<PhotoDialog> {
         wWidget = Column(
           children: [
             Container(
-
               height: 240,
               decoration: BoxDecoration(
                 color: Colors.transparent,
@@ -641,18 +1350,13 @@ class _PhotoDialogState extends State<PhotoDialog> {
                   color: gColors.greyDark2,
                 ),
               ),
-              child:
-              ClipRRect(
+              child: ClipRRect(
                 borderRadius: BorderRadius.circular(28.0),
-                child:  Image.memory(
+                child: Image.memory(
                   bytes,
                   fit: BoxFit.contain,
                 ),
               ),
-
-
-
-
             ),
           ],
         );
@@ -1029,18 +1733,13 @@ class _PhotoDialogState extends State<PhotoDialog> {
                 color: gColors.greyDark2,
               ),
             ),
-            child:
-
-            ClipRRect(
+            child: ClipRRect(
               borderRadius: BorderRadius.circular(28.0),
-              child:  Image.memory(
+              child: Image.memory(
                 bytes,
                 fit: BoxFit.contain,
               ),
             ),
-
-
-
           ),
         ],
       );
@@ -1090,8 +1789,6 @@ class _PhotoDialogState extends State<PhotoDialog> {
                                   "Secondaire VF",
                                   style: gColors.bodyTitle1_N_G_20,
                                 ),
-
-
                         ],
                       ),
                     ),
@@ -1111,7 +1808,15 @@ class _PhotoDialogState extends State<PhotoDialog> {
                     ),
                   ),
                   onTap: () async {
-                    await gDialogs.Dialog_MsgBox(context, "${DbTools.DescAff}","${DbTools.DescAff2}","${DbTools.DescAff3}","ico5b","Êtes-vous sur de vouloir","éffacer la photo ?",);
+                    await gDialogs.Dialog_MsgBox(
+                      context,
+                      "${DbTools.DescAff}",
+                      "${DbTools.DescAff2}",
+                      "${DbTools.DescAff3}",
+                      "ico5b",
+                      "Êtes-vous sur de vouloir",
+                      "éffacer la photo ?",
+                    );
                     if (_MsgBoxDialogState.gRep) {
                       await DbTools.deleteParc_ImgAllType(lParc_Imgs[zoomIndex].Parc_Imgid!);
                     }
@@ -1150,7 +1855,7 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
     String fSelDCL_DateFin = formatter.format(Srv_DbTools.SelDCL_DateFin);
 
     return SimpleDialog(
-      insetPadding: EdgeInsets.only(bottom: 420, right: 400),
+      insetPadding: EdgeInsets.only(bottom: 400, right: 300),
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
@@ -1173,18 +1878,18 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                              width: 260,
-                              height: 80,
-                              padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Row(
-                                children: [
-                                  InkWell(
-                                    child: Row(
+                          InkWell(
+                            child: Container(
+                                width: 260,
+                                height: 80,
+                                padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Row(
                                       children: [
                                         Text(
                                           "Du ",
@@ -1196,41 +1901,38 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
                                         ),
                                       ],
                                     ),
-                                    onTap: () async {
-                                      selectedDate = Srv_DbTools.SelDCL_DateDeb;
-                                      await _selectDate(context, DateTime(1900), DateTime(DateTime.now().year, 12, 31));
-                                      Srv_DbTools.SelDCL_DateDeb = selectedDate;
-                                      isSel = true;
-                                      setState(() {});
-                                    },
-                                  ),
-                                  Container(
-                                    width: 30,
-                                  ),
-                                  popMenu(),
-                                  Container(
-                                    width: 10,
-                                  ),
-                                  InkWell(
-                                    child: Row(
-                                      children: [
-                                        Image.asset(
-                                          "assets/images/DCL_Date.png",
-                                          height: 40,
-                                          width: 40,
-                                        ),
-                                      ],
+                                    Container(
+                                      width: 30,
                                     ),
-                                    onTap: () async {
-                                      selectedDate = Srv_DbTools.SelDCL_DateDeb;
-                                      await _selectDate(context, DateTime(1900), DateTime(DateTime.now().year, 12, 31));
-                                      Srv_DbTools.SelDCL_DateDeb = selectedDate;
-                                      isSel = true;
-                                      setState(() {});
-                                    },
-                                  ),
-                                ],
-                              ))
+                                    popMenu(),
+                                    Container(
+                                      width: 10,
+                                    ),
+                                    InkWell(
+                                      child: Row(
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/DCL_Date.png",
+                                            height: 40,
+                                            width: 40,
+                                          ),
+                                        ],
+                                      ),
+                                      onTap: () async {
+                                        setState(() {});
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                )),
+                            onTap: () async {
+                              selectedDate = Srv_DbTools.SelDCL_DateDeb;
+                              await _selectDate(context, DateTime(1900), DateTime(DateTime.now().year + 1, 12, 31));
+                              Srv_DbTools.SelDCL_DateDeb = selectedDate;
+                              isSel = true;
+                              setState(() {});
+                            },
+                          ),
                         ],
                       ),
                       Container(
@@ -1240,18 +1942,18 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
-                              width: 260,
-                              height: 80,
-                              padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(15),
-                              ),
-                              child: Row(
-                                children: [
-                                  InkWell(
-                                    child: Row(
+                          InkWell(
+                            child: Container(
+                                width: 260,
+                                height: 80,
+                                padding: const EdgeInsets.fromLTRB(25, 0, 0, 0),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                                child: Row(
+                                  children: [
+                                    Row(
                                       children: [
                                         Text(
                                           "Au ",
@@ -1263,41 +1965,38 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
                                         ),
                                       ],
                                     ),
-                                    onTap: () async {
-                                      selectedDate = Srv_DbTools.SelDCL_DateFin;
-                                      await _selectDate(context, DateTime(1900), DateTime.now());
-                                      Srv_DbTools.SelDCL_DateFin = selectedDate;
-                                      isSel = true;
-                                      setState(() {});
-                                    },
-                                  ),
-                                  Container(
-                                    width: 30,
-                                  ),
-                                  popMenu(),
-                                  Container(
-                                    width: 10,
-                                  ),
-                                  InkWell(
-                                    child: Row(
-                                      children: [
-                                        Image.asset(
-                                          "assets/images/DCL_Date.png",
-                                          height: 40,
-                                          width: 40,
-                                        ),
-                                      ],
+                                    Container(
+                                      width: 30,
                                     ),
-                                    onTap: () async {
-                                      selectedDate = Srv_DbTools.SelDCL_DateFin;
-                                      await _selectDate(context, DateTime(1900), DateTime.now());
-                                      Srv_DbTools.SelDCL_DateFin = selectedDate;
-                                      isSel = true;
-                                      setState(() {});
-                                    },
-                                  ),
-                                ],
-                              ))
+                                    popMenu(),
+                                    Container(
+                                      width: 10,
+                                    ),
+                                    InkWell(
+                                      child: Row(
+                                        children: [
+                                          Image.asset(
+                                            "assets/images/DCL_Date.png",
+                                            height: 40,
+                                            width: 40,
+                                          ),
+                                        ],
+                                      ),
+                                      onTap: () async {
+                                        setState(() {});
+                                        Navigator.of(context).pop();
+                                      },
+                                    ),
+                                  ],
+                                )),
+                            onTap: () async {
+                              selectedDate = Srv_DbTools.SelDCL_DateFin;
+                              await _selectDate(context, DateTime(1900), DateTime(DateTime.now().year + 1, 12, 31));
+                              Srv_DbTools.SelDCL_DateFin = selectedDate;
+                              isSel = true;
+                              setState(() {});
+                            },
+                          ),
                         ],
                       ),
                     ],

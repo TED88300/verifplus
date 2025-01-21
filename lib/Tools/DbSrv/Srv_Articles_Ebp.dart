@@ -30,8 +30,19 @@ class Article_Ebp {
   String  Article_Sous_Fam    = "";
   String  Article_codeArticle_Parent = "";
   bool    Art_Sel       = false;
+  int     Art_Qte       = 0;
   Image?  wImage ;
   bool    wImgeTrv       = false;
+  Image?  wImageL ;
+  bool    wImgeTrvL       = false;
+  int     DCL_Det_Livr = 0;
+  String DCL_Det_DateLivr = "";
+  String DCL_Det_Statut = "Facturable";
+
+  double DCL_Det_PU = 0;
+  double DCL_Det_RemP = 0;
+  double DCL_Det_RemMt = 0;
+
 
   static Article_EbpInit() {
     Article_Ebp wArticle_Ebp =  Article_Ebp(-1, "", "", "", "", "", "", "", 0, 0, "", 0, 0, 0, "", false, false, 0, "","","","", "");

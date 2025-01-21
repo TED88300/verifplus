@@ -36,6 +36,11 @@ void main() async {
       GlobalMaterialLocalizations.delegate,
       MonthYearPickerLocalizations.delegate,
     ],
+    supportedLocales: const [
+      Locale('fr', '')
+    ],
+    locale: const Locale('fr'),
+
     home: _defaultHome,
   ));
 }
