@@ -97,6 +97,8 @@ class DbTools {
   static int gCountDev = 0;
 
   static String? gImagePath;
+  static Uint8List gImageByte = Uint8List.fromList([]);
+
 
   static bool gIsRememberLogin = true;
   static var gVersion = "v1.0.14 b14";
@@ -123,6 +125,10 @@ class DbTools {
   static String DescAff2 = "";
   static String DescAff3 = "";
 
+  static String gTitre = "";
+  static Widget gImage = Container();
+
+  static double gTxTVA = 20;
 
   static bool hasConnection = false;
   static Future<bool> checkConnection() async {
@@ -416,10 +422,8 @@ class DbTools {
         "DCL_Ent_RelAuto varchar(64) NOT NULL DEFAULT '',"
         "DCL_Ent_RelAnniv	 varchar(64) NOT NULL DEFAULT '',"
         "DCL_Ent_CopRel varchar(64) NOT NULL DEFAULT '',"
-
-
-
-        "DCL_Ent_Relance int(11) NOT NULL DEFAULT 1,"
+        "DCL_Ent_RelanceAuto int(11) NOT NULL DEFAULT 1,"
+        "DCL_Ent_RelanceAnniv int(11) NOT NULL DEFAULT 1,"
         "DCL_Ent_Relance_Mode varchar(16) NOT NULL DEFAULT '',"
         "DCL_Ent_Relance_Contact varchar(64) NOT NULL DEFAULT '',"
         "DCL_Ent_Relance_Mail varchar(64) NOT NULL DEFAULT '',"
@@ -708,6 +712,18 @@ class DbTools {
       }
     });
 
+    Srv_DbTools.ListParam_Param_Affaire.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Affaire") == 0) {
+        Srv_DbTools.ListParam_Param_Affaire.add(element);
+      }
+    });
+    Srv_DbTools.ListParam_Param_Proba.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Proba") == 0) {
+        Srv_DbTools.ListParam_Param_Proba.add(element);
+      }
+    });
 
     Srv_DbTools.ListParam_Param_Validite_devis.clear();
     Srv_DbTools.ListParam_ParamAll.forEach((element) {
@@ -4743,7 +4759,8 @@ class DbTools {
   //******************** DCL_Ent  ******************
   //************************************************
 
-  static String wStatusCde = "Tous";
+  static String wStatusCde = "État";
+  static String wTypeCde = "Tous";
 
   static Future<List<DCL_Ent>> getDCL_EntAll() async {
     final db = await database;

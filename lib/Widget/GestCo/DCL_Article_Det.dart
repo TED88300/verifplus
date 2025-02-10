@@ -1,15 +1,19 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:group_button/group_button.dart';
 import 'package:intl/intl.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Articles_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DCL_Det.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
+import 'package:verifplus/Tools/DbTools/DbTools.dart';
+import 'package:verifplus/Tools/Upload.dart';
+import 'package:verifplus/Widget/GestCo/DCL_Ent_Garantie_Dialog.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
+import 'package:verifplus/Widget/Widget_Tools/gDialogs.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
 //**********************************
@@ -34,42 +38,85 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
   double wHeightTitre = 130;
 
   List<Widget> widgets = [];
+  List<Widget> widgetsDetail = [];
+  List<Widget> widgetsTarif = [];
+
   List<String> wTitres = [];
+  List<Widget> wImages = [];
 
   List<int> wCpt = [];
 
+  bool isFav = false;
+
+  int indexScreenBase= 1;
   var pageController = PageController(keepPage: false, initialPage: 0);
+  var screenController = PageController(keepPage: false, initialPage: 1);
+
   List<Article_Ebp> ListArticle_Ebpsearchresult = [];
   int indexPage = 0;
-
-
-
   void Erase() {
     Reload();
   }
 
   Future Reload() async {
     widgets.clear();
-    wTitres.clear();
-    // ListArticle_Ebpsearchresult = Srv_DbTools.ListArticle_Ebpsearchresult.where((element) => element.Art_Sel == true).toList();
-    // for (int i = 0; i < ListArticle_Ebpsearchresult.length; i++) {
+    widgetsDetail.clear();
+    widgetsTarif.clear();
 
+    wTitres.clear();
+    wImages.clear();
     int wPage = 0;
+
+    Srv_DbTools.wUserLogin_Art_Fav.clear();
+    Srv_DbTools.wUserLogin_Art_Fav.addAll(Srv_DbTools.gUserLogin_Art_Fav);
+
 
     for (int i = 0; i < Srv_DbTools.ListArticle_Ebpsearchresult.length; i++) {
       Article_Ebp wArticle_Ebp = Srv_DbTools.ListArticle_Ebpsearchresult[i];
       if (!wArticle_Ebp.Art_Sel) continue;
-      wTitres.add("${wArticle_Ebp.Article_descriptionCommercialeEnClair}\n(${wArticle_Ebp.Article_codeArticle})");
+      wTitres.add("${wArticle_Ebp.Article_descriptionCommercialeEnClair} (${wArticle_Ebp.Article_codeArticle})");
+
+      wArticle_Ebp.Art_Qte = 1;
+      wArticle_Ebp.DCL_Det_PU = wArticle_Ebp.Article_Promo_PVHT > 0 ? wArticle_Ebp.Article_Promo_PVHT : wArticle_Ebp.Article_PVHT;
+
+      wArticle_Ebp.DCL_Det_RemP = 0;
+      if (wArticle_Ebp.Article_PVHT > 0) wArticle_Ebp.DCL_Det_RemP = (wArticle_Ebp.Article_PVHT - wArticle_Ebp.DCL_Det_PU) / wArticle_Ebp.Article_PVHT * 100;
+      wArticle_Ebp.DCL_Det_RemMt = wArticle_Ebp.Article_PVHT - wArticle_Ebp.DCL_Det_PU;
+
+
+
+      wArticle_Ebp.DCL_Det_Livr = 0;
+      wArticle_Ebp.DCL_Det_Statut = "Facturable";
 
       StatePage wStatePage = StatePage(wArticle_Ebp: wArticle_Ebp, index: i, callback: Erase);
       widgets.add(wStatePage);
+
+      StatePageDetail wStatePageDetail = StatePageDetail(wArticle_Ebp: wArticle_Ebp, index: i, callback: Erase);
+      widgetsDetail.add(wStatePageDetail);
+
+      StatePageTarif wStatePageTarif = StatePageTarif(wArticle_Ebp: wArticle_Ebp, index: i, callback: Erase);
+      widgetsTarif.add(wStatePageTarif);
+      wImages.add(buildImage(context, wArticle_Ebp!));
       print(" ADD ${wArticle_Ebp.Article_descriptionCommercialeEnClair}");
+
+      wArticle_Ebp.wImageG1 = Image.memory(blankBytes, height: 1,);
+      wArticle_Ebp.wImageG2 = Image.memory(blankBytes, height: 1,);
+      wArticle_Ebp.wImageG3 = Image.memory(blankBytes, height: 1,);
+
+      wArticle_Ebp!.DCL_Det_Garantie = "...";
 
       wPage++;
     }
     indexPage = 0;
     pageController.dispose();
     pageController = PageController(keepPage: false, initialPage: 0);
+
+
+    print("");
+    print(" DCL_Article_Det widgets ${widgets.length}");
+    print("");
+
+
 
     print(" ADD ${widgets.length}");
 
@@ -89,12 +136,17 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
     initLib();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    pageController.dispose();
+    screenController.dispose();
+  }
+
   Future<Image> GetImage(Article_Ebp art, double wIcoWidth) async {
     if (art.wImgeTrvL) return art.wImageL!;
 
-
-
-    await Srv_DbTools.getArticlesImg_Ebp( art.Article_codeArticle);
+    await Srv_DbTools.getArticlesImg_Ebp(art.Article_codeArticle);
     gObj.pic = base64Decode(Srv_DbTools.gArticlesImg_Ebp.ArticlesImg_Image);
     if (gObj.pic.length > 0) {
       art.wImgeTrvL = true;
@@ -139,7 +191,8 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
     double wLabelWidth = 120;
     double wHeight = wHeightTitre + wHeightDet2 + wHeightPied - 30;
 
-    print(" B U I L D  ${widgets.length}");
+    print(" B U I L D _DCL_Article_DetState  ${widgets.length}");
+    print(" B U I L D _DCL_Article_DetState   ${wTitres[indexPage]}");
 
     return SimpleDialog(
       titlePadding: EdgeInsets.zero,
@@ -166,11 +219,11 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
               top: 0,
               left: 0,
               child: Material(
-
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
                 child: Container(
                   height: wHeightTitre,
                   width: wWidth,
+                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                   decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -178,13 +231,32 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
                     children: [
                       Container(
                         width: wWidth,
-                        height: wHeightTitre - 8,
-                        padding: const EdgeInsets.fromLTRB(10, 25, 10, 0),
-                        child: Text(
-                          "${wTitres[indexPage]}",
-                          maxLines: 3,
-                          style: gColors.bodyTitle1_B_G22,
-                          textAlign: TextAlign.center,
+                        height: wHeightTitre - 30,
+                        padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            (indexScreenBase == 1)
+                                ? Container()
+                                : Container(
+                                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    width: 100,
+                                    height: 100,
+                                    child: wImages[indexPage],
+                                  ),
+                            Container(
+                              height: 100,
+                              padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
+                              width: (indexScreenBase == 1) ? wWidth - 20 : wWidth - 120,
+                              child: Text(
+                                "${wTitres[indexPage]} $indexScreenBase",
+                                maxLines: 3,
+                                style: gColors.bodyTitle1_B_G22,
+                                textAlign: indexScreenBase == 1 ? TextAlign.center : TextAlign.start,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                       gColors.ombre(),
@@ -193,9 +265,6 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
                 ),
               ),
             ),
-
-
-
 
 ///////////
 // PIED
@@ -210,7 +279,7 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
                 padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                 decoration: BoxDecoration(
                   color: gColors.LinearGradient3,
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(24),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -224,7 +293,7 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
                       height: 18,
                     ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         ElevatedButton(
@@ -235,11 +304,11 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
                             ),
                           ),
                           child: Container(
-                            width: 40,
+                            width: 110,
                             height: wHeightBtnValider,
                             padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
                             child: Text(
-                              "<",
+                              "Annuler",
                               style: gColors.bodyTitle1_B_W24,
                               textAlign: TextAlign.center,
                             ),
@@ -247,9 +316,6 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
                           onPressed: () async {
                             Navigator.pop(context);
                           },
-                        ),
-                        Container(
-                          width: 210,
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
@@ -268,7 +334,6 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
                             ),
                           ),
                           onPressed: () async {
-
                             print("Ajouter Srv_DbTools.ListArticle_Ebpsearchresult.length ${Srv_DbTools.ListArticle_Ebpsearchresult.length}");
 
                             if (Srv_DbTools.ListArticle_Ebpsearchresult.length > 0) {
@@ -277,7 +342,10 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
                                 Article_Ebp wArticle_Ebp = Srv_DbTools.ListArticle_Ebpsearchresult[i];
                                 if (!wArticle_Ebp.Art_Sel) continue;
 
-                                print("Ajouter B");
+                                print("Ajouter B $i");
+                                print(" Ajouter    ${Srv_DbTools.ListArticle_Ebpsearchresult[0].Art_Qte} ${Srv_DbTools.ListArticle_Ebpsearchresult[0].DCL_Det_Statut}");
+
+                                print(" Ajouter   ${wArticle_Ebp.Art_Qte} ${wArticle_Ebp.DCL_Det_Statut}");
 
                                 DCL_Det aDCL_Det = DCL_Det();
                                 aDCL_Det.DCL_Det_EntID = Srv_DbTools.gDCL_Ent.DCL_EntID;
@@ -286,19 +354,55 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
                                 aDCL_Det.DCL_Det_Ordre = Srv_DbTools.getLastOrder() + 1;
                                 aDCL_Det.DCL_Det_NoArt = wArticle_Ebp.Article_codeArticle;
                                 aDCL_Det.DCL_Det_Lib = wArticle_Ebp.Article_descriptionCommercialeEnClair;
+
                                 aDCL_Det.DCL_Det_Qte = wArticle_Ebp.Art_Qte;
-                                aDCL_Det.DCL_Det_PU = wArticle_Ebp.Article_Promo_PVHT > 0 ? wArticle_Ebp.Article_Promo_PVHT : wArticle_Ebp.Article_PVHT;
-                                aDCL_Det.DCL_Det_RemP = 0;
-                                aDCL_Det.DCL_Det_RemMt = 0;
-                                aDCL_Det.DCL_Det_Livr = 0;
-                                aDCL_Det.DCL_Det_DateLivr = "";
+                                aDCL_Det.DCL_Det_Livr = wArticle_Ebp.DCL_Det_Livr;
+                                aDCL_Det.DCL_Det_DateLivr = wArticle_Ebp.DCL_Det_DateLivr;
+                                aDCL_Det.DCL_Det_Statut = wArticle_Ebp.DCL_Det_Statut;
+                                aDCL_Det.DCL_Det_PU = wArticle_Ebp.DCL_Det_PU;
+                                aDCL_Det.DCL_Det_RemP = wArticle_Ebp.DCL_Det_RemP;
+                                aDCL_Det.DCL_Det_RemMt = wArticle_Ebp.DCL_Det_RemMt;
+                                aDCL_Det.DCL_Det_TVA = wArticle_Ebp.DCL_Det_TVA;
+
                                 aDCL_Det.DCL_Det_Rel = 0;
-                                aDCL_Det.DCL_Det_DateRel = "";
-                                aDCL_Det.DCL_Det_Statut = "";
-                                aDCL_Det.DCL_Det_Note =  "";
+                                aDCL_Det.DCL_Det_DateRel = '';
+                                aDCL_Det.DCL_Det_Note = '';
+
+                                aDCL_Det.DCL_Det_Garantie = wArticle_Ebp.DCL_Det_Garantie;
+
+                                print(" GARANTIE VALIDER aDCL_Det.DCL_Det_Garantie ${wArticle_Ebp.DCL_Det_Garantie}");
+
+
                                 await Srv_DbTools.InsertUpdateDCL_Det(aDCL_Det);
+
+                                print(" Srv_DbTools.gLastID ${Srv_DbTools.gLastID}" );
+
+
+                                String wName = "";
+                                if(wArticle_Ebp.DCL_Det_Path1!.length > 0)
+                                {
+                                  wName = "DCL_Det_Garantie${Srv_DbTools.gLastID}_1.jpg";
+                                  print(" Ajouter IMAGE 1  ${wName}");
+                                  await Upload.SaveMem400(wName, wArticle_Ebp.DCL_Det_Path1!);
+                                }
+                                if(wArticle_Ebp.DCL_Det_Path2!.length > 0)
+                                {
+                                  wName = "DCL_Det_Garantie${Srv_DbTools.gLastID}_2.jpg";
+                                  print(" Ajouter IMAGE 2  ${wName}");
+                                  await Upload.SaveMem400(wName, wArticle_Ebp.DCL_Det_Path2!);
+                                }
+                                if(wArticle_Ebp.DCL_Det_Path3!.length > 0)
+                                {
+                                  wName = "DCL_Det_Garantie${Srv_DbTools.gLastID}_3.jpg";
+                                  print(" Ajouter IMAGE 3  ${wName}");
+                                  await Upload.SaveMem400(wName, wArticle_Ebp.DCL_Det_Path3!);
+                                }
                               }
                             }
+
+                            Srv_DbTools.gUserLogin_Art_Fav.clear();
+                            Srv_DbTools.gUserLogin_Art_Fav.addAll(Srv_DbTools.wUserLogin_Art_Fav);
+                            Srv_DbTools.setUserArtFav(Srv_DbTools.gUserLogin);
                             Navigator.pop(context);
                             Navigator.pop(context);
                           },
@@ -314,25 +418,28 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
 ////////////
             // Content
             Positioned(
-              top: wHeightTitre - 2,
+              top: wHeightTitre - 4,
               left: wLeft,
               child: Container(
-                height: wHeightDet2 - 28 ,
+                height: 674,
                 width: wWidth,
-color: Colors.green,
+                color: gColors.white,
                 child: (widgets.length > 0)
                     ? PageView.builder(
-                    onPageChanged: (page) {
-                      setState(() {
-                        indexPage = page;
-                        setState(() {});
-                        });
-                      },
                         itemCount: widgets.length,
                         controller: pageController,
-
                         itemBuilder: (BuildContext context, int index) => pageBuilder(index),
-                      )
+                  onPageChanged: (page) {
+                    setState(() {
+                      indexPage = page;
+                      indexScreenBase = 1;
+
+                      print("ARTICLE Changed ${indexPage}");
+
+                    });
+                  },
+
+                )
                     : Container(),
               ),
             ),
@@ -343,26 +450,45 @@ color: Colors.green,
   }
 
   pageBuilder(int index) {
-    var dismissibleKey = GlobalKey<State>();
+
+    List<Widget> screens = [];
+
+    screens.add(widgetsDetail[index]);
+    screens.add(widgets[index]);
+    screens.add(widgetsTarif[index]);
+
+
+    print("pageBuilder indexScreenBase ${indexScreenBase} ${index} indexPage ${indexPage}");
+
     return AnimatedBuilder(
       animation: pageController,
       builder: (context, child) {
-        return widgets[index];
+        return PageView.builder(
+          itemCount: screens.length,
+          controller: screenController,
+          scrollDirection: Axis.vertical,
+          onPageChanged: (page) {
+            setState(() {
+              indexScreenBase = page;
+              print("SCREEN Changed ${indexScreenBase}");
+              setState(() {});
+            });
+          },
+          itemBuilder: (BuildContext context, int indexScreen) => AnimatedBuilder(
+            animation: screenController,
+            builder: (context, child) {
+              return screens[indexScreen];
+            },
+          ),
+        );
       },
-
     );
   }
-
-  void onBottomIconPressed(int index) async {
-    pageController.jumpToPage(index);
-    indexPage = index;
-    setState(() {});
-  }
-
-//***************************
-//***************************
-//***************************
 }
+
+//***************************
+//***************************
+//***************************
 
 class StatePage extends StatefulWidget {
   final Article_Ebp? wArticle_Ebp;
@@ -388,29 +514,30 @@ class StatePageState extends State<StatePage> {
   double wHeightDet2 = 702;
   double wWidth = 560;
   double wHeightTitre = 115;
+
   bool isFav = false;
+
+  int DCL_Det_Livr = 0;
 
   Timer? timer;
 
-
   @override
   Widget build(BuildContext context) {
-    if (Srv_DbTools.gUserLogin_Art_Fav.contains(widget.wArticle_Ebp?.Article_codeArticle))
-    {
+    if (Srv_DbTools.wUserLogin_Art_Fav.contains(widget.wArticle_Ebp?.Article_codeArticle)) {
       isFav = true;
     }
 
     int wRem = 0;
-    if (widget.wArticle_Ebp!.Article_PVHT > 0)
-    {
+    if (widget.wArticle_Ebp!.Article_PVHT > 0) {
       wRem = ((widget.wArticle_Ebp!.Article_PVHT - widget.wArticle_Ebp!.Article_Promo_PVHT) / widget.wArticle_Ebp!.Article_PVHT * 100).round();
     }
 
 
-    print(">>>>>>>>> StatePage build ${widget.index} ${widget.wArticle_Ebp?.Art_Qte}");
+
     return Container(
       color: Colors.white,
       width: wWidth,
+      child: Container(
         child: Container(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
           color: gColors.LinearGradient2,
@@ -418,350 +545,338 @@ class StatePageState extends State<StatePage> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              widget.wArticle_Ebp!.Article_Promo_PVHT != 0 ?
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(20, 12, 0, 12),
-                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                    decoration: BoxDecoration(
-                      color: Colors.orange,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
+              widget.wArticle_Ebp!.Article_Promo_PVHT != 0
+                  ? Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Text(
-                          'Promo',
-                          style: gColors.bodyTitle1_B_W24,
+                        Container(
+                          margin: const EdgeInsets.fromLTRB(20, 12, 0, 12),
+                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                          decoration: BoxDecoration(
+                            color: Colors.orange,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Promo',
+                                style: gColors.bodyTitle1_B_W24,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Spacer(),
+                        Container(
+                          height: 80,
+                          padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
+                          color: gColors.LinearGradient2,
+                          child: Text(
+                            "${formatter.format(widget.wArticle_Ebp!.Article_PVHT).replaceAll(',', ' ').replaceAll('.', ',')}€",
+                            style: gColors.bodyTitle1_N_G24.copyWith(decoration: TextDecoration.lineThrough),
+                            textAlign: TextAlign.right,
+                          ),
+                        ),
+                        Spacer(),
+                        Container(
+                          height: 80,
+                          padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
+                          color: gColors.LinearGradient2,
+                          child: Text(
+                            "${wRem}%",
+                            style: gColors.bodyTitle1_N_G24,
+                            textAlign: TextAlign.right,
+                          ),
+                        ),
+                        Spacer(),
+                        Container(
+                          height: 80,
+                          padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
+                          color: gColors.LinearGradient2,
+                          child: Text(
+                            "${formatter.format(widget.wArticle_Ebp!.Article_Promo_PVHT).replaceAll(',', ' ').replaceAll('.', ',')}€",
+                            style: gColors.bodyTitle1_B_G24.copyWith(
+                              color: Colors.orange,
+                            ),
+                            textAlign: TextAlign.right,
+                          ),
+                        ),
+                      ],
+                    )
+                  : Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.fromLTRB(20, 12, 0, 12),
+                          padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                          decoration: BoxDecoration(
+                            color: gColors.primaryGreen,
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'PV HT',
+                                style: gColors.bodyTitle1_B_W24,
+                              ),
+                            ],
+                          ),
+                        ),
+                        Spacer(),
+                        Container(
+                          height: 80,
+                          padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
+                          color: gColors.LinearGradient2,
+                          child: Text(
+                            "${formatter.format(widget.wArticle_Ebp!.Article_PVHT).replaceAll(',', ' ').replaceAll('.', ',')}€",
+                            style: gColors.bodyTitle1_B_G24.copyWith(color: gColors.primaryGreen),
+                            textAlign: TextAlign.right,
+                          ),
                         ),
                       ],
                     ),
-                  ),
-                  Spacer(),
-                  Container(
-                    height: 80,
-                    padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
-                    color: gColors.LinearGradient2,
-                    child: Text(
-                      "${formatter.format(widget.wArticle_Ebp!.Article_PVHT).replaceAll(',', ' ').replaceAll('.', ',')}€",
-                      style: gColors.bodyTitle1_N_G24.copyWith(decoration: TextDecoration.lineThrough),
-                      textAlign: TextAlign.right,
-                    ),
-                  ),
-                  Spacer(),
-                  Container(
-                    height: 80,
-                    padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
-                    color: gColors.LinearGradient2,
-                    child: Text(
-                      "${wRem}%",
-                      style: gColors.bodyTitle1_N_G24,
-                      textAlign: TextAlign.right,
-                    ),
-                  ),
-
-                  Spacer(),
-                  Container(
-                    height: 80,
-                    padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
-                    color: gColors.LinearGradient2,
-                    child: Text(
-                      "${formatter.format(widget.wArticle_Ebp!.Article_Promo_PVHT).replaceAll(',', ' ').replaceAll('.', ',')}€",
-                      style: gColors.bodyTitle1_B_G24.copyWith(color: Colors.orange,),
-                      textAlign: TextAlign.right,
-                    ),
-                  ),
-                ],
-              ) :
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Container(
-                    margin: const EdgeInsets.fromLTRB(20, 12, 0, 12),
-                    padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
-                    decoration: BoxDecoration(
-                      color: gColors.primaryGreen,
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          'PV HT',
-                          style: gColors.bodyTitle1_B_W24,
-                        ),
-                      ],
-                    ),
-                  ),
-
-
-                  Spacer(),
-                  Container(
-                    height: 80,
-                    padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
-                    color: gColors.LinearGradient2,
-                    child: Text(
-                      "${formatter.format(widget.wArticle_Ebp!.Article_PVHT).replaceAll(',', ' ').replaceAll('.', ',')}€",
-                      style: gColors.bodyTitle1_B_G24.copyWith(color: gColors.primaryGreen),
-                      textAlign: TextAlign.right,
-                    ),
-                  ),
-                ],
-              ),
-
-
-
               Container(
                 color: gColors.LinearGradient1,
                 height: 1,
               ),
-
               Container(
-                height: 593,
-                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                color: Colors.white,
-                child:
-                Column(children: [
-                  Row(
+                  height: 593,
+                  padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
+                  color: Colors.white,
+                  child: Column(
                     children: [
-                      GestureDetector(
-                        child: Container(
-                          padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
-                          child: SvgPicture.asset(
-                            "assets/images/DCL_Info.svg",
-                            height: 60,
-                          ),
-                        ),
-                        onTap: () async {
-                          await HapticFeedback.vibrate();
-                          await showDialog(context: context, builder: (BuildContext context) => DialogInfo(context, widget.wArticle_Ebp!.Article_Notes));
-                          setState(() {});
-                        },
-                      ),
-
-                      GestureDetector(
-                        child: Container(
-                          padding: const EdgeInsets.fromLTRB(10, 0, 20, 0),
-                          child:  SvgPicture.asset(
-                            "assets/images/DCL_Fav.svg",
-                            color: !isFav ? gColors.greyDark : null,
-                            height: 60,
-                          ),
-                        ),
-                        onTap: () async {
-                          await HapticFeedback.vibrate();
-                          isFav = !isFav;
-                          if (isFav)
-                          {
-                            Srv_DbTools.gUserLogin_Art_Fav.add(widget.wArticle_Ebp!.Article_codeArticle);
-                          }
-                          else
-                          {
-                            Srv_DbTools.gUserLogin_Art_Fav.remove(widget.wArticle_Ebp!.Article_codeArticle);
-                          }
-                          Srv_DbTools.setUserArtFav(Srv_DbTools.gUserLogin);
-                          setState(() {});
-                        },
-                      ),
-
-                      SvgPicture.asset(
-                        "assets/images/DCL_Check.svg",
-                        width: 40,
-                      ),
-                      Text(
-                        "En stock",
-                        maxLines: 3,
-                        style: gColors.bodyTitle1_N_Gr,
-                        textAlign: TextAlign.center,
-                      ),
-                      Spacer(),
-                      SvgPicture.asset(
-                        "assets/images/DCL_ChH.svg",
-                        width: 60,
-                      ),
-                      Container(
-                        width: 10,
-                      ),
-                    ],
-                  ),
-                  Spacer(),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      buildImage(context, widget.wArticle_Ebp!),
-                    ],
-                  ),
-                  Spacer(),
-                  Row(
-                    children: [
-                      Container(
-                        width: 10,
-                      ),
-                      Container(
-                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                          width: SizeBtn,
-                          height: SizeBtn,
-                          child: GestureDetector(
+                      Row(
+                        children: [
+                          GestureDetector(
                             child: Container(
-                              child: Icon(
-                                Icons.delete,
-                                color: gColors.red,
-                                size: 46,
+                              padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                              child: SvgPicture.asset(
+                                "assets/images/DCL_Info.svg",
+                                height: 60,
                               ),
                             ),
                             onTap: () async {
                               await HapticFeedback.vibrate();
-                              await showDialog(context: context, builder: (BuildContext context) => DialogSuppr(context, widget.wArticle_Ebp!.Article_descriptionCommercialeEnClair));
+                              await showDialog(context: context, builder: (BuildContext context) => DialogInfo(context, widget.wArticle_Ebp!.Article_Notes));
+                              setState(() {});
                             },
-                          )),
+                          ),
+                          GestureDetector(
+                            child: Container(
+                              padding: const EdgeInsets.fromLTRB(10, 0, 20, 0),
+                              child: SvgPicture.asset(
+                                "assets/images/DCL_Fav.svg",
+                                color: !isFav ? gColors.greyDark : null,
+                                height: 60,
+                              ),
+                            ),
+                            onTap: () async {
+                              await HapticFeedback.vibrate();
+                              isFav = !isFav;
+                              if (isFav) {
+                                Srv_DbTools.wUserLogin_Art_Fav.add(widget.wArticle_Ebp!.Article_codeArticle);
+                              } else {
+                                Srv_DbTools.wUserLogin_Art_Fav.remove(widget.wArticle_Ebp!.Article_codeArticle);
+                              }
+                              setState(() {});
+                            },
+                          ),
+                          SvgPicture.asset(
+                            "assets/images/DCL_Check.svg",
+                            width: 40,
+                          ),
+                          Text(
+                            "En stock",
+                            maxLines: 1,
+                            style: gColors.bodyTitle1_N_Gr,
+                            textAlign: TextAlign.center,
+                          ),
+                          Spacer(),
+                          SvgPicture.asset(
+                            "assets/images/DCL_ChH.svg",
+                            width: 60,
+                          ),
+                          Container(
+                            width: 10,
+                          ),
+                        ],
+                      ),
                       Spacer(),
-
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          buildImage(context, widget.wArticle_Ebp!),
+                        ],
+                      ),
+                      Spacer(),
                       Row(
                         children: [
                           Container(
+                            width: 10,
+                          ),
+                          Container(
+                              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                               width: SizeBtn,
                               height: SizeBtn,
                               child: GestureDetector(
                                 child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(60),
-                                    ),
-                                    color: (widget.wArticle_Ebp!.Art_Qte == 1) ? gColors.LinearGradient1 : gColors.greyDark2,
-                                  ),
                                   child: Icon(
-                                    Icons.remove,
-                                    color: gColors.white,
-                                    size: 46,
+                                    Icons.delete,
+                                    color: gColors.red,
+                                    size: 60,
                                   ),
                                 ),
-                                onLongPressStart: (detail) {
-                                  print("onLongPressStart ");
+                                onTap: () async {
+                                  await HapticFeedback.vibrate();
+                                  await showDialog(context: context, builder: (BuildContext context) => DialogSuppr(context, widget.wArticle_Ebp!.Article_descriptionCommercialeEnClair));
+                                },
+                              )),
+                          Spacer(),
+                          Row(
+                            children: [
+                              Container(
+                                  width: SizeBtn,
+                                  height: SizeBtn,
+                                  child: GestureDetector(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(60),
+                                        ),
+                                        color: (widget.wArticle_Ebp!.Art_Qte == 1) ? gColors.LinearGradient1 : gColors.greyDark2,
+                                      ),
+                                      child: Icon(
+                                        Icons.remove,
+                                        color: gColors.white,
+                                        size: 46,
+                                      ),
+                                    ),
+                                    onLongPressStart: (detail) {
+                                      print("onLongPressStart ");
 
-                                  setState(() {
-                                    if (timer != null) {
-                                      timer!.cancel();
-                                    }
-                                    timer = Timer.periodic(const Duration(milliseconds: 100), (t) {
-                                      if (widget.wArticle_Ebp!.Art_Qte > 1) {
-                                        widget.wArticle_Ebp?.Art_Qte--;
-                                        setState(() {});
-                                      } else {
+                                      setState(() {
                                         if (timer != null) {
                                           timer!.cancel();
                                         }
+                                        timer = Timer.periodic(const Duration(milliseconds: 100), (t) {
+                                          if (widget.wArticle_Ebp!.Art_Qte > 1) {
+                                            widget.wArticle_Ebp?.Art_Qte--;
+                                            setState(() {});
+                                          } else {
+                                            if (timer != null) {
+                                              timer!.cancel();
+                                            }
+                                          }
+                                        });
+                                      });
+                                    },
+                                    onLongPressEnd: (detail) {
+                                      print("onLongPressEnd --");
+
+                                      if (timer != null) {
+                                        print("onLongPressEnd -- cancel");
+                                        timer!.cancel();
                                       }
-                                    });
-                                  });
-                                },
-                                onLongPressEnd: (detail) {
-                                  print("onLongPressEnd --");
-
-                                  if (timer != null) {
-                                    print("onLongPressEnd -- cancel");
-                                    timer!.cancel();
-                                  }
-                                },
-                                onTap: () async {
-                                  await HapticFeedback.vibrate();
-                                  if (widget.wArticle_Ebp!.Art_Qte > 1) widget.wArticle_Ebp?.Art_Qte--;
-                                  setState(() {});
-                                },
-                              )),
-                          Container(
-                            width: 10,
-                          ),
-                          Container(
-                            width: 50,
-                            child: Text(
-                              "${widget.wArticle_Ebp?.Art_Qte}",
-                              style: gColors.bodyTitle1_B_G24,
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                          Container(
-                            width: 10,
-                          ),
-                          Container(
-                              width: SizeBtn,
-                              height: SizeBtn,
-                              child: GestureDetector(
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.all(
-                                      Radius.circular(60),
-                                    ),
-                                    color: gColors.greyDark2,
-                                  ),
-                                  child: Icon(
-                                    Icons.add,
-                                    color: gColors.white,
-                                    size: 46,
-                                  ),
+                                    },
+                                    onTap: () async {
+                                      await HapticFeedback.vibrate();
+                                      if (widget.wArticle_Ebp!.Art_Qte > 1) widget.wArticle_Ebp?.Art_Qte--;
+                                      setState(() {});
+                                    },
+                                  )),
+                              Container(
+                                width: 10,
+                              ),
+                              Container(
+                                width: 50,
+                                child: Text(
+                                  "${widget.wArticle_Ebp?.Art_Qte}",
+                                  style: gColors.bodyTitle1_B_G24,
+                                  textAlign: TextAlign.center,
                                 ),
-                                onLongPressStart: (detail) {
-                                  print("onLongPressStart ");
+                              ),
+                              Container(
+                                width: 10,
+                              ),
+                              Container(
+                                  width: SizeBtn,
+                                  height: SizeBtn,
+                                  child: GestureDetector(
+                                    child: Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.all(
+                                          Radius.circular(60),
+                                        ),
+                                        color: gColors.greyDark2,
+                                      ),
+                                      child: Icon(
+                                        Icons.add,
+                                        color: gColors.white,
+                                        size: 46,
+                                      ),
+                                    ),
+                                    onLongPressStart: (detail) {
+                                      print("onLongPressStart ");
 
-                                  setState(() {
-                                    if (timer != null) {
-                                      timer!.cancel();
-                                    }
-                                    timer = Timer.periodic(const Duration(milliseconds: 100), (t) {
-                                      if (widget.wArticle_Ebp!.Art_Qte < 999) {
-                                        widget.wArticle_Ebp?.Art_Qte++;
-                                        setState(() {});
-                                      } else {
+                                      setState(() {
                                         if (timer != null) {
                                           timer!.cancel();
                                         }
-                                      }
-                                    });
-                                  });
-                                },
-                                onLongPressEnd: (detail) {
-                                  print("onLongPressEnd --");
+                                        timer = Timer.periodic(const Duration(milliseconds: 100), (t) {
+                                          if (widget.wArticle_Ebp!.Art_Qte < 999) {
+                                            widget.wArticle_Ebp?.Art_Qte++;
+                                            setState(() {});
+                                          } else {
+                                            if (timer != null) {
+                                              timer!.cancel();
+                                            }
+                                          }
+                                        });
+                                      });
+                                    },
+                                    onLongPressEnd: (detail) {
+                                      print("onLongPressEnd --");
 
-                                  if (timer != null) {
-                                    print("onLongPressEnd -- cancel");
-                                    timer!.cancel();
-                                  }
-                                },
-                                onTap: () async {
-                                  await HapticFeedback.vibrate();
-                                  if (widget.wArticle_Ebp!.Art_Qte < 999) widget.wArticle_Ebp?.Art_Qte++;
-                                  setState(() {});
-                                },
-                              )),
+                                      if (timer != null) {
+                                        print("onLongPressEnd -- cancel");
+                                        timer!.cancel();
+                                      }
+                                    },
+                                    onTap: () async {
+                                      await HapticFeedback.vibrate();
+                                      if (widget.wArticle_Ebp!.Art_Qte < 999) widget.wArticle_Ebp?.Art_Qte++;
+
+                                      print("widget.wArticle_Ebp ${widget.wArticle_Ebp!.Art_Qte} ${widget.wArticle_Ebp!.DCL_Det_Statut}");
+
+
+                                      setState(() {});
+                                    },
+                                  )),
+                            ],
+                          ),
+                          Spacer(),
+                          SvgPicture.asset(
+                            "assets/images/DCL_ChB.svg",
+                            width: 60,
+                          ),
+                          Container(
+                            width: 10,
+                          ),
                         ],
                       ),
-
-                      Spacer(),
-                      SvgPicture.asset(
-                        "assets/images/DCL_ChB.svg",
-                        width: 60,
-                      ),
                       Container(
-                        width: 10,
+                        height: 10,
                       ),
                     ],
-                  ),
-                  Container(
-                    height: 10,
-                  ),
-                ],),
-
-              ),
-
-
+                  )),
             ],
           ),
         ),
-
+      ),
     );
   }
 
@@ -778,7 +893,7 @@ class StatePageState extends State<StatePage> {
 
     double wHeight = wHeightTitre + wHeightDet2 + wHeightPied - 30;
 
-    print(" B U I L D ");
+
 
     return SimpleDialog(
       insetPadding: EdgeInsets.all(60),
@@ -813,7 +928,7 @@ class StatePageState extends State<StatePage> {
                   decoration: BoxDecoration(color: Colors.yellowAccent, borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))),
                   child: Container(
                       color: Colors.transparent,
-                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                      padding: const EdgeInsets.fromLTRB(30, 0, 10, 0),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.center,
@@ -829,7 +944,7 @@ class StatePageState extends State<StatePage> {
                               ),
                               Container(width: 5),
                               Text(
-                                "Enlever l'article ?",
+                                (Srv_DbTools.gDCL_Det.DCL_Det_Type == "A") ? "Supprimer l'article ?" : "Supprimer l'élément ?",
                                 style: gColors.bodyTitle1_B_G24,
                                 textAlign: TextAlign.center,
                               ),
@@ -849,85 +964,85 @@ class StatePageState extends State<StatePage> {
               left: wLeft,
               child: Container(
                   child: Container(
-                    width: wWidth,
-                    height: wHeightPied,
-                    padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                    decoration: BoxDecoration(
-                      color: gColors.LinearGradient3,
-                      borderRadius: BorderRadius.circular(15),
+                width: wWidth,
+                height: wHeightPied,
+                padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                decoration: BoxDecoration(
+                  color: gColors.LinearGradient3,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      color: gColors.LinearGradient4,
+                      height: 1,
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Container(
+                      height: 18,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Container(
-                          color: gColors.LinearGradient4,
-                          height: 1,
+                          width: 20,
+                        ),
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: gColors.primaryRed,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          child: Container(
+                            width: 110,
+                            height: wHeightBtnValider,
+                            padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
+                            child: Text(
+                              "Non",
+                              style: gColors.bodyTitle1_B_W24,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          onPressed: () async {
+                            Navigator.pop(context);
+                          },
                         ),
                         Container(
-                          height: 18,
+                          width: 20,
                         ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Container(
-                              width: 20,
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: gColors.primaryGreen,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              )),
+                          child: Container(
+                            width: 110,
+                            height: wHeightBtnValider,
+                            padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
+                            child: Text(
+                              "Oui",
+                              style: gColors.bodyTitle1_B_W24,
+                              textAlign: TextAlign.center,
                             ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                backgroundColor: gColors.primaryRed,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8),
-                                ),
-                              ),
-                              child: Container(
-                                width: 110,
-                                height: wHeightBtnValider,
-                                padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
-                                child: Text(
-                                  "Non",
-                                  style: gColors.bodyTitle1_B_W24,
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              onPressed: () async {
-                                Navigator.pop(context);
-                              },
-                            ),
-                            Container(
-                              width: 20,
-                            ),
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: gColors.primaryGreen,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  )),
-                              child: Container(
-                                width: 110,
-                                height: wHeightBtnValider,
-                                padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
-                                child: Text(
-                                  "Oui",
-                                  style: gColors.bodyTitle1_B_W24,
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              onPressed: () async {
-                                Srv_DbTools.ListArticle_Ebpsearchresult[widget.index!].Art_Sel = false;
-                                widget.callback!();
-                                Navigator.pop(context);
-                              },
-                            ),
-                            Container(
-                              width: 20,
-                            ),
-                          ],
-                        )
+                          ),
+                          onPressed: () async {
+                            await Srv_DbTools.delDCL_Det(Srv_DbTools.gDCL_Det.DCL_DetID!);
+                            Navigator.pop(context);
+                            Navigator.pop(context);
+                          },
+                        ),
+                        Container(
+                          width: 20,
+                        ),
                       ],
-                    ),
-                  )),
+                    )
+                  ],
+                ),
+              )),
             ),
 ////////////
 // CONTENT
@@ -972,13 +1087,13 @@ class StatePageState extends State<StatePage> {
     double wHeightBtnValider = 50;
     double wLabelWidth = 120;
 
-    double wHeightDet2 = 520;
+    double wHeightDet2 = 502;
     double wWidth = 520;
     double wHeightTitre = 135;
 
     double wHeight = wHeightTitre + wHeightDet2 + wHeightPied - 30;
 
-    print(" B U I L D ");
+
 
     return SimpleDialog(
       insetPadding: EdgeInsets.all(60),
@@ -1054,53 +1169,53 @@ class StatePageState extends State<StatePage> {
               left: wLeft,
               child: Container(
                   child: Container(
-                    width: wWidth,
-                    height: wHeightPied,
-                    padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
-                    decoration: BoxDecoration(
-                      color: gColors.LinearGradient3,
-                      borderRadius: BorderRadius.circular(15),
+                width: wWidth,
+                height: wHeightPied,
+                padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                decoration: BoxDecoration(
+                  color: gColors.LinearGradient3,
+                  borderRadius: BorderRadius.circular(15),
+                ),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      color: gColors.LinearGradient4,
+                      height: 1,
                     ),
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    Container(
+                      height: 18,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
-                        Container(
-                          color: gColors.LinearGradient4,
-                          height: 1,
-                        ),
-                        Container(
-                          height: 18,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  backgroundColor: gColors.primaryGreen,
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(8),
-                                  )),
-                              child: Container(
-                                width: 110,
-                                height: wHeightBtnValider,
-                                padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
-                                child: Text(
-                                  "OK",
-                                  style: gColors.bodyTitle1_B_W24,
-                                  textAlign: TextAlign.center,
-                                ),
-                              ),
-                              onPressed: () async {
-                                Navigator.pop(context);
-                              },
+                        ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: gColors.primaryGreen,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              )),
+                          child: Container(
+                            width: 110,
+                            height: wHeightBtnValider,
+                            padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
+                            child: Text(
+                              "OK",
+                              style: gColors.bodyTitle1_B_W24,
+                              textAlign: TextAlign.center,
                             ),
-                          ],
-                        )
+                          ),
+                          onPressed: () async {
+                            Navigator.pop(context);
+                          },
+                        ),
                       ],
-                    ),
-                  )),
+                    )
+                  ],
+                ),
+              )),
             ),
 ////////////
 // CONTENT
@@ -1141,14 +1256,10 @@ class StatePageState extends State<StatePage> {
     );
   }
 
-
-
   Future<Image> GetImage(Article_Ebp art, double wIcoWidth) async {
     if (art.wImgeTrvL) return art.wImageL!;
 
-
-
-    await Srv_DbTools.getArticlesImg_Ebp( art.Article_codeArticle);
+    await Srv_DbTools.getArticlesImg_Ebp(art.Article_codeArticle);
     gObj.pic = base64Decode(Srv_DbTools.gArticlesImg_Ebp.ArticlesImg_Image);
     if (gObj.pic.length > 0) {
       art.wImgeTrvL = true;
@@ -1181,6 +1292,1309 @@ class StatePageState extends State<StatePage> {
           return new Container(width: 30);
         }
       },
+    );
+  }
+}
+
+//***************************
+//***************************
+//***************************
+
+class StatePageDetail extends StatefulWidget {
+  final Article_Ebp? wArticle_Ebp;
+  final int? index;
+  final Function()? callback;
+
+  StatePageDetail({
+    Key? key,
+    @required this.wArticle_Ebp,
+    @required this.index,
+    @required this.callback,
+  }) : super(key: key);
+
+  @override
+  StatePageDetailState createState() => StatePageDetailState();
+}
+
+class StatePageDetailState extends State<StatePageDetail> {
+  var formatter = NumberFormat('###,###.00');
+  Image? wImage;
+
+  double SizeBtn = 60;
+  double wHeightDet2 = 702;
+  double wWidth = 560;
+  double wHeightTitre = 115;
+
+  bool isFav = false;
+  Timer? timer;
+
+  int SelectOnglet = 0;
+
+
+  List<Widget> screensDetail = [];
+
+  final groupButtonController = GroupButtonController();
+  final pageController = PageController(keepPage: false, initialPage: 0);
+
+
+  @override
+  void initState() {
+    super.initState();
+    groupButtonController.selectIndex(0);
+
+    screensDetail.add(
+      Container(
+        padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+        child: Text(
+          "${widget.wArticle_Ebp!.Article_Notes}",
+          style: gColors.bodyTitle1_N_Gr,
+
+        ),
+      ),
+    );
+    screensDetail.add(Container(
+
+    ));
+    screensDetail.add(Container(
+
+    ));
+
+
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (Srv_DbTools.wUserLogin_Art_Fav.contains(widget.wArticle_Ebp?.Article_codeArticle)) {
+      isFav = true;
+    }
+
+    int wRem = 0;
+    if (widget.wArticle_Ebp!.Article_PVHT > 0) {
+      wRem = ((widget.wArticle_Ebp!.Article_PVHT - widget.wArticle_Ebp!.Article_Promo_PVHT) / widget.wArticle_Ebp!.Article_PVHT * 100).round();
+    }
+
+    double btnWidth = 160;
+    double btnWidth2 = 140;
+
+    return Container(
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+          color: gColors.LinearGradient2,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                height: 80,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  height: 40,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GroupButton(
+                          controller: groupButtonController,
+                          options: GroupButtonOptions(
+                            borderRadius: BorderRadius.circular(8),
+                            selectedTextStyle: gColors.bodyTitle1_B_Gr,
+                            selectedBorderColor: Colors.white,
+                            selectedColor: Colors.white,
+                            selectedShadow: const [],
+                            unselectedColor: Colors.grey,
+                            unselectedBorderColor: Colors.grey,
+                            unselectedTextStyle: gColors.bodyTitle1_B_Gr,
+                            unselectedShadow: const [],
+                            spacing: 10,
+                            runSpacing: 10,
+                            groupingType: GroupingType.wrap,
+                            direction: Axis.horizontal,
+                            buttonWidth: 150,
+                            buttonHeight: 40,
+                            textAlign: TextAlign.center,
+                            textPadding: EdgeInsets.zero,
+                            alignment: Alignment.center,
+                            elevation: 0,
+                          ),
+                          buttons: ['Détails', 'Offres', 'Fiche Tech.'],
+                          onSelected: (val, index, selected) {
+                            pageController.animateToPage(
+                              index,
+                              duration: const Duration(milliseconds: 400),
+                              curve: Curves.easeInOut,
+                            );
+                            setState(() {});
+                          }),
+                    ],
+                  ),
+                ),
+              ),
+
+
+
+              Container(
+                color: gColors.LinearGradient1,
+                height: 1,
+              ),
+
+//              screensDetail[SelectOnglet],
+              Expanded(
+                child: PageView(
+                  children: screensDetail,
+                  controller: pageController,
+                ),
+              ),
+            ],
+          ),
+
+    );
+  }
+}
+
+//***************************
+//***************************
+//***************************
+
+class StatePageTarif extends StatefulWidget {
+  final Article_Ebp? wArticle_Ebp;
+  final int? index;
+  final Function()? callback;
+
+  StatePageTarif({
+    Key? key,
+    @required this.wArticle_Ebp,
+    @required this.index,
+    @required this.callback,
+  }) : super(key: key);
+
+  @override
+  StatePageTarifState createState() => StatePageTarifState();
+}
+
+class StatePageTarifState extends State<StatePageTarif> {
+  var formatter = NumberFormat('###,##0.00');
+  Image? wImage;
+
+  double SizeBtn = 60;
+  double wHeightDet2 = 702;
+  double wWidth = 560;
+  double wHeightTitre = 115;
+
+  bool isFav = false;
+  Timer? timer;
+
+  double wSizetouche = 38;
+
+  int wSelNombre = 0;
+
+  bool isNewSel = true;
+
+
+  void AjoutChiffre(int wCh) {
+    String wStringNombre = "0";
+    int wNombre = 0;
+
+    if (!isNewSel)
+      {
+        if (wSelNombre == 0) {
+          wStringNombre = widget.wArticle_Ebp!.DCL_Det_PU.toStringAsFixed(2);
+        } else if (wSelNombre == 1) {
+          wStringNombre = widget.wArticle_Ebp!.DCL_Det_RemP.toStringAsFixed(2);
+        } else if (wSelNombre == 2) {
+          wStringNombre = widget.wArticle_Ebp!.DCL_Det_RemMt.toStringAsFixed(2);
+        }
+      }
+
+    isNewSel = false;
+    wStringNombre = wStringNombre.replaceAll(".", "");
+    wStringNombre = "$wStringNombre$wCh";
+
+    wNombre = int.tryParse(wStringNombre) ?? 0;
+
+
+    if (wSelNombre == 0) {
+      widget.wArticle_Ebp!.DCL_Det_PU = wNombre / 100;
+    } else if (wSelNombre == 1) {
+      widget.wArticle_Ebp!.DCL_Det_RemP = wNombre / 100;
+    } else if (wSelNombre == 2) {
+      widget.wArticle_Ebp!.DCL_Det_RemMt = wNombre / 100;
+    }
+
+    compute();
+  }
+
+  void supprChiffre() {
+    String wStringNombre = "";
+    int wNombre = 0;
+
+    if (wSelNombre == 0) {
+      wStringNombre = widget.wArticle_Ebp!.DCL_Det_PU.toStringAsFixed(2);
+    } else if (wSelNombre == 1) {
+      wStringNombre = widget.wArticle_Ebp!.DCL_Det_RemP.toStringAsFixed(2);
+    } else if (wSelNombre == 2) {
+      wStringNombre = widget.wArticle_Ebp!.DCL_Det_RemMt.toStringAsFixed(2);
+    }
+
+    print("wStringNombre ${wStringNombre}");
+
+    wStringNombre = wStringNombre.replaceAll(".", "");
+
+    if (wStringNombre != null && wStringNombre.length > 0) {
+      wStringNombre = wStringNombre.substring(0, wStringNombre.length - 1);
+    }
+
+    print("wStringNombre ${wStringNombre}");
+    wNombre = int.tryParse(wStringNombre) ?? 0;
+    print("wNombre ${wNombre}");
+
+    if (wSelNombre == 0) {
+      widget.wArticle_Ebp!.DCL_Det_PU = wNombre / 100;
+    } else if (wSelNombre == 1) {
+      widget.wArticle_Ebp!.DCL_Det_RemP = wNombre / 100;
+    } else if (wSelNombre == 2) {
+      widget.wArticle_Ebp!.DCL_Det_RemMt = wNombre / 100;
+    }
+    compute();
+  }
+
+  void raz() {
+    widget.wArticle_Ebp!.DCL_Det_PU = widget.wArticle_Ebp!.Article_PVHT;
+    compute();
+  }
+
+
+  void inc() {
+      if (wSelNombre == 0) {
+      widget.wArticle_Ebp!.DCL_Det_PU++;
+      } else if (wSelNombre == 1) {
+      widget.wArticle_Ebp!.DCL_Det_RemP++;
+      } else if (wSelNombre == 2) {
+      widget.wArticle_Ebp!.DCL_Det_RemMt++;
+      }
+
+
+    compute();
+  }
+
+  void desc() {
+
+    double wNombre = 0;
+
+    if (wSelNombre == 0) {
+      wNombre = widget.wArticle_Ebp!.DCL_Det_PU;
+    } else if (wSelNombre == 1) {
+      wNombre = widget.wArticle_Ebp!.DCL_Det_RemP;
+    } else if (wSelNombre == 2) {
+      wNombre = widget.wArticle_Ebp!.DCL_Det_RemMt;
+    }
+
+    if (wNombre > 1)
+      {
+        if (wSelNombre == 0) {
+          widget.wArticle_Ebp!.DCL_Det_PU--;
+        } else if (wSelNombre == 1) {
+          widget.wArticle_Ebp!.DCL_Det_RemP--;
+        } else if (wSelNombre == 2) {
+          widget.wArticle_Ebp!.DCL_Det_RemMt--;
+        }
+
+      }
+      compute();
+  }
+
+  void compute() {
+    if (wSelNombre == 0) {
+      widget.wArticle_Ebp!.DCL_Det_RemP = 0;
+      if (widget.wArticle_Ebp!.Article_PVHT > 0) widget.wArticle_Ebp!.DCL_Det_RemP = (widget.wArticle_Ebp!.Article_PVHT - widget.wArticle_Ebp!.DCL_Det_PU) / widget.wArticle_Ebp!.Article_PVHT * 100;
+      widget.wArticle_Ebp!.DCL_Det_RemMt = widget.wArticle_Ebp!.Article_PVHT - widget.wArticle_Ebp!.DCL_Det_PU;
+    } else if (wSelNombre == 1) {
+      widget.wArticle_Ebp!.DCL_Det_PU = widget.wArticle_Ebp!.Article_PVHT - (widget.wArticle_Ebp!.Article_PVHT * widget.wArticle_Ebp!.DCL_Det_RemP / 100);
+      widget.wArticle_Ebp!.DCL_Det_RemMt = widget.wArticle_Ebp!.Article_PVHT - widget.wArticle_Ebp!.DCL_Det_PU;
+    } else if (wSelNombre == 2) {
+      widget.wArticle_Ebp!.DCL_Det_PU = widget.wArticle_Ebp!.Article_PVHT - widget.wArticle_Ebp!.DCL_Det_RemMt;
+      widget.wArticle_Ebp!.DCL_Det_RemP = 0;
+      if (widget.wArticle_Ebp!.Article_PVHT > 0) widget.wArticle_Ebp!.DCL_Det_RemP = (widget.wArticle_Ebp!.Article_PVHT - widget.wArticle_Ebp!.DCL_Det_PU) / widget.wArticle_Ebp!.Article_PVHT * 100;
+    }
+
+    if (widget.wArticle_Ebp!.DCL_Det_PU > widget.wArticle_Ebp!.Article_PVHT) {
+      widget.wArticle_Ebp!.DCL_Det_PU = widget.wArticle_Ebp!.Article_PVHT;
+      widget.wArticle_Ebp!.DCL_Det_RemP = 0;
+      if (widget.wArticle_Ebp!.Article_PVHT > 0) widget.wArticle_Ebp!.DCL_Det_RemP = (widget.wArticle_Ebp!.Article_PVHT - widget.wArticle_Ebp!.DCL_Det_PU) / widget.wArticle_Ebp!.Article_PVHT * 100;
+      widget.wArticle_Ebp!.DCL_Det_RemMt = widget.wArticle_Ebp!.Article_PVHT - widget.wArticle_Ebp!.DCL_Det_PU;
+    }
+
+    if (widget.wArticle_Ebp!.DCL_Det_RemP > 100) {
+      widget.wArticle_Ebp!.DCL_Det_RemP = 100;
+      widget.wArticle_Ebp!.DCL_Det_PU = widget.wArticle_Ebp!.Article_PVHT - (widget.wArticle_Ebp!.Article_PVHT * widget.wArticle_Ebp!.DCL_Det_RemP / 100);
+      widget.wArticle_Ebp!.DCL_Det_RemMt = widget.wArticle_Ebp!.Article_PVHT - widget.wArticle_Ebp!.DCL_Det_PU;
+    }
+
+    if (widget.wArticle_Ebp!.DCL_Det_RemMt > widget.wArticle_Ebp!.Article_PVHT) {
+      widget.wArticle_Ebp!.DCL_Det_RemMt = widget.wArticle_Ebp!.Article_PVHT;
+      widget.wArticle_Ebp!.DCL_Det_PU = widget.wArticle_Ebp!.Article_PVHT - widget.wArticle_Ebp!.DCL_Det_RemMt;
+      widget.wArticle_Ebp!.DCL_Det_RemP = 0;
+      if (widget.wArticle_Ebp!.Article_PVHT > 0) widget.wArticle_Ebp!.DCL_Det_RemP = (widget.wArticle_Ebp!.Article_PVHT - widget.wArticle_Ebp!.DCL_Det_PU) / widget.wArticle_Ebp!.Article_PVHT * 100;
+    }
+
+
+
+
+    setState(() {});
+  }
+
+  DateTime selectedDate = DateTime.now();
+  Future<void> _selectDate(BuildContext context, DateTime firstDate, DateTime lastDate) async {
+    print("selectedDate >> ${selectedDate}");
+
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: firstDate,
+        lastDate: lastDate,
+        builder: (BuildContext context, Widget? child) {
+          return Theme(
+            data: ThemeData(
+              dividerColor: gColors.LinearGradient5,
+              colorScheme: ColorScheme.light(
+                primary: gColors.LinearGradient5,
+                onPrimary: Colors.white, // header text color
+                surface: Colors.white, // fond
+                onSurface: Colors.black, // body text color`
+              ),
+            ),
+            child: child!,
+          );
+        });
+    if (picked != null && picked != selectedDate) {
+      setState(() {
+        selectedDate = picked;
+        print("selectedDate << ${selectedDate}");
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (Srv_DbTools.wUserLogin_Art_Fav.contains(widget.wArticle_Ebp?.Article_codeArticle)) {
+      isFav = true;
+    }
+
+    int wRem = 0;
+    if (widget.wArticle_Ebp!.Article_PVHT > 0) {
+      wRem = ((widget.wArticle_Ebp!.Article_PVHT - widget.wArticle_Ebp!.Article_Promo_PVHT) / widget.wArticle_Ebp!.Article_PVHT * 100).round();
+    }
+
+
+
+    DateTime wDate = DateTime.now();
+    try {
+      wDate = new DateFormat("dd/MM/yyyy").parse(widget.wArticle_Ebp!.DCL_Det_DateLivr);
+    } catch (e) {}
+    var formatdate = new DateFormat('EEEE\ndd/MM/yyyy', 'fr_FR');
+    String formattedDate = formatdate.format(wDate);
+    formattedDate = formattedDate.replaceRange(
+      0,
+      1,
+      formattedDate.substring(0, 1).toUpperCase(),
+    );
+
+    return Stack(
+      children: [
+        Container(
+          color: Colors.white,
+          width: wWidth,
+          child: Container(
+            child: Container(
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+              color: gColors.LinearGradient2,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  widget.wArticle_Ebp!.Article_Promo_PVHT != 0
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(20, 12, 0, 12),
+                              padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                              decoration: BoxDecoration(
+                                color: Colors.orange,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Promo',
+                                    style: gColors.bodyTitle1_B_W24,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Spacer(),
+                            Container(
+                              height: 80,
+                              padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
+                              color: gColors.LinearGradient2,
+                              child: Text(
+                                "${formatter.format(widget.wArticle_Ebp!.Article_PVHT).replaceAll(',', ' ').replaceAll('.', ',')}€",
+                                style: gColors.bodyTitle1_N_G24.copyWith(decoration: TextDecoration.lineThrough),
+                                textAlign: TextAlign.right,
+                              ),
+                            ),
+                            Spacer(),
+                            Container(
+                              height: 80,
+                              padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
+                              color: gColors.LinearGradient2,
+                              child: Text(
+                                "${wRem}%",
+                                style: gColors.bodyTitle1_N_G24,
+                                textAlign: TextAlign.right,
+                              ),
+                            ),
+                            Spacer(),
+                            Container(
+                              height: 80,
+                              padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
+                              color: gColors.LinearGradient2,
+                              child: Text(
+                                "${formatter.format(widget.wArticle_Ebp!.Article_Promo_PVHT).replaceAll(',', ' ').replaceAll('.', ',')}€",
+                                style: gColors.bodyTitle1_B_G24.copyWith(
+                                  color: Colors.orange,
+                                ),
+                                textAlign: TextAlign.right,
+                              ),
+                            ),
+                          ],
+                        )
+                      : Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              margin: const EdgeInsets.fromLTRB(20, 12, 0, 12),
+                              padding: const EdgeInsets.fromLTRB(20, 5, 20, 5),
+                              decoration: BoxDecoration(
+                                color: gColors.primaryGreen,
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'PV HT',
+                                    style: gColors.bodyTitle1_B_W24,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Spacer(),
+                            Container(
+                              height: 80,
+                              padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
+                              color: gColors.LinearGradient2,
+                              child: Text(
+                                "${formatter.format(widget.wArticle_Ebp!.Article_PVHT).replaceAll(',', ' ').replaceAll('.', ',')}€",
+                                style: gColors.bodyTitle1_B_G24.copyWith(color: gColors.primaryGreen),
+                                textAlign: TextAlign.right,
+                              ),
+                            ),
+                          ],
+                        ),
+                  Container(
+                    color: gColors.LinearGradient1,
+                    height: 1,
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        height: 593,
+                        width: 179,
+                        color: gColors.LinearGradient3,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: 30,
+                            ),
+                            Text(
+                              formattedDate,
+                              style: gColors.bodyTitle1_B_G24,
+                              textAlign: TextAlign.center,
+                            ),
+                            Container(
+                              height: 30,
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  elevation: 0,
+                                  backgroundColor: widget.wArticle_Ebp!.DCL_Det_Livr == 0 ? gColors.primaryBlue2 : gColors.LinearGradient3,
+                                  side: BorderSide(
+                                    color: widget.wArticle_Ebp!.DCL_Det_Livr == 0 ? gColors.primaryBlue2 : gColors.LinearGradient1,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  )),
+                              child: Container(
+                                width: 115,
+                                height: 50,
+                                padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
+                                child: Text(
+                                  "Livré",
+                                  style: widget.wArticle_Ebp!.DCL_Det_Livr == 0 ? gColors.bodyTitle1_B_W24 : gColors.bodyTitle1_N_G24,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              onPressed: () async {
+                                widget.wArticle_Ebp!.DCL_Det_Livr = 0;
+                                widget.wArticle_Ebp!.DCL_Det_DateLivr = DateFormat('dd/MM/yyyy').format(DateTime.now());
+                                setState(() {});
+                              },
+                            ),
+                            Container(
+                              height: 20,
+                            ),
+                            ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    elevation: 0,
+                                    backgroundColor: widget.wArticle_Ebp!.DCL_Det_Livr == 1 ? gColors.primaryRed : gColors.LinearGradient3,
+                                    side: BorderSide(
+                                      color: widget.wArticle_Ebp!.DCL_Det_Livr == 1 ? gColors.primaryRed : gColors.LinearGradient1,
+                                    ),
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(8),
+                                    )),
+                                child: Container(
+                                  width: 115,
+                                  height: 50,
+                                  padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
+                                  child: Text(
+                                    "Reliquat",
+                                    style: widget.wArticle_Ebp!.DCL_Det_Livr == 1 ? gColors.bodyTitle1_B_W24 : gColors.bodyTitle1_N_G24,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  widget.wArticle_Ebp!.DCL_Det_Livr = 1;
+                                  try {
+                                    selectedDate = new DateFormat("dd/MM/yyyy").parse(widget.wArticle_Ebp!.DCL_Det_DateLivr);
+                                  } catch (e) {}
+                                  await _selectDate(context, DateTime(1900), DateTime(DateTime.now().year + 1, 12, 31));
+                                  widget.wArticle_Ebp!.DCL_Det_DateLivr = DateFormat('dd/MM/yyyy').format(selectedDate);
+                                  setState(() {});
+                                }),
+                            Container(
+                              height: 30,
+                            ),
+                            Container(
+                              color: gColors.LinearGradient1,
+                              height: 1,
+                            ),
+                            Container(
+                              height: 30,
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  elevation: 0,
+                                  backgroundColor: widget.wArticle_Ebp!.DCL_Det_Statut == "Facturable" ? gColors.primaryGreen : gColors.LinearGradient3,
+                                  side: BorderSide(
+                                    color: widget.wArticle_Ebp!.DCL_Det_Statut == "Facturable" ? gColors.primaryGreen : gColors.LinearGradient1,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  )),
+                              child: Container(
+                                width: 115,
+                                height: 50,
+                                padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
+                                child: Text(
+                                  "Facturable",
+                                  style: widget.wArticle_Ebp!.DCL_Det_Statut == "Facturable" ? gColors.bodyTitle1_B_W24 : gColors.bodyTitle1_N_G24,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              onPressed: () async {
+                                if (widget.wArticle_Ebp!.DCL_Det_Statut == "Facturable") return;
+                                widget.wArticle_Ebp!.DCL_Det_Statut = "Facturable";
+                                widget.wArticle_Ebp!.DCL_Det_PU = widget.wArticle_Ebp!.Article_PVHT;
+                                compute();
+
+                                setState(() {});
+                              },
+                            ),
+                            Container(
+                              height: 20,
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  elevation: 0,
+                                  backgroundColor: widget.wArticle_Ebp!.DCL_Det_Statut == "Offert" ? gColors.btnMove : gColors.LinearGradient3,
+                                  side: BorderSide(
+                                    color: widget.wArticle_Ebp!.DCL_Det_Statut == "Offert" ? gColors.btnMove : gColors.LinearGradient1,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  )),
+                              child: Container(
+                                width: 115,
+                                height: 50,
+                                padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
+                                child: Text(
+                                  "Offert",
+                                  style: widget.wArticle_Ebp!.DCL_Det_Statut == "Offert" ? gColors.bodyTitle1_B_W24 : gColors.bodyTitle1_N_G24,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              onPressed: () async {
+                                if (widget.wArticle_Ebp!.DCL_Det_Statut == "Offert") return;
+
+                                widget.wArticle_Ebp!.DCL_Det_Statut = "Offert";
+                                widget.wArticle_Ebp!.DCL_Det_PU = 0;
+                                compute();
+                                setState(() {});
+                              },
+                            ),
+                            Container(
+                              height: 20,
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  elevation: 0,
+                                  backgroundColor: widget.wArticle_Ebp!.DCL_Det_Statut == "Compris" ? gColors.black : gColors.LinearGradient3,
+                                  side: BorderSide(
+                                    color: widget.wArticle_Ebp!.DCL_Det_Statut == "Compris" ? gColors.black : gColors.LinearGradient1,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  )),
+                              child: Container(
+                                width: 115,
+                                height: 50,
+                                padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
+                                child: Text(
+                                  "Compris",
+                                  style: widget.wArticle_Ebp!.DCL_Det_Statut == "Compris" ? gColors.bodyTitle1_B_W24 : gColors.bodyTitle1_N_G24,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              onPressed: () async {
+                                if (widget.wArticle_Ebp!.DCL_Det_Statut == "Compris") return;
+                                widget.wArticle_Ebp!.DCL_Det_Statut = "Compris";
+                                widget.wArticle_Ebp!.DCL_Det_PU = 0;
+                                compute();
+
+                                setState(() {});
+                              },
+                            ),
+                            Container(
+                              height: 20,
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  elevation: 0,
+                                  backgroundColor: widget.wArticle_Ebp!.DCL_Det_Statut == "Garantie" ? Colors.red : gColors.LinearGradient3,
+                                  side: BorderSide(
+                                    color: widget.wArticle_Ebp!.DCL_Det_Statut == "Garantie" ? Colors.red : gColors.LinearGradient1,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  )),
+                              child: Container(
+                                width: 115,
+                                height: 50,
+                                padding: const EdgeInsets.fromLTRB(0, 11, 0, 0),
+                                child: Text(
+                                  "Garantie",
+                                  style: widget.wArticle_Ebp!.DCL_Det_Statut == "Garantie" ? gColors.bodyTitle1_B_W24 : gColors.bodyTitle1_N_G24,
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              onPressed: () async {
+                                await DCL_Ent_Garantie_Dialog.Dialogs_DCL_Ent_Garantie(context, widget.wArticle_Ebp!);
+                                widget.wArticle_Ebp!.DCL_Det_Statut = "Garantie";
+                                widget.wArticle_Ebp!.DCL_Det_PU = 0;
+                                compute();
+
+                                setState(() {});
+                              },
+                            ),
+                          ],
+                        ),
+                      ),
+                      Container(
+                        height: 590,
+                        width: 1,
+                        color: gColors.LinearGradient1,
+                      ),
+                      Container(
+                        height: 590,
+                        width: 380,
+                        color: gColors.white,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Container(
+                              height: 20,
+                            ),
+                            ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                  elevation: 0,
+                                  side: BorderSide(
+                                    color: gColors.LinearGradient1,
+                                    width: wSelNombre == 0 ? 3 : 1,
+                                  ),
+                                  backgroundColor: gColors.SecondaryGreen,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(8),
+                                  )),
+                              child: Container(
+                                width: 302,
+                                height: 100,
+                                padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+                                child: Text(
+                                  "PV Net HT\n${formatter.format(widget.wArticle_Ebp!.DCL_Det_PU).replaceAll(',', ' ').replaceAll('.', ',')}€",
+                                  style: gColors.bodyTitle1_B_G24.copyWith(height: 1.5),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                              onPressed: () async {
+                                wSelNombre = 0;
+                                isNewSel = true;
+                                setState(() {});
+                              },
+                            ),
+                            Container(
+                              height: 18,
+                            ),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 24,
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      side: BorderSide(
+                                        color: gColors.LinearGradient1,
+                                        width: wSelNombre == 1 ? 3 : 1,
+                                      ),
+                                      backgroundColor: gColors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      )),
+                                  child: Container(
+                                    width: 126,
+                                    height: 100,
+                                    padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+                                    child: Text(
+                                      "Remise\n${formatter.format(widget.wArticle_Ebp!.DCL_Det_RemP).replaceAll(',', ' ').replaceAll('.', ',')}%",
+                                      style: gColors.bodyTitle1_B_G24.copyWith(height: 1.5),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    wSelNombre = 1;
+                                    isNewSel = true;
+                                    setState(() {});
+                                  },
+                                ),
+                                Container(
+                                  width: 18,
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      side: BorderSide(
+                                        color: gColors.LinearGradient1,
+                                        width: wSelNombre == 2 ? 3 : 1,
+                                      ),
+                                      backgroundColor: gColors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      )),
+                                  child: Container(
+                                    width: 126,
+                                    height: 100,
+                                    padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+                                    child: Text(
+                                      "Remise\n${formatter.format(widget.wArticle_Ebp!.DCL_Det_RemMt).replaceAll(',', ' ').replaceAll('.', ',')}€",
+                                      style: gColors.bodyTitle1_B_G24.copyWith(height: 1.5),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    wSelNombre = 2;
+                                    isNewSel = true;
+                                    setState(() {});
+                                  },
+                                ),
+                              ],
+                            ),
+                            Container(
+                              height: 18,
+                            ),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 24,
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      side: BorderSide(
+                                        color: gColors.LinearGradient1,
+                                      ),
+                                      backgroundColor: gColors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      )),
+                                  child: Container(
+                                    width: wSizetouche,
+                                    height: 65,
+                                    padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+                                    child: Text(
+                                      "7",
+                                      style: gColors.bodyTitle1_B_G32,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    AjoutChiffre(7);
+                                  },
+                                ),
+                                Container(
+                                  width: 18,
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      side: BorderSide(
+                                        color: gColors.LinearGradient1,
+                                      ),
+                                      backgroundColor: gColors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      )),
+                                  child: Container(
+                                    width: wSizetouche,
+                                    height: 65,
+                                    padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+                                    child: Text(
+                                      "8",
+                                      style: gColors.bodyTitle1_B_G32,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    AjoutChiffre(8);
+                                  },
+                                ),
+                                Container(
+                                  width: 18,
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      side: BorderSide(
+                                        color: gColors.LinearGradient1,
+                                      ),
+                                      backgroundColor: gColors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      )),
+                                  child: Container(
+                                    width: wSizetouche,
+                                    height: 65,
+                                    padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+                                    child: Text(
+                                      "9",
+                                      style: gColors.bodyTitle1_B_G32,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    AjoutChiffre(9);
+                                  },
+                                ),
+                                Container(
+                                  width: 18,
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      side: BorderSide(
+                                        color: gColors.LinearGradient1,
+                                      ),
+                                      backgroundColor: gColors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      )),
+                                  child: Container(
+                                    width: wSizetouche,
+                                    height: 65,
+                                    padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+                                    child: Text(
+                                      "+",
+                                      style: gColors.bodyTitle1_B_G32,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    inc();
+                                    },
+                                ),
+                              ],
+                            ),
+                            Container(
+                              height: 18,
+                            ),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 24,
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      side: BorderSide(
+                                        color: gColors.LinearGradient1,
+                                      ),
+                                      backgroundColor: gColors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      )),
+                                  child: Container(
+                                    width: wSizetouche,
+                                    height: 65,
+                                    padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+                                    child: Text(
+                                      "4",
+                                      style: gColors.bodyTitle1_B_G32,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    AjoutChiffre(4);
+                                  },
+                                ),
+                                Container(
+                                  width: 18,
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      side: BorderSide(
+                                        color: gColors.LinearGradient1,
+                                      ),
+                                      backgroundColor: gColors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      )),
+                                  child: Container(
+                                    width: wSizetouche,
+                                    height: 65,
+                                    padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+                                    child: Text(
+                                      "5",
+                                      style: gColors.bodyTitle1_B_G32,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    AjoutChiffre(5);
+                                  },
+                                ),
+                                Container(
+                                  width: 18,
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      side: BorderSide(
+                                        color: gColors.LinearGradient1,
+                                      ),
+                                      backgroundColor: gColors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      )),
+                                  child: Container(
+                                    width: wSizetouche,
+                                    height: 65,
+                                    padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+                                    child: Text(
+                                      "6",
+                                      style: gColors.bodyTitle1_B_G32,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    AjoutChiffre(6);
+                                  },
+                                ),
+                                Container(
+                                  width: 18,
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      side: BorderSide(
+                                        color: gColors.LinearGradient1,
+                                      ),
+                                      backgroundColor: gColors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      )),
+                                  child: Container(
+                                    width: wSizetouche,
+                                    height: 65,
+                                    padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+                                    child: Text(
+                                      "-",
+                                      style: gColors.bodyTitle1_B_G32,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    desc();
+                                  },
+                                ),
+                              ],
+                            ),
+                            Container(
+                              height: 18,
+                            ),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 24,
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      side: BorderSide(
+                                        color: gColors.LinearGradient1,
+                                      ),
+                                      backgroundColor: gColors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      )),
+                                  child: Container(
+                                    width: wSizetouche,
+                                    height: 65,
+                                    padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+                                    child: Text(
+                                      "1",
+                                      style: gColors.bodyTitle1_B_G32,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    AjoutChiffre(1);
+                                  },
+                                ),
+                                Container(
+                                  width: 18,
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      side: BorderSide(
+                                        color: gColors.LinearGradient1,
+                                      ),
+                                      backgroundColor: gColors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      )),
+                                  child: Container(
+                                    width: wSizetouche,
+                                    height: 65,
+                                    padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+                                    child: Text(
+                                      "2",
+                                      style: gColors.bodyTitle1_B_G32,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    AjoutChiffre(2);
+                                  },
+                                ),
+                                Container(
+                                  width: 18,
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      side: BorderSide(
+                                        color: gColors.LinearGradient1,
+                                      ),
+                                      backgroundColor: gColors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      )),
+                                  child: Container(
+                                    width: wSizetouche,
+                                    height: 65,
+                                    padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+                                    child: Text(
+                                      "3",
+                                      style: gColors.bodyTitle1_B_G32,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    AjoutChiffre(3);
+                                  },
+                                ),
+                                Container(
+                                  width: 18,
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      side: BorderSide(
+                                        color: gColors.LinearGradient1,
+                                      ),
+                                      backgroundColor: gColors.GrdBtn_Colors5,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      )),
+                                  child: Container(
+                                    width: wSizetouche,
+                                    height: 65,
+                                    padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                                    child: Text(
+                                      "AC",
+                                      style: gColors.bodyTitle1_B_G24,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    raz();
+                                  },
+                                ),
+                              ],
+                            ),
+                            Container(
+                              height: 18,
+                            ),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 24,
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      side: BorderSide(
+                                        color: gColors.LinearGradient1,
+                                      ),
+                                      backgroundColor: gColors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      )),
+                                  child: Container(
+                                    width: wSizetouche,
+                                    height: 65,
+                                    padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+                                    child: Text(
+                                      "0",
+                                      style: gColors.bodyTitle1_B_G32,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    AjoutChiffre(0);
+                                  },
+                                ),
+                                Container(
+                                  width: 18,
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      side: BorderSide(
+                                        color: gColors.LinearGradient1,
+                                      ),
+                                      backgroundColor: gColors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      )),
+                                  child: Container(
+                                    width: wSizetouche,
+                                    height: 65,
+                                    padding: const EdgeInsets.fromLTRB(0, 12, 0, 0),
+                                    child: Text(
+                                      "00",
+                                      style: gColors.bodyTitle1_B_G32,
+                                      textAlign: TextAlign.center,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    AjoutChiffre(0);
+                                    AjoutChiffre(0);
+                                  },
+                                ),
+                                Container(
+                                  width: 18,
+                                ),
+                                ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      side: BorderSide(
+                                        color: gColors.LinearGradient1,
+                                      ),
+                                      backgroundColor: gColors.LinearGradient3,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8),
+                                      )),
+                                  child: Container(
+                                    width: wSizetouche,
+                                    height: 65,
+                                    padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                                    child: SvgPicture.asset(
+                                      "assets/images/DCL_ArrowLeft.svg",
+                                      color: gColors.black,
+                                      height: 60,
+                                      width: 60,
+                                    ),
+                                  ),
+                                  onPressed: () async {
+                                    supprChiffre();
+                                  },
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        if (widget.wArticle_Ebp!.DCL_Det_Statut != "Facturable")
+          Positioned(
+            top: 210,
+            left: 190,
+            child: Container(
+              height: 600,
+              width: 400,
+              color: gColors.transparent2,
+            ),
+          ),
+      ],
     );
   }
 }

@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart' as intl;
 import 'package:marquee/marquee.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
@@ -48,6 +49,15 @@ class gObj {
 
 
 
+
+
+  static String formatterformat(double aDouble)
+  {
+    var formatter = intl.NumberFormat('###,##0.00');
+    String wTmp = formatter.format(aDouble).replaceAll(',', ' ').replaceAll('.', ',');
+    if (wTmp == ",00") wTmp == ",00";
+return wTmp;
+  }
 
   static Widget SquareRoundIcon(BuildContext context, double wsize, double wradius, Color bckcolor, Color color, IconData icon, VoidCallback onTapVoidCallback) {
     return InkWell(

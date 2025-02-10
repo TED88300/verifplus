@@ -4,11 +4,14 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:group_button/group_button.dart';
 import 'package:intl/intl.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Articles_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
+import 'package:verifplus/Tools/DbTools/DbTools.dart';
+import 'package:verifplus/Tools/Upload.dart';
+import 'package:verifplus/Widget/GestCo/DCL_Ent_Garantie_Dialog.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
-import 'package:verifplus/Widget/Widget_Tools/gDialogs.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
 //**********************************
@@ -41,10 +44,10 @@ class _DCL_Devis_Det_ArticleState extends State<DCL_Devis_Det_Article> {
 
   List<int> wCpt = [];
 
+
   bool isFav = false;
 
   var pageController = PageController(keepPage: false, initialPage: 0);
-
   var screenController = PageController(keepPage: false, initialPage: 1);
 
   List<Article_Ebp> ListArticle_Ebpsearchresult = [];
@@ -66,6 +69,7 @@ class _DCL_Devis_Det_ArticleState extends State<DCL_Devis_Det_Article> {
     Srv_DbTools.wUserLogin_Art_Fav.clear();
     Srv_DbTools.wUserLogin_Art_Fav.addAll(Srv_DbTools.gUserLogin_Art_Fav);
 
+
     for (int i = 0; i < Srv_DbTools.ListArticle_Ebpsearchresult.length; i++) {
       Article_Ebp wArticle_Ebp = Srv_DbTools.ListArticle_Ebpsearchresult[i];
       if (!wArticle_Ebp.Art_Sel) continue;
@@ -74,6 +78,7 @@ class _DCL_Devis_Det_ArticleState extends State<DCL_Devis_Det_Article> {
       wArticle_Ebp.DCL_Det_Livr = Srv_DbTools.gDCL_Det.DCL_Det_Livr!;
       wArticle_Ebp.DCL_Det_DateLivr = Srv_DbTools.gDCL_Det.DCL_Det_DateLivr!;
       wArticle_Ebp.DCL_Det_Statut = Srv_DbTools.gDCL_Det.DCL_Det_Statut!;
+      wArticle_Ebp.DCL_Det_Garantie = Srv_DbTools.gDCL_Det.DCL_Det_Garantie!;
 
       wArticle_Ebp.DCL_Det_PU = Srv_DbTools.gDCL_Det.DCL_Det_PU!;
       if (wArticle_Ebp.DCL_Det_PU == 0) wArticle_Ebp.DCL_Det_PU = wArticle_Ebp.Article_PVHT;
@@ -81,6 +86,11 @@ class _DCL_Devis_Det_ArticleState extends State<DCL_Devis_Det_Article> {
       wArticle_Ebp.DCL_Det_RemP = 0;
       if (wArticle_Ebp.Article_PVHT > 0) wArticle_Ebp.DCL_Det_RemP = (wArticle_Ebp.Article_PVHT - wArticle_Ebp.DCL_Det_PU) / wArticle_Ebp.Article_PVHT * 100;
       wArticle_Ebp.DCL_Det_RemMt = wArticle_Ebp.Article_PVHT - wArticle_Ebp.DCL_Det_PU;
+
+      wArticle_Ebp.wImageG1 = Image.memory(blankBytes, height: 1,);
+      wArticle_Ebp.wImageG2 = Image.memory(blankBytes, height: 1,);
+      wArticle_Ebp.wImageG3 = Image.memory(blankBytes, height: 1,);
+
 
       StatePage wStatePage = StatePage(wArticle_Ebp: wArticle_Ebp, index: i, callback: Erase);
       widgets.add(wStatePage);
@@ -98,6 +108,13 @@ class _DCL_Devis_Det_ArticleState extends State<DCL_Devis_Det_Article> {
     indexPage = 0;
     pageController.dispose();
     pageController = PageController(keepPage: false, initialPage: 0);
+
+
+    print("");
+    print(" DCL_Devis_Det_Article widgets ${widgets.length}");
+    print("");
+
+
 
     print(" ADD ${widgets.length}");
 
@@ -174,6 +191,10 @@ class _DCL_Devis_Det_ArticleState extends State<DCL_Devis_Det_Article> {
 
     print(" B U I L D  ${widgets.length}");
 
+    DbTools.gImage = wImages[indexPage];
+    DbTools.gTitre = wTitres[indexPage];
+
+
     return SimpleDialog(
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
@@ -203,7 +224,7 @@ class _DCL_Devis_Det_ArticleState extends State<DCL_Devis_Det_Article> {
                 child: Container(
                   height: wHeightTitre,
                   width: wWidth,
-                  padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
+                  padding:  EdgeInsets.fromLTRB(0, indexScreen == 1 ? 20 : 0, 0, 0),
                   decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
@@ -259,7 +280,7 @@ class _DCL_Devis_Det_ArticleState extends State<DCL_Devis_Det_Article> {
                 padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                 decoration: BoxDecoration(
                   color: gColors.LinearGradient3,
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(24),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -314,20 +335,47 @@ class _DCL_Devis_Det_ArticleState extends State<DCL_Devis_Det_Article> {
                             ),
                           ),
                           onPressed: () async {
-                            print("Ajouter Srv_DbTools.ListArticle_Ebpsearchresult.length ${Srv_DbTools.ListArticle_Ebpsearchresult.length}");
                             for (int i = 0; i < Srv_DbTools.ListArticle_Ebpsearchresult.length; i++) {
                               Article_Ebp wArticle_Ebp = Srv_DbTools.ListArticle_Ebpsearchresult[i];
                               if (!wArticle_Ebp.Art_Sel) continue;
 
-                              Srv_DbTools.gDCL_Det.DCL_Det_PU = wArticle_Ebp.Article_Promo_PVHT > 0 ? wArticle_Ebp.Article_Promo_PVHT : wArticle_Ebp.Article_PVHT;
                               Srv_DbTools.gDCL_Det.DCL_Det_Qte = wArticle_Ebp.Art_Qte;
                               Srv_DbTools.gDCL_Det.DCL_Det_Livr = wArticle_Ebp.DCL_Det_Livr;
                               Srv_DbTools.gDCL_Det.DCL_Det_DateLivr = wArticle_Ebp.DCL_Det_DateLivr;
                               Srv_DbTools.gDCL_Det.DCL_Det_Statut = wArticle_Ebp.DCL_Det_Statut;
+                              Srv_DbTools.gDCL_Det.DCL_Det_Garantie = wArticle_Ebp.DCL_Det_Garantie;
 
                               Srv_DbTools.gDCL_Det.DCL_Det_PU = wArticle_Ebp.DCL_Det_PU;
                               Srv_DbTools.gDCL_Det.DCL_Det_RemP = wArticle_Ebp.DCL_Det_RemP;
                               Srv_DbTools.gDCL_Det.DCL_Det_RemMt = wArticle_Ebp.DCL_Det_RemMt;
+                              Srv_DbTools.gDCL_Det.DCL_Det_TVA = wArticle_Ebp.DCL_Det_TVA;
+
+
+                              print(" VALIDER ${wArticle_Ebp.DCL_Det_PU}");
+                              print(" VALIDER ${wArticle_Ebp.DCL_Det_RemP}");
+                              print(" VALIDER ${wArticle_Ebp.DCL_Det_RemMt}");
+                              print(" VALIDER ${DbTools.gTxTVA}");
+
+
+                              Srv_DbTools.gDCL_Det.DCL_Det_Garantie = wArticle_Ebp.DCL_Det_Garantie;
+
+                              String wName = "";
+
+                              if(wArticle_Ebp.DCL_Det_Path1!.length > 0)
+                                {
+                                  wName = "DCL_Det_Garantie${Srv_DbTools.gDCL_Det.DCL_DetID}_1.jpg";
+                                  await Upload.SaveMem400(wName, wArticle_Ebp.DCL_Det_Path1!);
+                                }
+                              if(wArticle_Ebp.DCL_Det_Path2!.length > 0)
+                                {
+                                wName = "DCL_Det_Garantie${Srv_DbTools.gDCL_Det.DCL_DetID}_2.jpg";
+                                await Upload.SaveMem400(wName, wArticle_Ebp.DCL_Det_Path2!);
+                                }
+                              if(wArticle_Ebp.DCL_Det_Path3!.length > 0)
+                                {
+                                wName = "DCL_Det_Garantie${Srv_DbTools.gDCL_Det.DCL_DetID}_3.jpg";
+                                await Upload.SaveMem400(wName, wArticle_Ebp.DCL_Det_Path3!);
+                                }
 
                               await Srv_DbTools.setDCL_Det(Srv_DbTools.gDCL_Det);
                             }
@@ -336,6 +384,7 @@ class _DCL_Devis_Det_ArticleState extends State<DCL_Devis_Det_Article> {
                             Srv_DbTools.gUserLogin_Art_Fav.addAll(Srv_DbTools.wUserLogin_Art_Fav);
                             Srv_DbTools.setUserArtFav(Srv_DbTools.gUserLogin);
                             Navigator.pop(context);
+
                           },
                         )
                       ],
@@ -1239,9 +1288,39 @@ class StatePageDetailState extends State<StatePageDetail> {
   bool isFav = false;
   Timer? timer;
 
+  int SelectOnglet = 0;
+
+  var pageControllerDetail = PageController(keepPage: false, initialPage: 0);
+
+  List<Widget> screensDetail = [];
+
+  final groupButtonController = GroupButtonController();
+  final pageController = PageController(keepPage: false, initialPage: 0);
+
+
   @override
   void initState() {
     super.initState();
+    groupButtonController.selectIndex(0);
+
+    screensDetail.add(
+      Container(
+        padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
+        child: Text(
+          "${widget.wArticle_Ebp!.Article_Notes}",
+          style: gColors.bodyTitle1_N_Gr,
+
+        ),
+      ),
+    );
+    screensDetail.add(Container(
+
+    ));
+    screensDetail.add(Container(
+
+    ));
+
+
   }
 
   @override
@@ -1255,29 +1334,92 @@ class StatePageDetailState extends State<StatePageDetail> {
       wRem = ((widget.wArticle_Ebp!.Article_PVHT - widget.wArticle_Ebp!.Article_Promo_PVHT) / widget.wArticle_Ebp!.Article_PVHT * 100).round();
     }
 
+    double btnWidth = 160;
+    double btnWidth2 = 140;
+
     return Container(
-      color: Colors.red,
-      width: wWidth,
-      child: Container(
-        child: Container(
           padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
           color: gColors.LinearGradient2,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Container(
-                height: 671,
-                padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
-                color: Colors.white,
-                child: Text("Détail"),
-              )
+                height: 80,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: Colors.grey,
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  height: 40,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      GroupButton(
+                          controller: groupButtonController,
+                          options: GroupButtonOptions(
+                            borderRadius: BorderRadius.circular(8),
+                            selectedTextStyle: gColors.bodyTitle1_B_Gr,
+                            selectedBorderColor: Colors.white,
+                            selectedColor: Colors.white,
+                            selectedShadow: const [],
+                            unselectedColor: Colors.grey,
+                            unselectedBorderColor: Colors.grey,
+                            unselectedTextStyle: gColors.bodyTitle1_B_Gr,
+                            unselectedShadow: const [],
+                            spacing: 10,
+                            runSpacing: 10,
+                            groupingType: GroupingType.wrap,
+                            direction: Axis.horizontal,
+                            buttonWidth: 150,
+                            buttonHeight: 40,
+                            textAlign: TextAlign.center,
+                            textPadding: EdgeInsets.zero,
+                            alignment: Alignment.center,
+                            elevation: 0,
+                          ),
+                          buttons: ['Détails', 'Offres', 'Fiche Tech.'],
+                          onSelected: (val, index, selected) {
+                            pageController.animateToPage(
+                              index,
+                              duration: const Duration(milliseconds: 400),
+                              curve: Curves.easeInOut,
+                            );
+                            setState(() {});
+                          }),
+                    ],
+                  ),
+                ),
+              ),
+
+
+
+              Container(
+                color: gColors.LinearGradient1,
+                height: 1,
+              ),
+
+//              screensDetail[SelectOnglet],
+              Expanded(
+                child: PageView(
+                  children: screensDetail,
+                  controller: pageController,
+//                      onPageChanged: onBottomIconPressed,
+                ),
+              ),
+
+
             ],
           ),
-        ),
-      ),
+
     );
   }
+
+
+
 }
 
 //***************************
@@ -1316,26 +1458,30 @@ class StatePageTarifState extends State<StatePageTarif> {
 
   int wSelNombre = 0;
 
+  bool isNewSel = true;
+
+
   void AjoutChiffre(int wCh) {
-    String wStringNombre = "";
+    String wStringNombre = "0";
     int wNombre = 0;
 
-    if (wSelNombre == 0) {
-      wStringNombre = widget.wArticle_Ebp!.DCL_Det_PU.toStringAsFixed(2);
-    } else if (wSelNombre == 1) {
-      wStringNombre = widget.wArticle_Ebp!.DCL_Det_RemP.toStringAsFixed(2);
-    } else if (wSelNombre == 2) {
-      wStringNombre = widget.wArticle_Ebp!.DCL_Det_RemMt.toStringAsFixed(2);
-    }
+    if (!isNewSel)
+      {
+        if (wSelNombre == 0) {
+          wStringNombre = widget.wArticle_Ebp!.DCL_Det_PU.toStringAsFixed(2);
+        } else if (wSelNombre == 1) {
+          wStringNombre = widget.wArticle_Ebp!.DCL_Det_RemP.toStringAsFixed(2);
+        } else if (wSelNombre == 2) {
+          wStringNombre = widget.wArticle_Ebp!.DCL_Det_RemMt.toStringAsFixed(2);
+        }
+      }
 
-    print("wStringNombre ${wStringNombre}");
-
+    isNewSel = false;
     wStringNombre = wStringNombre.replaceAll(".", "");
     wStringNombre = "$wStringNombre$wCh";
 
-    print("wStringNombre ${wStringNombre}");
     wNombre = int.tryParse(wStringNombre) ?? 0;
-    print("wNombre ${wNombre}");
+
 
     if (wSelNombre == 0) {
       widget.wArticle_Ebp!.DCL_Det_PU = wNombre / 100;
@@ -1383,14 +1529,48 @@ class StatePageTarifState extends State<StatePageTarif> {
   }
 
   void raz() {
-    if (wSelNombre == 0) {
-      widget.wArticle_Ebp!.DCL_Det_PU = 0;
-    } else if (wSelNombre == 1) {
-      widget.wArticle_Ebp!.DCL_Det_RemP = 0;
-    } else if (wSelNombre == 2) {
-      widget.wArticle_Ebp!.DCL_Det_RemMt = 0;
-    }
+    widget.wArticle_Ebp!.DCL_Det_PU = widget.wArticle_Ebp!.Article_PVHT;
     compute();
+  }
+
+
+  void inc() {
+      if (wSelNombre == 0) {
+      widget.wArticle_Ebp!.DCL_Det_PU++;
+      } else if (wSelNombre == 1) {
+      widget.wArticle_Ebp!.DCL_Det_RemP++;
+      } else if (wSelNombre == 2) {
+      widget.wArticle_Ebp!.DCL_Det_RemMt++;
+      }
+
+
+    compute();
+  }
+
+  void desc() {
+
+    double wNombre = 0;
+
+    if (wSelNombre == 0) {
+      wNombre = widget.wArticle_Ebp!.DCL_Det_PU;
+    } else if (wSelNombre == 1) {
+      wNombre = widget.wArticle_Ebp!.DCL_Det_RemP;
+    } else if (wSelNombre == 2) {
+      wNombre = widget.wArticle_Ebp!.DCL_Det_RemMt;
+    }
+
+    if (wNombre > 1)
+      {
+        if (wSelNombre == 0) {
+          widget.wArticle_Ebp!.DCL_Det_PU--;
+        } else if (wSelNombre == 1) {
+          widget.wArticle_Ebp!.DCL_Det_RemP--;
+        } else if (wSelNombre == 2) {
+          widget.wArticle_Ebp!.DCL_Det_RemMt--;
+        }
+
+      }
+      compute();
   }
 
   void compute() {
@@ -1414,15 +1594,50 @@ class StatePageTarifState extends State<StatePageTarif> {
       widget.wArticle_Ebp!.DCL_Det_RemMt = widget.wArticle_Ebp!.Article_PVHT - widget.wArticle_Ebp!.DCL_Det_PU;
     }
 
+    if (widget.wArticle_Ebp!.DCL_Det_RemP > 100) {
+      widget.wArticle_Ebp!.DCL_Det_RemP = 100;
+      widget.wArticle_Ebp!.DCL_Det_PU = widget.wArticle_Ebp!.Article_PVHT - (widget.wArticle_Ebp!.Article_PVHT * widget.wArticle_Ebp!.DCL_Det_RemP / 100);
+      widget.wArticle_Ebp!.DCL_Det_RemMt = widget.wArticle_Ebp!.Article_PVHT - widget.wArticle_Ebp!.DCL_Det_PU;
+    }
+
+    if (widget.wArticle_Ebp!.DCL_Det_RemMt > widget.wArticle_Ebp!.Article_PVHT) {
+      widget.wArticle_Ebp!.DCL_Det_RemMt = widget.wArticle_Ebp!.Article_PVHT;
+      widget.wArticle_Ebp!.DCL_Det_PU = widget.wArticle_Ebp!.Article_PVHT - widget.wArticle_Ebp!.DCL_Det_RemMt;
+      widget.wArticle_Ebp!.DCL_Det_RemP = 0;
+      if (widget.wArticle_Ebp!.Article_PVHT > 0) widget.wArticle_Ebp!.DCL_Det_RemP = (widget.wArticle_Ebp!.Article_PVHT - widget.wArticle_Ebp!.DCL_Det_PU) / widget.wArticle_Ebp!.Article_PVHT * 100;
+    }
+
+
+
+
+
+
     setState(() {});
   }
-
 
   DateTime selectedDate = DateTime.now();
   Future<void> _selectDate(BuildContext context, DateTime firstDate, DateTime lastDate) async {
     print("selectedDate >> ${selectedDate}");
 
-    final DateTime? picked = await showDatePicker(context: context, initialDate: selectedDate, firstDate: firstDate, lastDate: lastDate);
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: firstDate,
+        lastDate: lastDate,
+        builder: (BuildContext context, Widget? child) {
+          return Theme(
+            data: ThemeData(
+              dividerColor: gColors.LinearGradient5,
+              colorScheme: ColorScheme.light(
+                primary: gColors.LinearGradient5,
+                onPrimary: Colors.white, // header text color
+                surface: Colors.white, // fond
+                onSurface: Colors.black, // body text color`
+              ),
+            ),
+            child: child!,
+          );
+        });
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
@@ -1430,7 +1645,6 @@ class StatePageTarifState extends State<StatePageTarif> {
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -1445,7 +1659,7 @@ class StatePageTarifState extends State<StatePageTarif> {
 
     DateTime wDate = DateTime.now();
     try {
-       wDate = new DateFormat("dd/MM/yyyy").parse(widget.wArticle_Ebp!.DCL_Det_DateLivr);
+      wDate = new DateFormat("dd/MM/yyyy").parse(widget.wArticle_Ebp!.DCL_Det_DateLivr);
     } catch (e) {}
     var formatdate = new DateFormat('EEEE\ndd/MM/yyyy', 'fr_FR');
     String formattedDate = formatdate.format(wDate);
@@ -1457,8 +1671,6 @@ class StatePageTarifState extends State<StatePageTarif> {
 
     return Stack(
       children: [
-
-
         Container(
           color: Colors.white,
           width: wWidth,
@@ -1639,19 +1851,11 @@ class StatePageTarifState extends State<StatePageTarif> {
                                 ),
                                 onPressed: () async {
                                   widget.wArticle_Ebp!.DCL_Det_Livr = 1;
-
-
-
                                   try {
                                     selectedDate = new DateFormat("dd/MM/yyyy").parse(widget.wArticle_Ebp!.DCL_Det_DateLivr);
                                   } catch (e) {}
                                   await _selectDate(context, DateTime(1900), DateTime(DateTime.now().year + 1, 12, 31));
-
-print("selectedDate ${selectedDate.toString()}");
-
                                   widget.wArticle_Ebp!.DCL_Det_DateLivr = DateFormat('dd/MM/yyyy').format(selectedDate);
-
-
                                   setState(() {});
                                 }),
                             Container(
@@ -1781,7 +1985,56 @@ print("selectedDate ${selectedDate.toString()}");
                                 ),
                               ),
                               onPressed: () async {
-                                if (widget.wArticle_Ebp!.DCL_Det_Statut == "Garantie") return;
+
+
+                                String wName = "DCL_Det_Garantie${Srv_DbTools.gDCL_Det.DCL_DetID}_1.jpg";
+                                Uint8List pic = await gColors.getImage(wName);
+                                print(" pic $wName ${pic.length}");
+                                ;
+                                if (pic.length > 400) {
+                                  widget.wArticle_Ebp!.wImageG1 = Image.memory(
+                                    pic,
+                                    fit: BoxFit.scaleDown,
+                                    height: 400,
+                                    width: 400,
+                                  );
+                                }
+                                ("  widget.wArticle_Ebp!.wImageG1 ${widget.wArticle_Ebp!.wImageG1.width}");
+
+                                wName = "DCL_Det_Garantie${Srv_DbTools.gDCL_Det.DCL_DetID}_2.jpg";
+                                pic = await gColors.getImage(wName);
+                                print(" pic $wName ${pic.length}");
+                                ;
+                                if (pic.length > 400) {
+                                  widget.wArticle_Ebp!.wImageG2 = Image.memory(
+                                    pic,
+                                    fit: BoxFit.scaleDown,
+                                    height: 400,
+                                    width: 400,
+                                  );
+                                }
+
+                                print("  widget.wArticle_Ebp!.wImageG2 ${widget.wArticle_Ebp!.wImageG2.width}");
+
+                                wName = "DCL_Det_Garantie${Srv_DbTools.gDCL_Det.DCL_DetID}_3.jpg";
+                                pic = await gColors.getImage(wName);
+                                print(" pic $wName ${pic.length}");
+                                ;
+                                if (pic.length > 400) {
+                                  widget.wArticle_Ebp!.wImageG3 = Image.memory(
+                                    pic,
+                                    fit: BoxFit.scaleDown,
+                                    height: 400,
+                                    width: 400,
+                                  );
+                                }
+
+                                print("  widget.wArticle_Ebp!.wImageG3 ${widget.wArticle_Ebp!.wImageG3.width}");
+
+
+
+
+                                await DCL_Ent_Garantie_Dialog.Dialogs_DCL_Ent_Garantie(context, widget.wArticle_Ebp!);
                                 widget.wArticle_Ebp!.DCL_Det_Statut = "Garantie";
                                 widget.wArticle_Ebp!.DCL_Det_PU = 0;
                                 compute();
@@ -1831,6 +2084,7 @@ print("selectedDate ${selectedDate.toString()}");
                               ),
                               onPressed: () async {
                                 wSelNombre = 0;
+                                isNewSel = true;
                                 setState(() {});
                               },
                             ),
@@ -1865,6 +2119,7 @@ print("selectedDate ${selectedDate.toString()}");
                                   ),
                                   onPressed: () async {
                                     wSelNombre = 1;
+                                    isNewSel = true;
                                     setState(() {});
                                   },
                                 ),
@@ -1894,6 +2149,7 @@ print("selectedDate ${selectedDate.toString()}");
                                   ),
                                   onPressed: () async {
                                     wSelNombre = 2;
+                                    isNewSel = true;
                                     setState(() {});
                                   },
                                 ),
@@ -2008,7 +2264,9 @@ print("selectedDate ${selectedDate.toString()}");
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
-                                  onPressed: () async {},
+                                  onPressed: () async {
+                                    inc();
+                                    },
                                 ),
                               ],
                             ),
@@ -2121,7 +2379,9 @@ print("selectedDate ${selectedDate.toString()}");
                                       textAlign: TextAlign.center,
                                     ),
                                   ),
-                                  onPressed: () async {},
+                                  onPressed: () async {
+                                    desc();
+                                  },
                                 ),
                               ],
                             ),
@@ -2340,22 +2600,16 @@ print("selectedDate ${selectedDate.toString()}");
             ),
           ),
         ),
-
-if (widget.wArticle_Ebp!.DCL_Det_Statut != "Facturable" )
-        Positioned(
-          top: 210,
-          left : 190,
-          child:
-          Container(
-            height: 600,
-            width: 400,
-
-            color: gColors.transparent2,),
-
-        ),
-
-
-
+        if (widget.wArticle_Ebp!.DCL_Det_Statut != "Facturable")
+          Positioned(
+            top: 210,
+            left: 190,
+            child: Container(
+              height: 600,
+              width: 400,
+              color: gColors.transparent2,
+            ),
+          ),
       ],
     );
   }

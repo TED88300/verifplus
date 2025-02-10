@@ -435,7 +435,7 @@ class _MissionsState extends State<Missions> {
 
       try {
         Uint8List? pic = await gColors.getImage(wUserImg);
-        if (pic.length > 0) {
+        if (pic.length > 300) {
           print("pic ${pic.length}");
           _images.add(pic!);
         }
@@ -495,6 +495,7 @@ class _MissionsState extends State<Missions> {
         ],
       );
     } else {
+
       Uint8List? _bytes = await gColors.getDoc(wDocPath);
       print("wDocPath $wDocPath length ${_bytes.length}");
       if (_bytes.length > 0) {
@@ -532,6 +533,7 @@ class _MissionsState extends State<Missions> {
           ],
         );
       }
+
     }
 
     return wWidget;

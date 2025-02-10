@@ -41,6 +41,13 @@ class gDialogs {
     );
   }
 
+  static Future<void> Dialog_MsgBox2(BuildContext context, String wTxt, String wImg, String wLabel1, String wLabel2) async {
+    await showDialog(
+      context: context,
+      builder: (BuildContext context) => MsgBoxDialog2(wTxt: wTxt, wImg: wImg, wLabel1: wLabel1, wLabel2: wLabel2),
+    );
+  }
+
   static Future<void> Dialog_MiseEnServ(BuildContext context) async {
     await showDialog(
       context: context,
@@ -72,10 +79,18 @@ class gDialogs {
   static Future<void> Dialog_ActionSel(BuildContext context) async {
     await showDialog(
       context: context,
+      barrierColor: Color(0xC8000000),
       builder: (BuildContext context) => ActionDialogSel(),
     );
   }
 
+  static Future<void> Dialog_ActionType(BuildContext context) async {
+    await showDialog(
+      context: context,
+      barrierColor: Color(0xC8000000),
+      builder: (BuildContext context) => ActionDialogType(),
+    );
+  }
 
   static Future<void> Dialog_ActionLigne(BuildContext context) async {
     await showDialog(
@@ -89,6 +104,284 @@ class gDialogs {
     await showDialog(
       context: context,
       builder: (BuildContext context) => ActionDialogDevis(),
+    );
+  }
+}
+
+//**********************************
+//**********************************
+//**********************************
+
+class ActionDialogType extends StatefulWidget {
+  @override
+  _ActionDialogTypeState createState() => _ActionDialogTypeState();
+}
+
+class _ActionDialogTypeState extends State<ActionDialogType> {
+  bool isType = false;
+
+  @override
+  void initState() {}
+
+  @override
+  Widget build(BuildContext context) {
+    return SimpleDialog(
+      insetPadding: EdgeInsets.only(left: 0, bottom: 0),
+      titlePadding: EdgeInsets.zero,
+      contentPadding: EdgeInsets.zero,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      surfaceTintColor: Colors.transparent,
+      backgroundColor: gColors.transparent,
+      shadowColor: gColors.transparent,
+      children: [
+        Container(
+            color: gColors.transparent,
+            height: 470,
+            margin: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+            child: Column(
+              children: [
+                Container(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          InkWell(
+                            child: Container(
+                              width: 470,
+                              margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                              padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Choisissez un document de vente",
+                                    style: gColors.bodyTitle1_B_W24,
+                                  ),
+                                  Spacer(),
+                                  SvgPicture.asset(
+                                    "assets/images/Btn_Clear.svg",
+                                    width: 60,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            onTap: () async {
+                              Navigator.pop(context);
+                            },
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          InkWell(
+                              child: Container(
+                                width: 120,
+                                margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                decoration: BoxDecoration(
+                                  color: gColors.transparent,
+                                  borderRadius: BorderRadius.circular(24),
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 2,
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Tous',
+                                      style: gColors.bodyTitle1_B_W24,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onTap: () async {
+                                Srv_DbTools.gSelDCL_Ent = Srv_DbTools.gSelDCL_EntBase;
+                                Navigator.pop(context);
+                              }),
+                          Text(
+                            'Tous',
+                            style: gColors.bodyTitle1_B_W24,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          InkWell(
+                              child: Container(
+                                width: 120,
+                                margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                decoration: BoxDecoration(
+                                  color: gColors.transparent,
+                                  borderRadius: BorderRadius.circular(24),
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 2,
+                                  ),
+                                ),                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'DEV',
+                                      style: gColors.bodyTitle1_B_W24,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onTap: () async {
+                                Srv_DbTools.gSelDCL_Ent = "Devis";
+                                Navigator.pop(context);
+                              }),
+                          Container(
+                            width: 300,
+                            child: Text(
+                              'Devis (DEV)',
+                              style: gColors.bodyTitle1_B_W24,
+                            ),
+                          ),
+                          Container(
+                            width: 12,
+                            height: 32,
+                            color: gColors.TypeCDE_DEV,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          InkWell(
+                              child: Container(
+                                width: 120,
+                                margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                decoration: BoxDecoration(
+                                  color: gColors.transparent,
+                                  borderRadius: BorderRadius.circular(24),
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 2,
+                                  ),
+                                ),                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'BDC',
+                                      style: gColors.bodyTitle1_B_W24,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onTap: () async {
+                                Srv_DbTools.gSelDCL_Ent = "Commande";
+                                Navigator.pop(context);
+                              }),
+                          Container(
+                            width: 300,
+                            child: Text(
+                              'Bon de Commande (BDC)',
+                              style: gColors.bodyTitle1_B_W24,
+                            ),
+                          ),
+                          Container(
+                            width: 12,
+                            height: 32,
+                            color: gColors.TypeCDE_BDC,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          InkWell(
+                              child: Container(
+                                width: 120,
+                                margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                decoration: BoxDecoration(
+                                  color: gColors.transparent,
+                                  borderRadius: BorderRadius.circular(24),
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 2,
+                                  ),
+                                ),                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'BDL',
+                                      style: gColors.bodyTitle1_B_W24,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onTap: () async {
+                                Srv_DbTools.gSelDCL_Ent = "Bon de livraison";
+                                Navigator.pop(context);
+                              }),
+                          Container(
+                            width: 300,
+                            child: Text(
+                              'Bon de Livraison (BDL)',
+                              style: gColors.bodyTitle1_B_W24,
+                            ),
+                          ),
+                          Container(
+                            width: 12,
+                            height: 32,
+                            color: gColors.TypeCDE_BDL,
+                          ),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          InkWell(
+                              child: Container(
+                                width: 120,
+                                margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                decoration: BoxDecoration(
+                                  color: gColors.transparent,
+                                  borderRadius: BorderRadius.circular(24),
+                                  border: Border.all(
+                                    color: Colors.white,
+                                    width: 2,
+                                  ),
+                                ),                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'BDR',
+                                      style: gColors.bodyTitle1_B_W24,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onTap: () async {
+                                Srv_DbTools.gSelDCL_Ent = "Bon de retour";
+                                Navigator.pop(context);
+                              }),
+                          Container(
+                            width: 300,
+                            child: Text(
+                              'Bon de Retours (BDR)',
+                              style: gColors.bodyTitle1_B_W24,
+                            ),
+                          ),
+                          Container(
+                            width: 12,
+                            height: 32,
+                            color: gColors.TypeCDE_BDR,
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            )),
+      ],
     );
   }
 }
@@ -726,6 +1019,7 @@ class _ActionDialogState extends State<ActionDialog> {
     );
   }
 }
+
 //**********************************
 //**********************************
 //**********************************
@@ -744,7 +1038,7 @@ class _ActionDialogSelState extends State<ActionDialogSel> {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      insetPadding: EdgeInsets.only(left: 90, bottom: 220),
+      insetPadding: EdgeInsets.only(left: 0, bottom: 0),
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
@@ -754,7 +1048,7 @@ class _ActionDialogSelState extends State<ActionDialogSel> {
       children: [
         Container(
             color: gColors.transparent,
-            height: 342,
+            height: 450,
             margin: const EdgeInsets.fromLTRB(25, 0, 25, 0),
             child: Column(
               children: [
@@ -763,118 +1057,207 @@ class _ActionDialogSelState extends State<ActionDialogSel> {
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      InkWell(
-                          child: Container(
-                            margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                            decoration: BoxDecoration(
-                              color: gColors.LinearGradient4,
-                              borderRadius: BorderRadius.circular(24),
+                      Row(
+                        children: [
+                          InkWell(
+                            child: Container(
+                              width: 450,
+                              margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                              padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "Choisissez l'état du Devis",
+                                    style: gColors.bodyTitle1_B_W24,
+                                  ),
+                                  Spacer(),
+                                  SvgPicture.asset(
+                                    "assets/images/Btn_Clear.svg",
+                                    width: 60,
+                                  ),
+                                ],
+                              ),
                             ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Tous',
-                                  style: gColors.bodyTitle1_N_W24,
+                            onTap: () async {
+                              Navigator.pop(context);
+                            },
+                          )
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          InkWell(
+                              child: Container(
+                                width: 140,
+                                margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                decoration: BoxDecoration(
+                                  color: gColors.LinearGradient4,
+                                  borderRadius: BorderRadius.circular(24),
                                 ),
-                              ],
-                            ),
-                          ),
-                          onTap: () async {
-                            DbTools.wStatusCde = 'Tous';
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'État',
+                                      style: gColors.bodyTitle1_N_W24,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onTap: () async {
+                                DbTools.wStatusCde = 'Tous';
 
-                            Navigator.pop(context);
-                          }),
-                      InkWell(
-                          child: Container(
-                            margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                            decoration: BoxDecoration(
-                              color: Colors.orangeAccent,
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Préparation',
-                                  style: gColors.bodyTitle1_N_W24,
-                                ),
-                              ],
-                            ),
+                                Navigator.pop(context);
+                              }),
+                          Text(
+                            'État',
+                            style: gColors.bodyTitle1_N_W24,
                           ),
-                          onTap: () async {
-                            DbTools.wStatusCde = 'Préparation';
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          InkWell(
+                              child: Container(
+                                width: 140,
+                                margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                decoration: BoxDecoration(
+                                  color: Colors.orangeAccent,
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Prépa',
+                                      style: gColors.bodyTitle1_N_W24,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onTap: () async {
+                                DbTools.wStatusCde = 'Préparation';
 
-                            Navigator.pop(context);
-                          }),
-                      InkWell(
-                          child: Container(
-                            margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                            decoration: BoxDecoration(
-                              color: Colors.blueAccent,
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'En cours',
-                                  style: gColors.bodyTitle1_N_W24,
-                                ),
-                              ],
+                                Navigator.pop(context);
+                              }),
+                          Container(
+                            width: 250,
+                            child: Text(
+                              'Devis en préparation',
+                              style: gColors.bodyTitle1_N_W24,
                             ),
                           ),
-                          onTap: () async {
-                            DbTools.wStatusCde = 'En cours';
-                            Navigator.pop(context);
-                          }),
-                      InkWell(
-                          child: Container(
-                            margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                            decoration: BoxDecoration(
-                              color: gColors.primaryGreen,
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Accepté',
-                                  style: gColors.bodyTitle1_N_W24,
+                          gColors.gCircle(Colors.orangeAccent, wSize: 32),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          InkWell(
+                              child: Container(
+                                width: 140,
+                                margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                decoration: BoxDecoration(
+                                  color: Colors.blueAccent,
+                                  borderRadius: BorderRadius.circular(24),
                                 ),
-                              ],
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'En cours',
+                                      style: gColors.bodyTitle1_N_W24,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onTap: () async {
+                                DbTools.wStatusCde = 'En cours';
+                                Navigator.pop(context);
+                              }),
+                          Container(
+                            width: 250,
+                            child: Text(
+                              'Devis en cours',
+                              style: gColors.bodyTitle1_N_W24,
                             ),
                           ),
-                          onTap: () async {
-                            DbTools.wStatusCde = 'Accepté';
-                            Navigator.pop(context);
-                          }),
-                      InkWell(
-                          child: Container(
-                            margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
-                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                            decoration: BoxDecoration(
-                              color: gColors.red,
-                              borderRadius: BorderRadius.circular(24),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                Text(
-                                  'Refusé',
-                                  style: gColors.bodyTitle1_N_W24,
+                          gColors.gCircle(Colors.blueAccent, wSize: 32),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          InkWell(
+                              child: Container(
+                                width: 140,
+                                margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                decoration: BoxDecoration(
+                                  color: gColors.primaryGreen,
+                                  borderRadius: BorderRadius.circular(24),
                                 ),
-                              ],
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Accepté',
+                                      style: gColors.bodyTitle1_N_W24,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onTap: () async {
+                                DbTools.wStatusCde = 'Accepté';
+                                Navigator.pop(context);
+                              }),
+                          Container(
+                            width: 250,
+                            child: Text(
+                              'Devis Accepté',
+                              style: gColors.bodyTitle1_N_W24,
                             ),
                           ),
-                          onTap: () async {
-                            DbTools.wStatusCde = 'Refusé';
-                            Navigator.pop(context);
-                          }),
+                          gColors.gCircle(gColors.primaryGreen, wSize: 32),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          InkWell(
+                              child: Container(
+                                width: 140,
+                                margin: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                                decoration: BoxDecoration(
+                                  color: gColors.red,
+                                  borderRadius: BorderRadius.circular(24),
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      'Refusé',
+                                      style: gColors.bodyTitle1_N_W24,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                              onTap: () async {
+                                DbTools.wStatusCde = 'Refusé';
+                                Navigator.pop(context);
+                              }),
+                          Container(
+                            width: 250,
+                            child: Text(
+                              'Devis Refusé',
+                              style: gColors.bodyTitle1_N_W24,
+                            ),
+                          ),
+                          gColors.gCircle(gColors.red, wSize: 32),
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -884,6 +1267,7 @@ class _ActionDialogSelState extends State<ActionDialogSel> {
     );
   }
 }
+
 //**********************************
 //**********************************
 //**********************************
@@ -1300,6 +1684,233 @@ class _MsgBoxDialogState extends State<MsgBoxDialog> {
   }
 }
 
+class MsgBoxDialog2 extends StatefulWidget {
+  static bool gRep = false;
+
+  final String wTxt;
+
+  final String wImg;
+  final String wLabel1;
+  final String wLabel2;
+
+  const MsgBoxDialog2({Key? key, required this.wTxt, required this.wImg, required this.wLabel1, required this.wLabel2}) : super(key: key);
+  @override
+  _MsgBoxDialog2State createState() => _MsgBoxDialog2State();
+}
+
+class _MsgBoxDialog2State extends State<MsgBoxDialog2> {
+  @override
+  Future initLib() async {}
+
+  @override
+  void initState() {
+    initLib();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    print(" Srv_DbTools.SelDCL_DateDeb ${Srv_DbTools.SelDCL_DateDeb}");
+
+    double wWidth = 550;
+    double wHeight = 1024;
+    double wHeightDet = 580;
+    double wHeightDet2 = 610;
+
+    double wHeightBtn = 45;
+
+    double wHeightBtnValider = 40;
+
+    Widget Ctrl = Container(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Container(
+            padding: EdgeInsets.only(bottom: 8),
+            child: Image.asset(
+              "assets/images/${widget.wImg}.png",
+              fit: BoxFit.cover,
+              height: 100,
+              width: 100,
+            ),
+          ),
+          Container(
+            padding: EdgeInsets.only(bottom: 4),
+            width: wWidth,
+            child: Text(
+              widget.wLabel1,
+              style: gColors.bodyTitle1_B_G,
+              textAlign: TextAlign.center,
+            ),
+          ),
+          Container(
+            width: wWidth,
+            child: Text(
+              widget.wLabel2,
+              style: gColors.bodyTitle1_B_G,
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ],
+      ),
+    );
+
+    return SimpleDialog(
+      titlePadding: EdgeInsets.zero,
+      contentPadding: EdgeInsets.zero,
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      surfaceTintColor: Colors.transparent,
+      backgroundColor: gColors.transparent,
+      shadowColor: gColors.transparent,
+      children: [
+        Stack(
+          children: [
+            Container(
+                margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                color: Colors.transparent,
+                height: wHeight,
+                child: Column(
+                  children: [
+// Titre
+                    Container(
+                        child: Container(
+                      width: wWidth,
+                      height: 155,
+                      margin: const EdgeInsets.fromLTRB(0, 50, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      decoration: BoxDecoration(
+                        color: Colors.yellowAccent,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Spacer(),
+                          Container(
+                            width: wWidth,
+                            child: Text(
+                              widget.wTxt,
+                              style: gColors.bodyTitle1_B_G,
+                              textAlign: TextAlign.center,
+                            ),
+                          ),
+                          Spacer(),
+                        ],
+                      ),
+                    )),
+
+                    Container(
+                      height: wHeightDet,
+                    ),
+
+// Pied
+                    Container(
+                        child: Container(
+                      width: wWidth,
+                      height: 106,
+                      padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
+                      decoration: BoxDecoration(
+                        color: gColors.LinearGradient3,
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Container(
+                            color: gColors.black,
+                            height: 1,
+                          ),
+                          Container(
+                            height: 22,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: gColors.primaryRed,
+                                ),
+                                child: Container(
+                                  width: 140,
+                                  height: wHeightBtnValider,
+                                  padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
+                                  child: Text(
+                                    "Annuler",
+                                    style: gColors.bodyTitle1_B_W24,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  MsgBoxDialog2.gRep = false;
+                                  Navigator.pop(context);
+                                },
+                              ),
+                              ElevatedButton(
+                                style: ElevatedButton.styleFrom(
+                                    backgroundColor: gColors.primaryGreen,
+                                    side: const BorderSide(
+                                      width: 1.0,
+                                      color: gColors.primaryGreen,
+                                    )),
+                                child: Container(
+                                  width: 140,
+                                  height: wHeightBtnValider,
+                                  padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
+                                  child: Text(
+                                    "Valider",
+                                    style: gColors.bodyTitle1_B_W24,
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                                onPressed: () async {
+                                  MsgBoxDialog2.gRep = true;
+                                  Navigator.pop(context);
+                                },
+                              )
+                            ],
+                          )
+                        ],
+                      ),
+                    )),
+                  ],
+                )),
+
+            // Content
+            Positioned(
+                top: 190,
+                left: 5,
+                child: Container(
+                  color: Colors.white,
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  height: wHeightDet2,
+                  width: wWidth,
+                  child: Container(
+                      color: gColors.white,
+                      height: 540,
+                      child: Column(
+                        children: [
+                          Container(
+                            color: gColors.black,
+                            height: 1,
+                          ),
+                          const Spacer(),
+                          Container(
+                            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                            child: Ctrl,
+                          ),
+                          const Spacer(),
+                        ],
+                      )),
+                )),
+          ],
+        ),
+      ],
+    );
+  }
+}
 //**********************************
 //**********************************
 //**********************************
@@ -1385,7 +1996,7 @@ class _PhotoDialogState extends State<PhotoDialog> {
 
   @override
   Widget build(BuildContext context) {
-    print(" Srv_DbTools.SelDCL_DateDeb ${Srv_DbTools.SelDCL_DateDeb}");
+    print(" PhotoDialog build");
 
     double wWidth = 550;
     double wHeight = 1024;
@@ -1532,6 +2143,7 @@ class _PhotoDialogState extends State<PhotoDialog> {
                                   ),
                                 ),
                                 onPressed: () async {
+                                  print(" PHOTO Valider ${lParc_Imgs.length}");
                                   for (int i = 0; i < lParc_Imgs.length; i++) {
                                     DbTools.setParc_Img(lParc_Imgs[i]);
                                   }
@@ -1597,6 +2209,8 @@ class _PhotoDialogState extends State<PhotoDialog> {
     var formatter = new DateFormat('dd/MM/yy');
     var inputFormat = DateFormat('yyyy-MM-dd');
 
+    print("photo >>>>>>>>< ${imgList.length}");
+
     return Container(
       width: 530,
       child: Column(
@@ -1611,6 +2225,7 @@ class _PhotoDialogState extends State<PhotoDialog> {
                   print(" PHOTO ADD");
 
                   DbTools.gImagePath = "";
+                  gPhotos.wImg = 0;
                   await Navigator.push(context, MaterialPageRoute(builder: (context) => gPhotos()));
 
                   print("gImagePath ${DbTools.gImagePath}");
@@ -1628,6 +2243,7 @@ class _PhotoDialogState extends State<PhotoDialog> {
                       imgList.add(wWidget);
                       print("Add photo ${imgList.length}");
                       print("setState");
+                      initLib();
                     });
                   }
                 },
@@ -1646,9 +2262,10 @@ class _PhotoDialogState extends State<PhotoDialog> {
                 scrollDirection: Axis.horizontal,
                 itemCount: imgList.length, // number of items in your list
                 itemBuilder: (BuildContext context, int Itemindex) {
-                  var wParc_Imgs_Date = inputFormat.parse(lParc_Imgs[Itemindex].Parc_Imgs_Date!);
-                  String formattedDate = formatter.format(wParc_Imgs_Date);
-
+                  String formattedDate = formatter.format(DateTime.now());
+                  try {
+                    formattedDate = lParc_Imgs[Itemindex].Parc_Imgs_Date!;
+                  } catch (e) {}
                   return Row(
                     children: [
                       GestureDetector(
@@ -1714,8 +2331,11 @@ class _PhotoDialogState extends State<PhotoDialog> {
   Widget Photo2(BuildContext context) {
     var formatter = new DateFormat('dd/MM/yy');
     var inputFormat = DateFormat('yyyy-MM-dd');
-    var wParc_Imgs_Date = inputFormat.parse(lParc_Imgs[zoomIndex].Parc_Imgs_Date!);
-    String formattedDate = formatter.format(wParc_Imgs_Date);
+
+    String formattedDate = lParc_Imgs[zoomIndex].Parc_Imgs_Date!;
+
+//    var wParc_Imgs_Date = inputFormat.parse(lParc_Imgs[zoomIndex].Parc_Imgs_Date!);
+//    String formattedDate = formatter.format(wParc_Imgs_Date);
 
     var wParc_Imgs = DbTools.glfParc_Imgs[zoomIndex];
     var bytes = base64Decode(wParc_Imgs.Parc_Imgs_Data!);
@@ -1848,10 +2468,9 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
 
   @override
   Widget build(BuildContext context) {
-    print(" Srv_DbTools.SelDCL_DateDeb ${Srv_DbTools.SelDCL_DateDeb}");
-
     var formatter = DateFormat('dd/MM/yyyy');
     String fSelDCL_DateDeb = formatter.format(Srv_DbTools.SelDCL_DateDeb);
+
     String fSelDCL_DateFin = formatter.format(Srv_DbTools.SelDCL_DateFin);
 
     return SimpleDialog(
@@ -2012,8 +2631,26 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
   DateTime selectedDate = DateTime.now();
   Future<void> _selectDate(BuildContext context, DateTime firstDate, DateTime lastDate) async {
     print("selectedDate >> ${selectedDate}");
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedDate,
+        firstDate: firstDate,
+        lastDate: lastDate,
+        builder: (BuildContext context, Widget? child) {
+          return Theme(
+            data: ThemeData(
+              dividerColor: gColors.LinearGradient5,
+              colorScheme: ColorScheme.light(
+                primary: gColors.LinearGradient5,
+                onPrimary: Colors.white, // header text color
+                surface: Colors.white, // fond
+                onSurface: Colors.black, // body text color`
+              ),
+            ),
+            child: child!,
+          );
+        });
 
-    final DateTime? picked = await showDatePicker(context: context, initialDate: selectedDate, firstDate: firstDate, lastDate: lastDate);
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;

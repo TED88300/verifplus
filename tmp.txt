@@ -1,0 +1,11 @@
+
+
+
+
+
+CREATE TABLE `DCL_Ent_Img` (
+  `DCL_Ent_Imgid` int(11) NOT NULL,
+  `DCL_Ent_Img_EntID` int(11) NOT NULL DEFAULT 0,
+  `DCL_Ent_Img_Data` mediumtext NOT NULL,
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+

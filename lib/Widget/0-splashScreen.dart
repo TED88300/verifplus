@@ -43,9 +43,14 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
     await DbTools.initSqlite();
 
 
-//    await Srv_ImportExport.ExportNotSync();
-//    Srv_DbTools.ListArticle_Ebp = await Article_Ebp.getArticle_Ebp();
-//    Srv_DbTools.getParam_ParamAll();
+    Srv_DbTools.getParam_ParamAll();
+
+    DbTools.gTxTVA = 20;
+    Srv_DbTools.getParam_ParamMemDet("Param_Div", "TxTVA");
+    if (Srv_DbTools.ListParam_Param.length > 0) DbTools.gTxTVA = double.tryParse(Srv_DbTools.ListParam_Param[0].Param_Param_Text) ?? 20.0;
+
+
+
 
     Srv_DbTools.gSelGroupe = Srv_DbTools.gSelGroupeBase;
     Srv_DbTools.gSelIntervention = Srv_DbTools.gSelInterventionBase;
@@ -69,6 +74,8 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
     Srv_DbTools.ListIntervention = await  DbTools.getInterventionsAll();
     Srv_DbTools.ListInterMission = await  DbTools.getInterMissions();
 
+
+    bool wResult = await Srv_DbTools.getUserAll();
 
 
     print("Srv_DbTools.ListIntervention.length ${Srv_DbTools.ListIntervention.length}");
@@ -111,6 +118,22 @@ class SplashScreenState extends State<SplashScreen> with SingleTickerProviderSta
       }
     });
 
+    
+    Srv_DbTools.ListParam_Param_Affaire.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Affaire") == 0) {
+        Srv_DbTools.ListParam_Param_Affaire.add(element);
+      }
+    });
+
+    Srv_DbTools.ListParam_Param_Proba.clear();
+    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+      if (element.Param_Param_Type.compareTo("Proba") == 0) {
+        Srv_DbTools.ListParam_Param_Proba.add(element);
+      }
+    });
+
+    
     Srv_DbTools.ListParam_Param_Validite_devis.clear();
     Srv_DbTools.ListParam_ParamAll.forEach((element) {
       if (element.Param_Param_Type.compareTo("Validite_devis") == 0) {

@@ -15,12 +15,16 @@ class DCL_Det {
   double? DCL_Det_PU;
   double? DCL_Det_RemP;
   double? DCL_Det_RemMt;
+  double? DCL_Det_TVA;
+
+
   int? DCL_Det_Livr;
   String? DCL_Det_DateLivr;
   int? DCL_Det_Rel;
   String? DCL_Det_DateRel;
   String? DCL_Det_Statut;
   String? DCL_Det_Note;
+  String? DCL_Det_Garantie;
 
   DCL_Det(
       { this.DCL_DetID,
@@ -34,12 +38,14 @@ class DCL_Det {
         this.DCL_Det_PU,
         this.DCL_Det_RemP,
         this.DCL_Det_RemMt,
+        this.DCL_Det_TVA,
         this.DCL_Det_Livr,
         this.DCL_Det_DateLivr,
         this.DCL_Det_Rel,
         this.DCL_Det_DateRel,
         this.DCL_Det_Statut,
-        this.DCL_Det_Note
+        this.DCL_Det_Note,
+        this.DCL_Det_Garantie
       });
 
 static DCL_DetInit() {
@@ -55,12 +61,14 @@ static DCL_DetInit() {
       DCL_Det_PU : 0,
       DCL_Det_RemP : 0,
       DCL_Det_RemMt : 0,
+      DCL_Det_TVA : 0,
       DCL_Det_Livr : 0,
       DCL_Det_DateLivr : "",
       DCL_Det_Rel : 0,
       DCL_Det_DateRel : "",
       DCL_Det_Statut : "",
-      DCL_Det_Note : ""
+      DCL_Det_Note : "",
+      DCL_Det_Garantie : ""
       );
 }
 
@@ -76,12 +84,14 @@ DCL_Det.fromJson(Map<String, dynamic> json) {
     DCL_Det_PU = double.parse(json['DCL_Det_PU']);
     DCL_Det_RemP = double.parse(json['DCL_Det_Rem_P']);
     DCL_Det_RemMt = double.parse(json['DCL_Det_Rem_Mt']);
+    DCL_Det_TVA = double.parse(json['DCL_Det_TVA']);
     DCL_Det_Livr = int.parse(json['DCL_Det_Livr']);
     DCL_Det_DateLivr = json['DCL_Det_DateLivr'];
     DCL_Det_Rel = int.parse(json['DCL_Det_Rel']);
     DCL_Det_DateRel = json['DCL_Det_DateRel'];
     DCL_Det_Statut = json['DCL_Det_Statut'];
     DCL_Det_Note = json['DCL_Det_Note'];
+    DCL_Det_Garantie = json['DCL_Det_Garantie'];
   }
 
   Map<String, dynamic> toJson() {
@@ -97,12 +107,14 @@ DCL_Det.fromJson(Map<String, dynamic> json) {
     data['DCL_Det_PU'] = this.DCL_Det_PU;
     data['DCL_Det_Rem_P'] = this.DCL_Det_RemP;
     data['DCL_Det_Rem_Mt'] = this.DCL_Det_RemMt;
+    data['DCL_Det_TVA'] = this.DCL_Det_TVA;
     data['DCL_Det_Livr'] = this.DCL_Det_Livr;
     data['DCL_Det_DateLivr'] = this.DCL_Det_DateLivr;
     data['DCL_Det_Rel'] = this.DCL_Det_Rel;
     data['DCL_Det_DateRel'] = this.DCL_Det_DateRel;
     data['DCL_Det_Statut'] = this.DCL_Det_Statut;
     data['DCL_Det_Note'] = this.DCL_Det_Note;
+    data['DCL_Det_Garantie'] = this.DCL_Det_Garantie;
     return data;
   }
 

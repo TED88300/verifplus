@@ -1382,6 +1382,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
                     wDCL_Ent.DCL_Ent_SiteId =   iListe >= 4 ? selSite.SiteId : -1;
                     wDCL_Ent.DCL_Ent_ZoneId =   iListe >= 5 ? selZone.ZoneId : -1;
                     wDCL_Ent.DCL_Ent_InterventionId = -1;
+                    wDCL_Ent.DCL_Ent_Valo = 1;
                     if (selDLC == "Devis")
                     {
                       wDCL_Ent.DCL_Ent_Etat = Srv_DbTools.ListParam_Param_Etat_Devis[0].Param_Param_ID;

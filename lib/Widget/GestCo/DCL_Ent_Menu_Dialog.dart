@@ -6,12 +6,12 @@ import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'dart:async';
 
-class DCL_Ent_Type_Dialog {
-  DCL_Ent_Type_Dialog();
-  static Future<void> Dialogs_DCL_Ent_Type(BuildContext context) async {
+class DCL_Ent_Menu_Dialog {
+  DCL_Ent_Menu_Dialog();
+  static Future<void> Dialogs_DCL_Ent_Menu(BuildContext context) async {
     await showDialog(
       context: context,
-      builder: (BuildContext context) => DCL_EntTypeDialog(),
+      builder: (BuildContext context) => DCL_EntMenuDialog(),
     );
   }
 }
@@ -20,15 +20,15 @@ class DCL_Ent_Type_Dialog {
 //**********************************
 //**********************************
 
-class DCL_EntTypeDialog extends StatefulWidget {
-  const DCL_EntTypeDialog({
+class DCL_EntMenuDialog extends StatefulWidget {
+  const DCL_EntMenuDialog({
     Key? key,
   }) : super(key: key);
   @override
-  _DCL_EntTypeDialogState createState() => _DCL_EntTypeDialogState();
+  _DCL_EntMenuDialogState createState() => _DCL_EntMenuDialogState();
 }
 
-class _DCL_EntTypeDialogState extends State<DCL_EntTypeDialog> {
+class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
 //  String DbTools.ParamTypeOg = "";
 //  List<String> subLibArray = [];
 

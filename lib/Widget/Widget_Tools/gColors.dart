@@ -28,6 +28,15 @@ class gColors {
   static const Color primaryBlue2 = Color(0xFF0070C0);
 
 
+  static const Color TypeCDE_DEV  = Color(0xFFC00000);
+  static const Color TypeCDE_BDC  = Color(0xFF3997ED);
+  static const Color TypeCDE_BDL  = Color(0xFF00B050);
+  static const Color TypeCDE_BDR  = Color(0xFFFF9900);
+
+
+
+
+
   static Color backgroundColor = const Color.fromRGBO(0, 116, 227, 1);
 
   static const Color blueCyan = const Color.fromRGBO(0, 176, 240, 1);
@@ -55,6 +64,7 @@ class gColors {
   static const Color LinearGradient2 = Color(0xFFf6f6f6);
   static const Color LinearGradient3 = Color(0xFFe6e6e6);
   static const Color LinearGradient4 = Color(0xFFBBBBBB);
+  static const Color LinearGradient5 = Color(0xFF888888);
 
   static const Color TextColor1 = Color(0xFF222222);
   static const Color TextColor2 = Color(0xFF555555);
@@ -971,6 +981,19 @@ class gColors {
     return Container(width: wSize, height: wSize, decoration: BoxDecoration(color: wColor, shape: BoxShape.circle));
   }
 
+  static Color getColorTypeCde(String wType) {
+    Color wColor = Colors.transparent;
+    if (wType == "Devis")
+      wColor = gColors.TypeCDE_DEV;
+    else if (wType == "Commande")
+      wColor = gColors.TypeCDE_BDC;
+    else if (wType == "Bon de livraison")
+      wColor = gColors.TypeCDE_BDL;
+    else if (wType == "Bon de retour")
+      wColor = gColors.TypeCDE_BDR;
+    return wColor;
+  }
+
   static Color getColorEtatDevis(String Status) {
     Color wColor = Colors.transparent;
 
@@ -1063,16 +1086,19 @@ class gColors {
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
-        //print("-----------x getImage contentLength ${response.contentLength}");
 
-        return await response.stream.toBytes();
+        Uint8List wRep =  await response.stream.toBytes();
+
+
+
+        return await wRep;
         // print("getImage wTmp $wTmp");
       } else {
-        //print("-----------x getImage Error ${response.statusCode}");
+        print("-----------x getImage Error ${response.statusCode}");
         return new Uint8List(0);
       }
     } catch (e) {
-      //print("-----------x getImage Error ${e}");
+      print("-----------x getImage Error ${e}");
 
       return new Uint8List(0);
     }

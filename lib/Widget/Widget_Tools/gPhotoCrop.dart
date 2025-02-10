@@ -8,6 +8,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_DCL_Ent_Img.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 
 
 import 'dart:ui' as ui;
@@ -15,6 +17,7 @@ import 'dart:ui' as ui;
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Img.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
+import 'package:verifplus/Widget/Widget_Tools/gPhotos.dart';
 
 class gPhotoCrop extends StatefulWidget {
   @override
@@ -84,8 +87,6 @@ class gPhotoCropState extends State<gPhotoCrop> {
 
     relaodImage();
 
-
-
     print("width $width");
 
     return Container(
@@ -114,42 +115,43 @@ class gPhotoCropState extends State<gPhotoCrop> {
                     final data = await croppedImage.toByteData(
                       format: ui.ImageByteFormat.png,
                     );
-                    print(">>>>>>>> bytes");
+
                     final bytes = data!.buffer.asUint8List();
-                    print(">>>>>>>> bytes ${bytes.length}");
-                    print(">>>>>>>> ui.Image Size  ${croppedImage.width} ${croppedImage.height}");
-
-
-//                    Image wImage = Image(image: ResizeImage(MemoryImage(bytes), width: 300, height: 400));
 
                     File file = File(DbTools.gImagePath!);
                     await file.writeAsBytes(bytes);
-                    Parc_Img wParc_Img = Parc_Img();
-                    wParc_Img.Parc_Imgs_ParcsId = DbTools.gParc_Ent.ParcsId;
-                    wParc_Img.Parc_Imgs_Path = DbTools.gImagePath!;
-                    wParc_Img.Parc_Imgs_Type = DbTools.gParc_Img_Type;
-                    wParc_Img.Parc_Imgs_Principale = 0;
+
+                    if (gPhotos.wImg == 0)
+                      {
+                        Parc_Img wParc_Img = Parc_Img();
+                        wParc_Img.Parc_Imgs_ParcsId = DbTools.gParc_Ent.ParcsId;
+                        wParc_Img.Parc_Imgs_Path = DbTools.gImagePath!;
+                        wParc_Img.Parc_Imgs_Type = DbTools.gParc_Img_Type;
+                        wParc_Img.Parc_Imgs_Principale = 0;
+                        var now = new DateTime.now();
+                        var formatter = new DateFormat('dd/MM/yyyy');
+                        wParc_Img.Parc_Imgs_Date= formatter.format(now);
+                        wParc_Img.Parc_Imgs_Data = await base64Encode(bytes);
+                        print("insertParc_Img            bytes ${bytes.length}         Parc_Imgs_Data ${wParc_Img.Parc_Imgs_Data!.length}");
+                        DbTools.insertParc_Img(wParc_Img);
+                        DbTools.glfParc_Imgs = await DbTools.getParc_Imgs(DbTools.gParc_Ent.ParcsId!, DbTools.gParc_Img_Type);
+                      }
+
+                    if (gPhotos.wImg == 1)
+                    {
+                      DCL_Ent_Img wDCL_Ent_Img = DCL_Ent_Img();
+                      wDCL_Ent_Img.dCLEntImgEntID = Srv_DbTools.gDCL_Ent.DCL_EntID;
+                      wDCL_Ent_Img.DCL_Ent_Img_Type = "I";
+                      wDCL_Ent_Img.DCL_Ent_Img_No =  gPhotos.ImgDoc;
+                      wDCL_Ent_Img.dCLEntImgData = await base64Encode(bytes);
+                      Srv_DbTools.InsertUpdateDCL_Ent_Img_Srv(wDCL_Ent_Img);
+
+                    }
 
 
-                    var now = new DateTime.now();
-                    var formatter = new DateFormat('dd/MM/yyyy');
-                    wParc_Img.Parc_Imgs_Date= formatter.format(now);
 
 
-                    print(">>>>>>>>>>>>> Parc_Imgs_Data");
 
-
-                    wParc_Img.Parc_Imgs_Data = await base64Encode(bytes);
-                    print("insertParc_Img            bytes ${bytes.length}         Parc_Imgs_Data ${wParc_Img.Parc_Imgs_Data!.length}");
-                    DbTools.insertParc_Img(wParc_Img);
-
-                    DbTools.glfParc_Imgs = await DbTools.getParc_Imgs(DbTools.gParc_Ent.ParcsId!, DbTools.gParc_Img_Type);
-
-/*
-                    String wName = "";
-                    wName = "Parc_Ent_${Srv_DbTools.gClient.ClientId!}_${Srv_DbTools.gSite.SiteId!}_${Srv_DbTools.gIntervention.InterventionId!}_${DbTools.gParc_Ent.ParcsId!}.png";
-                    await Upload.SaveMem(wName, bytes);
-*/
 
                     Navigator.pop(context);
                     imageCache.clear();
@@ -214,29 +216,44 @@ class gPhotoCropState extends State<gPhotoCrop> {
 
               File file = File(DbTools.gImagePath!);
               await file.writeAsBytes(bytes);
-              Parc_Img wParc_Img = Parc_Img();
-              wParc_Img.Parc_Imgs_ParcsId = DbTools.gParc_Ent.ParcsId;
-              wParc_Img.Parc_Imgs_Path = DbTools.gImagePath!;
-              wParc_Img.Parc_Imgs_Type = DbTools.gParc_Img_Type;
-              wParc_Img.Parc_Imgs_Principale = 0;
-
-              var now = new DateTime.now();
-              var formatter = new DateFormat('dd/MM/yyyy');
-              wParc_Img.Parc_Imgs_Date= formatter.format(now);
 
 
-              print(">>>>>>>>>>>>> Parc_Imgs_Data");
 
-              wParc_Img.Parc_Imgs_Data = await base64Encode(bytes);
-              print("insertParc_Img            bytes ${bytes.length}         Parc_Imgs_Data ${wParc_Img.Parc_Imgs_Data!.length}");
-              DbTools.insertParc_Img(wParc_Img);
-              DbTools.glfParc_Imgs = await DbTools.getParc_Imgs(DbTools.gParc_Ent.ParcsId!, DbTools.gParc_Img_Type);
+              if (gPhotos.wImg == 0)
+              {
+                Parc_Img wParc_Img = Parc_Img();
+                wParc_Img.Parc_Imgs_ParcsId = DbTools.gParc_Ent.ParcsId;
+                wParc_Img.Parc_Imgs_Path = DbTools.gImagePath!;
+                wParc_Img.Parc_Imgs_Type = DbTools.gParc_Img_Type;
+                wParc_Img.Parc_Imgs_Principale = 0;
 
-/*
-              String wName = "";
-              wName = "Parc_Ent_${Srv_DbTools.gClient.ClientId!}_${Srv_DbTools.gSite.SiteId!}_${Srv_DbTools.gIntervention.InterventionId!}_${DbTools.gParc_Ent.ParcsId!}.png";
-              await Upload.SaveMem(wName, bytes);
-*/
+                var now = new DateTime.now();
+                var formatter = new DateFormat('dd/MM/yyyy');
+                wParc_Img.Parc_Imgs_Date= formatter.format(now);
+
+
+                print(">>>>>>>>>>>>> Parc_Imgs_Data");
+
+                wParc_Img.Parc_Imgs_Data = await base64Encode(bytes);
+                print("insertParc_Img            bytes ${bytes.length}         Parc_Imgs_Data ${wParc_Img.Parc_Imgs_Data!.length}");
+                await DbTools.insertParc_Img(wParc_Img);
+                DbTools.glfParc_Imgs = await DbTools.getParc_Imgs(DbTools.gParc_Ent.ParcsId!, DbTools.gParc_Img_Type);
+
+              }
+
+              if (gPhotos.wImg == 1)
+              {
+                DCL_Ent_Img wDCL_Ent_Img = DCL_Ent_Img();
+                wDCL_Ent_Img.dCLEntImgEntID = Srv_DbTools.gDCL_Ent.DCL_EntID;
+                wDCL_Ent_Img.DCL_Ent_Img_Type = "I";
+                wDCL_Ent_Img.DCL_Ent_Img_No =  gPhotos.ImgDoc;
+                wDCL_Ent_Img.dCLEntImgData = await base64Encode(bytes);
+                await Srv_DbTools.InsertUpdateDCL_Ent_Img_Srv(wDCL_Ent_Img);
+
+              }
+
+
+
 
               Navigator.pop(context);
               imageCache.clear();

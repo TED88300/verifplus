@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:fbroadcast/fbroadcast.dart';
 import 'package:flutter/material.dart';
@@ -15,9 +16,7 @@ import 'package:verifplus/Widget/GestCo/DCL_List.dart';
 import 'package:verifplus/Widget/Import_ASync.dart';
 import 'package:verifplus/Widget/Import_Data.dart';
 import 'package:verifplus/Widget/Import_Menu.dart';
-import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_ArticleAV.dart';
 import 'package:verifplus/Widget/Intervention/Intervention_Liste.dart';
-import 'package:verifplus/Widget/P_Notifications.dart';
 import 'package:verifplus/Widget/Planning/Planning.dart';
 import 'package:verifplus/Widget/Widget_Tools/bottom_navigation_bar.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
@@ -44,7 +43,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     "INTERVENTIONS",
     "CATALOGUE",
     "PLANNING",
-    "DEVIS / CDE / LIVR",
+    "DOCUMENTS DE VENTE",
   ];
 
   List<Widget> P_children = [];
@@ -183,14 +182,14 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   @override
   Widget Block_MenuApp(BuildContext context) {
     String title_string = P_itemsTitre[DbTools.gCurrentIndex];
-    print("Block_MenuApp");
+    print("Block_MenuApp ${title_string}");
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
       //    endDrawer: DbTools.gIsMedecinLogin! ? C_SideDrawer() : I_SideDrawer(),
       backgroundColor: Colors.transparent,
       appBar: AppBar(
-        centerTitle: true,
+//        centerTitle: true,
         title: (title_string.isEmpty)
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.center,

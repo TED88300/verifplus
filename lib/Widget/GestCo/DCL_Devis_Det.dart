@@ -11,11 +11,12 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Articles_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DCL_Det.dart';
+import 'package:verifplus/Tools/DbSrv/Srv_DCL_Ent_Img.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
-import 'package:verifplus/Widget/GestCo/DCL_Ent_Type_Dialog.dart';
+import 'package:verifplus/Widget/GestCo/DCL_Det_Param.dart';
 import 'package:verifplus/Widget/GestCo/HTML_Text.dart';
 import 'package:verifplus/Widget/GestCo/DCL_Article.dart';
 import 'package:verifplus/Widget/GestCo/DCL_Devis_Det_Article.dart';
@@ -27,6 +28,7 @@ class DCL_Devis_Det extends StatefulWidget {
   static int gLongPressAction = 0;
   static bool wUpDown = true;
   static DCL_Det gSaveDCL_Det = DCL_Det.DCL_DetInit();
+  static bool isParam = false;
 
   @override
   DCL_Devis_DetState createState() => DCL_Devis_DetState();
@@ -57,7 +59,40 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
   double TotTVA = 0.0;
   double TotTTC = 0.0;
 
+
+
   Future Reload() async {
+
+
+    await Srv_DbTools.getDCL_Ent_ImgID(Srv_DbTools.gDCL_Ent.DCL_EntID!, "D");
+
+    if (Srv_DbTools.ListDCL_Ent_Img.length == 0) {
+      print("getDCL_Ent_ImgID ADD");
+      DCL_Ent_Img wDCL_Ent_Img = DCL_Ent_Img();
+      wDCL_Ent_Img.dCLEntImgEntID = Srv_DbTools.gDCL_Ent.DCL_EntID;
+      wDCL_Ent_Img.DCL_Ent_Img_Type = "D";
+      wDCL_Ent_Img.DCL_Ent_Img_No = 0;
+      wDCL_Ent_Img.DCL_Ent_Img_Name = "";
+      wDCL_Ent_Img.dCLEntImgData = "";
+      await Srv_DbTools.InsertUpdateDCL_Ent_Img_Srv(wDCL_Ent_Img);
+
+      wDCL_Ent_Img = DCL_Ent_Img();
+      wDCL_Ent_Img.dCLEntImgEntID = Srv_DbTools.gDCL_Ent.DCL_EntID;
+      wDCL_Ent_Img.DCL_Ent_Img_Type = "D";
+      wDCL_Ent_Img.DCL_Ent_Img_No = 1;
+      wDCL_Ent_Img.DCL_Ent_Img_Name = "";
+      wDCL_Ent_Img.dCLEntImgData = "";
+      await Srv_DbTools.InsertUpdateDCL_Ent_Img_Srv(wDCL_Ent_Img);
+
+      wDCL_Ent_Img = DCL_Ent_Img();
+      wDCL_Ent_Img.dCLEntImgEntID = Srv_DbTools.gDCL_Ent.DCL_EntID;
+      wDCL_Ent_Img.DCL_Ent_Img_Type = "D";
+      wDCL_Ent_Img.DCL_Ent_Img_No = 2;
+      wDCL_Ent_Img.DCL_Ent_Img_Name = "";
+      wDCL_Ent_Img.dCLEntImgData = "";
+      await Srv_DbTools.InsertUpdateDCL_Ent_Img_Srv(wDCL_Ent_Img);
+    }
+
     await Srv_DbTools.getUserLoginid(Srv_DbTools.gUserLogin.UserID!);
     await Srv_ImportExport.getErrorSync();
 
@@ -104,9 +139,8 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
     Srv_DbTools.ListDCL_Det.forEach((element) async {
       TotQTE += element.DCL_Det_Qte!;
       TotHT += element.DCL_Det_PU! * element.DCL_Det_Qte!;
+      TotTVA += TotHT * element.DCL_Det_TVA! / 100;
     });
-
-    TotTVA = TotHT * 0.2;
     TotTTC = TotHT + TotTVA;
 
     setState(() {});
@@ -163,6 +197,9 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
 
   @override
   Widget Entete_VALO() {
+
+    isValo = Srv_DbTools.gDCL_Ent.DCL_Ent_Valo == 1;
+
     return Container(
         height: 57,
         child: Row(
@@ -199,7 +236,7 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
                   width: 20,
                 ),
                 Text(
-                  "${formatter.format(TotHT).replaceAll(',', ' ').replaceAll('.', ',')}€ HT",
+                  "${gObj.formatterformat(TotHT)}€ HT",
                   maxLines: 1,
                   textAlign: TextAlign.right,
                   style: gColors.bodyTitle1_B_Gr,
@@ -208,7 +245,7 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
                   width: 20,
                 ),
                 Text(
-                  "${formatter.format(TotTVA).replaceAll(',', ' ').replaceAll('.', ',')}€ TVA",
+                  "${gObj.formatterformat(TotTVA)}€ TVA",
                   maxLines: 1,
                   textAlign: TextAlign.right,
                   style: gColors.bodyTitle1_N_Gr,
@@ -217,7 +254,7 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
                   width: 20,
                 ),
                 Text(
-                  "${formatter.format(TotTTC).replaceAll(',', ' ').replaceAll('.', ',')}€ TTC",
+                  "${gObj.formatterformat(TotTTC)}€ TTC",
                   maxLines: 1,
                   textAlign: TextAlign.right,
                   style: gColors.bodyTitle1_N_Gr,
@@ -254,10 +291,6 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
       wEtatColors = gColors.red;
     }
 
-
-
-
-
     return Container(
         decoration: BoxDecoration(
           color: gColors.LinearGradient3,
@@ -280,7 +313,7 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
               ),
               onTap: () async {
                 await HapticFeedback.vibrate();
-                await DCL_Ent_Type_Dialog.Dialogs_DCL_Ent_Type(context);
+
                 Filtre();
               }),
           Container(
@@ -353,7 +386,7 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
                 width: icoWidth + 10,
                 child: Stack(children: <Widget>[
                   SvgPicture.asset(
-                    "assets/images/DCL_Param.svg",
+                    DCL_Devis_Det.isParam ? "assets/images/DCL_ParamSel.svg" : "assets/images/DCL_Param.svg",
                     height: 40,
                     width: 40,
                   ),
@@ -362,7 +395,9 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
               onTap: () async {
                 await HapticFeedback.vibrate();
 
-                Filtre();
+                DCL_Devis_Det.isParam =!DCL_Devis_Det.isParam;
+//                await Navigator.push(context, MaterialPageRoute(builder: (context) => DCL_Det_Param()));
+                  setState(() {});
               }),
           InkWell(
               child: Container(
@@ -587,6 +622,7 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
       aDCL_Det.DCL_Det_PU = 0;
       aDCL_Det.DCL_Det_RemP = 0;
       aDCL_Det.DCL_Det_RemMt = 0;
+      aDCL_Det.DCL_Det_TVA = 0;
       aDCL_Det.DCL_Det_Livr = 0;
       aDCL_Det.DCL_Det_DateLivr = "";
       aDCL_Det.DCL_Det_Rel = 0;
@@ -621,6 +657,7 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
       aDCL_Det.DCL_Det_PU = 0;
       aDCL_Det.DCL_Det_RemP = 0;
       aDCL_Det.DCL_Det_RemMt = 0;
+      aDCL_Det.DCL_Det_TVA = 0;
       aDCL_Det.DCL_Det_Livr = 0;
       aDCL_Det.DCL_Det_DateLivr = "";
       aDCL_Det.DCL_Det_Rel = 0;
@@ -655,6 +692,7 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
       aDCL_Det.DCL_Det_PU = 0;
       aDCL_Det.DCL_Det_RemP = 0;
       aDCL_Det.DCL_Det_RemMt = 0;
+      aDCL_Det.DCL_Det_TVA = 0;
       aDCL_Det.DCL_Det_Livr = 0;
       aDCL_Det.DCL_Det_DateLivr = "";
       aDCL_Det.DCL_Det_Rel = 0;
@@ -736,24 +774,23 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
 
     Param_Param wParam_Param = Srv_DbTools.getParam_Param_in_Mem("Type_Organe", Srv_DbTools.gSelDCL_Ent);
 
+
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      //    endDrawer: DbTools.gIsMedecinLogin! ? C_SideDrawer() : I_SideDrawer(),
-
       backgroundColor: Colors.white,
-
       appBar: appBar(),
       body: Container(
           padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Column(
             children: [
-
               Expanded(
                 child: DCL_Devis_DetGridWidget(),
               ),
             ],
           )),
-      floatingActionButton: !affAll
+
+      floatingActionButton: !affAll || DCL_Devis_Det.isParam
           ? Container()
           : Container(
               padding: EdgeInsets.fromLTRB(0, 0, 50, 30),
@@ -851,7 +888,7 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
                 Container(
                   width: 80,
                   child: Text(
-                    "${formatter.format(wDCL_Det.DCL_Det_PU).replaceAll(',', ' ').replaceAll('.', ',')}€",
+                    "${gObj.formatterformat(wDCL_Det.DCL_Det_PU!)}€",
                     maxLines: 1,
                     textAlign: TextAlign.right,
                     style: gColors.bodySaisie_B_B.copyWith(color: (Srv_DbTools.gDCL_Det.DCL_DetID == wDCL_Det.DCL_DetID) ? Colors.white : Colors.black),
@@ -869,7 +906,7 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
                 Container(
                   width: 90,
                   child: Text(
-                    " ${formatter.format(wDCL_Det.DCL_Det_PU! * wDCL_Det.DCL_Det_Qte!).replaceAll(',', ' ').replaceAll('.', ',')}€",
+                    " ${gObj.formatterformat(wDCL_Det.DCL_Det_PU! * wDCL_Det.DCL_Det_Qte!)}€",
                     maxLines: 1,
                     textAlign: TextAlign.right,
                     style: gColors.bodySaisie_B_B.copyWith(color: (Srv_DbTools.gDCL_Det.DCL_DetID == wDCL_Det.DCL_DetID) ? Colors.white : Colors.black),
@@ -881,10 +918,7 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.end,
-
               children: [
-
-
                 Container(
                   width: 40,
                   child: Text(
@@ -894,8 +928,6 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
                     style: gColors.bodySaisie_B_B.copyWith(color: (Srv_DbTools.gDCL_Det.DCL_DetID == wDCL_Det.DCL_DetID) ? Colors.white : Colors.black),
                   ),
                 ),
-
-
               ],
             )
             ,
@@ -972,7 +1004,7 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              "PU Net ${formatter.format(wDCL_Det.DCL_Det_PU).replaceAll(',', ' ').replaceAll('.', ',')}€",
+                              "PU Net ${gObj.formatterformat(wDCL_Det.DCL_Det_PU!)}€",
                               maxLines: 1,
                               textAlign: TextAlign.right,
                               style: gColors.bodyTitle1_B_Gr.copyWith(color: (Srv_DbTools.gDCL_Det.DCL_DetID == wDCL_Det.DCL_DetID) ? Colors.white : Colors.black),
@@ -984,7 +1016,7 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
                               style: gColors.bodyTitle1_B_Gr.copyWith(color: (Srv_DbTools.gDCL_Det.DCL_DetID == wDCL_Det.DCL_DetID) ? Colors.white : Colors.black),
                             ),
                             Text(
-                              "Mt Net ${formatter.format(wDCL_Det.DCL_Det_PU! * wDCL_Det.DCL_Det_Qte!).replaceAll(',', ' ').replaceAll('.', ',')}€",
+                              "Mt Net ${gObj.formatterformat(wDCL_Det.DCL_Det_PU! * wDCL_Det.DCL_Det_Qte!)}€",
                               maxLines: 1,
                               /**/
                               textAlign: TextAlign.right,
@@ -1132,7 +1164,12 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
                       ),
                     ))
                   ],
-              body: ReorderableListView.builder(
+              body:
+
+              DCL_Devis_Det.isParam ?
+              DCL_Det_Param() :
+
+              ReorderableListView.builder(
                   physics: ClampingScrollPhysics(),
                   onReorder: (int oldIndex, int newIndex) {
                     if (newIndex >= Srv_DbTools.ListDCL_Detsearchresult.length) return;
@@ -1348,7 +1385,9 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
               child: Material(
                 elevation: 5,
                 borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
-                child: Container(
+                child:
+
+                Container(
                   height: wHeightTitre,
                   width: wWidth,
                   decoration: BoxDecoration(color: Colors.yellowAccent, borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))),
@@ -1380,6 +1419,8 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
                         ],
                       )),
                 ),
+
+
               ),
             ),
 

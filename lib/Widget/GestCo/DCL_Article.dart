@@ -296,7 +296,9 @@ class DCL_ArticlesState extends State<DCL_Articles> {
                 child: Container(
                   height: wHeightTitre - 9,
                   width: 560,
-                  decoration: BoxDecoration(color: gColors.LinearGradient2, borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))),
+                  decoration: BoxDecoration(color: gColors.LinearGradient2,
+                      borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))
+                  ),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -328,7 +330,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
                 padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                 decoration: BoxDecoration(
                   color: gColors.LinearGradient2,
-                  borderRadius: BorderRadius.circular(15),
+                  borderRadius: BorderRadius.circular(24),
                 ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -422,7 +424,6 @@ class DCL_ArticlesState extends State<DCL_Articles> {
 
                                   if (!wArticle_Ebp.Art_Sel) continue;
 
-                                  print(" wOrder $wOrder");
 
                                   DCL_Det aDCL_Det = DCL_Det();
                                   aDCL_Det.DCL_Det_EntID = Srv_DbTools.gDCL_Ent.DCL_EntID;
@@ -432,15 +433,23 @@ class DCL_ArticlesState extends State<DCL_Articles> {
                                   aDCL_Det.DCL_Det_NoArt = wArticle_Ebp.Article_codeArticle;
                                   aDCL_Det.DCL_Det_Lib = wArticle_Ebp.Article_descriptionCommercialeEnClair;
                                   aDCL_Det.DCL_Det_Qte = wArticle_Ebp.Art_Qte;
-                                  aDCL_Det.DCL_Det_PU = wArticle_Ebp.Article_PVHT;
+                                  aDCL_Det.DCL_Det_PU = wArticle_Ebp.Article_Promo_PVHT > 0 ? wArticle_Ebp.Article_Promo_PVHT : wArticle_Ebp.Article_PVHT;
                                   aDCL_Det.DCL_Det_RemP = 0;
                                   aDCL_Det.DCL_Det_RemMt = 0;
+                                  aDCL_Det.DCL_Det_TVA = 0;
                                   aDCL_Det.DCL_Det_Livr = 0;
                                   aDCL_Det.DCL_Det_DateLivr = "";
                                   aDCL_Det.DCL_Det_Rel = 0;
                                   aDCL_Det.DCL_Det_DateRel = "";
-                                  aDCL_Det.DCL_Det_Statut = "";
+                                  aDCL_Det.DCL_Det_Statut = "Facturable";
                                   aDCL_Det.DCL_Det_Note = "";
+                                  aDCL_Det.DCL_Det_Garantie = "";
+                                  aDCL_Det.DCL_Det_Garantie = wArticle_Ebp.DCL_Det_Garantie;
+
+
+                                  print(" aDCL_Det.DCL_Det_Garantie ${aDCL_Det.DCL_Det_Garantie}");
+
+
                                   await Srv_DbTools.InsertUpdateDCL_Det(aDCL_Det);
                                 }
                               }

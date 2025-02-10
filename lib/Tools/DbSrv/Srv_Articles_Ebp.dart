@@ -1,5 +1,8 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
+import 'package:verifplus/Widget/GestCo/DCL_Ent_Garantie_Dialog.dart';
 
 /*
 */
@@ -42,6 +45,17 @@ class Article_Ebp {
   double DCL_Det_PU = 0;
   double DCL_Det_RemP = 0;
   double DCL_Det_RemMt = 0;
+  double DCL_Det_TVA = 0;
+
+  String DCL_Det_Garantie = "Garantie";
+
+  Uint8List DCL_Det_Path1 = Uint8List.fromList([]);
+  Uint8List DCL_Det_Path2 = Uint8List.fromList([]);
+  Uint8List DCL_Det_Path3 = Uint8List.fromList([]);
+
+  Image wImageG1 = Image.memory(blankBytes, height: 1,);
+  Image wImageG2 = Image.memory(blankBytes, height: 1,);
+  Image wImageG3 = Image.memory(blankBytes, height: 1,);
 
 
   static Article_EbpInit() {
