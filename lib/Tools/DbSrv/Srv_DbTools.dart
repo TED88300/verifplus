@@ -3469,6 +3469,10 @@ class Srv_DbTools {
       if (ListUser == null) return false;
       print("getUserLogin D");
     } catch (e) {
+
+      print("getUserLogin ERROR $e");
+
+
       List<User> wListUser = await DbTools.getUsers();
       if (wListUser.length == 0) return false;
       gUserLogin = wListUser[0];
@@ -3635,6 +3639,10 @@ class Srv_DbTools {
       var parsedJson = json.decode(await response.stream.bytesToString());
 
       final items = parsedJson['data'];
+
+      print(">>>>>>>>>>>>>> getUser_API_Post items ${items}");
+
+
       if (items != null) {
         List<User> UserList = await items.map<User>((json) {
           return User.fromJson(json);
@@ -3661,6 +3669,24 @@ class Srv_DbTools {
         "\" " +
         " WHERE UserID = " +
         User.UserID.toString();
+    print("setUser " + wSlq);
+    bool ret = await add_API_Post("upddel", wSlq);
+    print("setUser ret " + ret.toString());
+    return ret;
+  }
+
+  static Future<bool> setUser_DCL(User aUser) async {
+    String wSlq = 'UPDATE Users SET '
+        'User_DCL_Ent_Validite = \"${aUser.User_DCL_Ent_Validite}\", '
+        'User_DCL_Ent_LivrPrev = \"${aUser.User_DCL_Ent_LivrPrev}\", '
+        'User_DCL_Ent_ModeRegl = \"${aUser.User_DCL_Ent_ModeRegl}\", '
+        'User_DCL_Ent_MoyRegl = \"${aUser.User_DCL_Ent_MoyRegl}\", '
+        'User_DCL_Ent_Valo = ${aUser.User_DCL_Ent_Valo}, '
+        'User_DCL_Ent_PrefAff = \"${aUser.User_DCL_Ent_PrefAff}\", '
+        'User_DCL_Ent_RelAuto = \"${aUser.User_DCL_Ent_RelAuto}\", '
+        'User_DCL_Ent_RelAnniv = \"${aUser.User_DCL_Ent_RelAnniv}\", '
+        'User_DCL_Ent_CopRel = \"${aUser.User_DCL_Ent_CopRel}\" '
+        'WHERE UserID = ${aUser.UserID}';
     print("setUser " + wSlq);
     bool ret = await add_API_Post("upddel", wSlq);
     print("setUser ret " + ret.toString());
@@ -3699,11 +3725,8 @@ class Srv_DbTools {
         User.User_Ville +
         ' ", "' +
         User.User_Tel +
-        ' ", "' +
-        User.User_Mail +
-        '"'
-            ', "' +
-        User.User_PassWord +
+        ' ", "' + User.User_Mail +
+        '", "' + User.User_PassWord +
         '"';
     String wSlq = "INSERT INTO Users ("
         "UserID,User_AuthID,User_Actif,User_Verif,User_Verif_Demande,User_Abus,User_Token_FBM,User_simCountryCode,User_NickName,User_Nom,User_Prenom,User_Adresse1,User_Adresse2,User_Cp,User_Ville,User_Tel,User_Mail,User_PassWord,User_DateNaissance,User_Note,User_Sexe) "

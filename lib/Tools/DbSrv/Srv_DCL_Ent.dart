@@ -19,6 +19,8 @@ class DCL_Ent {
   String? DCL_Ent_Collaborateur;
   String? DCL_Ent_Affaire;
   String? DCL_Ent_AffaireNote;
+
+
   String? DCL_Ent_Validite;
   String? DCL_Ent_LivrPrev;
   String? DCL_Ent_ModeRegl;
@@ -80,7 +82,47 @@ class DCL_Ent {
     );
   }
 
-  DCL_Ent({this.DCL_EntID, this.DCL_Ent_Type, this.DCL_Ent_Num, this.DCL_Ent_Version, this.DCL_Ent_ClientId, this.DCL_Ent_GroupeId, this.DCL_Ent_SiteId, this.DCL_Ent_ZoneId, this.DCL_Ent_InterventionId, this.DCL_Ent_Date, this.DCL_Ent_Statut, this.DCL_Ent_Etat, this.DCL_Ent_EtatMotif, this.DCL_Ent_EtatNote, this.DCL_Ent_EtatAction, this.DCL_Ent_Collaborateur, this.DCL_Ent_Affaire, this.DCL_Ent_AffaireNote, this.DCL_Ent_Validite, this.DCL_Ent_LivrPrev, this.DCL_Ent_ModeRegl, this.DCL_Ent_MoyRegl, this.DCL_Ent_PrefAff,this.DCL_Ent_RelAuto,this.DCL_Ent_RelAnniv,this.DCL_Ent_CopRel,this.DCL_Ent_Valo, this.DCL_Ent_RelanceAuto, this.DCL_Ent_RelanceAnniv, this.DCL_Ent_RelanceMode, this.DCL_Ent_RelanceContact, this.DCL_Ent_RelanceMail, this.DCL_Ent_RelanceTel, this.DCL_Ent_Proba, this.DCL_Ent_Proba_Note,this.DCL_Ent_Concurent, this.DCL_Ent_Note, this.DCL_Ent_Regl, this.DCL_Ent_Partage, this.DCL_Ent_Contributeurs, this.DCL_Ent_DemTech,
+  DCL_Ent({this.DCL_EntID,
+    this.DCL_Ent_Type,
+    this.DCL_Ent_Num,
+    this.DCL_Ent_Version,
+    this.DCL_Ent_ClientId,
+    this.DCL_Ent_GroupeId,
+    this.DCL_Ent_SiteId,
+    this.DCL_Ent_ZoneId,
+    this.DCL_Ent_InterventionId,
+    this.DCL_Ent_Date,
+    this.DCL_Ent_Statut,
+    this.DCL_Ent_Etat,
+    this.DCL_Ent_EtatMotif,
+    this.DCL_Ent_EtatNote,
+    this.DCL_Ent_EtatAction,
+    this.DCL_Ent_Collaborateur,
+    this.DCL_Ent_Affaire,
+    this.DCL_Ent_AffaireNote,
+    this.DCL_Ent_Validite,
+    this.DCL_Ent_LivrPrev,
+    this.DCL_Ent_ModeRegl,
+    this.DCL_Ent_MoyRegl,
+    this.DCL_Ent_PrefAff,
+    this.DCL_Ent_RelAuto,
+    this.DCL_Ent_RelAnniv,
+    this.DCL_Ent_CopRel,
+    this.DCL_Ent_Valo,
+    this.DCL_Ent_RelanceAuto,
+    this.DCL_Ent_RelanceAnniv,
+    this.DCL_Ent_RelanceMode,
+    this.DCL_Ent_RelanceContact,
+    this.DCL_Ent_RelanceMail,
+    this.DCL_Ent_RelanceTel,
+    this.DCL_Ent_Proba,
+    this.DCL_Ent_Proba_Note,
+    this.DCL_Ent_Concurent,
+    this.DCL_Ent_Note,
+    this.DCL_Ent_Regl,
+    this.DCL_Ent_Partage,
+    this.DCL_Ent_Contributeurs,
+    this.DCL_Ent_DemTech,
     this.DCL_Ent_DemSsT,
     this.DCL_Ent_MtHT,
     this.DCL_Ent_MtTVA,

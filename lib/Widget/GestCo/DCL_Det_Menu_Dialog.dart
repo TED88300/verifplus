@@ -11,13 +11,13 @@ import 'dart:async';
 
 import 'package:verifplus/Widget/Widget_Tools/gDialogs.dart';
 
-class DCL_Ent_Menu_Dialog {
-  DCL_Ent_Menu_Dialog();
-  static Future<void> Dialogs_DCL_Ent_Menu(BuildContext context) async {
+class DCL_Det_Menu_Dialog {
+  DCL_Det_Menu_Dialog();
+  static Future<void> Dialogs_DCL_Det_Menu(BuildContext context) async {
     await showDialog(
       context: context,
       barrierColor: Color(0x00000000),
-      builder: (BuildContext context) => DCL_EntMenuDialog(),
+      builder: (BuildContext context) => DCL_DetMenuDialog(),
     );
   }
 }
@@ -26,15 +26,15 @@ class DCL_Ent_Menu_Dialog {
 //**********************************
 //**********************************
 
-class DCL_EntMenuDialog extends StatefulWidget {
-  const DCL_EntMenuDialog({
+class DCL_DetMenuDialog extends StatefulWidget {
+  const DCL_DetMenuDialog({
     Key? key,
   }) : super(key: key);
   @override
-  _DCL_EntMenuDialogState createState() => _DCL_EntMenuDialogState();
+  _DCL_DetMenuDialogState createState() => _DCL_DetMenuDialogState();
 }
 
-class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
+class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
 //  String DbTools.ParamTypeOg = "";
 //  List<String> subLibArray = [];
 
@@ -66,17 +66,26 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
     double wWidth = MediaQuery.of(context).size.width;
 
     var formatter = DateFormat('dd/MM/yyyy');
-    String fSelDCL_DateDeb = formatter.format(Srv_DbTools.SelDCL_DateDeb);
 
-    String fSelDCL_DateFin = formatter.format(Srv_DbTools.SelDCL_DateFin);
-    bool isSel = false;
+    DateTime fSelDCL_Date = new DateFormat("dd/MM/yyyy").parse(Srv_DbTools.gDCL_Ent.DCL_Ent_Date!);
 
-    print(" B U I L D  $ModeParams");
+    String Validite =  Srv_DbTools.gUserLogin.User_DCL_Ent_Validite;
+    String sValidite = Validite.replaceAll(new RegExp(r'[^0-9]'),''); // '23'
+    int iValidite = int.parse(sValidite);
 
+    DateTime fSelDCL_DateValiditeDef = DateTime.now();
+    if (Validite.contains("mois"))
+      {
+        fSelDCL_DateValiditeDef = fSelDCL_DateValiditeDef.add(Duration(days: iValidite * 30));
+      }
+    else
+    {
+      fSelDCL_DateValiditeDef = fSelDCL_DateValiditeDef.add(Duration(days: iValidite));
+    }
+    DateTime fSelDCL_DateValidite = new DateFormat("dd/MM/yyyy").tryParse(Srv_DbTools.gDCL_Ent.DCL_Ent_Validite!) ?? fSelDCL_DateValiditeDef;
 
+    print(" B U I L D  $ModeParams ");
     return
-
-
       !ModeParams ?
         SimpleDialog(
       insetPadding: const EdgeInsets.fromLTRB(0, 200, 0, 0),
@@ -122,7 +131,7 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
                           child: Container(
                               padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
                               child: Text(
-                                "Menu documents de vente",
+                                "Menu du Devis",
                                 maxLines: 1,
                                 textAlign: TextAlign.left,
                                 style: gColors.bodySaisie_B_O,
@@ -177,23 +186,27 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
                                                               ),
                                                               width: 580,
                                                               height: 71,
-                                                              padding: const EdgeInsets.fromLTRB(60, 0, 35, 0),
+                                                              padding: const EdgeInsets.fromLTRB(16, 0, 35, 0),
                                                               child: Row(
                                                                 children: [
                                                                   Row(
                                                                     children: [
-                                                                      Text(
-                                                                        "Du ",
-                                                                        style: gColors.bodySaisie_B_G,
+                                                                      Container(
+                                                                        width : 200,
+                                                                        child: Text(
+                                                                          "Date du Devis",
+                                                                          style: gColors.bodySaisie_B_G,
+                                                                        ),
                                                                       ),
+
                                                                       Text(
-                                                                        "${fSelDCL_DateDeb}",
+                                                                        "${DateFormat('dd/MM/yyyy').format(fSelDCL_Date)}",
                                                                         style: gColors.bodySaisie_N_G,
                                                                       ),
                                                                     ],
                                                                   ),
                                                                   Spacer(),
-                                                                  popMenu(),
+
                                                                   Container(
                                                                     width: 16,
                                                                   ),
@@ -215,10 +228,12 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
                                                                 ],
                                                               )),
                                                           onTap: () async {
-                                                            selectedDate = Srv_DbTools.SelDCL_DateDeb;
+                                                            selectedDate = fSelDCL_Date;
                                                             await _selectDate(context, DateTime(1900), DateTime(DateTime.now().year + 1, 12, 31));
-                                                            Srv_DbTools.SelDCL_DateDeb = selectedDate;
-                                                            isSel = true;
+                                                            fSelDCL_Date = selectedDate;
+                                                            var formatter = new DateFormat('dd/MM/yyyy');
+                                                            Srv_DbTools.gDCL_Ent.DCL_Ent_Date = formatter.format(selectedDate);
+                                                            await Srv_DbTools.setDCL_Ent(Srv_DbTools.gDCL_Ent);
                                                             setState(() {});
                                                           },
                                                         ),
@@ -243,23 +258,26 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
                                                               ),
                                                               width: 580,
                                                               height: 71,
-                                                              padding: const EdgeInsets.fromLTRB(60, 0, 35, 0),
+                                                              padding: const EdgeInsets.fromLTRB(16, 0, 35, 0),
                                                               child: Row(
                                                                 children: [
                                                                   Row(
                                                                     children: [
-                                                                      Text(
-                                                                        "Au ",
-                                                                        style: gColors.bodySaisie_B_G,
+                                                                      Container(
+                                                                        width : 200,
+                                                                        child: Text(
+                                                                          "Date de validité du Devis",
+                                                                          style: gColors.bodySaisie_B_G,
+                                                                        ),
                                                                       ),
+
                                                                       Text(
-                                                                        "${fSelDCL_DateFin}",
+                                                                        "${DateFormat('dd/MM/yyyy').format(fSelDCL_DateValidite)}",
                                                                         style: gColors.bodySaisie_N_G,
                                                                       ),
                                                                     ],
                                                                   ),
                                                                   Spacer(),
-                                                                  popMenu(),
                                                                   Container(
                                                                     width: 16,
                                                                   ),
@@ -281,10 +299,13 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
                                                                 ],
                                                               )),
                                                           onTap: () async {
-                                                            selectedDate = Srv_DbTools.SelDCL_DateFin;
+                                                            selectedDate = fSelDCL_DateValidite;
                                                             await _selectDate(context, DateTime(1900), DateTime(DateTime.now().year + 1, 12, 31));
-                                                            Srv_DbTools.SelDCL_DateFin = selectedDate;
-                                                            isSel = true;
+                                                            fSelDCL_DateValidite = selectedDate;
+
+                                                            Srv_DbTools.gDCL_Ent.DCL_Ent_Validite = DateFormat('dd/MM/yyyy').format(selectedDate);
+                                                            await Srv_DbTools.setDCL_Ent(Srv_DbTools.gDCL_Ent);
+
                                                             setState(() {});
                                                           },
                                                         ),
@@ -305,18 +326,25 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
                         )),
                     gColors.wLigne(),
 
-                    AffBtnParam("", "Paramètres des documents de vente", "", "DCL_Param.svg", gColors.LinearGradient3, gColors.primaryBlue, "Param"),
-
+                    AffBtnParam("", "Paramètres du Devis", "", "DCL_Param.svg", gColors.LinearGradient3, gColors.primaryBlue, "DEV"),
                     Container(
                       height: 6,
                     ),
 
-                    AffBtnParam("", "Statistiques des documents de vente", "", "DCL_Stat.svg", gColors.LinearGradient3, gColors.primaryBlue, "Stat"),
-
+                    AffBtnParam("", "Adresse de Facturation/Livraison", "", "DCL_Adr.svg", gColors.LinearGradient3, gColors.primaryBlue, "ADR"),
                     Container(
                       height: 6,
                     ),
 
+                    AffBtnParam("", "Statistiques (Historique client/articles)", "", "DCL_Stat.svg", gColors.LinearGradient3, gColors.primaryBlue, "STAT"),
+                    Container(
+                      height: 6,
+                    ),
+
+                    AffBtnParam("", "TVA", "", "DCL_Tva.svg", gColors.LinearGradient3, gColors.primaryBlue, "TVA"),
+                    Container(
+                      height: 6,
+                    ),
 
                   ],
                 )),

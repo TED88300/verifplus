@@ -200,7 +200,16 @@ class DbTools {
         "User_NivHabID INTEGER NOT NULL DEFAULT 0,"
         "User_Niv_Isole INTEGER NOT NULL DEFAULT 0,"
         "User_TypeUser TEXT NOT NULL DEFAULT '', "
-        "User_Art_Fav TEXT NOT NULL DEFAULT ''"
+        "User_Art_Fav TEXT NOT NULL DEFAULT '',"
+        "User_DCL_Ent_Validite TEXT NOT NULL DEFAULT '',"
+        "User_DCL_Ent_LivrPrev TEXT NOT NULL DEFAULT '',"
+        "User_DCL_Ent_ModeRegl TEXT NOT NULL DEFAULT '',"
+        "User_DCL_Ent_MoyRegl TEXT NOT NULL DEFAULT '',"
+        "User_DCL_Ent_Valo INTEGER NOT NULL DEFAULT 0,"
+        "User_DCL_Ent_PrefAff TEXT NOT NULL DEFAULT '',"
+        "User_DCL_Ent_RelAuto TEXT NOT NULL DEFAULT '',"
+        "User_DCL_Ent_RelAnniv TEXT NOT NULL DEFAULT '',"
+        "User_DCL_Ent_CopRel TEXT NOT NULL DEFAULT ''"
         ");";
 
     String wCREATE_Clients =
@@ -458,7 +467,7 @@ class DbTools {
         ")";
 
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
-    String wDbPath = "karavan2.db";
+    String wDbPath = "demos22crat.db";
     //◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉◉
 
     database = openDatabase(
@@ -510,14 +519,15 @@ class DbTools {
       version: 1,
     );
 
-/*
+
     final db = await database;
-    final tables = await db.rawQuery('SELECT * FROM sqlite_master ORDER BY name;');
+    final tables = await db.rawQuery('SELECT * FROM sqlite_master where name ="Users" ORDER BY name ;');
     print("-------------------> onOpen Liste des table ${tables.length}");
     tables.forEach((element) {
-      print("-------------------> tables ${element}");
+
+      gColors.printWrapped("-------------------> tables ${element}");
     });
-*/
+
   }
 
   //************************************************

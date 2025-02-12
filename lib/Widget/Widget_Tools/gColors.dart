@@ -63,8 +63,9 @@ class gColors {
   static const Color LinearGradient1 = Color(0xFFaaaaaa);
   static const Color LinearGradient2 = Color(0xFFf6f6f6);
   static const Color LinearGradient3 = Color(0xFFe6e6e6);
-  static const Color LinearGradient4 = Color(0xFFBBBBBB);
-  static const Color LinearGradient5 = Color(0xFF888888);
+  static const Color LinearGradient3b = Color(0xFFBFBFBF);
+  static const Color LinearGradient4 = Color(0xFFA6A6A6);
+  static const Color LinearGradient5 = Color(0xFF7F7F7F);
 
   static const Color TextColor1 = Color(0xFF222222);
   static const Color TextColor2 = Color(0xFF555555);
@@ -442,6 +443,8 @@ class gColors {
         fontSize: wNorm,
         fontWeight: FontWeight.bold,
       );
+
+
 
   static TextStyle get bodySaisie_N_G => TextStyle(
         color: grey,

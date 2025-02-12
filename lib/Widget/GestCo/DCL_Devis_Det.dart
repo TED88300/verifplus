@@ -16,6 +16,7 @@ import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
+import 'package:verifplus/Widget/GestCo/DCL_Det_Menu_Dialog.dart';
 import 'package:verifplus/Widget/GestCo/DCL_Det_Param.dart';
 import 'package:verifplus/Widget/GestCo/HTML_Text.dart';
 import 'package:verifplus/Widget/GestCo/DCL_Article.dart';
@@ -173,7 +174,7 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
   @override
   Widget Entete_Btn_Search() {
     return Container(
-        height: 57,
+        height: 71,
         width: MediaQuery.of(context).size.width,
         color: gColors.LinearGradient3,
         child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -201,7 +202,7 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
     isValo = Srv_DbTools.gDCL_Ent.DCL_Ent_Valo == 1;
 
     return Container(
-        height: 57,
+        height: 71,
         child: Row(
           children: [
             Container(
@@ -295,7 +296,7 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
         decoration: BoxDecoration(
           color: gColors.LinearGradient3,
         ),
-        height: 57,
+        height: 71,
         child: Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.center, children: [
           Container(
             width: 16,
@@ -313,6 +314,7 @@ class DCL_Devis_DetState extends State<DCL_Devis_Det> with SingleTickerProviderS
               ),
               onTap: () async {
                 await HapticFeedback.vibrate();
+                await DCL_Det_Menu_Dialog.Dialogs_DCL_Det_Menu(context);
 
                 Filtre();
               }),

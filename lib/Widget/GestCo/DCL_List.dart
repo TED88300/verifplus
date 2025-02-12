@@ -62,11 +62,9 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
     List<String> lDCL_Ent = [];
     for (int i = 0; i < Srv_DbTools.ListDCL_Ent.length; i++) {
       DCL_Ent wDCL_Ent = Srv_DbTools.ListDCL_Ent[i];
-
       if (lDCL_Ent.indexOf(wDCL_Ent.DCL_Ent_Type!) == -1) {
         lDCL_Ent.add(wDCL_Ent.DCL_Ent_Type!);
       }
-
       print("wDCL_Ent.DCL_Ent_ClientNom ${wDCL_Ent.DCL_Ent_ClientNom}");
     }
 
@@ -105,14 +103,13 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
     wListDCL_Ent.forEach((element) async {
       DateTime wDate = new DateFormat("dd/MM/yyyy").parse(element.DCL_Ent_Date!);
       if (wDate.compareTo(Srv_DbTools.SelDCL_DateDeb) >= 0) {
-        print("wDate ${Srv_DbTools.SelDCL_DateDeb} ${wDate.toString()}    ${wDate.compareTo(Srv_DbTools.SelDCL_DateDeb)}");
+//        print("wDate ${Srv_DbTools.SelDCL_DateDeb} ${wDate.toString()}    ${wDate.compareTo(Srv_DbTools.SelDCL_DateDeb)}");
         wListDCL_Ent_Tmp.add(element);
       }
     });
 
     wListDCL_Ent.clear();
     wListDCL_Ent.addAll(wListDCL_Ent_Tmp);
-
     if (DbTools.wStatusCde != "Tous") {
       wListDCL_Ent_Tmp.clear();
       wListDCL_Ent.forEach((element) async {
@@ -120,7 +117,6 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
           wListDCL_Ent_Tmp.add(element);
         }
       });
-
       wListDCL_Ent.clear();
       wListDCL_Ent.addAll(wListDCL_Ent_Tmp);
     }
@@ -409,9 +405,12 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
               ),
               onTap: () async {
                 await HapticFeedback.vibrate();
+                affEdtFilter = false;
                 await DCL_Ent_Menu_Dialog.Dialogs_DCL_Ent_Menu(context);
                 Filtre();
               }),
+
+
 /*
 
           InkWell(
@@ -556,7 +555,6 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
               ),
               onTap: () async {
                 await HapticFeedback.vibrate();
-                await Navigator.push(context, MaterialPageRoute(builder: (context) => DCL_Ent_Param()));
                 Filtre();
               }),
           Container(
@@ -705,10 +703,6 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
   void doOptions(BuildContext context) {}
 
   Widget DCL_EntGridWidget() {
-    ImageIcon wDCL_Impr = ImageIcon(
-      AssetImage("images/DCL_Impr.png"),
-      color: gColors.white,
-    );
 
     return Container(
         color: gColors.LinearGradient2,
@@ -797,8 +791,9 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
                                 child: GestureDetector(
                                   onLongPress: () async {
                                     await HapticFeedback.vibrate();
-                                    await gDialogs.Dialog_ActionDevis(context);
-                                    Reload();
+                                    print(" on LongPress on LongPress on LongPress on LongPress on LongPress");
+                                    btnSel_Aff = !btnSel_Aff;
+                                    setState(() {});
                                   },
                                   onTap: () async {
                                     print(" GestureDetectorGestureDetectorGestureDetectorGestureDetectorGestureDetector");
@@ -919,8 +914,7 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
                                               children: [
                                                 CustomSlidableAction(
                                                   onPressed: (_) {
-                                                    dCL_Ent.DCL_Ent_isOptions = !dCL_Ent.DCL_Ent_isOptions;
-                                                    Srv_DbTools.gDCL_Ent = dCL_Ent;
+
                                                     setState(() {});
                                                   },
                                                   backgroundColor: gColors.LinearGradient5,
@@ -930,10 +924,11 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
                                                     crossAxisAlignment: CrossAxisAlignment.center,
                                                     children: [
                                                       SvgPicture.asset(
-                                                        "assets/images/DCL_Dots.svg",
+                                                        "assets/images/DCL_Dupliquer.svg",
+                                                        color: Colors.white,
                                                         height: 50,
                                                       ),
-                                                      Text("Options")
+                                                      Text("Dupliquer"),
                                                     ],
                                                   ),
                                                 ),
@@ -945,25 +940,25 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
                                                     mainAxisAlignment: MainAxisAlignment.center,
                                                     crossAxisAlignment: CrossAxisAlignment.center,
                                                     children: [
-                                                      Image.asset(
-                                                        "assets/images/DCL_Impr.png",
+                                                      SvgPicture.asset(
+                                                        "assets/images/DCL_Reviser.svg",
                                                         color: Colors.white,
                                                         height: 50,
                                                       ),
-                                                      Text("Imprimer")
+                                                      Text("Reviser")
                                                     ],
                                                   ),
                                                 ),
                                                 CustomSlidableAction(
                                                   onPressed: (_) => controller.openEndActionPane(),
-                                                  backgroundColor: gColors.LinearGradient3,
+                                                  backgroundColor: gColors.LinearGradient3b,
                                                   foregroundColor: Colors.white,
                                                   child: Column(
                                                     mainAxisAlignment: MainAxisAlignment.center,
                                                     crossAxisAlignment: CrossAxisAlignment.center,
                                                     children: [
                                                       SvgPicture.asset(
-                                                        "assets/images/DCL_Relance.svg",
+                                                        "assets/images/DCL_Relancer.svg",
                                                         color: Colors.white,
                                                         height: 50,
                                                       ),
@@ -1023,7 +1018,7 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
                                                                   ]),
                                                                 ),
                                                                 Container(
-                                                                    width: 70,
+                                                                    width: 80,
                                                                     child: Container(
                                                                         padding: EdgeInsets.only(left: 5),
                                                                         height: rowh,
@@ -1354,4 +1349,8 @@ class DCL_ListState extends State<DCL_List> with SingleTickerProviderStateMixin 
           ],
         ));
   }
+
+
+
+
 }

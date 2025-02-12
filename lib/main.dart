@@ -31,9 +31,12 @@ void main() async {
         gColors.getSwatch(gColors.primary),
       ),
     ),
+
+
     localizationsDelegates: [
       GlobalWidgetsLocalizations.delegate,
       GlobalMaterialLocalizations.delegate,
+      GlobalCupertinoLocalizations.delegate,
       MonthYearPickerLocalizations.delegate,
     ],
     supportedLocales: const [

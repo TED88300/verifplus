@@ -107,9 +107,6 @@ class DCL_Det_ParamState extends State<DCL_Det_Param> with SingleTickerProviderS
       }
     }
 
-
-
-
     ListWidget = [
       gColors.wLigne(),
       AffTxtParam(
