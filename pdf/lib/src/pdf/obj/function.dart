@@ -28,35 +28,35 @@ abstract class PdfBaseFunction extends PdfObject<PdfDict> {
 
   factory PdfBaseFunction.colorsAndStops(
     PdfDocument pdfDocument,
-    List<PdfColor?> colors, [
-    List<double>? stops,
+    List<PdfColor?> wcolors, [
+    List<double>? wstops,
   ]) {
-    if (stops == null || stops.isEmpty) {
-      return PdfFunction.fromColors(pdfDocument, colors);
+    if (wstops == null || wstops.isEmpty) {
+      return PdfFunction.fromColors(pdfDocument, wcolors);
     }
 
-    final _colors = List<PdfColor>.from(colors);
-    final _stops = List<double>.from(stops);
+    final colors = List<PdfColor>.from(wcolors);
+    final stops = List<double>.from(wstops);
 
     final fn = <PdfFunction>[];
-    var lc = _colors.first;
+    var lc = colors.first;
 
-    if (_stops[0] > 0) {
-      _colors.insert(0, lc);
-      _stops.insert(0, 0);
+    if (stops[0] > 0) {
+      colors.insert(0, lc);
+      stops.insert(0, 0);
     }
 
-    if (_stops.last < 1) {
-      _colors.add(_colors.last);
-      _stops.add(1);
+    if (stops.last < 1) {
+      colors.add(colors.last);
+      stops.add(1);
     }
 
-    if (_stops.length != _colors.length) {
+    if (stops.length != colors.length) {
       throw Exception(
           'The number of colors in a gradient must match the number of stops');
     }
 
-    for (final c in _colors.sublist(1)) {
+    for (final c in colors.sublist(1)) {
       fn.add(PdfFunction.fromColors(pdfDocument, <PdfColor>[lc, c]));
       lc = c;
     }
@@ -64,7 +64,7 @@ abstract class PdfBaseFunction extends PdfObject<PdfDict> {
     return PdfStitchingFunction(
       pdfDocument,
       functions: fn,
-      bounds: _stops.sublist(1, _stops.length - 1),
+      bounds: stops.sublist(1, stops.length - 1),
       domainStart: 0,
       domainEnd: 1,
     );

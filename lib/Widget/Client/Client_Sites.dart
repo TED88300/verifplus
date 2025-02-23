@@ -14,6 +14,8 @@ import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
 class Client_Sites extends StatefulWidget {
+  const Client_Sites({super.key});
+
   @override
   Client_SitesState createState() => Client_SitesState();
 }
@@ -32,7 +34,7 @@ class Client_SitesState extends State<Client_Sites> {
   int CountTot = 0;
   int CountSel = 0;
 
-  TextEditingController ctrlFilter = new TextEditingController();
+  TextEditingController ctrlFilter = TextEditingController();
   String filterText = '';
   bool isAll = true;
 
@@ -54,7 +56,7 @@ class Client_SitesState extends State<Client_Sites> {
       Srv_DbTools.gSite = Site.SiteInit();
       bool wRet = await Srv_DbTools.addSite(Srv_DbTools.gGroupe.GroupeId);
       Srv_DbTools.gSite.Site_isUpdate = wRet;
-      if (!wRet) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
+      if (!wRet) Srv_DbTools.gLastID = DateTime.now().millisecondsSinceEpoch * -1;
 
       Srv_DbTools.gSite.SiteId = Srv_DbTools.gLastID;
       Srv_DbTools.gSite.Site_GroupeId = Srv_DbTools.gGroupe.GroupeId;
@@ -77,7 +79,7 @@ class Client_SitesState extends State<Client_Sites> {
     for (int i = 0; i < Srv_DbTools.ListSite.length; i++) {
       Site wSite = Srv_DbTools.ListSite[i];
       print("Client_Sites C ${wSite.toMap()} ");
-      if (lGroupe.indexOf(wSite.Groupe_Nom) == -1) {
+      if (!lGroupe.contains(wSite.Groupe_Nom)) {
         print("Client_Sites C2 ${wSite.Groupe_Nom} ");
         lGroupe.add(wSite.Groupe_Nom);
       }
@@ -120,27 +122,28 @@ class Client_SitesState extends State<Client_Sites> {
 
     if (filterText.isEmpty) {
       Srv_DbTools.ListSitesearchresult.addAll(wListSite);
-    } else
+    } else {
       wListSite.forEach((element) async {
         {
-          String nom = element.Site_Nom == null ? "" : element.Site_Nom;
-          String cp = element.Site_CP == null ? "" : element.Site_CP;
-          String ville = element.Site_Ville == null ? "" : element.Site_Ville;
+          String nom = element.Site_Nom ?? "";
+          String cp = element.Site_CP ?? "";
+          String ville = element.Site_Ville ?? "";
 
-          String Groupe_Nom = element.Groupe_Nom == null ? "" : element.Groupe_Nom;
+          String groupeNom = element.Groupe_Nom ?? "";
 
           String id = element.SiteId.toString();
-          if (nom.toUpperCase().contains(filterText.toUpperCase()))
+          if (nom.toUpperCase().contains(filterText.toUpperCase())) {
             Srv_DbTools.ListSitesearchresult.add(element);
-          else if (cp.toUpperCase().contains(filterText.toUpperCase()))
+          } else if (cp.toUpperCase().contains(filterText.toUpperCase()))
             Srv_DbTools.ListSitesearchresult.add(element);
           else if (ville.toUpperCase().contains(filterText.toUpperCase()))
             Srv_DbTools.ListSitesearchresult.add(element);
-          else if (Groupe_Nom.toUpperCase().contains(filterText.toUpperCase()))
+          else if (groupeNom.toUpperCase().contains(filterText.toUpperCase()))
             Srv_DbTools.ListSitesearchresult.add(element);
           else if (id.toUpperCase().contains(filterText.toUpperCase())) Srv_DbTools.ListSitesearchresult.add(element);
         }
       });
+    }
 
     CountSel = Srv_DbTools.ListSitesearchresult.length;
 
@@ -155,6 +158,7 @@ class Client_SitesState extends State<Client_Sites> {
     Reload();
   }
 
+  @override
   void initState() {
     initLib();
     super.initState();
@@ -201,19 +205,18 @@ class Client_SitesState extends State<Client_Sites> {
           backgroundColor: gColors.white,
         ),
         body: Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: Column(
               children: [
-                gObj.InterventionTitleWidget("${Srv_DbTools.gClient.Client_Nom.toUpperCase()}", wTitre2: "${Srv_DbTools.gGroupe.Groupe_Nom} "),
+                gObj.InterventionTitleWidget(Srv_DbTools.gClient.Client_Nom.toUpperCase(), wTitre2: "${Srv_DbTools.gGroupe.Groupe_Nom} "),
                 Entete_Btn_Search(),
                 Expanded(
                   child: SiteGridWidget(),
                 ),
               ],
             )),
-        floatingActionButton: new FloatingActionButton(
+        floatingActionButton: FloatingActionButton(
             elevation: 0.0,
-            child: new Icon(Icons.add),
             backgroundColor: gColors.secondary,
             onPressed: () async {
               await DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
@@ -223,11 +226,11 @@ class Client_SitesState extends State<Client_Sites> {
               bool wRet =  await Srv_DbTools.addSite(Srv_DbTools.gClient.ClientId);
               print("retour addSite  ${wRet.toString()}");
               Srv_DbTools.gSite.Site_isUpdate = wRet;
-              if (!wRet) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
+              if (!wRet) Srv_DbTools.gLastID = DateTime.now().millisecondsSinceEpoch * -1;
               Srv_DbTools.gSite.SiteId          = Srv_DbTools.gLastID;
               print("retour gSite.gZone.SiteId  ${Srv_DbTools.gSite.SiteId}");
               Srv_DbTools.gSite.Site_GroupeId   = Srv_DbTools.gGroupe.GroupeId;
-              Srv_DbTools.gSite.Site_Nom        = Srv_DbTools.gGroupe.Groupe_Nom + "_${Srv_DbTools.ListSite.length+1}";
+              Srv_DbTools.gSite.Site_Nom        = "${Srv_DbTools.gGroupe.Groupe_Nom}_${Srv_DbTools.ListSite.length+1}";
               Srv_DbTools.gSite.Site_Adr1       = Srv_DbTools.gAdresse.Adresse_Adr1;
               Srv_DbTools.gSite.Site_Adr2       = Srv_DbTools.gAdresse.Adresse_Adr2;
               Srv_DbTools.gSite.Site_Adr3       = Srv_DbTools.gAdresse.Adresse_Adr3;
@@ -251,12 +254,13 @@ class Client_SitesState extends State<Client_Sites> {
 
               await Reload();
               
-            }));
+            },
+            child: const Icon(Icons.add)));
   }
 
   @override
   Widget Entete_Btn_Search() {
-    return Container(
+    return SizedBox(
         height: 57,
         child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
           Container(
@@ -278,7 +282,7 @@ class Client_SitesState extends State<Client_Sites> {
             width: 8,
           ),
           InkWell(
-              child: Container(
+              child: SizedBox(
                   width: icoWidth + 10,
                   child: Stack(children: <Widget>[
                     Image.asset(
@@ -302,8 +306,8 @@ class Client_SitesState extends State<Client_Sites> {
                               child: CircleAvatar(
                                 radius: 10,
                                 backgroundColor: gColors.tks,
-                                child: Text("${PastilleGroupe}",
-                                    style: TextStyle(
+                                child: Text("$PastilleGroupe",
+                                    style: const TextStyle(
                                       color: Colors.white,
                                       fontSize: 12,
                                       fontWeight: FontWeight.normal,
@@ -320,7 +324,7 @@ class Client_SitesState extends State<Client_Sites> {
           Container(
             width: 8,
           ),
-          Spacer(),
+          const Spacer(),
           EdtFilterWidget(),
         ]));
   }
@@ -331,7 +335,7 @@ class Client_SitesState extends State<Client_Sites> {
     return !affEdtFilter
         ? InkWell(
             child: Padding(
-              padding: EdgeInsets.only(right: 8),
+              padding: const EdgeInsets.only(right: 8),
               child: Image.asset(
                 "assets/images/Btn_Loupe.png",
                 height: icoWidth,
@@ -342,7 +346,7 @@ class Client_SitesState extends State<Client_Sites> {
               affEdtFilter = !affEdtFilter;
               setState(() {});
             })
-        : Container(
+        : SizedBox(
             width: 320,
             child: Row(
               children: [
@@ -391,7 +395,7 @@ class Client_SitesState extends State<Client_Sites> {
       Srv_DbTools.gZone = Zone.ZoneInit();
       bool wRet = await Srv_DbTools.addZone(Srv_DbTools.gSite.SiteId);
       Srv_DbTools.gZone.Zone_isUpdate = wRet;
-      if (!wRet) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
+      if (!wRet) Srv_DbTools.gLastID = DateTime.now().millisecondsSinceEpoch * -1;
       Srv_DbTools.gZone.ZoneId = Srv_DbTools.gLastID;
       Srv_DbTools.gZone.Zone_SiteId = Srv_DbTools.gSite.SiteId;
       Srv_DbTools.gZone.Zone_Nom = Srv_DbTools.gSite.Site_Nom;
@@ -404,14 +408,14 @@ class Client_SitesState extends State<Client_Sites> {
       if (wRet) await Srv_DbTools.setZone(Srv_DbTools.gZone);
 
       await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gZone.ZoneId, "ZONE");
-      await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Interventions()));
+      await Navigator.push(context, MaterialPageRoute(builder: (context) => const Client_Interventions()));
     } else if (Srv_DbTools.ListZone.length == 1) {
       Srv_DbTools.gZone = Srv_DbTools.ListZone[0];
       print("SELECT ZONE ${Srv_DbTools.gZone.Desc()}");
       await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gZone.ZoneId, "ZONE");
-      await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Interventions()));
+      await Navigator.push(context, MaterialPageRoute(builder: (context) => const Client_Interventions()));
     } else {
-      await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Zones()));
+      await Navigator.push(context, MaterialPageRoute(builder: (context) => const Client_Zones()));
     }
     setState(() {});
 
@@ -438,7 +442,7 @@ class Client_SitesState extends State<Client_Sites> {
                   child: Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(5),
                         child: Image.asset(
                           "assets/images/Icon_Site.png",
                           height: icoWidth,
@@ -481,7 +485,7 @@ class Client_SitesState extends State<Client_Sites> {
           ),
         ),
         gColors.wLigne(),
-        SizedBox(height: 5.0),
+        const SizedBox(height: 5.0),
         Expanded(
           child: ListView.builder(
             itemCount: Srv_DbTools.ListSitesearchresult.length,
@@ -506,12 +510,12 @@ class Client_SitesState extends State<Client_Sites> {
 
               return Column(
                 children: [
-                  new GestureDetector(
+                  GestureDetector(
                     //You need to make my child interactive
                     onDoubleTap: () async {
                       await HapticFeedback.vibrate();
                       Srv_DbTools.gSite = site;
-                      await Navigator.push(context, MaterialPageRoute(builder: (context) => Site_Vue()));
+                      await Navigator.push(context, MaterialPageRoute(builder: (context) => const Site_Vue()));
                     },
 
                     onTap: () async {
@@ -525,7 +529,7 @@ class Client_SitesState extends State<Client_Sites> {
                       child: Row(
                         children: <Widget>[
                           Container(
-                            padding: EdgeInsets.only(left: 5, bottom: 2),
+                            padding: const EdgeInsets.only(left: 5, bottom: 2),
                             child: Text(
                               site.Site_isUpdate ? " " : "◉",
                               maxLines: 1,
@@ -539,7 +543,7 @@ class Client_SitesState extends State<Client_Sites> {
                                 padding: EdgeInsets.only(left: 10, top: mTop),
                                 height: rowh,
                                 child: Text(
-                                  "${site.Site_Nom}",
+                                  site.Site_Nom,
                                   maxLines: 1,
                                   style: gColors.bodySaisie_B_B,
                                 ),
@@ -559,7 +563,7 @@ class Client_SitesState extends State<Client_Sites> {
                             flex: 10,
                             child: Container(
                               child: Image.asset(
-                                "assets/images/${wTmpImage}.png",
+                                "assets/images/$wTmpImage.png",
                                 height: icoWidth,
                                 width: icoWidth,
                               ),
@@ -571,7 +575,7 @@ class Client_SitesState extends State<Client_Sites> {
                                   padding: EdgeInsets.only(right: 10, top: mTop),
                                   height: rowh,
                                   child: Text(
-                                    index == 5 ? "Planifié ${wV}" : wV,
+                                    index == 5 ? "Planifié $wV" : wV,
                                     textAlign: TextAlign.right,
                                     maxLines: 1,
                                     style: index > 4 ? gColors.bodySaisie_B_B.copyWith(color: Colors.orange) : gColors.bodySaisie_B_B,
@@ -586,7 +590,7 @@ class Client_SitesState extends State<Client_Sites> {
             },
           ),
         ),
-        SizedBox(height: 45.0),
+        const SizedBox(height: 45.0),
       ],
     );
   }

@@ -89,10 +89,10 @@ class Srv_ImportExport {
       }
     }
 
-    List<Parc_Ent> ListParcs_Ent = await DbTools.getParcs_EntAll();
-    for (int i = 0; i < ListParcs_Ent.length; i++) {
-      Parc_Ent wParc_Ent = ListParcs_Ent[i];
-      if (wParc_Ent.Parcs_Update == 1) {
+    List<Parc_Ent> listparcsEnt = await DbTools.getParcs_EntAll();
+    for (int i = 0; i < listparcsEnt.length; i++) {
+      Parc_Ent wparcEnt = listparcsEnt[i];
+      if (wparcEnt.Parcs_Update == 1) {
         print("E");
         DbTools.setBoolErrorSync(true);
         return;
@@ -109,7 +109,7 @@ class Srv_ImportExport {
     wClient.Client_isUpdate = wRes;
     Srv_DbTools.gAdresse.Adresse_isUpdate = wRes;
     await DbTools.updateClients(wClient);
-    print("Client à remonter Client wRes ${wRes}");
+    print("Client à remonter Client wRes $wRes");
     return wRes;
   }
 
@@ -141,14 +141,14 @@ class Srv_ImportExport {
     wGroupe.Groupe_isUpdate = wRes;
     Srv_DbTools.gAdresse.Adresse_isUpdate = wRes;
     await DbTools.updateGroupesID(wGroupe, oldID);
-    print("Groupe à remonter Groupe wRes ${wRes}");
+    print("Groupe à remonter Groupe wRes $wRes");
     return wRes;
   }
 
   // ☀︎☀︎☀︎ GROUPE INSERT ☀︎☀︎☀︎
   static Future<bool> Groupe_Export_Insert(Groupe wGroupe) async {
     print(
-        "Groupe_Export_Insert ${wGroupe.Groupe_Nom} ${wGroupe.GroupeId} ${newClientId}");
+        "Groupe_Export_Insert ${wGroupe.Groupe_Nom} ${wGroupe.GroupeId} $newClientId");
     int OldID = wGroupe.GroupeId;
 
     bool wRes = await Srv_DbTools.addGroupe(newClientId);
@@ -175,7 +175,7 @@ class Srv_ImportExport {
     wSite.Site_isUpdate = wRes;
     Srv_DbTools.gAdresse.Adresse_isUpdate = wRes;
     await DbTools.updateSitesID(wSite, oldSite);
-    print("Site à remonter Site wRes ${wRes}");
+    print("Site à remonter Site wRes $wRes");
     return wRes;
   }
 
@@ -184,7 +184,7 @@ class Srv_ImportExport {
     print("Site à remonter INSERT  ${wSite.Site_Nom} ${wSite.SiteId}");
     int OldID = wSite.SiteId;
     bool wRes = await Srv_DbTools.addSite(newGroupeId);
-    print("Site à remonter INSERT  ${wSite.Site_Nom} ${wSite.SiteId} ${wRes}");
+    print("Site à remonter INSERT  ${wSite.Site_Nom} ${wSite.SiteId} $wRes");
     if (wRes) {
       print("Site à remonter Modif  ");
       wSite.Site_GroupeId = newGroupeId;
@@ -207,7 +207,7 @@ class Srv_ImportExport {
     wZone.Zone_isUpdate = wRes;
     Srv_DbTools.gAdresse.Adresse_isUpdate = wRes;
     await DbTools.updateZones(wZone);
-    print("Zone_Export_Update wRes ${wRes}");
+    print("Zone_Export_Update wRes $wRes");
     return wRes;
   }
 
@@ -236,7 +236,7 @@ class Srv_ImportExport {
     wIntervention.Intervention_isUpdate = wRes;
     Srv_DbTools.gAdresse.Adresse_isUpdate = wRes;
     await DbTools.updateInterventions(wIntervention);
-    print("Intervention à remonter Intervention wRes ${wRes}");
+    print("Intervention à remonter Intervention wRes $wRes");
     return wRes;
   }
 
@@ -252,7 +252,7 @@ class Srv_ImportExport {
       wIntervention.InterventionId = Srv_DbTools.gLastID;
       newInterventionId = Srv_DbTools.gLastID;
       print(
-          "Intervention_Export_Insert ADD OK ${wIntervention.Intervention_Type} >> ${wIntervention.Intervention_ZoneId}  >> ${wIntervention.InterventionId} >> ${newInterventionId}");
+          "Intervention_Export_Insert ADD OK ${wIntervention.Intervention_Type} >> ${wIntervention.Intervention_ZoneId}  >> ${wIntervention.InterventionId} >> $newInterventionId");
       wRes = await Srv_DbTools.setIntervention(wIntervention);
     }
     wIntervention.Intervention_isUpdate = wRes;
@@ -282,7 +282,7 @@ class Srv_ImportExport {
     if (!wRes) DbTools.setBoolErrorSync(true);
     Srv_DbTools.gAdresse.Adresse_isUpdate = wRes;
     await DbTools.updateAdresse(wAdresse);
-    print("Adresse à remonter Adresse wRes ${wRes}");
+    print("Adresse à remonter Adresse wRes $wRes");
     AdresseId = wAdresse.AdresseId;
     return wRes;
   }
@@ -294,7 +294,7 @@ class Srv_ImportExport {
       Contact wContact = Srv_DbTools.ListContact[i];
       if (!wContact.Contact_isUpdate && wContact.ContactId >= 0) {
         bool wRes = await Srv_DbTools.setContact(wContact);
-        print("•••• setContact wRes ${wRes}");
+        print("•••• setContact wRes $wRes");
         Srv_DbTools.gContact.Contact_isUpdate = wRes;
         if (!wRes) DbTools.setBoolErrorSync(true);
         await DbTools.updateContact(Srv_DbTools.gContact);
@@ -313,7 +313,7 @@ class Srv_ImportExport {
         if (!wRes) DbTools.setBoolErrorSync(true);
         Srv_DbTools.gContact.Contact_isUpdate = wRes;
         await DbTools.updateContact(wContact);
-        print("Contact à remonter Contact wRes ${wRes}");
+        print("Contact à remonter Contact wRes $wRes");
 
         return wRes;
       }
@@ -340,7 +340,7 @@ class Srv_ImportExport {
     if (!wRes) DbTools.setBoolErrorSync(true);
     Srv_DbTools.gContact.Contact_isUpdate = wRes;
     await DbTools.updateContact(wContact);
-    print("Contact à remonter Contact wRes ${wRes}");
+    print("Contact à remonter Contact wRes $wRes");
 
     return wRes;
   }
@@ -380,7 +380,7 @@ class Srv_ImportExport {
 
         print("••••• ••••• ••••• ••••• BOUCLE CLIENT");
 
-        print("Client à remonter INSERT Client wRes ${wRes}");
+        print("Client à remonter INSERT Client wRes $wRes");
         if (wRes) {
           // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
           // ☀︎☀︎☀︎ ADRESSE CLIENT INSERT FACT ☀︎☀︎☀︎
@@ -474,16 +474,16 @@ class Srv_ImportExport {
                             bool wRes =
                                 await Intervention_Export_Insert(wIntervention);
                             DbTools.glfParcs_Ent = await DbTools.getParcs_Ent(
-                                wIntervention.InterventionId!);
+                                wIntervention.InterventionId);
                             for (int j = 0;
                                 j < DbTools.lParcs_Ent.length;
                                 j++) {
-                              Parc_Ent wParc_Ent = DbTools.lParcs_Ent[j];
-                              if (wParc_Ent.Parcs_Update == 1 &&
-                                  wParc_Ent.Parcs_InterventionId! < 0) {
-                                wParc_Ent.Parcs_InterventionId =
+                              Parc_Ent wparcEnt = DbTools.lParcs_Ent[j];
+                              if (wparcEnt.Parcs_Update == 1 &&
+                                  wparcEnt.Parcs_InterventionId! < 0) {
+                                wparcEnt.Parcs_InterventionId =
                                     newInterventionId;
-                                await DbTools.updateParc_Ent(wParc_Ent);
+                                await DbTools.updateParc_Ent(wparcEnt);
                               }
                             }
                           }
@@ -514,7 +514,7 @@ class Srv_ImportExport {
         if (!wRes) DbTools.setBoolErrorSync(true);
         Srv_DbTools.gAdresse.Adresse_isUpdate = wRes;
         await DbTools.updateAdresse(wAdresse);
-        print("Adresse à remonter Adresse wRes ${wRes}");
+        print("Adresse à remonter Adresse wRes $wRes");
       }
     }
     Srv_DbTools.ListAdresse = await DbTools.getAdresseAll();
@@ -537,7 +537,7 @@ class Srv_ImportExport {
         if (!wRes) DbTools.setBoolErrorSync(true);
         Srv_DbTools.gContact.Contact_isUpdate = wRes;
         await DbTools.updateContact(wContact);
-        print("Contact à remonter Contact wRes ${wRes}");
+        print("Contact à remonter Contact wRes $wRes");
       }
     }
     Srv_DbTools.ListContact = await DbTools.getContact();
@@ -569,7 +569,7 @@ class Srv_ImportExport {
             wGroupe.Groupe_ClientId, saveGroupeId, "SITE");
 
         print(
-            "••••• ••••• ••••• ••••• BOUCLE GROUPE  getSiteGroupe ${saveGroupeId}");
+            "••••• ••••• ••••• ••••• BOUCLE GROUPE  getSiteGroupe $saveGroupeId");
 
         Srv_DbTools.ListSite = await DbTools.getSiteGroupe(saveGroupeId);
         print(
@@ -624,13 +624,13 @@ class Srv_ImportExport {
                       wIntervention.InterventionId < 0) {
                     bool wRes = await Intervention_Export_Insert(wIntervention);
                     DbTools.glfParcs_Ent = await DbTools.getParcs_Ent(
-                        wIntervention.InterventionId!);
+                        wIntervention.InterventionId);
                     for (int j = 0; j < DbTools.lParcs_Ent.length; j++) {
-                      Parc_Ent wParc_Ent = DbTools.lParcs_Ent[j];
-                      if (wParc_Ent.Parcs_Update == 1 &&
-                          wParc_Ent.Parcs_InterventionId! < 0) {
-                        wParc_Ent.Parcs_InterventionId = newInterventionId;
-                        await DbTools.updateParc_Ent(wParc_Ent);
+                      Parc_Ent wparcEnt = DbTools.lParcs_Ent[j];
+                      if (wparcEnt.Parcs_Update == 1 &&
+                          wparcEnt.Parcs_InterventionId! < 0) {
+                        wparcEnt.Parcs_InterventionId = newInterventionId;
+                        await DbTools.updateParc_Ent(wparcEnt);
                       }
                     }
                   }
@@ -656,7 +656,7 @@ class Srv_ImportExport {
             "••••• ••••• ••••• ••••• BOUCLE SITE : Site_Export_Update ${wSite.SiteId}");
         int wClientID = await DbTools.getClient_ID_Site(wSite.SiteId);
         print(
-            "••••• ••••• ••••• ••••• BOUCLE SITE : Contact_Export_InsertUpdate ${wClientID} ${wSite.SiteId}");
+            "••••• ••••• ••••• ••••• BOUCLE SITE : Contact_Export_InsertUpdate $wClientID ${wSite.SiteId}");
         await Contact_Export_InsertUpdate(wClientID, wSite.SiteId, "SITE");
       } else if (!wSite.Site_isUpdate && wSite.SiteId < 0) {
         print(
@@ -668,7 +668,7 @@ class Srv_ImportExport {
 
         int wClientID = await DbTools.getClient_ID_Groupe(wSite.Site_GroupeId);
         print(
-            "••••• ••••• ••••• ••••• BOUCLE SITE : Contact_Export_InsertUpdate ${wClientID} ${wSite.SiteId}");
+            "••••• ••••• ••••• ••••• BOUCLE SITE : Contact_Export_InsertUpdate $wClientID ${wSite.SiteId}");
         await Contact_Export_InsertUpdate(wClientID, wSite.SiteId, "SITE");
 
         // ☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎☀︎
@@ -685,7 +685,7 @@ class Srv_ImportExport {
             bool wRes = await Zone_Export_Update(wZone);
             int wClientID = await DbTools.getClient_ID_Site(wZone.Zone_SiteId);
             print(
-                "••••• ••••• ••••• ••••• BOUCLE SITE : Contact_Export_Update ${wClientID} ${wZone.ZoneId}");
+                "••••• ••••• ••••• ••••• BOUCLE SITE : Contact_Export_Update $wClientID ${wZone.ZoneId}");
             await Contact_Export_InsertUpdate(wClientID, wZone.ZoneId, "ZONE");
           } else if (!wZone.Zone_isUpdate && wZone.ZoneId < 0) {
             newSiteId = wSite.SiteId;
@@ -712,20 +712,20 @@ class Srv_ImportExport {
                 saveInterventionId = wIntervention.InterventionId;
                 bool wRes = await Intervention_Export_Insert(wIntervention);
                 print(
-                    "••••• ••••• ••••• ••••• BOUCLE SITE : Intervention_Export_Insert ${newInterventionId}");
+                    "••••• ••••• ••••• ••••• BOUCLE SITE : Intervention_Export_Insert $newInterventionId");
 
                 DbTools.glfParcs_Ent =
-                    await DbTools.getParcs_Ent(saveInterventionId!);
+                    await DbTools.getParcs_Ent(saveInterventionId);
                 print(
                     "••••• ••••• ••••• ••••• BOUCLE SITE : getParcs_Ent ${DbTools.glfParcs_Ent.length}");
                 for (int j = 0; j < DbTools.lParcs_Ent.length; j++) {
-                  Parc_Ent wParc_Ent = DbTools.lParcs_Ent[j];
-                  if (wParc_Ent.Parcs_Update == 1 &&
-                      wParc_Ent.Parcs_InterventionId! < 0) {
-                    wParc_Ent.Parcs_InterventionId = newInterventionId;
+                  Parc_Ent wparcEnt = DbTools.lParcs_Ent[j];
+                  if (wparcEnt.Parcs_Update == 1 &&
+                      wparcEnt.Parcs_InterventionId! < 0) {
+                    wparcEnt.Parcs_InterventionId = newInterventionId;
                     print(
-                        "••••• ••••• ••••• ••••• BOUCLE SITE : updateParc_Ent Parcs_InterventionId ${wParc_Ent.Parcs_InterventionId}");
-                    await DbTools.updateParc_Ent(wParc_Ent);
+                        "••••• ••••• ••••• ••••• BOUCLE SITE : updateParc_Ent Parcs_InterventionId ${wparcEnt.Parcs_InterventionId}");
+                    await DbTools.updateParc_Ent(wparcEnt);
                   }
                 }
               }
@@ -754,7 +754,7 @@ class Srv_ImportExport {
         bool wRes = await Zone_Export_Update(wZone);
         int wClientID = await DbTools.getClient_ID_Site(wZone.Zone_SiteId);
         print(
-            "••••• ••••• ••••• ••••• BOUCLE ZONE : Contact_Export_Update ${wClientID} ${wZone.ZoneId}");
+            "••••• ••••• ••••• ••••• BOUCLE ZONE : Contact_Export_Update $wClientID ${wZone.ZoneId}");
         await Contact_Export_InsertUpdate(wClientID, wZone.ZoneId, "ZONE");
       } else if (!wZone.Zone_isUpdate && wZone.ZoneId < 0) {
         newSiteId = wZone.Zone_SiteId;
@@ -781,20 +781,20 @@ class Srv_ImportExport {
             saveInterventionId = wIntervention.InterventionId;
             bool wRes = await Intervention_Export_Insert(wIntervention);
             print(
-                "••••• ••••• ••••• ••••• BOUCLE ZONE : Intervention_Export_Insert ${newInterventionId}");
+                "••••• ••••• ••••• ••••• BOUCLE ZONE : Intervention_Export_Insert $newInterventionId");
 
             DbTools.glfParcs_Ent =
-                await DbTools.getParcs_Ent(saveInterventionId!);
+                await DbTools.getParcs_Ent(saveInterventionId);
             print(
                 "••••• ••••• ••••• ••••• BOUCLE ZONE : getParcs_Ent ${DbTools.glfParcs_Ent.length}");
             for (int j = 0; j < DbTools.lParcs_Ent.length; j++) {
-              Parc_Ent wParc_Ent = DbTools.lParcs_Ent[j];
-              if (wParc_Ent.Parcs_Update == 1 &&
-                  wParc_Ent.Parcs_InterventionId! < 0) {
-                wParc_Ent.Parcs_InterventionId = newInterventionId;
+              Parc_Ent wparcEnt = DbTools.lParcs_Ent[j];
+              if (wparcEnt.Parcs_Update == 1 &&
+                  wparcEnt.Parcs_InterventionId! < 0) {
+                wparcEnt.Parcs_InterventionId = newInterventionId;
                 print(
-                    "••••• ••••• ••••• ••••• BOUCLE ZONE : updateParc_Ent Parcs_InterventionId ${wParc_Ent.Parcs_InterventionId}");
-                await DbTools.updateParc_Ent(wParc_Ent);
+                    "••••• ••••• ••••• ••••• BOUCLE ZONE : updateParc_Ent Parcs_InterventionId ${wparcEnt.Parcs_InterventionId}");
+                await DbTools.updateParc_Ent(wparcEnt);
               }
             }
           }
@@ -823,21 +823,21 @@ class Srv_ImportExport {
         bool wRes = await Intervention_Export_Insert(wIntervention);
 
         print(
-            "••••• ••••• ••••• ••••• BOUCLE INTERVENTION newInterventionId ${newInterventionId}");
+            "••••• ••••• ••••• ••••• BOUCLE INTERVENTION newInterventionId $newInterventionId");
 
-        DbTools.glfParcs_Ent = await DbTools.getParcs_Ent(saveInterventionId!);
+        DbTools.glfParcs_Ent = await DbTools.getParcs_Ent(saveInterventionId);
 
         print(
             "••••• ••••• ••••• ••••• BOUCLE INTERVENTION DbTools.glfParcs_Ent ${DbTools.glfParcs_Ent.length}");
 
         for (int j = 0; j < DbTools.lParcs_Ent.length; j++) {
-          Parc_Ent wParc_Ent = DbTools.lParcs_Ent[j];
-          if (wParc_Ent.Parcs_Update == 1 &&
-              wParc_Ent.Parcs_InterventionId! < 0) {
-            wParc_Ent.Parcs_InterventionId = newInterventionId;
+          Parc_Ent wparcEnt = DbTools.lParcs_Ent[j];
+          if (wparcEnt.Parcs_Update == 1 &&
+              wparcEnt.Parcs_InterventionId! < 0) {
+            wparcEnt.Parcs_InterventionId = newInterventionId;
             print(
-                "wParc_Ent Parcs_InterventionId  ${wParc_Ent.Parcs_InterventionId}");
-            await DbTools.updateParc_Ent(wParc_Ent);
+                "wParc_Ent Parcs_InterventionId  ${wparcEnt.Parcs_InterventionId}");
+            await DbTools.updateParc_Ent(wparcEnt);
           }
         }
       }
@@ -851,22 +851,22 @@ class Srv_ImportExport {
 
 
     for (int j = 0; j < DbTools.glfParcs_Ent.length; j++) {
-      Parc_Ent wParc_Ent = DbTools.glfParcs_Ent[j];
+      Parc_Ent wparcEnt = DbTools.glfParcs_Ent[j];
 
-      print("wParc_Ent  ${wParc_Ent.toMap()}");
+      print("wParc_Ent  ${wparcEnt.toMap()}");
 
-      if (wParc_Ent.Parcs_Update == 1) {
+      if (wparcEnt.Parcs_Update == 1) {
         int NbDesc = 0;
         int NbArt = 0;
 
         DbTools.glfParcs_Ent =
-            await DbTools.getParcs_Ent_Upd(wParc_Ent.Parcs_InterventionId!);
+            await DbTools.getParcs_Ent_Upd(wparcEnt.Parcs_InterventionId!);
         print("glfParcs_Ent lenght ${DbTools.glfParcs_Ent.length}");
 
         DbTools.lParcs_Art.clear();
         DbTools.glfParcs_Art =
-            await DbTools.getParcs_ArtInter(wParc_Ent.Parcs_InterventionId!);
-        print("getParcs_ArtInter ${Srv_DbTools.gIntervention.InterventionId!}");
+            await DbTools.getParcs_ArtInter(wparcEnt.Parcs_InterventionId!);
+        print("getParcs_ArtInter ${Srv_DbTools.gIntervention.InterventionId}");
         print("glfParcs_Art lenght ${DbTools.glfParcs_Art.length}");
         DbTools.lParcs_Art.addAll(DbTools.glfParcs_Art);
 
@@ -878,7 +878,7 @@ class Srv_ImportExport {
           await Srv_DbTools.InsertUpdateParc_Ent_Srv(element);
 
           int gLastID = Srv_DbTools.gLastID;
-          print("Srv_DbTools.gLastID ${gLastID}      <   ${element.ParcsId}");
+          print("Srv_DbTools.gLastID $gLastID      <   ${element.ParcsId}");
 
           String wSql = "";
           for (int i = 0; i < DbTools.glfParcs_Desc.length; i++) {
@@ -888,7 +888,7 @@ class Srv_ImportExport {
               element2.ParcsDesc_ParcsId = gLastID;
               String wTmp =
                   Srv_DbTools.InsertUpdateParc_Desc_Srv_GetSql(element2);
-              wSql = "${wSql} ${wTmp};";
+              wSql = "$wSql $wTmp;";
             }
           }
 
@@ -904,7 +904,7 @@ class Srv_ImportExport {
               element2.ParcsArt_ParcsId = gLastID;
               String wTmp =
                   Srv_DbTools.InsertUpdateParc_Art_Srv_GetSql(element2);
-              wSql = "${wSql} ${wTmp};";
+              wSql = "$wSql $wTmp;";
             }
           }
 
@@ -937,12 +937,12 @@ class Srv_ImportExport {
 
       if (wPlanning.Planning_InterventionId == -1)
       {
-        Planning_Intervention wPlanning_Intervention = Planning_Intervention.Planning_InterventionInit();
-        wPlanning_Intervention.Planning_Interv_InterventionId = -1;
-        wPlanning_Intervention.Planning_Interv_InterventionstartTime = wPlanning.Planning_InterventionstartTime;
-        wPlanning_Intervention.Planning_Interv_InterventionendTime = wPlanning.Planning_InterventionendTime;
-        wPlanning_Intervention.Planning_Libelle = wPlanning.Planning_Libelle;
-        Srv_DbTools.ListPlanning_Intervention.add(wPlanning_Intervention);
+        Planning_Intervention wplanningIntervention = Planning_Intervention.Planning_InterventionInit();
+        wplanningIntervention.Planning_Interv_InterventionId = -1;
+        wplanningIntervention.Planning_Interv_InterventionstartTime = wPlanning.Planning_InterventionstartTime;
+        wplanningIntervention.Planning_Interv_InterventionendTime = wPlanning.Planning_InterventionendTime;
+        wplanningIntervention.Planning_Libelle = wPlanning.Planning_Libelle;
+        Srv_DbTools.ListPlanning_Intervention.add(wplanningIntervention);
       }
     }
 
@@ -953,7 +953,7 @@ class Srv_ImportExport {
 
   static Future<bool> ImportUsers() async {
     bool wResult = await Srv_DbTools.getUserAll();
-    print("ImportUser wResult ${wResult}");
+    print("ImportUser wResult $wResult");
     if (wResult) {
       await DbTools.TrunckUsers();
       for (int i = 0; i < Srv_DbTools.ListUser.length; i++) {
@@ -980,12 +980,12 @@ class Srv_ImportExport {
         .contains(("admin"))) {
       wResult = await Srv_DbTools.getClient_ALL();
     } else {
-      print("ImportClient wResult ${wResult}");
+      print("ImportClient wResult $wResult");
       wResult = await Srv_DbTools.getClient_User_CSIP(
           Srv_DbTools.gUserLogin.User_Matricule);
     }
 
-    print("ImportClient wResult ${wResult}");
+    print("ImportClient wResult $wResult");
     if (wResult) {
       await DbTools.TrunckClients();
       for (int i = 0; i < Srv_DbTools.ListClient.length; i++) {
@@ -1005,7 +1005,7 @@ class Srv_ImportExport {
 
   static Future<bool> ImportAdresse() async {
     bool wResult = await Srv_DbTools.IMPORT_AdresseAll();
-    print("ImportAdresse wResult ${wResult}");
+    print("ImportAdresse wResult $wResult");
     if (wResult) {
       await DbTools.TrunckAdresse();
       for (int i = 0; i < Srv_DbTools.ListAdresse.length; i++) {
@@ -1025,7 +1025,7 @@ class Srv_ImportExport {
 
   static Future<bool> ImportContact() async {
     bool wResult = await Srv_DbTools.getContactAll();
-    print("ImportContact wResult ${wResult}");
+    print("ImportContact wResult $wResult");
     if (wResult) {
       await DbTools.TrunckContact();
       for (int i = 0; i < Srv_DbTools.ListContact.length; i++) {
@@ -1046,7 +1046,7 @@ class Srv_ImportExport {
   static Future<bool> ImportPlanning() async {
     bool wResult = await Srv_DbTools.getPlanning_ResourceId(
         Srv_DbTools.gUserLogin.User_Matricule);
-    print("ImportPlanning wResult ${wResult}");
+    print("ImportPlanning wResult $wResult");
     if (wResult) {
       await DbTools.TrunckPlanning();
       for (int i = 0; i < Srv_DbTools.ListPlanning.length; i++) {
@@ -1073,10 +1073,10 @@ class Srv_ImportExport {
     if (wResult) {
       await DbTools.TrunckPlanning_Intervention();
       for (int i = 0; i < Srv_DbTools.ListPlanning_Intervention.length; i++) {
-        Planning_Intervention wPlanning_Intervention =
+        Planning_Intervention wplanningIntervention =
             Srv_DbTools.ListPlanning_Intervention[i];
         //      print("ImportPlanning_Intervention wPlanning_Intervention ${wPlanning_Intervention.Desc()}");
-        await DbTools.inserPlanning_Intervention(wPlanning_Intervention);
+        await DbTools.inserPlanning_Intervention(wplanningIntervention);
       }
       Srv_DbTools.ListPlanning_Intervention = await DbTools.getPlanning_InterventionAll();
       print(
@@ -1148,7 +1148,7 @@ class Srv_ImportExport {
 
   static Future<bool> ImportGroupe(int ID) async {
     bool wResult = await Srv_DbTools.getGroupesClient(ID);
-    print("ImportGroupe Groupe wResult ${wResult}");
+    print("ImportGroupe Groupe wResult $wResult");
     if (wResult) {
       await DbTools.TrunckGroupes();
       for (int i = 0; i < Srv_DbTools.ListGroupe.length; i++) {
@@ -1166,7 +1166,7 @@ class Srv_ImportExport {
 
   static Future<bool> ImportSite(int ID) async {
     bool wResult = await Srv_DbTools.getSitesGroupe(ID);
-    print("ImportSite Groupe wResult ${wResult}");
+    print("ImportSite Groupe wResult $wResult");
     if (wResult) {
       await DbTools.TrunckSites();
       for (int i = 0; i < Srv_DbTools.ListSite.length; i++) {
@@ -1185,7 +1185,7 @@ class Srv_ImportExport {
   static Future<bool> ImportParam_ParamAll() async {
     bool wResult = await Srv_DbTools.getParam_ParamAll();
 
-    print("ImportContact wResult ${wResult}");
+    print("ImportContact wResult $wResult");
     if (wResult) {
       await DbTools.TrunckContact();
       for (int i = 0; i < Srv_DbTools.ListContact.length; i++) {
@@ -1212,15 +1212,15 @@ class Srv_ImportExport {
       wResult = await Srv_DbTools.getDCL_EntAll();
 
 
-    print("ImportDCL_Ent wResult ${wResult}");
+    print("ImportDCL_Ent wResult $wResult");
     if (wResult) {
 
       await DbTools.TrunckDCL_Ent();
       for (int i = 0; i < Srv_DbTools.ListDCL_Ent.length; i++) {
-        print("ImportDCL_Ent i ${i}");
-        DCL_Ent wDCL_Ent = Srv_DbTools.ListDCL_Ent[i];
-        print("ImportDCL_Ent wDCL_Ent ${wDCL_Ent.toJson()}");
-        await DbTools.inserDCL_Ent(wDCL_Ent);
+        print("ImportDCL_Ent i $i");
+        DCL_Ent wdclEnt = Srv_DbTools.ListDCL_Ent[i];
+        print("ImportDCL_Ent wDCL_Ent ${wdclEnt.toJson()}");
+        await DbTools.inserDCL_Ent(wdclEnt);
       }
       Srv_DbTools.ListDCL_Ent = await DbTools.getDCL_EntAll();
       print("Import_DataDialog ON LINE Srv_DbTools.ListDCL_Ent len  ${Srv_DbTools.ListDCL_Ent.length}");
@@ -1240,15 +1240,15 @@ class Srv_ImportExport {
     wResult = await Srv_DbTools.getDCL_DetAll();
 
 
-    print("ImportDCL_Det wResult ${wResult}");
+    print("ImportDCL_Det wResult $wResult");
     if (wResult) {
 
       await DbTools.TrunckDCL_Det();
       for (int i = 0; i < Srv_DbTools.ListDCL_Det.length; i++) {
-        print("ImportDCL_Det i ${i}");
-        DCL_Det wDCL_Det = Srv_DbTools.ListDCL_Det[i];
-        print("ImportDCL_Det wDCL_Det ${wDCL_Det.toJson()}");
-        await DbTools.inserDCL_Det(wDCL_Det);
+        print("ImportDCL_Det i $i");
+        DCL_Det wdclDet = Srv_DbTools.ListDCL_Det[i];
+        print("ImportDCL_Det wDCL_Det ${wdclDet.toJson()}");
+        await DbTools.inserDCL_Det(wdclDet);
       }
       Srv_DbTools.ListDCL_Det = await DbTools.getDCL_DetAll();
       print("Import_DataDialog ON LINE Srv_DbTools.ListDCL_Det len  ${Srv_DbTools.ListDCL_Det.length}");

@@ -11,11 +11,11 @@ class Param_Saisie_Param {
   String Param_Saisie_Param_Aide = "";
   bool Param_Saisie_Param_Default = false;
   bool Param_Saisie_Param_Init = false;
-  Widget Param_Saisie_Param_Ico = SizedBox();
+  Widget Param_Saisie_Param_Ico = const SizedBox();
   String Param_Saisie_Param_Color = "";
 
   static Param_Saisie_ParamInit() {
-    return Param_Saisie_Param(0, "", 0, "", "", "", false, false, SizedBox(), "");
+    return Param_Saisie_Param(0, "", 0, "", "", "", false, false, const SizedBox(), "");
   }
 
   String Desc() {
@@ -73,7 +73,7 @@ class Param_Saisie_Param {
 
 
   factory Param_Saisie_Param.fromJson(Map<String, dynamic> json) {
-    Param_Saisie_Param wParam_Saisie_Param = Param_Saisie_Param(
+    Param_Saisie_Param wparamSaisieParam = Param_Saisie_Param(
       int.parse(json['Param_Saisie_ParamId']),
       json['Param_Saisie_Param_Id'],
       int.parse(json['Param_Saisie_Param_Ordre']),
@@ -82,10 +82,10 @@ class Param_Saisie_Param {
       json['Param_Saisie_Param_Aide'],
       int.parse(json['Param_Saisie_Param_Default']) == 1,
       int.parse(json['Param_Saisie_Param_Init']) == 1,
-      SizedBox(),
+      const SizedBox(),
       json['Param_Saisie_Param_Color'],
     );
 
-    return wParam_Saisie_Param;
+    return wparamSaisieParam;
   }
 }

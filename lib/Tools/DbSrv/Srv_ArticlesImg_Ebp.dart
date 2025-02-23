@@ -19,13 +19,13 @@ class ArticlesImg_Ebp {
 
   factory ArticlesImg_Ebp.fromJson(Map<String, dynamic> json) {
 //    print("json $json");
-    ArticlesImg_Ebp wArticlesImg_Ebp = ArticlesImg_Ebp(
+    ArticlesImg_Ebp warticlesimgEbp = ArticlesImg_Ebp(
       json['ArticlesImg_codeArticle'],
       json['ArticlesImg_Image'],
 
     );
 
-    return wArticlesImg_Ebp;
+    return warticlesimgEbp;
   }
 
 

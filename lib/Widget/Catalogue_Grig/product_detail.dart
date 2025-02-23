@@ -21,7 +21,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
   late Animation<double> animation;
   bool isLiked = false;
 
-  Product product = new Product();
+  Product product = Product();
 
 
 
@@ -44,7 +44,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
     print("image $wImg");
 
     controller =
-        AnimationController(vsync: this, duration: Duration(milliseconds: 300));
+        AnimationController(vsync: this, duration: const Duration(milliseconds: 300));
     animation = Tween<double>(begin: 0, end: 1).animate(
         CurvedAnimation(parent: controller, curve: Curves.easeInToLinear));
     controller.forward();
@@ -98,10 +98,10 @@ class _ProductDetailPageState extends State<ProductDetailPage>
         border: Border.all(
             color: LightColor.iconColor,
             style: isOutLine ? BorderStyle.solid : BorderStyle.none),
-        borderRadius: BorderRadius.all(Radius.circular(13)),
+        borderRadius: const BorderRadius.all(Radius.circular(13)),
         color:
             isOutLine ? Colors.transparent : Theme.of(context).primaryColor,
-        boxShadow: <BoxShadow>[
+        boxShadow: const <BoxShadow>[
           BoxShadow(
               color: Color(0xfff8f8f8),
               blurRadius: 5,
@@ -111,17 +111,15 @@ class _ProductDetailPageState extends State<ProductDetailPage>
       ),
       child: Icon(icon, color: color, size: size),
     ).ripple(() {
-      if (onPressed != null) {
-        onPressed();
-      }
-    }, borderRadius: BorderRadius.all(Radius.circular(13)));
+      onPressed();
+        }, borderRadius: const BorderRadius.all(Radius.circular(13)));
   }
 
   Widget _productImage() {
     return AnimatedBuilder(
       builder: (context, child) {
         return AnimatedOpacity(
-          duration: Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 500),
           opacity: animation.value,
           child: child,
         );
@@ -139,7 +137,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
 
   Widget _imagesWidget() {
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 0),
+      margin: const EdgeInsets.symmetric(vertical: 0),
       width: AppTheme.fullWidth(context),
       height: 80,
       child: Row(
@@ -156,14 +154,14 @@ class _ProductDetailPageState extends State<ProductDetailPage>
       //  builder: null,
       builder: (context, child) => AnimatedOpacity(
         opacity: animation.value,
-        duration: Duration(milliseconds: 500),
+        duration: const Duration(milliseconds: 500),
         child: child,
       ),
       child:
 
 
       Container(
-        margin: EdgeInsets.symmetric(horizontal: 10),
+        margin: const EdgeInsets.symmetric(horizontal: 10),
 
           child:Container(
           height: 40,
@@ -172,7 +170,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
             border: Border.all(
               color: LightColor.grey,
             ),
-            borderRadius: BorderRadius.all(Radius.circular(13)),
+            borderRadius: const BorderRadius.all(Radius.circular(13)),
             // color: Theme.of(context).backgroundColor,
           ),
           child: Image.asset(image),
@@ -183,7 +181,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
               wImg = image;
 
             });
-          }, borderRadius: BorderRadius.all(Radius.circular(13))),
+          }, borderRadius: const BorderRadius.all(Radius.circular(13))),
       ))
     ;
   }
@@ -198,7 +196,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
       builder: (context, scrollController) {
         return Container(
           padding: AppTheme.padding.copyWith(bottom: 0),
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(40),
                 topRight: Radius.circular(40),
@@ -210,18 +208,18 @@ class _ProductDetailPageState extends State<ProductDetailPage>
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.max,
               children: <Widget>[
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Container(
                   alignment: Alignment.center,
                   child: Container(
                     width: 50,
                     height: 5,
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                         color: LightColor.iconColor,
                         borderRadius: BorderRadius.all(Radius.circular(10))),
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Container(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -266,7 +264,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
                   ),
                 ),
 
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 _description(),
@@ -308,7 +306,7 @@ class _ProductDetailPageState extends State<ProductDetailPage>
       floatingActionButton: _flotingButton(),
       body: SafeArea(
         child: Container(
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
               gradient: LinearGradient(
             colors: [
               Color(0xfffbfbfb),

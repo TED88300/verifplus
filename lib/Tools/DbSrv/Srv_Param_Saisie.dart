@@ -112,7 +112,7 @@ class Param_Saisie {
   }
 
   factory Param_Saisie.fromJson(Map<String, dynamic> json) {
-    Param_Saisie wParam_Saisie = Param_Saisie(
+    Param_Saisie wparamSaisie = Param_Saisie(
       int.parse(json['Param_SaisieId']),
       json['Param_Saisie_Organe'],
       json['Param_Saisie_Type'],
@@ -133,6 +133,6 @@ class Param_Saisie {
       json['Param_Saisie_Triger'],
     );
 
-    return wParam_Saisie;
+    return wparamSaisie;
   }
 }

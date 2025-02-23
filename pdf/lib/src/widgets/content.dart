@@ -68,53 +68,53 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(Context context) {
-    var _decoration = decoration;
-    var _margin = margin;
-    var _padding = padding;
-    var _textStyle = textStyle;
+    var decoration = this.decoration;
+    var margin = this.margin;
+    var padding = this.padding;
+    var textStyle = this.textStyle;
     switch (level) {
       case 0:
-        _margin ??= const EdgeInsets.only(bottom: 5.0 * PdfPageFormat.mm);
-        _padding ??= const EdgeInsets.only(bottom: 1.0 * PdfPageFormat.mm);
-        _decoration ??=
+        margin ??= const EdgeInsets.only(bottom: 5.0 * PdfPageFormat.mm);
+        padding ??= const EdgeInsets.only(bottom: 1.0 * PdfPageFormat.mm);
+        decoration ??=
             const BoxDecoration(border: Border(bottom: BorderSide()));
-        _textStyle ??= Theme.of(context).header0;
+        textStyle ??= Theme.of(context).header0;
         break;
       case 1:
-        _margin ??= const EdgeInsets.only(
+        margin ??= const EdgeInsets.only(
             top: 3.0 * PdfPageFormat.mm, bottom: 5.0 * PdfPageFormat.mm);
-        _decoration ??=
+        decoration ??=
             const BoxDecoration(border: Border(bottom: BorderSide(width: 0.2)));
-        _textStyle ??= Theme.of(context).header1;
+        textStyle ??= Theme.of(context).header1;
         break;
       case 2:
-        _margin ??= const EdgeInsets.only(
+        margin ??= const EdgeInsets.only(
             top: 2.0 * PdfPageFormat.mm, bottom: 4.0 * PdfPageFormat.mm);
-        _textStyle ??= Theme.of(context).header2;
+        textStyle ??= Theme.of(context).header2;
         break;
       case 3:
-        _margin ??= const EdgeInsets.only(
+        margin ??= const EdgeInsets.only(
             top: 2.0 * PdfPageFormat.mm, bottom: 4.0 * PdfPageFormat.mm);
-        _textStyle ??= Theme.of(context).header3;
+        textStyle ??= Theme.of(context).header3;
         break;
       case 4:
-        _margin ??= const EdgeInsets.only(
+        margin ??= const EdgeInsets.only(
             top: 2.0 * PdfPageFormat.mm, bottom: 4.0 * PdfPageFormat.mm);
-        _textStyle ??= Theme.of(context).header4;
+        textStyle ??= Theme.of(context).header4;
         break;
       case 5:
-        _margin ??= const EdgeInsets.only(
+        margin ??= const EdgeInsets.only(
             top: 2.0 * PdfPageFormat.mm, bottom: 4.0 * PdfPageFormat.mm);
-        _textStyle ??= Theme.of(context).header5;
+        textStyle ??= Theme.of(context).header5;
         break;
     }
 
     final Widget container = Container(
       alignment: Alignment.topLeft,
-      margin: _margin,
-      padding: _padding,
-      decoration: _decoration,
-      child: child ?? Text(text!, style: _textStyle),
+      margin: margin,
+      padding: padding,
+      decoration: decoration,
+      child: child ?? Text(text!, style: textStyle),
     );
 
     if (title == null) {

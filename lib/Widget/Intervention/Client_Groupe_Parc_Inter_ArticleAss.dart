@@ -18,7 +18,7 @@ class Client_Groupe_Parc_Inter_ArticleAss_Dialog {
   ) async {
     await showDialog(
       context: context,
-      builder: (BuildContext context) => Client_Groupe_Parc_Inter_ArticleDialog(),
+      builder: (BuildContext context) => const Client_Groupe_Parc_Inter_ArticleDialog(),
     );
   }
 }
@@ -69,7 +69,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
     print("  AffisOU ");
 
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
       surfaceTintColor: Colors.white,
       backgroundColor: gColors.white,
       title: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -126,7 +126,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                                 Container(
                                   width: 100,
                                   height: 20,
-                                  padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+                                  padding: const EdgeInsets.fromLTRB(0, 2, 8, 0),
                                   child: Text(
                                     "${art.ParcsArt_Id}",
                                     style: gColors.bodyTitle1_N_Gr,
@@ -135,9 +135,9 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                                 Expanded(
                                   child: Container(
                                     height: 20,
-                                    padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+                                    padding: const EdgeInsets.fromLTRB(0, 2, 8, 0),
                                     child: Text(
-                                      "${art.ParcsArt_Lib!}",
+                                      art.ParcsArt_Lib!,
                                       style: gColors.bodyTitle1_N_Gr,
                                     ),
                                   ),
@@ -147,12 +147,12 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                                     await HapticFeedback.vibrate();
 
                                     print("onTap ${art.Desc()}");
-                                    bool saveArt_Sel = art.Art_Sel;
+                                    bool saveartSel = art.Art_Sel;
                                     for (int i = 0; i < DbTools.gIsOUlParcs_Art.length; i++) {
                                       Parc_Art element = DbTools.gIsOUlParcs_Art[i];
                                       element.Art_Sel = false;
                                     }
-                                    art.Art_Sel = !saveArt_Sel;
+                                    art.Art_Sel = !saveartSel;
                                     save_Parc_Art = art;
 
                                     isSel = art.Art_Sel;
@@ -219,7 +219,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
 
     await Srv_DbTools.getArticlesImg_Ebp( art.ParcsArt_Id!);
     gObj.pic = base64Decode(Srv_DbTools.gArticlesImg_Ebp.ArticlesImg_Image);
-    if (gObj.pic.length > 0) {
+    if (gObj.pic.isNotEmpty) {
       art.wImgeTrv = true;
       art.wImage = Image.memory(
         gObj.pic,
@@ -237,13 +237,13 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
   }
 
   Widget buildImage(BuildContext context, Parc_Art art) {
-    return new FutureBuilder(
+    return FutureBuilder(
       future: GetImage(art),
       builder: (BuildContext context, AsyncSnapshot<Image> image) {
         if (image.hasData) {
           return image.data!;
         } else {
-          return new Container(width: 30);
+          return Container(width: 30);
         }
       },
     );
@@ -262,8 +262,8 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
             color: gColors.primary,
             width: 8,
           ),
-          Spacer(),
-          new ElevatedButton(
+          const Spacer(),
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
               Navigator.of(context).pop();
@@ -277,31 +277,31 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
 
             onPressed: () async {
               if (isSel)
                 {
                   await HapticFeedback.vibrate();
 
-                  List<Parc_Art> wlParcs_Art = await DbTools.getParcs_ArtAll(DbTools.gParc_Ent.ParcsId!);
-                  for (int i = 0; i < wlParcs_Art.length; i++) {
-                    Parc_Art element = wlParcs_Art[i];
+                  List<Parc_Art> wlparcsArt = await DbTools.getParcs_ArtAll(DbTools.gParc_Ent.ParcsId!);
+                  for (int i = 0; i < wlparcsArt.length; i++) {
+                    Parc_Art element = wlparcsArt[i];
                     if (element.ParcsArt_Lib!.startsWith(">>>")) {
                       if (element.ParcsArt_Id != save_Parc_Art.ParcsArt_Id) {
                         print("DELETE");
-                        List<Parc_Art> wlParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "P");
-                        List<Parc_Art> lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "V");
-                        lParcs_Art.addAll(wlParcs_Art);
+                        List<Parc_Art> wlparcsArt = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "P");
+                        List<Parc_Art> lparcsArt = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "V");
+                        lparcsArt.addAll(wlparcsArt);
                         print("deleteParc_Art lParcs_Art ${element.ParcsArtId} ${element.ParcsArt_Id} ${element.ParcsArt_Lib}");
                         await DbTools.deleteParc_Art(element.ParcsArtId!);
-                        wlParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "P");
-                        lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "V");
-                        lParcs_Art.addAll(wlParcs_Art);
-                        print("deleteParc_Art lParcs_Art ${lParcs_Art.length}");
+                        wlparcsArt = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "P");
+                        lparcsArt = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "V");
+                        lparcsArt.addAll(wlparcsArt);
+                        print("deleteParc_Art lParcs_Art ${lparcsArt.length}");
 
-                        for (int ii = 0; ii < lParcs_Art.length; ii++) {
-                          Parc_Art element = lParcs_Art[ii];
+                        for (int ii = 0; ii < lparcsArt.length; ii++) {
+                          Parc_Art element = lparcsArt[ii];
                           print("deleteParc_Art Liste ${element.ParcsArtId} ${element.ParcsArt_Type} ${element.ParcsArt_Id} ${element.ParcsArt_Lib}");
                         }
 

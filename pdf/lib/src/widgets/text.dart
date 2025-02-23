@@ -477,10 +477,10 @@ class WidgetSpan extends InlineSpan {
     TextStyle? parentStyle,
     AnnotationBuilder? annotation,
   ) {
-    final _style = parentStyle?.merge(style);
-    final _a = this.annotation ?? annotation;
+    final style = parentStyle?.merge(this.style);
+    final a = this.annotation ?? annotation;
 
-    return visitor(this, _style, _a);
+    return visitor(this, style, a);
   }
 }
 
@@ -517,17 +517,17 @@ class TextSpan extends InlineSpan {
     TextStyle? parentStyle,
     AnnotationBuilder? annotation,
   ) {
-    final _style = parentStyle?.merge(style);
-    final _annotation = this.annotation ?? annotation;
+    final style = parentStyle?.merge(this.style);
+    final annotation0 = this.annotation ?? annotation;
 
     if (text != null) {
-      if (!visitor(this, _style, _annotation)) {
+      if (!visitor(this, style, annotation0)) {
         return false;
       }
     }
     if (children != null) {
       for (final child in children!) {
-        if (!child.visitChildren(visitor, _style, _annotation)) {
+        if (!child.visitChildren(visitor, style, annotation0)) {
           return false;
         }
       }
@@ -888,12 +888,12 @@ class RichText extends Widget with SpanningWidget {
     _decorations.clear();
 
     final theme = Theme.of(context);
-    final _softWrap = softWrap ?? theme.softWrap;
-    final _maxLines = maxLines ?? theme.maxLines;
-    final _textDirection = textDirection ?? Directionality.of(context);
+    final softWrap = this.softWrap ?? theme.softWrap;
+    final maxLines = this.maxLines ?? theme.maxLines;
+    final textDirection = this.textDirection ?? Directionality.of(context);
     _textAlign = textAlign ?? theme.textAlign ?? TextAlign.start;
 
-    final _overflow = this.overflow ?? theme.overflow;
+    final overflow0 = this.overflow ?? theme.overflow;
 
     final constraintWidth = constraints.hasBoundedWidth
         ? constraints.maxWidth
@@ -915,7 +915,7 @@ class RichText extends Widget with SpanningWidget {
 
     _preprocessed ??= _preProcessSpans(context);
 
-    void _buildLines() {
+    void buildLines() {
       for (final span in _preprocessed!) {
         final style = span.style;
         final annotation = span.annotation;
@@ -930,9 +930,9 @@ class RichText extends Widget with SpanningWidget {
           final space =
               font.stringMetrics(' ') * (style.fontSize! * textScaleFactor);
 
-          final spanLines = (useArabic && _textDirection == TextDirection.rtl
+          final spanLines = (useArabic && textDirection == TextDirection.rtl
                   ? arabic.convert(span.text!)
-                  : useBidi && _textDirection == TextDirection.rtl
+                  : useBidi && textDirection == TextDirection.rtl
                       ? bidi.logicalToVisual(span.text!)
                       : span.text)!
               .split('\n');
@@ -953,7 +953,7 @@ class RichText extends Widget with SpanningWidget {
                           (style.fontSize! * textScaleFactor)) *
                   (style.fontSize! * textScaleFactor);
 
-              if (_softWrap &&
+              if (softWrap &&
                   offsetX + metrics.width > constraintWidth + 0.00001) {
                 if (hyphenation != null) {
                   final syllables = hyphenation!(word);
@@ -991,7 +991,7 @@ class RichText extends Widget with SpanningWidget {
                     offsetX -
                         space.advanceWidth * style.wordSpacing! -
                         style.letterSpacing!,
-                    _textDirection,
+                    textDirection,
                     true,
                   ));
 
@@ -1003,7 +1003,7 @@ class RichText extends Widget with SpanningWidget {
                   top = 0;
                   bottom = 0;
 
-                  if (_maxLines != null && lines.length >= _maxLines) {
+                  if (maxLines != null && lines.length >= maxLines) {
                     return;
                   }
 
@@ -1066,7 +1066,7 @@ class RichText extends Widget with SpanningWidget {
                 offsetX -
                     space.advanceWidth * style.wordSpacing! -
                     style.letterSpacing!,
-                _textDirection,
+                textDirection,
                 false,
               ));
 
@@ -1083,7 +1083,7 @@ class RichText extends Widget with SpanningWidget {
               bottom = 0;
               spanCount = 0;
 
-              if (_maxLines != null && lines.length >= _maxLines) {
+              if (maxLines != null && lines.length >= maxLines) {
                 return;
               }
 
@@ -1118,14 +1118,14 @@ class RichText extends Widget with SpanningWidget {
               spanCount,
               bottom,
               offsetX,
-              _textDirection,
+              textDirection,
               true,
             ));
 
             spanStart += spanCount;
             spanCount = 0;
 
-            if (_maxLines != null && lines.length > _maxLines) {
+            if (maxLines != null && lines.length > maxLines) {
               return;
             }
 
@@ -1167,7 +1167,7 @@ class RichText extends Widget with SpanningWidget {
       }
     }
 
-    _buildLines();
+    buildLines();
 
     if (spanCount > 0) {
       lines.add(_Line(
@@ -1176,7 +1176,7 @@ class RichText extends Widget with SpanningWidget {
         spanCount,
         bottom,
         offsetX,
-        _textDirection,
+        textDirection,
         false,
       ));
       offsetY += bottom - top;
@@ -1206,8 +1206,8 @@ class RichText extends Widget with SpanningWidget {
       ..endOffset = offsetY - _context.startOffset
       ..spanEnd = _spans.length;
 
-    if (_overflow != TextOverflow.span) {
-      if (_overflow != TextOverflow.visible) {
+    if (overflow0 != TextOverflow.span) {
+      if (overflow0 != TextOverflow.visible) {
         _mustClip = true;
       }
       return;

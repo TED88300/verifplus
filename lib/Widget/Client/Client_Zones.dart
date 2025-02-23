@@ -12,6 +12,8 @@ import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
 class Client_Zones extends StatefulWidget {
+  const Client_Zones({super.key});
+
   @override
   Client_ZonesState createState() => Client_ZonesState();
 }
@@ -30,7 +32,7 @@ class Client_ZonesState extends State<Client_Zones> {
   int CountTot = 0;
   int CountSel = 0;
 
-  TextEditingController ctrlFilter = new TextEditingController();
+  TextEditingController ctrlFilter = TextEditingController();
   String filterText = '';
 
   Future Reload() async {
@@ -45,7 +47,7 @@ class Client_ZonesState extends State<Client_Zones> {
     List<String> lGroupe = [];
     for (int i = 0; i < Srv_DbTools.ListZone.length; i++) {
       Zone wZone = Srv_DbTools.ListZone[i];
-      if (lGroupe.indexOf(wZone.Groupe_Nom) == -1) {
+      if (!lGroupe.contains(wZone.Groupe_Nom)) {
         lGroupe.add(wZone.Groupe_Nom);
       }
     }
@@ -61,27 +63,28 @@ class Client_ZonesState extends State<Client_Zones> {
 
     if (filterText.isEmpty) {
       Srv_DbTools.ListZonesearchresult.addAll(wListZone);
-    } else
+    } else {
       wListZone.forEach((element) async {
         {
-          String nom = element.Zone_Nom == null ? "" : element.Zone_Nom;
-          String cp = element.Zone_CP == null ? "" : element.Zone_CP;
-          String ville = element.Zone_Ville == null ? "" : element.Zone_Ville;
+          String nom = element.Zone_Nom ?? "";
+          String cp = element.Zone_CP ?? "";
+          String ville = element.Zone_Ville ?? "";
 
-          String Groupe_Nom = element.Groupe_Nom == null ? "" : element.Groupe_Nom;
+          String groupeNom = element.Groupe_Nom ?? "";
 
           String id = element.ZoneId.toString();
-          if (nom.toUpperCase().contains(filterText.toUpperCase()))
+          if (nom.toUpperCase().contains(filterText.toUpperCase())) {
             Srv_DbTools.ListZonesearchresult.add(element);
-          else if (cp.toUpperCase().contains(filterText.toUpperCase()))
+          } else if (cp.toUpperCase().contains(filterText.toUpperCase()))
             Srv_DbTools.ListZonesearchresult.add(element);
           else if (ville.toUpperCase().contains(filterText.toUpperCase()))
             Srv_DbTools.ListZonesearchresult.add(element);
-          else if (Groupe_Nom.toUpperCase().contains(filterText.toUpperCase()))
+          else if (groupeNom.toUpperCase().contains(filterText.toUpperCase()))
             Srv_DbTools.ListZonesearchresult.add(element);
           else if (id.toUpperCase().contains(filterText.toUpperCase())) Srv_DbTools.ListZonesearchresult.add(element);
         }
       });
+    }
 
     CountSel = Srv_DbTools.ListZonesearchresult.length;
 
@@ -96,6 +99,7 @@ class Client_ZonesState extends State<Client_Zones> {
     Reload();
   }
 
+  @override
   void initState() {
     initLib();
     super.initState();
@@ -147,10 +151,10 @@ class Client_ZonesState extends State<Client_Zones> {
           backgroundColor: gColors.white,
         ),
         body: Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: Column(
               children: [
-                gObj.InterventionTitleWidget("${Srv_DbTools.gClient.Client_Nom.toUpperCase()}", wTitre2: "${Srv_DbTools.gGroupe.Groupe_Nom} / ${Srv_DbTools.gSite.Site_Nom}"),
+                gObj.InterventionTitleWidget(Srv_DbTools.gClient.Client_Nom.toUpperCase(), wTitre2: "${Srv_DbTools.gGroupe.Groupe_Nom} / ${Srv_DbTools.gSite.Site_Nom}"),
 
                 Entete_Btn_Search(),
                 Expanded(
@@ -158,9 +162,8 @@ class Client_ZonesState extends State<Client_Zones> {
                 ),
               ],
             )),
-        floatingActionButton: new FloatingActionButton(
+        floatingActionButton: FloatingActionButton(
             elevation: 0.0,
-            child: new Icon(Icons.add),
             backgroundColor: gColors.secondary,
             onPressed: () async {
               await DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
@@ -170,11 +173,11 @@ class Client_ZonesState extends State<Client_Zones> {
               bool wRet = await Srv_DbTools.addZone(Srv_DbTools.gSite.SiteId);
               print("retour addZone  ${wRet.toString()}");
               Srv_DbTools.gZone.Zone_isUpdate = wRet;
-              if (!wRet) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
+              if (!wRet) Srv_DbTools.gLastID = DateTime.now().millisecondsSinceEpoch * -1;
               Srv_DbTools.gZone.ZoneId          = Srv_DbTools.gLastID;
               print("retour Srv_DbTools.gZone.ZoneId  ${Srv_DbTools.gZone.ZoneId}");
               Srv_DbTools.gZone.Zone_SiteId   = Srv_DbTools.gSite.SiteId;
-              Srv_DbTools.gZone.Zone_Nom        = Srv_DbTools.gGroupe.Groupe_Nom + "_${Srv_DbTools.ListZone.length+1}";
+              Srv_DbTools.gZone.Zone_Nom        = "${Srv_DbTools.gGroupe.Groupe_Nom}_${Srv_DbTools.ListZone.length+1}";
               Srv_DbTools.gZone.Zone_Adr1       = Srv_DbTools.gAdresse.Adresse_Adr1;
               Srv_DbTools.gZone.Zone_Adr2       = Srv_DbTools.gAdresse.Adresse_Adr2;
               Srv_DbTools.gZone.Zone_Adr3       = Srv_DbTools.gAdresse.Adresse_Adr3;
@@ -198,7 +201,8 @@ class Client_ZonesState extends State<Client_Zones> {
 
               await Reload();
 
-            })
+            },
+            child: const Icon(Icons.add))
 
 
 
@@ -207,7 +211,7 @@ class Client_ZonesState extends State<Client_Zones> {
 
   @override
   Widget Entete_Btn_Search() {
-    return Container(
+    return SizedBox(
         height: 57,
         child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
           Container(
@@ -228,7 +232,7 @@ class Client_ZonesState extends State<Client_Zones> {
           Container(
             width: 8,
           ),
-          Spacer(),
+          const Spacer(),
           EdtFilterWidget(),
         ]));
   }
@@ -239,7 +243,7 @@ class Client_ZonesState extends State<Client_Zones> {
     return !affEdtFilter
         ? InkWell(
             child: Padding(
-              padding: EdgeInsets.only(right: 8),
+              padding: const EdgeInsets.only(right: 8),
               child: Image.asset(
                 "assets/images/Btn_Loupe.png",
                 height: icoWidth,
@@ -250,7 +254,7 @@ class Client_ZonesState extends State<Client_Zones> {
               affEdtFilter = !affEdtFilter;
               setState(() {});
             })
-        : Container(
+        : SizedBox(
             width: 320,
             child: Row(
               children: [
@@ -311,7 +315,7 @@ class Client_ZonesState extends State<Client_Zones> {
                   child: Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(5),
                         child: Image.asset(
                           "assets/images/Icon_Zone.png",
                           height: icoWidth,
@@ -354,7 +358,7 @@ class Client_ZonesState extends State<Client_Zones> {
           ),
         ),
         gColors.wLigne(),
-        SizedBox(height: 5.0),
+        const SizedBox(height: 5.0),
         Expanded(
           child: ListView.builder(
             itemCount: Srv_DbTools.ListZonesearchresult.length,
@@ -380,19 +384,19 @@ class Client_ZonesState extends State<Client_Zones> {
 
               return Column(
                 children: [
-                  new GestureDetector(
+                  GestureDetector(
                     //You need to make my child interactive
                     onDoubleTap: () async {
                       await HapticFeedback.vibrate();
                       Srv_DbTools.gZone = zone;
-                      await Navigator.push(context, MaterialPageRoute(builder: (context) => Zone_Vue()));
+                      await Navigator.push(context, MaterialPageRoute(builder: (context) => const Zone_Vue()));
                       setState(() {});
                     },
 
                     onTap: () async {
                       await HapticFeedback.vibrate();
                       Srv_DbTools.gZone = zone;
-                      await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Interventions()));
+                      await Navigator.push(context, MaterialPageRoute(builder: (context) => const Client_Interventions()));
                       setState(() {});
                     },
                     child: Container(
@@ -401,7 +405,7 @@ class Client_ZonesState extends State<Client_Zones> {
                       child: Row(
                         children: <Widget>[
                           Container(
-                            padding: EdgeInsets.only(left: 5, bottom: 2),
+                            padding: const EdgeInsets.only(left: 5, bottom: 2),
                             child: Text(
                               zone.Zone_isUpdate ? " " : "◉",
                               maxLines: 1,
@@ -414,7 +418,7 @@ class Client_ZonesState extends State<Client_Zones> {
                                 padding: EdgeInsets.only(left: 10, top: mTop),
                                 height: rowh,
                                 child: Text(
-                                  "${zone.Zone_Nom}",
+                                  zone.Zone_Nom,
                                   maxLines: 1,
                                   style: gColors.bodySaisie_B_B,
                                 ),
@@ -434,7 +438,7 @@ class Client_ZonesState extends State<Client_Zones> {
                             flex: 10,
                             child: Container(
                               child: Image.asset(
-                                "assets/images/${wTmpImage}.png",
+                                "assets/images/$wTmpImage.png",
                                 height: icoWidth,
                                 width: icoWidth,
                               ),
@@ -446,7 +450,7 @@ class Client_ZonesState extends State<Client_Zones> {
                                   padding: EdgeInsets.only(right: 10, top: mTop),
                                   height: rowh,
                                   child: Text(
-                                    index == 5 ? "Planifié ${wV}" : wV,
+                                    index == 5 ? "Planifié $wV" : wV,
                                     textAlign: TextAlign.right,
                                     maxLines: 1,
                                     style: index > 4 ? gColors.bodySaisie_B_B.copyWith(color: Colors.orange) : gColors.bodySaisie_B_B,
@@ -461,7 +465,7 @@ class Client_ZonesState extends State<Client_Zones> {
             },
           ),
         ),
-        SizedBox(height: 45.0),
+        const SizedBox(height: 45.0),
       ],
     );
   }

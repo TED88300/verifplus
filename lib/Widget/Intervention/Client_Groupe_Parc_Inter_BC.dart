@@ -27,7 +27,7 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
 
   bool affEdtFilter = false;
   double icoWidth = 40;
-  TextEditingController ctrlFilter = new TextEditingController();
+  TextEditingController ctrlFilter = TextEditingController();
   String filterText = '';
 
 
@@ -37,9 +37,9 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
   @override
   Future initLib() async {
     print("initLib");
-    DbTools.lParcs_Art = await DbTools.getParcs_ArtSoBL(Srv_DbTools.gIntervention.InterventionId!);
-    List<Parc_Art> wlParcs_Art = await DbTools.getParcs_ArtInterSumBL(Srv_DbTools.gIntervention.InterventionId!);
-    DbTools.lParcs_Art.addAll(wlParcs_Art);
+    DbTools.lParcs_Art = await DbTools.getParcs_ArtSoBL(Srv_DbTools.gIntervention.InterventionId);
+    List<Parc_Art> wlparcsArt = await DbTools.getParcs_ArtInterSumBL(Srv_DbTools.gIntervention.InterventionId);
+    DbTools.lParcs_Art.addAll(wlparcsArt);
     print("DbTools.lParcs_Art ${DbTools.lParcs_Art.length}");
     Filtre();
   }
@@ -47,18 +47,20 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
   void Filtre() async {
     searchParcs_Art.clear();
 
-    if (filterText.isEmpty)
+    if (filterText.isEmpty) {
       searchParcs_Art.addAll(DbTools.lParcs_Art);
-    else {
+    } else {
       for (int jj = 0; jj < DbTools.lParcs_Art.length; jj++) {
-        Parc_Art wParc_Art = DbTools.lParcs_Art[jj];
-        if(wParc_Art.Desc().contains(filterText))
-          searchParcs_Art.add(wParc_Art);
+        Parc_Art wparcArt = DbTools.lParcs_Art[jj];
+        if(wparcArt.Desc().contains(filterText)) {
+          searchParcs_Art.add(wparcArt);
+        }
       }
     }
     setState(() {});
   }
 
+  @override
   void initState() {
     DbTools.lParcs_Art.clear();
     initLib();
@@ -77,8 +79,9 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
     print("initLib ${Srv_DbTools.ListParam_Saisie_Param.length}");
 
     String wTitre2 = "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}";
-    if (Srv_DbTools.gIntervention.Groupe_Nom == Srv_DbTools.gIntervention.Site_Nom)
+    if (Srv_DbTools.gIntervention.Groupe_Nom == Srv_DbTools.gIntervention.Site_Nom) {
       wTitre2 = "";
+    }
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -86,7 +89,7 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
       bottomNavigationBar: Container(
         color: Colors.white,
         child: Padding(
-          padding: EdgeInsets.fromLTRB(0, 10, 0, 55),
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 55),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -100,11 +103,11 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
               ),
 
 
-              new ElevatedButton(
+              ElevatedButton(
                 onPressed: () async {
                   await HapticFeedback.vibrate();
 
-                  await Navigator.push(context, MaterialPageRoute(builder: (context) => Aff_Bdc()));
+                  await Navigator.push(context, MaterialPageRoute(builder: (context) => const Aff_Bdc()));
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: gColors.primaryGreen,
@@ -119,12 +122,12 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
                   padding: const EdgeInsets.only(right: 16, bottom: 21.0),
                   child: FloatingActionButton(
                       elevation: 10.0,
-                      child: new Icon(Icons.add),
                       backgroundColor: gColors.secondary,
                       onPressed: () async {
                         await Client_Groupe_Parc_Inter_Article_Dialog.Dialogs_Saisie(context, onSaisie, "SO");
                         await initLib();
-                      })),
+                      },
+                      child: const Icon(Icons.add))),
 
 
 
@@ -135,12 +138,12 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
 
 
       body: Padding(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              gObj.InterventionTitleWidget("${Srv_DbTools.gClient.Client_Nom.toUpperCase()}", wTitre2: wTitre2, wTimer: 0),
+              gObj.InterventionTitleWidget(Srv_DbTools.gClient.Client_Nom.toUpperCase(), wTitre2: wTitre2, wTimer: 0),
               Entete_Btn_Search(),
               Container(
                 height: 1,
@@ -148,7 +151,7 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
               ),
 
               buildIcoTitre(context),
-              (DbTools.lParcs_Art.length == 0 ) ? Container() :
+              (DbTools.lParcs_Art.isEmpty ) ? Container() :
               Expanded(
                 child:              buildDesc(context),
               ),
@@ -163,16 +166,16 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
       child: Container(
         width: 640,
         height: 57,
-        padding: EdgeInsets.fromLTRB(10, 12, 10, 10),
+        padding: const EdgeInsets.fromLTRB(10, 12, 10, 10),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
 
-          Spacer(),
+          const Spacer(),
           Text(
             "${Srv_DbTools.gIntervention.Intervention_Type}/${Srv_DbTools.gIntervention.Intervention_Parcs_Type} - ${Srv_DbTools.gIntervention.Intervention_Status} - Cr N° : ${Srv_DbTools.gIntervention.InterventionId} -Anthony FUNDONI",
             style: gColors.bodySaisie_B_G,
             textAlign: TextAlign.center,
           ),
-          Spacer(),
+          const Spacer(),
 
         ]),
       ),
@@ -185,7 +188,7 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
 
     return Container(
       width: 640,
-      padding: EdgeInsets.fromLTRB(10, 10, 10, 8),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
       color: gColors.greyLight,
       child: Row(
         children: [
@@ -200,7 +203,7 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
           Expanded(
             child: Container(
               height: 20,
-              padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+              padding: const EdgeInsets.fromLTRB(0, 2, 8, 0),
               child: Text(
                 "BC : Liste des pièces facturées",
                 style: gColors.bodyTitle1_B_Gr,
@@ -233,10 +236,10 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
         height: 770,
         color: gColors.greyDark,
         child: Container(
-            padding: EdgeInsets.fromLTRB(0, 1, 0, 0),
+            padding: const EdgeInsets.fromLTRB(0, 1, 0, 0),
             color: gColors.greyDark,
             child: Container(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
               color: gColors.white,
               child: ListView.separated(
                 padding: const EdgeInsets.all(0.0),
@@ -253,14 +256,15 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
 
 
   Future<Image> GetImage(Parc_Art art) async {
-    if (art.wImgeTrv)
+    if (art.wImgeTrv) {
       return art.wImage!;
+    }
 
 
     await Srv_DbTools.getArticlesImg_Ebp( art.ParcsArt_Id!);
     gObj.pic = base64Decode(Srv_DbTools.gArticlesImg_Ebp.ArticlesImg_Image);
 
-    if (gObj.pic.length > 0) {
+    if (gObj.pic.isNotEmpty) {
       art.wImgeTrv = true;
       art.wImage =  Image.memory(
         gObj.pic,
@@ -278,31 +282,31 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
     );
   }
   Widget buildImage(BuildContext context, Parc_Art art) {
-    return new FutureBuilder(
+    return FutureBuilder(
       future: GetImage(art),
       builder: (BuildContext context, AsyncSnapshot<Image> image) {
         if (image.hasData) {
           return image.data!;
         } else {
-          return new Container(width: 30);
+          return Container(width: 30);
         }
       },
     );
   }
 
-  Widget RowSaisie(Parc_Art parc_Art, double H2) {
+  Widget RowSaisie(Parc_Art parcArt, double H2) {
 
     Color wColor = Colors.green;
 
     for (int i = 0; i < Srv_DbTools.ListParam_Saisie_Param.length; i++) {
       Param_Saisie_Param eP = Srv_DbTools.ListParam_Saisie_Param[i];
-      if (eP.Param_Saisie_Param_Label.compareTo(parc_Art.ParcsArt_Fact!) == 0) {
+      if (eP.Param_Saisie_Param_Label.compareTo(parcArt.ParcsArt_Fact!) == 0) {
         wColor = gColors.getColor(eP.Param_Saisie_Param_Color);
         break;
       }
     }
-    String ParcsArt_Livr = parc_Art.ParcsArt_Livr!.substring(0,1);
-    if (ParcsArt_Livr.compareTo("R") != 0) ParcsArt_Livr = "";
+    String parcsartLivr = parcArt.ParcsArt_Livr!.substring(0,1);
+    if (parcsartLivr.compareTo("R") != 0) parcsartLivr = "";
 
     return Container(
         color: Colors.white,
@@ -311,12 +315,12 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
           onTap: () async {
             await HapticFeedback.vibrate();
             print("onTap ");
-            print("onTap ${parc_Art.toString()} ");
+            print("onTap ${parcArt.toString()} ");
 
-            if (parc_Art.ParcsArt_lnk == "SO") {
-              await Client_Groupe_Parc_Inter_Piece_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, onSaisie, parc_Art);
+            if (parcArt.ParcsArt_lnk == "SO") {
+              await Client_Groupe_Parc_Inter_Piece_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, onSaisie, parcArt);
             } else {
-              await Client_Groupe_Parc_Inter_Article_View_Dialog.Dialogs_Saisie(context, parc_Art);
+              await Client_Groupe_Parc_Inter_Article_View_Dialog.Dialogs_Saisie(context, parcArt);
             }
 
 
@@ -329,35 +333,35 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
               Container(
                 width: 10,
               ),
-              buildImage(context, parc_Art),
+              buildImage(context, parcArt),
               Container(
                 width: 10,
               ),
               Container(
                 width: 100,
                 height: 20,
-                padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+                padding: const EdgeInsets.fromLTRB(0, 2, 8, 0),
                 child: Text(
-                  "${parc_Art.ParcsArt_Id}",
-                  style: parc_Art.ParcsArt_Livr!.substring(0,1).compareTo("R")==0 ? gColors.bodySaisie_B_O : gColors.bodySaisie_B_G,
+                  "${parcArt.ParcsArt_Id}",
+                  style: parcArt.ParcsArt_Livr!.substring(0,1).compareTo("R")==0 ? gColors.bodySaisie_B_O : gColors.bodySaisie_B_G,
                 ),
               ),
               Expanded(
                 child: Container(
                   height: 20,
-                  padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 2, 8, 0),
                   child: Text(
-                    "[${parc_Art.ParcsArt_Livr!.substring(0,1)}] ${parc_Art.ParcsArt_Lib}",
-                    style: parc_Art.ParcsArt_Livr!.substring(0,1).compareTo("R")==0 ? gColors.bodySaisie_B_O : gColors.bodySaisie_B_G,
+                    "[${parcArt.ParcsArt_Livr!.substring(0,1)}] ${parcArt.ParcsArt_Lib}",
+                    style: parcArt.ParcsArt_Livr!.substring(0,1).compareTo("R")==0 ? gColors.bodySaisie_B_O : gColors.bodySaisie_B_G,
                   ),
                 ),
               ),
               Container(
                 width: 110,
                 height: 20,
-                padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+                padding: const EdgeInsets.fromLTRB(0, 2, 8, 0),
                 child: Text(
-                  "${parc_Art.ParcsArt_Fact}",
+                  "${parcArt.ParcsArt_Fact}",
                   style: gColors.bodyTitle1_B_Gr.copyWith(
                     color: wColor,
                   ),
@@ -368,9 +372,9 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
               Container(
                 width: 40,
                 height: 20,
-                padding: EdgeInsets.fromLTRB(0, 2, 0, 0),
+                padding: const EdgeInsets.fromLTRB(0, 2, 0, 0),
                 child: Text(
-                  "${parc_Art.Qte}",
+                  "${parcArt.Qte}",
                   style: gColors.bodyTitle1_B_Gr,
                   textAlign: TextAlign.center,
                 ),
@@ -389,14 +393,14 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
 
   @override
   Widget Entete_Btn_Search() {
-    return Container(
+    return SizedBox(
         height: 57,
         child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
           Container(
             width: 8,
           ),
 
-          Spacer(),
+          const Spacer(),
 
           EdtFilterWidget(),
         ]));
@@ -407,7 +411,7 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
     return !affEdtFilter
         ? InkWell(
         child: Padding(
-          padding: EdgeInsets.only(right: 8),
+          padding: const EdgeInsets.only(right: 8),
           child: Image.asset(
             "assets/images/Btn_Loupe.png",
             height: icoWidth,
@@ -418,7 +422,7 @@ class Client_Groupe_Parc_Inter_BCState extends State<Client_Groupe_Parc_Inter_BC
           affEdtFilter = !affEdtFilter;
           setState(() {});
         })
-        : Container(
+        : SizedBox(
         width: 320,
         child: Row(
           children: [

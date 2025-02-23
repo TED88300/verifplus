@@ -103,15 +103,15 @@ class ChoiceField extends StatelessWidget with AnnotationAppearance {
   @override
   void paint(Context context) {
     super.paint(context);
-    final _textStyle = Theme.of(context).defaultTextStyle.merge(textStyle);
+    final textStyle = Theme.of(context).defaultTextStyle.merge(this.textStyle);
     final pdfRect = context.localToGlobal(box!);
 
     final bf = PdfChoiceField(
-      textColor: _textStyle.color!,
+      textColor: textStyle.color!,
       fieldName: name,
       value: value,
-      font: _textStyle.font!.getFont(context),
-      fontSize: _textStyle.fontSize!,
+      font: textStyle.font!.getFont(context),
+      fontSize: textStyle.fontSize!,
       items: items,
       rect: pdfRect,
     );
@@ -123,7 +123,7 @@ class ChoiceField extends StatelessWidget with AnnotationAppearance {
         context,
         bf,
         mat,
-        Text(value!, style: _textStyle),
+        Text(value!, style: textStyle),
         tag: const PdfName('/Tx'),
       );
     }
@@ -378,7 +378,7 @@ class TextField extends StatelessWidget with AnnotationAppearance {
   void paint(Context context) {
     super.paint(context);
 
-    final _textStyle = Theme.of(context).defaultTextStyle.merge(textStyle);
+    final textStyle = Theme.of(context).defaultTextStyle.merge(this.textStyle);
 
     final tf = PdfTextField(
       rect: context.localToGlobal(box!),
@@ -395,9 +395,9 @@ class TextField extends StatelessWidget with AnnotationAppearance {
       fieldFlags: fieldFlags,
       value: value,
       defaultValue: defaultValue,
-      font: _textStyle.font!.getFont(context),
-      fontSize: _textStyle.fontSize!,
-      textColor: _textStyle.color!,
+      font: textStyle.font!.getFont(context),
+      fontSize: textStyle.fontSize!,
+      textColor: textStyle.color!,
     );
 
     if (value != null) {
@@ -407,7 +407,7 @@ class TextField extends StatelessWidget with AnnotationAppearance {
         context,
         tf,
         mat,
-        Text(value!, style: _textStyle),
+        Text(value!, style: textStyle),
         tag: const PdfName('/Tx'),
       );
     }

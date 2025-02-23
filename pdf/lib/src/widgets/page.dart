@@ -83,7 +83,7 @@ class Page {
 
   @protected
   void debugPaint(Context context) {
-    final _margin = resolvedMargin!;
+    final margin = resolvedMargin!;
 
     context.canvas
       ..setFillColor(PdfColors.lightGreen)
@@ -91,11 +91,11 @@ class Page {
       ..lineTo(pageFormat.width, 0)
       ..lineTo(pageFormat.width, pageFormat.height)
       ..lineTo(0, pageFormat.height)
-      ..moveTo(_margin.left, _margin.bottom)
-      ..lineTo(_margin.left, pageFormat.height - _margin.top)
+      ..moveTo(margin.left, margin.bottom)
+      ..lineTo(margin.left, pageFormat.height - margin.top)
       ..lineTo(
-          pageFormat.width - _margin.right, pageFormat.height - _margin.top)
-      ..lineTo(pageFormat.width - _margin.right, _margin.bottom)
+          pageFormat.width - margin.right, pageFormat.height - margin.top)
+      ..lineTo(pageFormat.width - margin.right, margin.bottom)
       ..fillPath();
   }
 
@@ -115,14 +115,14 @@ class Page {
   void postProcess(Document document) {
     final canvas = _pdfPage!.getGraphics();
     canvas.reset();
-    final _margin = resolvedMargin;
+    final margin = resolvedMargin;
     var constraints = mustRotate
         ? BoxConstraints(
-            maxWidth: pageFormat.height - _margin!.vertical,
-            maxHeight: pageFormat.width - _margin.horizontal)
+            maxWidth: pageFormat.height - margin!.vertical,
+            maxHeight: pageFormat.width - margin.horizontal)
         : BoxConstraints(
-            maxWidth: pageFormat.width - _margin!.horizontal,
-            maxHeight: pageFormat.height - _margin.vertical);
+            maxWidth: pageFormat.width - margin!.horizontal,
+            maxHeight: pageFormat.height - margin.vertical);
 
     final calculatedTheme = theme ?? document.theme ?? ThemeData.base();
     final context = Context(
@@ -148,11 +148,11 @@ class Page {
           _pdfPage!.pageFormat.copyWith(width: size.x, height: size.y);
       constraints = mustRotate
           ? BoxConstraints(
-              maxWidth: _pdfPage!.pageFormat.height - _margin.vertical,
-              maxHeight: _pdfPage!.pageFormat.width - _margin.horizontal)
+              maxWidth: _pdfPage!.pageFormat.height - margin.vertical,
+              maxHeight: _pdfPage!.pageFormat.width - margin.horizontal)
           : BoxConstraints(
-              maxWidth: _pdfPage!.pageFormat.width - _margin.horizontal,
-              maxHeight: _pdfPage!.pageFormat.height - _margin.vertical);
+              maxWidth: _pdfPage!.pageFormat.width - margin.horizontal,
+              maxHeight: _pdfPage!.pageFormat.height - margin.vertical);
     }
 
     if (pageTheme.buildBackground != null) {
@@ -186,19 +186,19 @@ class Page {
   @protected
   PdfPoint layout(Widget child, Context context, BoxConstraints constraints,
       {bool parentUsesSize = false}) {
-    final _margin = resolvedMargin!;
+    final margin = resolvedMargin!;
     child.layout(context, constraints, parentUsesSize: parentUsesSize);
     assert(child.box != null);
 
     final width = pageFormat.width == double.infinity
-        ? child.box!.width + _margin.left + _margin.right
+        ? child.box!.width + margin.left + margin.right
         : pageFormat.width;
 
     final height = pageFormat.height == double.infinity
-        ? child.box!.height + _margin.top + _margin.bottom
+        ? child.box!.height + margin.top + margin.bottom
         : pageFormat.height;
 
-    child.box = PdfRect(_margin.left, height - child.box!.height - _margin.top,
+    child.box = PdfRect(margin.left, height - child.box!.height - margin.top,
         child.box!.width, child.box!.height);
 
     return PdfPoint(width, height);
@@ -206,12 +206,12 @@ class Page {
 
   @protected
   void paint(Widget child, Context context) {
-    final _margin = resolvedMargin!;
+    final margin = resolvedMargin!;
     final box = PdfRect(
-      _margin.left,
-      _margin.bottom,
-      pageFormat.width - _margin.horizontal,
-      pageFormat.height - _margin.vertical,
+      margin.left,
+      margin.bottom,
+      pageFormat.width - margin.horizontal,
+      pageFormat.height - margin.vertical,
     );
     if (pageTheme.clip) {
       context.canvas
@@ -231,14 +231,14 @@ class Page {
     }
 
     if (mustRotate) {
-      final _margin = resolvedMargin!;
+      final margin = resolvedMargin!;
       context.canvas
         ..saveContext()
         ..setTransform(Matrix4.identity()
           ..rotateZ(-math.pi / 2)
           ..translate(
-            -pageFormat.height - _margin.left + _margin.top,
-            -pageFormat.height + pageFormat.width + _margin.top - _margin.right,
+            -pageFormat.height - margin.left + margin.top,
+            -pageFormat.height + pageFormat.width + margin.top - margin.right,
           ));
       child.paint(context);
       context.canvas.restoreContext();

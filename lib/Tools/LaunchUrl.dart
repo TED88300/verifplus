@@ -7,7 +7,7 @@ void launchURL(String url) async {
   Uri uri = Uri.parse(url);
 
   print ("launchURL $url");
-  print ("uri ${uri}");
+  print ("uri $uri");
 
 
   if (await canLaunchUrl(uri)) {

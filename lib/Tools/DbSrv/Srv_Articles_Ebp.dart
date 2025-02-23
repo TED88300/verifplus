@@ -59,9 +59,9 @@ class Article_Ebp {
 
 
   static Article_EbpInit() {
-    Article_Ebp wArticle_Ebp =  Article_Ebp(-1, "", "", "", "", "", "", "", 0, 0, "", 0, 0, 0, "", false, false, 0, "","","","", "");
-    wArticle_Ebp.wImage = Image.asset("assets/images/Audit_det.png", height: 30, width: 30,);
-    return wArticle_Ebp;
+    Article_Ebp warticleEbp =  Article_Ebp(-1, "", "", "", "", "", "", "", 0, 0, "", 0, 0, 0, "", false, false, 0, "","","","", "");
+    warticleEbp.wImage = Image.asset("assets/images/Audit_det.png", height: 30, width: 30,);
+    return warticleEbp;
   }
 
   Article_Ebp(int ArticleID, String Article_codeArticle, String Article_descriptionCommerciale, String Article_descriptionCommercialeEnClair, String Article_codeFamilleArticles, String Article_LibelleFamilleArticle, String Article_CodeSousFamilleArticle, String Article_LibelleSousFamilleArticle, double Article_PVHT, double Article_tauxTVA, String Article_codeTVA, double Article_PVTTC, double Article_stockReel, double Article_stockVirtuel, String Article_Notes,bool     Article_Pousse, bool     Article_New, double  Article_Promo_PVHT,String  Article_Libelle, String  Article_Groupe,String  Article_Fam, String  Article_Sous_Fam,String  Article_codeArticle_Parent) {
@@ -122,7 +122,7 @@ class Article_Ebp {
 
   factory Article_Ebp.fromJson(Map<String, dynamic> json) {
 //    print("json $json");
-    Article_Ebp wArticle_Ebp = Article_Ebp(
+    Article_Ebp warticleEbp = Article_Ebp(
       int.parse(json['ArticleID']),
       json['Article_codeArticle'],
       json['Article_descriptionCommerciale'],
@@ -148,7 +148,7 @@ class Article_Ebp {
       json['Article_codeArticle_Parent'],
     );
 
-    return wArticle_Ebp;
+    return warticleEbp;
   }
 
   String Desc() {
@@ -193,9 +193,9 @@ class Article_Ebp {
     });
   }
 
-  static Future<void> insertArticle_Ebp(Article_Ebp article_Ebp) async {
+  static Future<void> insertArticle_Ebp(Article_Ebp articleEbp) async {
     final db = await DbTools.database;
-    int? repid = await db.insert("Articles_Ebp", article_Ebp.toMap());
+    int? repid = await db.insert("Articles_Ebp", articleEbp.toMap());
 
   }
 

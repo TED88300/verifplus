@@ -2,22 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_DCL_Ent.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
+import 'package:verifplus/Widget/GestCo/DCL_Det_Adresses.dart';
+import 'package:verifplus/Widget/GestCo/DCL_Det_Param.dart';
 import 'package:verifplus/Widget/GestCo/DCL_Ent_Param.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'dart:async';
 
-import 'package:verifplus/Widget/Widget_Tools/gDialogs.dart';
 
 class DCL_Det_Menu_Dialog {
   DCL_Det_Menu_Dialog();
   static Future<void> Dialogs_DCL_Det_Menu(BuildContext context) async {
     await showDialog(
       context: context,
-      barrierColor: Color(0x00000000),
-      builder: (BuildContext context) => DCL_DetMenuDialog(),
+      barrierColor: const Color(0x00000000),
+      builder: (BuildContext context) => const DCL_DetMenuDialog(),
     );
   }
 }
@@ -67,24 +67,24 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
 
     var formatter = DateFormat('dd/MM/yyyy');
 
-    DateTime fSelDCL_Date = new DateFormat("dd/MM/yyyy").parse(Srv_DbTools.gDCL_Ent.DCL_Ent_Date!);
+    DateTime fseldclDate = DateFormat("dd/MM/yyyy").parse(Srv_DbTools.gDCL_Ent.DCL_Ent_Date!);
 
     String Validite =  Srv_DbTools.gUserLogin.User_DCL_Ent_Validite;
-    String sValidite = Validite.replaceAll(new RegExp(r'[^0-9]'),''); // '23'
+    String sValidite = Validite.replaceAll(RegExp(r'[^0-9]'),''); // '23'
     int iValidite = int.parse(sValidite);
 
-    DateTime fSelDCL_DateValiditeDef = DateTime.now();
+    DateTime fseldclDatevaliditedef = DateTime.now();
     if (Validite.contains("mois"))
       {
-        fSelDCL_DateValiditeDef = fSelDCL_DateValiditeDef.add(Duration(days: iValidite * 30));
+        fseldclDatevaliditedef = fseldclDatevaliditedef.add(Duration(days: iValidite * 30));
       }
     else
     {
-      fSelDCL_DateValiditeDef = fSelDCL_DateValiditeDef.add(Duration(days: iValidite));
+      fseldclDatevaliditedef = fseldclDatevaliditedef.add(Duration(days: iValidite));
     }
-    DateTime fSelDCL_DateValidite = new DateFormat("dd/MM/yyyy").tryParse(Srv_DbTools.gDCL_Ent.DCL_Ent_Validite!) ?? fSelDCL_DateValiditeDef;
+    DateTime fseldclDatevalidite = DateFormat("dd/MM/yyyy").tryParse(Srv_DbTools.gDCL_Ent.DCL_Ent_Validite!) ?? fseldclDatevaliditedef;
 
-    print(" B U I L D  $ModeParams ");
+    print(" B U I L D DCL_DetMenuDialog  $ModeParams ");
     return
       !ModeParams ?
         SimpleDialog(
@@ -109,7 +109,7 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
                         width: 16,
                       ),
                       InkWell(
-                          child: Container(
+                          child: SizedBox(
                             width: icoWidth + 10,
                             child: Stack(children: <Widget>[
                               Image.asset(
@@ -180,7 +180,7 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
                                                                 color: Colors.white,
                                                                 borderRadius: BorderRadius.circular(12),
                                                                 border: Border.all(
-                                                                  color: Colors.black,
+                                                                  color: gColors.LinearGradient5,
                                                                   width: 1.5,
                                                                 ),
                                                               ),
@@ -191,7 +191,7 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
                                                                 children: [
                                                                   Row(
                                                                     children: [
-                                                                      Container(
+                                                                      SizedBox(
                                                                         width : 200,
                                                                         child: Text(
                                                                           "Date du Devis",
@@ -200,12 +200,12 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
                                                                       ),
 
                                                                       Text(
-                                                                        "${DateFormat('dd/MM/yyyy').format(fSelDCL_Date)}",
+                                                                        DateFormat('dd/MM/yyyy').format(fseldclDate),
                                                                         style: gColors.bodySaisie_N_G,
                                                                       ),
                                                                     ],
                                                                   ),
-                                                                  Spacer(),
+                                                                  const Spacer(),
 
                                                                   Container(
                                                                     width: 16,
@@ -228,10 +228,10 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
                                                                 ],
                                                               )),
                                                           onTap: () async {
-                                                            selectedDate = fSelDCL_Date;
+                                                            selectedDate = fseldclDate;
                                                             await _selectDate(context, DateTime(1900), DateTime(DateTime.now().year + 1, 12, 31));
-                                                            fSelDCL_Date = selectedDate;
-                                                            var formatter = new DateFormat('dd/MM/yyyy');
+                                                            fseldclDate = selectedDate;
+                                                            var formatter = DateFormat('dd/MM/yyyy');
                                                             Srv_DbTools.gDCL_Ent.DCL_Ent_Date = formatter.format(selectedDate);
                                                             await Srv_DbTools.setDCL_Ent(Srv_DbTools.gDCL_Ent);
                                                             setState(() {});
@@ -252,7 +252,7 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
                                                                 color: Colors.white,
                                                                 borderRadius: BorderRadius.circular(12),
                                                                 border: Border.all(
-                                                                  color: Colors.black,
+                                                                  color: gColors.LinearGradient5,
                                                                   width: 1.5,
                                                                 ),
                                                               ),
@@ -263,7 +263,7 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
                                                                 children: [
                                                                   Row(
                                                                     children: [
-                                                                      Container(
+                                                                      SizedBox(
                                                                         width : 200,
                                                                         child: Text(
                                                                           "Date de validité du Devis",
@@ -272,12 +272,12 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
                                                                       ),
 
                                                                       Text(
-                                                                        "${DateFormat('dd/MM/yyyy').format(fSelDCL_DateValidite)}",
+                                                                        DateFormat('dd/MM/yyyy').format(fseldclDatevalidite),
                                                                         style: gColors.bodySaisie_N_G,
                                                                       ),
                                                                     ],
                                                                   ),
-                                                                  Spacer(),
+                                                                  const Spacer(),
                                                                   Container(
                                                                     width: 16,
                                                                   ),
@@ -299,9 +299,9 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
                                                                 ],
                                                               )),
                                                           onTap: () async {
-                                                            selectedDate = fSelDCL_DateValidite;
+                                                            selectedDate = fseldclDatevalidite;
                                                             await _selectDate(context, DateTime(1900), DateTime(DateTime.now().year + 1, 12, 31));
-                                                            fSelDCL_DateValidite = selectedDate;
+                                                            fseldclDatevalidite = selectedDate;
 
                                                             Srv_DbTools.gDCL_Ent.DCL_Ent_Validite = DateFormat('dd/MM/yyyy').format(selectedDate);
                                                             await Srv_DbTools.setDCL_Ent(Srv_DbTools.gDCL_Ent);
@@ -377,7 +377,7 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
                         width: 16,
                       ),
                       InkWell(
-                          child: Container(
+                          child: SizedBox(
                             width: icoWidth + 10,
                             child: Stack(children: <Widget>[
                               Image.asset(
@@ -461,7 +461,7 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
                         width: 16,
                       ),
                       InkWell(
-                          child: Container(
+                          child: SizedBox(
                             width: icoWidth + 10,
                             child: Stack(children: <Widget>[
                               Image.asset(
@@ -489,28 +489,17 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
                                 style: gColors.bodySaisie_B_O,
                               ))),
                     ]),
-
-
-
-
-
-
-
                   ],
                 )),
           ],
         ),
       ],
     );
-
-
-
-
   }
 
   DateTime selectedDate = DateTime.now();
   Future<void> _selectDate(BuildContext context, DateTime firstDate, DateTime lastDate) async {
-    print("selectedDate >> ${selectedDate}");
+    print("selectedDate >> $selectedDate");
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
@@ -520,7 +509,7 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
           return Theme(
             data: ThemeData(
               dividerColor: gColors.LinearGradient5,
-              colorScheme: ColorScheme.light(
+              colorScheme: const ColorScheme.light(
                 primary: gColors.LinearGradient5,
                 onPrimary: Colors.white, // header text color
                 surface: Colors.white, // fond
@@ -534,7 +523,7 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        print("selectedDate << ${selectedDate}");
+        print("selectedDate << $selectedDate");
       });
     }
   }
@@ -543,9 +532,9 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
     double hLigne = 72;
 
     return PopupMenuButton(
-      child: Tooltip(textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.normal), decoration: BoxDecoration(color: Colors.orange), message: "Filtre Date", child: Container(width: 40, height: 40, child: SvgPicture.asset("assets/images/Icon_circle_down2.svg", height: 40, width: 40, colorFilter: ColorFilter.mode(Colors.grey, BlendMode.srcIn), semanticsLabel: 'A red up arrow'))),
+      child: Tooltip(textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.normal), decoration: const BoxDecoration(color: Colors.orange), message: "Filtre Date", child: SizedBox(width: 40, height: 40, child: SvgPicture.asset("assets/images/Icon_circle_down2.svg", height: 40, width: 40, colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn), semanticsLabel: 'A red up arrow'))),
       onSelected: (value) async {
-        print(" onSelected ${value}");
+        print(" onSelected $value");
 
         if (value == "S0") {
           Srv_DbTools.selDateTools(0);
@@ -588,7 +577,7 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Aujourd'hui",
                 style: gColors.bodySaisie_N_G,
@@ -601,7 +590,7 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Hier",
                 style: gColors.bodySaisie_N_G,
@@ -614,7 +603,7 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Avant hier",
                 style: gColors.bodySaisie_N_G,
@@ -627,7 +616,7 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Semaine courante",
                 style: gColors.bodySaisie_N_G,
@@ -640,7 +629,7 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Semaine précédente",
                 style: gColors.bodySaisie_N_G,
@@ -653,7 +642,7 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Semaine précédent la précédente",
                 style: gColors.bodySaisie_N_G,
@@ -666,7 +655,7 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Mois courant",
                 style: gColors.bodySaisie_N_G,
@@ -679,7 +668,7 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Mois précédent",
                 style: gColors.bodySaisie_N_G,
@@ -692,7 +681,7 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Mois précédent le précédent",
                 style: gColors.bodySaisie_N_G,
@@ -705,7 +694,7 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Année courante",
                 style: gColors.bodySaisie_N_G,
@@ -718,7 +707,7 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Année précédente",
                 style: gColors.bodySaisie_N_G,
@@ -745,19 +734,26 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
         onPressed: () async {
           print("onPressed");
           await HapticFeedback.vibrate();
-          if (wParam == "Param") {
-            await HapticFeedback.vibrate();
-            ModeParams = true;
-          }
-          if (wParam == "Devis") {
+
+          if (wParam == "DEV") {
             await HapticFeedback.vibrate();
             await showDialog(
               context: context,
-              barrierColor: Color(0x00000000),
-              builder: (BuildContext context) => DCL_Ent_Param(),
+              barrierColor: const Color(0x00000000),
+              builder: (BuildContext context) => const DCL_Det_Param(),
             );
 
           }
+
+          if (wParam == "ADR") {
+            await HapticFeedback.vibrate();
+            await showDialog(
+              context: context,
+              barrierColor: const Color(0x00000000),
+              builder: (BuildContext context) => const DCL_Det_Adresses(),
+            );
+          }
+
 
           setState(() {});
         },
@@ -773,7 +769,7 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
     double mTop = 28;
     double icoWidth = 48;
     return Container(
-        padding: EdgeInsets.fromLTRB(20, 0, 40, 0),
+        padding: const EdgeInsets.fromLTRB(20, 0, 40, 0),
         color: BckGrd,
         child: Column(
           children: [
@@ -783,17 +779,17 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
                     ? Container()
                     : ImgL.contains(".svg")
                     ? Container(
-                  padding: EdgeInsets.only(left: 10),
+                  padding: const EdgeInsets.only(left: 10),
                   child: SvgPicture.asset(
-                    "assets/images/${ImgL}",
+                    "assets/images/$ImgL",
                     height: icoWidth,
                     width: icoWidth,
                   ),
                 )
                     : Container(
-                  padding: EdgeInsets.only(left: 10),
+                  padding: const EdgeInsets.only(left: 10),
                   child: Image.asset(
-                    "assets/images/${ImgL}.png",
+                    "assets/images/$ImgL.png",
                     height: icoWidth,
                     width: icoWidth,
                   ),
@@ -803,7 +799,7 @@ class _DCL_DetMenuDialogState extends State<DCL_DetMenuDialog> {
                       padding: EdgeInsets.only(left: 10, top: mTop),
                       height: wHeight,
                       child: Text(
-                        "${wTextL}",
+                        wTextL,
                         textAlign: TextAlign.start,
                         maxLines: 1,
                         style: gColors.bodySaisie_B_B,

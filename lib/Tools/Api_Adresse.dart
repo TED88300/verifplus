@@ -22,7 +22,7 @@ class Api_Adresse {
     if (json['features'] != null) {
       features = <Features>[];
       json['features'].forEach((v) {
-        features!.add(new Features.fromJson(v));
+        features!.add(Features.fromJson(v));
       });
     }
     attribution = json['attribution'];
@@ -32,16 +32,16 @@ class Api_Adresse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['type'] = this.type;
-    data['version'] = this.version;
-    if (this.features != null) {
-      data['features'] = this.features!.map((v) => v.toJson()).toList();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['type'] = type;
+    data['version'] = version;
+    if (features != null) {
+      data['features'] = features!.map((v) => v.toJson()).toList();
     }
-    data['attribution'] = this.attribution;
-    data['licence'] = this.licence;
-    data['query'] = this.query;
-    data['limit'] = this.limit;
+    data['attribution'] = attribution;
+    data['licence'] = licence;
+    data['query'] = query;
+    data['limit'] = limit;
     return data;
   }
 }
@@ -56,21 +56,21 @@ class Features {
   Features.fromJson(Map<String, dynamic> json) {
     type = json['type'];
     geometry = json['geometry'] != null
-        ? new Geometry.fromJson(json['geometry'])
+        ? Geometry.fromJson(json['geometry'])
         : null;
     properties = json['properties'] != null
-        ? new Properties.fromJson(json['properties'])
+        ? Properties.fromJson(json['properties'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['type'] = this.type;
-    if (this.geometry != null) {
-      data['geometry'] = this.geometry!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['type'] = type;
+    if (geometry != null) {
+      data['geometry'] = geometry!.toJson();
     }
-    if (this.properties != null) {
-      data['properties'] = this.properties!.toJson();
+    if (properties != null) {
+      data['properties'] = properties!.toJson();
     }
     return data;
   }
@@ -88,9 +88,9 @@ class Geometry {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['type'] = this.type;
-    data['coordinates'] = this.coordinates;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['type'] = type;
+    data['coordinates'] = coordinates;
     return data;
   }
 }
@@ -145,21 +145,21 @@ class Properties {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['label'] = this.label;
-    data['score'] = this.score;
-    data['housenumber'] = this.housenumber;
-    data['id'] = this.id;
-    data['name'] = this.name;
-    data['postcode'] = this.postcode;
-    data['citycode'] = this.citycode;
-    data['x'] = this.x;
-    data['y'] = this.y;
-    data['city'] = this.city;
-    data['context'] = this.context;
-    data['type'] = this.type;
-    data['importance'] = this.importance;
-    data['street'] = this.street;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['label'] = label;
+    data['score'] = score;
+    data['housenumber'] = housenumber;
+    data['id'] = id;
+    data['name'] = name;
+    data['postcode'] = postcode;
+    data['citycode'] = citycode;
+    data['x'] = x;
+    data['y'] = y;
+    data['city'] = city;
+    data['context'] = context;
+    data['type'] = type;
+    data['importance'] = importance;
+    data['street'] = street;
     return data;
   }
 }

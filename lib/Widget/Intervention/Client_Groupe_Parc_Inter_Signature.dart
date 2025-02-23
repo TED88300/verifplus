@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,6 @@ import 'package:verifplus/Tools/DbTools/DbTools.dart';
 
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
-import 'package:verifplus/pdf/Aff_Bdc.dart';
 import 'package:verifplus/pdf/Aff_CR.dart';
 import 'package:verifplus/pdf/Aff_CR_Ria.dart';
 
@@ -48,12 +46,13 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
     setState(() {});
   }
 
-  TextEditingController ctrlTech = new TextEditingController();
-  TextEditingController ctrlClient = new TextEditingController();
-  TextEditingController ctrlNote = new TextEditingController();
+  TextEditingController ctrlTech = TextEditingController();
+  TextEditingController ctrlClient = TextEditingController();
+  TextEditingController ctrlNote = TextEditingController();
 
   int SatClient = 0;
 
+  @override
   void initState() {
     ctrlTech.text = Srv_DbTools.gIntervention.Intervention_Signataire_Tech;
     ctrlClient.text = Srv_DbTools.gIntervention.Intervention_Signataire_Client;
@@ -81,16 +80,16 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
       bottomNavigationBar: Container(
         color: Colors.white,
         child: Padding(
-          padding: EdgeInsets.fromLTRB(0, 10, 0, 55),
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 55),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              new ElevatedButton(
+              ElevatedButton(
                 onPressed: () async {
                   await HapticFeedback.vibrate();
-                  if (Srv_DbTools.gIntervention.Intervention_Parcs_Type == "Ext") await Navigator.push(context, MaterialPageRoute(builder: (context) => Aff_CR()));
-                  if (Srv_DbTools.gIntervention.Intervention_Parcs_Type == "Ria") await Navigator.push(context, MaterialPageRoute(builder: (context) => Aff_CR_Ria()));
+                  if (Srv_DbTools.gIntervention.Intervention_Parcs_Type == "Ext") await Navigator.push(context, MaterialPageRoute(builder: (context) => const Aff_CR()));
+                  if (Srv_DbTools.gIntervention.Intervention_Parcs_Type == "Ria") await Navigator.push(context, MaterialPageRoute(builder: (context) => const Aff_CR_Ria()));
                 },
                 style: ElevatedButton.styleFrom(
                     backgroundColor: gColors.primaryGreen,
@@ -104,17 +103,17 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
           ),
         ),
       ),
-      body: Container(
+      body: SizedBox(
         height: MediaQuery.of(context).size.height,
 //        padding: EdgeInsets.fromLTRB(0, 0, 0, 50),
         child: SingleChildScrollView(
-            physics: ClampingScrollPhysics(),
+            physics: const ClampingScrollPhysics(),
             dragStartBehavior: DragStartBehavior.down,
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                gObj.InterventionTitleWidget("${Srv_DbTools.gClient.Client_Nom.toUpperCase()}", wTitre2: wTitre2, wTimer: 0),
+                gObj.InterventionTitleWidget(Srv_DbTools.gClient.Client_Nom.toUpperCase(), wTitre2: wTitre2, wTimer: 0),
                 gColors.wLigne(),
                 buildTitreTech(context),
                 gColors.wLigne(),
@@ -135,7 +134,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
   Widget _buildSign() => Container(
       color: gColors.greyLight,
       height : 500,
-      padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+      padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
       child: Column(
         children: [
           Row(
@@ -152,7 +151,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
                   child: TextField(
                     controller: ctrlClient,
                     style: gColors.bodyTitle1_N_Gr,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.only(left: 10, right: 10, bottom: 0, top: 3),
                     ),
@@ -165,7 +164,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 16.0,
           ),
           Center(
@@ -174,7 +173,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
               child: Stack(
                 children: <Widget>[
                   Container(
-                    constraints: BoxConstraints.expand(),
+                    constraints: const BoxConstraints.expand(),
                     color: Colors.white,
                     child: HandSignature(
                       control: control,
@@ -193,7 +192,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 16.0,
           ),
           Row(
@@ -203,16 +202,16 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
                   control.clear();
                   rawImageFit.value = null;
                 },
-                child: Text('clear'),
+                child: const Text('clear'),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 80.0,
               ),
               _buildScaledImageView(),
-              SizedBox(
+              const SizedBox(
                 width: 80.0,
               ),
-              new ElevatedButton(
+              ElevatedButton(
                 onPressed: () async {
                   rawImageFit.value = await control.toImage(
                     color: Colors.black,
@@ -221,14 +220,14 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
                   );
 
                   final json = control.toMap();
-                  print("Client rawImageFit.value ${json} ${rawImageFit.value}");
+                  print("Client rawImageFit.value $json ${rawImageFit.value}");
 
                   if (rawImageFit.value != null) {
                     print("SET Intervention_Signature_Client");
                     Srv_DbTools.gIntervention.Intervention_Signature_Client = rawImageFit.value!.buffer.asUint8List();
                   }
-                  var now = new DateTime.now();
-                  var formatter = new DateFormat('dd/MM/yyyy');
+                  var now = DateTime.now();
+                  var formatter = DateFormat('dd/MM/yyyy');
                   String formattedDate = formatter.format(now);
                   Srv_DbTools.gIntervention.Intervention_Signataire_Date_Client = formattedDate;
 
@@ -252,7 +251,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 16.0,
           ),
           gColors.wLigne(),
@@ -261,7 +260,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
 
   Widget _buildNote() => Container(
       color: Colors.grey,
-      padding: EdgeInsets.fromLTRB(50, 20, 50, 0),
+      padding: const EdgeInsets.fromLTRB(50, 20, 50, 0),
       child: Column(
         children: [
           Row(
@@ -281,7 +280,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
                     minLines: 7,
                     maxLines: 7,
                     style: gColors.bodyTitle1_N_Gr,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.only(left: 10, right: 10, bottom: 0, top: 3),
                     ),
@@ -300,7 +299,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 16.0,
           ),
           gColors.wLigne(),
@@ -324,17 +323,17 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
         },
         child:    Container(
             color: Colors.black12,
-            padding: EdgeInsets.fromLTRB(50, 20, 50, 0),
+            padding: const EdgeInsets.fromLTRB(50, 20, 50, 0),
             child: Column(
               children: [
                 Row(
                   children: <Widget>[
-                    Spacer(),
+                    const Spacer(),
                     _buildScaledImageView(),
-                    Spacer(),
+                    const Spacer(),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16.0,
                 ),
                 gColors.wLigne(),
@@ -361,17 +360,17 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
         },
         child:     Container(
             color: Colors.black12,
-            padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+            padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
             child: Column(
               children: [
                 Row(
                   children: <Widget>[
-                    Spacer(),
+                    const Spacer(),
                     _buildScaledImageViewTech(),
-                    Spacer(),
+                    const Spacer(),
                   ],
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 16.0,
                 ),
                 gColors.wLigne(),
@@ -383,7 +382,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
   Widget _buildSignTech() => Container(
       color: gColors.greyLight,
       height : 500,
-      padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+      padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
       child: Column(
         children: [
           Row(
@@ -400,7 +399,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
                   child: TextField(
                     controller: ctrlTech,
                     style: gColors.bodyTitle1_N_Gr,
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       border: InputBorder.none,
                       contentPadding: EdgeInsets.only(left: 10, right: 10, bottom: 0, top: 3),
                     ),
@@ -413,7 +412,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 16.0,
           ),
           Container(
@@ -423,7 +422,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
                 child: Stack(
                   children: <Widget>[
                     Container(
-                      constraints: BoxConstraints.expand(),
+                      constraints: const BoxConstraints.expand(),
                       color: Colors.white,
                       child: HandSignature(
                         control: controlTech,
@@ -443,7 +442,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
               ),
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 16.0,
           ),
           Row(
@@ -457,16 +456,16 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
                   controlTech.clear();
                   rawImageFitTech.value = null;
                 },
-                child: Text('clear'),
+                child: const Text('clear'),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 80.0,
               ),
               _buildScaledImageViewTech(),
-              SizedBox(
+              const SizedBox(
                 width: 80.0,
               ),
-              new ElevatedButton(
+              ElevatedButton(
                 onPressed: () async {
                   rawImageFitTech.value = await controlTech.toImage(
                     color: Colors.black,
@@ -480,8 +479,8 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
                     print("json ${rawImageFitTech.value!.buffer.asUint8List()}");
                     Srv_DbTools.gIntervention.Intervention_Signature_Tech = rawImageFitTech.value!.buffer.asUint8List();
                   }
-                  var now = new DateTime.now();
-                  var formatter = new DateFormat('dd/MM/yyyy');
+                  var now = DateTime.now();
+                  var formatter = DateFormat('dd/MM/yyyy');
                   String formattedDate = formatter.format(now);
                   Srv_DbTools.gIntervention.Intervention_Signataire_Date = formattedDate;
                   await DbTools.updateInterventions(Srv_DbTools.gIntervention);
@@ -502,7 +501,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
               ),
             ],
           ),
-          SizedBox(
+          const SizedBox(
             height: 16.0,
           ),
 
@@ -516,15 +515,15 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
           border: Border.all(),
           color: Colors.white30,
         ),
-        child: Srv_DbTools.gIntervention.Intervention_Signature_Client == null || Srv_DbTools.gIntervention.Intervention_Signature_Client.length == 0
+        child: Srv_DbTools.gIntervention.Intervention_Signature_Client.isEmpty
             ? Container(
                 color: Colors.white,
-                child: Center(
+                child: const Center(
                   child: Text('Vide'),
                 ),
               )
             : Container(
-                padding: EdgeInsets.all(0.0),
+                padding: const EdgeInsets.all(0.0),
                 color: Colors.white,
                 child: Image.memory(Srv_DbTools.gIntervention.Intervention_Signature_Client),
               ),
@@ -537,15 +536,15 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
           border: Border.all(),
           color: Colors.white30,
         ),
-        child: Srv_DbTools.gIntervention.Intervention_Signature_Tech == null || Srv_DbTools.gIntervention.Intervention_Signature_Tech.length == 0
+        child: Srv_DbTools.gIntervention.Intervention_Signature_Tech.isEmpty
             ? Container(
                 color: Colors.white,
-                child: Center(
+                child: const Center(
                   child: Text('Vide'),
                 ),
               )
             : Container(
-                padding: EdgeInsets.all(0.0),
+                padding: const EdgeInsets.all(0.0),
                 color: Colors.white,
                 child: Image.memory(Srv_DbTools.gIntervention.Intervention_Signature_Tech),
               ),
@@ -555,7 +554,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
   Widget buildTitreTech(BuildContext context) {
     double IcoWidth = 30;
     return Container(
-      padding: EdgeInsets.fromLTRB(10, 10, 10, 8),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
       color: gColors.greyLight,
       child: Row(
         children: [
@@ -570,14 +569,14 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
           Expanded(
             child: Container(
               height: 20,
-              padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+              padding: const EdgeInsets.fromLTRB(0, 2, 8, 0),
               child: Text(
                 "Signature Agent",
                 style: gColors.bodyTitle1_B_Gr,
               ),
             ),
           ),
-          Spacer(),
+          const Spacer(),
           Expanded(
             child: InkWell(
               onTap: () async {
@@ -601,7 +600,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
   Widget buildTitreClient(BuildContext context) {
     double IcoWidth = 30;
     return Container(
-      padding: EdgeInsets.fromLTRB(10, 10, 10, 8),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
       color: gColors.greyLight,
       child: Row(
         children: [
@@ -616,14 +615,14 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
           Expanded(
             child: Container(
               height: 20,
-              padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+              padding: const EdgeInsets.fromLTRB(0, 2, 8, 0),
               child: Text(
                 "Signature Client",
                 style: gColors.bodyTitle1_B_Gr,
               ),
             ),
           ),
-          Spacer(),
+          const Spacer(),
           Expanded(
             child: InkWell(
               onTap: () async {
@@ -647,7 +646,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
   Widget buildTitreNote(BuildContext context) {
     double IcoWidth = 30;
     return Container(
-      padding: EdgeInsets.fromLTRB(10, 10, 10, 8),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
       color: gColors.greyLight,
       child: Row(
         children: [
@@ -662,7 +661,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
           Expanded(
             child: Container(
               height: 20,
-              padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+              padding: const EdgeInsets.fromLTRB(0, 2, 8, 0),
               child: Text(
                 "Note",
                 style: gColors.bodyTitle1_B_Gr,
@@ -677,7 +676,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
   Widget buildTitreSat(BuildContext context) {
     double IcoWidth = 30;
     return Container(
-      padding: EdgeInsets.fromLTRB(10, 10, 10, 8),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
       color: gColors.white,
       child: Row(
         children: [
@@ -692,7 +691,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
           Expanded(
             child: Container(
               height: 20,
-              padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+              padding: const EdgeInsets.fromLTRB(0, 2, 8, 0),
               child: Text(
                 "Satisfaction client",
                 style: gColors.bodyTitle1_B_Gr,
@@ -707,7 +706,7 @@ class Client_Groupe_Parc_Inter_SignatureState extends State<Client_Groupe_Parc_I
   Widget buildSat() {
     double IcoWidth = 80;
     return Container(
-      padding: EdgeInsets.fromLTRB(10, 10, 10, 8),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
       color: gColors.greyLight,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.end,

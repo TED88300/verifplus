@@ -169,12 +169,12 @@ class Import_ASyncDialogState extends State<Import_ASyncDialog> with TickerProvi
 
     wSt += "Parcs\n";
 
-    List<Parc_Ent> ListParcs_Ent = await DbTools.getParcs_EntAll();
-    for (int i = 0; i < ListParcs_Ent.length; i++) {
-      Parc_Ent wParc_Ent = ListParcs_Ent[i];
-      print("Parcs ${wParc_Ent.ParcsId} [${wParc_Ent.Parcs_InterventionId}] ${wParc_Ent.Parcs_Update}");
-      if (wParc_Ent.Parcs_Update == 1) {
-        wSt += "     > ${wParc_Ent.Parcs_InterventionId} ${wParc_Ent.Parcs_Type} - ${wParc_Ent.Parcs_EMP_Label} ${wParc_Ent.Parcs_NIV_Label} \n";
+    List<Parc_Ent> listparcsEnt = await DbTools.getParcs_EntAll();
+    for (int i = 0; i < listparcsEnt.length; i++) {
+      Parc_Ent wparcEnt = listparcsEnt[i];
+      print("Parcs ${wparcEnt.ParcsId} [${wparcEnt.Parcs_InterventionId}] ${wparcEnt.Parcs_Update}");
+      if (wparcEnt.Parcs_Update == 1) {
+        wSt += "     > ${wparcEnt.Parcs_InterventionId} ${wparcEnt.Parcs_Type} - ${wparcEnt.Parcs_EMP_Label} ${wparcEnt.Parcs_NIV_Label} \n";
       }
 
 /*
@@ -212,12 +212,12 @@ class Import_ASyncDialogState extends State<Import_ASyncDialog> with TickerProvi
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
       surfaceTintColor: Colors.white,
       backgroundColor: gColors.white,
       title: Container(
           color: gColors.white,
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
           child: Column(
             children: [
               Text(
@@ -249,9 +249,9 @@ class Import_ASyncDialogState extends State<Import_ASyncDialog> with TickerProvi
               Container(
                 height: 10,
               ),
-              new Expanded(
+              Expanded(
                 flex: 1,
-                child: new SingleChildScrollView(
+                child: SingleChildScrollView(
                     scrollDirection: Axis.vertical, //.horizontal
                     child: Padding(
                       padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
@@ -271,7 +271,7 @@ class Import_ASyncDialogState extends State<Import_ASyncDialog> with TickerProvi
         iStrfExp
             ? Container()
             : ElevatedButton(
-                child: Text(
+                child: const Text(
                   "OK",
                   style: TextStyle(
                     fontSize: 22,

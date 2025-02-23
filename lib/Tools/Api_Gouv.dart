@@ -22,11 +22,11 @@ class InseeToken {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['access_token'] = this.accessToken;
-    data['scope'] = this.scope;
-    data['token_type'] = this.tokenType;
-    data['expires_in'] = this.expiresIn;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['access_token'] = accessToken;
+    data['scope'] = scope;
+    data['token_type'] = tokenType;
+    data['expires_in'] = expiresIn;
     return data;
   }
 }
@@ -67,12 +67,10 @@ class Api_Gouv {
 
         print("wInseeToken ${wInseeToken.toJson()}");
 
-        if (wInseeToken != null) {
-          print("access_token get");
-          access_token = wInseeToken.accessToken!;
-          print("access_token $access_token");
-        }
-      } else {
+        print("access_token get");
+        access_token = wInseeToken.accessToken!;
+        print("access_token $access_token");
+            } else {
         print(response.reasonPhrase);
       }
       return true;
@@ -102,7 +100,7 @@ class Api_Gouv {
 
     Srv_DbTools.setSrvToken();
     var request = http.MultipartRequest('POST', Uri.parse(Srv_DbTools.SrvUrl.toString()));
-    request.fields.addAll({'tic12z': Srv_DbTools.SrvToken, 'zasq': 'siret', 'token': '${access_token}', 'asiret': '${asiret}'});
+    request.fields.addAll({'tic12z': Srv_DbTools.SrvToken, 'zasq': 'siret', 'token': access_token, 'asiret': asiret});
 
     print("siret          request.fields ${request.fields}");
 
@@ -131,13 +129,13 @@ class Api_Gouv {
 //      print("wSiret adresseEtablissement ${wSiret.etablissement!.adresseEtablissement!.toJson()}");
 
       String wNom = "${wSiret.etablissement!.uniteLegale!.denominationUniteLegale}";
-      print("Adresse wNom ${wNom}");
+      print("Adresse wNom $wNom");
 
       String wRue = "${wSiret.etablissement!.adresseEtablissement!.numeroVoieEtablissement} ${wSiret.etablissement!.adresseEtablissement!.typeVoieEtablissement} ${wSiret.etablissement!.adresseEtablissement!.libelleVoieEtablissement}";
-      print("Adresse wRue ${wRue}");
+      print("Adresse wRue $wRue");
 
-      String wCP_Ville = "${wSiret.etablissement!.adresseEtablissement!.codePostalEtablissement} ${wSiret.etablissement!.adresseEtablissement!.libelleCommuneEtablissement}";
-      print("Adresse wCP_Ville ${wCP_Ville}");
+      String wcpVille = "${wSiret.etablissement!.adresseEtablissement!.codePostalEtablissement} ${wSiret.etablissement!.adresseEtablissement!.libelleCommuneEtablissement}";
+      print("Adresse wCP_Ville $wcpVille");
 
       siret_Nom = wNom;
       siret_Rue = wRue;
@@ -159,7 +157,7 @@ class Api_Gouv {
     aAdresse = aAdresse.replaceAll(" ", "+");
     Srv_DbTools.setSrvToken();
     var request = http.MultipartRequest('POST', Uri.parse(Srv_DbTools.SrvUrl.toString()));
-    request.fields.addAll({'tic12z': Srv_DbTools.SrvToken, 'zasq': 'Api_Adresse', 'aAdresse': '${aAdresse}', 'aLimit': '20'});
+    request.fields.addAll({'tic12z': Srv_DbTools.SrvToken, 'zasq': 'Api_Adresse', 'aAdresse': aAdresse, 'aLimit': '20'});
     http.StreamedResponse response = await request.send();
 
     if (response.statusCode == 200) {
@@ -171,13 +169,13 @@ class Api_Gouv {
 //      print("parsedJson ${parsedJson}");
       Map valueMap = json.decode(parsedJson['data']);
       //    print("valueMap $valueMap");
-      Api_Adresse wApi_Adresse = Api_Adresse.fromJson(valueMap);
+      Api_Adresse wapiAdresse = Api_Adresse.fromJson(valueMap);
 
-      print("wApi_Adresse.features ${wApi_Adresse.features!.length}");
+      print("wApi_Adresse.features ${wapiAdresse.features!.length}");
 
-      wApi_Adresse.features!.forEach((feature) {
+      for (var feature in wapiAdresse.features!) {
         properties.add(feature.properties!);
-      });
+      }
     } else {
       print(response.reasonPhrase);
       return false;
@@ -192,9 +190,9 @@ class Api_Gouv {
     tVille.clear();
     tCp.clear();
 
-    String wParam = "http://api-adresse.data.gouv.fr/search/?q=" + aCp + "&type=municipality&limit=30";
+    String wParam = "http://api-adresse.data.gouv.fr/search/?q=$aCp&type=municipality&limit=30";
 
-    print("wParam " + wParam);
+    print("wParam $wParam");
 
     http.Response wRet = await http.get(Uri.parse(wParam));
 

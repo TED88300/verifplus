@@ -15,6 +15,8 @@ import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
 class Client_Groupe_Inter_Det extends StatefulWidget {
+  const Client_Groupe_Inter_Det({super.key});
+
   @override
   Client_Groupe_Inter_DetState createState() => Client_Groupe_Inter_DetState();
 }
@@ -22,7 +24,7 @@ class Client_Groupe_Inter_Det extends StatefulWidget {
 class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
   double icoWidth = 38;
   bool affEdtFilter = false;
-  TextEditingController ctrlFilter = new TextEditingController();
+  TextEditingController ctrlFilter = TextEditingController();
   String filterText = '';
 
   DateTime minStartTime = DateTime(2900, 1, 1);
@@ -62,109 +64,109 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
 //    await DbTools.TrunckDCL_Ent();
 
 
-    List<DCL_Ent> wList_DCL_Ent = await Srv_DbTools.getDCL_Ent_DCL_Ent_InterventionId(Srv_DbTools.gIntervention.InterventionId);
-    print("▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎ wList_DCL_Ent.length ${wList_DCL_Ent.length}   de   ${Srv_DbTools.gIntervention.InterventionId}");
+    List<DCL_Ent> wlistDclEnt = await Srv_DbTools.getDCL_Ent_DCL_Ent_InterventionId(Srv_DbTools.gIntervention.InterventionId);
+    print("▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎ wList_DCL_Ent.length ${wlistDclEnt.length}   de   ${Srv_DbTools.gIntervention.InterventionId}");
 
-    if (wList_DCL_Ent.length == 0)
+    if (wlistDclEnt.isEmpty)
       {
         print("▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎ DCL_Ent INSERT ${Srv_DbTools.gIntervention.toMap()}");
-        DCL_Ent wDCL_Ent = DCL_Ent.DCL_EntInit();
-        wDCL_Ent.DCL_Ent_Type = "Devis";
-        wDCL_Ent.DCL_Ent_Version = 1;
-        wDCL_Ent.DCL_Ent_ClientId = Srv_DbTools.gClient.ClientId;
-        wDCL_Ent.DCL_Ent_GroupeId = Srv_DbTools.gGroupe.GroupeId;
-        wDCL_Ent.DCL_Ent_SiteId = Srv_DbTools.gSite.SiteId;
-        wDCL_Ent.DCL_Ent_ZoneId = Srv_DbTools.gZone.ZoneId;
-        wDCL_Ent.DCL_Ent_InterventionId = Srv_DbTools.gIntervention.InterventionId;
-        wDCL_Ent.DCL_Ent_Date  = Srv_DbTools.gIntervention.Intervention_Date; //  DateFormat('dd/MM/yyyy').format(DateTime.now());
-        wDCL_Ent.DCL_Ent_Etat = "Préparation";
-        await  Srv_DbTools.InsertUpdateDCL_Ent(wDCL_Ent);
+        DCL_Ent wdclEnt = DCL_Ent.DCL_EntInit();
+        wdclEnt.DCL_Ent_Type = "Devis";
+        wdclEnt.DCL_Ent_Version = 1;
+        wdclEnt.DCL_Ent_ClientId = Srv_DbTools.gClient.ClientId;
+        wdclEnt.DCL_Ent_GroupeId = Srv_DbTools.gGroupe.GroupeId;
+        wdclEnt.DCL_Ent_SiteId = Srv_DbTools.gSite.SiteId;
+        wdclEnt.DCL_Ent_ZoneId = Srv_DbTools.gZone.ZoneId;
+        wdclEnt.DCL_Ent_InterventionId = Srv_DbTools.gIntervention.InterventionId;
+        wdclEnt.DCL_Ent_Date  = Srv_DbTools.gIntervention.Intervention_Date; //  DateFormat('dd/MM/yyyy').format(DateTime.now());
+        wdclEnt.DCL_Ent_Etat = "Préparation";
+        await  Srv_DbTools.InsertUpdateDCL_Ent(wdclEnt);
 
-        wDCL_Ent.DCL_Ent_Type = "Commande";
-        wDCL_Ent.DCL_Ent_Etat = "Non livrée";
-        await  Srv_DbTools.InsertUpdateDCL_Ent(wDCL_Ent);
+        wdclEnt.DCL_Ent_Type = "Commande";
+        wdclEnt.DCL_Ent_Etat = "Non livrée";
+        await  Srv_DbTools.InsertUpdateDCL_Ent(wdclEnt);
 
 
-        wDCL_Ent.DCL_Ent_Type = "Bon de livraison";
-        wDCL_Ent.DCL_Ent_Etat = "Non facturé";
-        await  Srv_DbTools.InsertUpdateDCL_Ent(wDCL_Ent);
+        wdclEnt.DCL_Ent_Type = "Bon de livraison";
+        wdclEnt.DCL_Ent_Etat = "Non facturé";
+        await  Srv_DbTools.InsertUpdateDCL_Ent(wdclEnt);
 
 
 
       }
 
-    wList_DCL_Ent = await DbTools.getDCL_Ent_DCL_Ent_InterventionId(Srv_DbTools.gIntervention.InterventionId);
-    print("▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎ 222222222222 wList_DCL_Ent.length ${wList_DCL_Ent.length}");
+    wlistDclEnt = await DbTools.getDCL_Ent_DCL_Ent_InterventionId(Srv_DbTools.gIntervention.InterventionId);
+    print("▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎ 222222222222 wList_DCL_Ent.length ${wlistDclEnt.length}");
 
-    if (wList_DCL_Ent.length > 0)
+    if (wlistDclEnt.isNotEmpty)
       {
-        DCL_Ent wDCL_Ent = wList_DCL_Ent[0];
-        print("▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎ wDCL_Ent ${wDCL_Ent.toMapInsert()}");
+        DCL_Ent wdclEnt = wlistDclEnt[0];
+        print("▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎ wDCL_Ent ${wdclEnt.toMapInsert()}");
 
       }
 
-    if (wList_DCL_Ent.length > 1)
+    if (wlistDclEnt.length > 1)
     {
-      DCL_Ent wDCL_Ent = wList_DCL_Ent[1];
-     print("▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎ wDCL_Ent ${wDCL_Ent.toMapInsert()}");
+      DCL_Ent wdclEnt = wlistDclEnt[1];
+     print("▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎ wDCL_Ent ${wdclEnt.toMapInsert()}");
 
     }
 
-    if (wList_DCL_Ent.length > 2)
+    if (wlistDclEnt.length > 2)
     {
-      DCL_Ent wDCL_Ent = wList_DCL_Ent[2];
-      print("▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎ wDCL_Ent ${wDCL_Ent.toMapInsert()}");
+      DCL_Ent wdclEnt = wlistDclEnt[2];
+      print("▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎▶︎ wDCL_Ent ${wdclEnt.toMapInsert()}");
 
     }
 
 
-    if (Srv_DbTools.gIntervention.Intervention_Responsable!.isNotEmpty) {
+    if (Srv_DbTools.gIntervention.Intervention_Responsable.isNotEmpty) {
       await Srv_DbTools.getUserMat(
-          Srv_DbTools.gIntervention.Intervention_Responsable!);
+          Srv_DbTools.gIntervention.Intervention_Responsable);
       Srv_DbTools.selectedUserInter =
           "${Srv_DbTools.gUser.User_Nom} ${Srv_DbTools.gUser.User_Prenom}";
     }
-    if (Srv_DbTools.gIntervention.Intervention_Responsable2!.isNotEmpty) {
+    if (Srv_DbTools.gIntervention.Intervention_Responsable2.isNotEmpty) {
       await Srv_DbTools.getUserMat(
-          Srv_DbTools.gIntervention.Intervention_Responsable2!);
+          Srv_DbTools.gIntervention.Intervention_Responsable2);
       Srv_DbTools.selectedUserInter2 =
           "${Srv_DbTools.gUser.User_Nom} ${Srv_DbTools.gUser.User_Prenom}";
     }
-    if (Srv_DbTools.gIntervention.Intervention_Responsable3!.isNotEmpty) {
+    if (Srv_DbTools.gIntervention.Intervention_Responsable3.isNotEmpty) {
       await Srv_DbTools.getUserMat(
-          Srv_DbTools.gIntervention.Intervention_Responsable3!);
+          Srv_DbTools.gIntervention.Intervention_Responsable3);
       Srv_DbTools.selectedUserInter3 =
           "${Srv_DbTools.gUser.User_Nom} ${Srv_DbTools.gUser.User_Prenom}";
     }
-    if (Srv_DbTools.gIntervention.Intervention_Responsable4!.isNotEmpty) {
+    if (Srv_DbTools.gIntervention.Intervention_Responsable4.isNotEmpty) {
       await Srv_DbTools.getUserMat(
-          Srv_DbTools.gIntervention.Intervention_Responsable4!);
+          Srv_DbTools.gIntervention.Intervention_Responsable4);
       Srv_DbTools.selectedUserInter4 =
           "${Srv_DbTools.gUser.User_Nom} ${Srv_DbTools.gUser.User_Prenom}";
     }
 
-    if (Srv_DbTools.gIntervention.Intervention_Responsable5!.isNotEmpty) {
+    if (Srv_DbTools.gIntervention.Intervention_Responsable5.isNotEmpty) {
       await Srv_DbTools.getUserMat(
-          Srv_DbTools.gIntervention.Intervention_Responsable5!);
+          Srv_DbTools.gIntervention.Intervention_Responsable5);
       Srv_DbTools.selectedUserInter5 =
           "${Srv_DbTools.gUser.User_Nom} ${Srv_DbTools.gUser.User_Prenom}";
     }
-    if (Srv_DbTools.gIntervention.Intervention_Responsable6!.isNotEmpty) {
+    if (Srv_DbTools.gIntervention.Intervention_Responsable6.isNotEmpty) {
       await Srv_DbTools.getUserMat(
-          Srv_DbTools.gIntervention.Intervention_Responsable6!);
+          Srv_DbTools.gIntervention.Intervention_Responsable6);
       Srv_DbTools.selectedUserInter6 =
           "${Srv_DbTools.gUser.User_Nom} ${Srv_DbTools.gUser.User_Prenom}";
     }
 
     Srv_DbTools.ListPlanning = await DbTools.getPlanning_InterventionId(
-        Srv_DbTools.gIntervention.InterventionId!);
+        Srv_DbTools.gIntervention.InterventionId);
 
     await Srv_DbTools.getPlanning_InterventionIdRes(
-        Srv_DbTools.gIntervention.InterventionId!);
+        Srv_DbTools.gIntervention.InterventionId);
 
     print("ListInterMission > ${Srv_DbTools.ListInterMission.length}");
     Srv_DbTools.ListInterMission = await DbTools.getInterMissionsIntervention(
-        Srv_DbTools.gIntervention.InterventionId!);
+        Srv_DbTools.gIntervention.InterventionId);
     print("ListInterMission < ${Srv_DbTools.ListInterMission.length}");
 
     bool wMin = false, wMax = false;
@@ -199,10 +201,12 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
       wHours += wplanningSrv.Planning_InterventionendTime.difference(
               wplanningSrv.Planning_InterventionstartTime)
           .inHours;
-      if (firstDate.isAfter(wplanningSrv.Planning_InterventionstartTime))
+      if (firstDate.isAfter(wplanningSrv.Planning_InterventionstartTime)) {
         firstDate = wplanningSrv.Planning_InterventionstartTime;
-      if (lastDate.isBefore(wplanningSrv.Planning_InterventionendTime))
+      }
+      if (lastDate.isBefore(wplanningSrv.Planning_InterventionendTime)) {
         lastDate = wplanningSrv.Planning_InterventionendTime;
+      }
     }
 
     if (minStartTime.year == maxEndTime.year &&
@@ -220,7 +224,7 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
     }
 
     Plannification =
-        "Plannifiée du ${DateFormat('dd/MM/yyyy').format(firstDate)} au ${DateFormat('dd/MM/yyyy').format(lastDate)} pour ${wHours} heures";
+        "Plannifiée du ${DateFormat('dd/MM/yyyy').format(firstDate)} au ${DateFormat('dd/MM/yyyy').format(lastDate)} pour $wHours heures";
 
     wInterMission = "";
     for (int i = 0; i < Srv_DbTools.ListInterMission.length; i++) {
@@ -233,12 +237,12 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
     wTimer = 0;
     countX = 0;
     DbTools.glfParcs_Ent =
-        await DbTools.getParcs_Ent(Srv_DbTools.gIntervention.InterventionId!);
+        await DbTools.getParcs_Ent(Srv_DbTools.gIntervention.InterventionId);
 
     for (int jj = 0; jj < DbTools.glfParcs_Ent.length; jj++) {
       Parc_Ent elementEnt = DbTools.glfParcs_Ent[jj];
       countTot++;
-      if (!elementEnt.Parcs_Date_Rev!.isEmpty) countX++;
+      if (elementEnt.Parcs_Date_Rev!.isNotEmpty) countX++;
 
       try {
         wTimer += elementEnt.Parcs_Intervention_Timer!;
@@ -247,18 +251,24 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
       }
     }
     wAdresse = "";
-    if (Srv_DbTools.gZone.Zone_Adr1.isNotEmpty)
-      wAdresse = wAdresse + " " + Srv_DbTools.gZone.Zone_Adr1;
-    if (Srv_DbTools.gZone.Zone_Adr2.isNotEmpty)
-      wAdresse = wAdresse + " " + Srv_DbTools.gZone.Zone_Adr2;
-    if (Srv_DbTools.gZone.Zone_Adr3.isNotEmpty)
-      wAdresse = wAdresse + " " + Srv_DbTools.gZone.Zone_Adr3;
-    if (Srv_DbTools.gZone.Zone_Adr4.isNotEmpty)
-      wAdresse = wAdresse + " " + Srv_DbTools.gZone.Zone_Adr4;
-    if (Srv_DbTools.gZone.Zone_CP.isNotEmpty)
-      wAdresse = wAdresse + " " + Srv_DbTools.gZone.Zone_CP;
-    if (Srv_DbTools.gZone.Zone_Ville.isNotEmpty)
-      wAdresse = wAdresse + " " + Srv_DbTools.gZone.Zone_Ville;
+    if (Srv_DbTools.gZone.Zone_Adr1.isNotEmpty) {
+      wAdresse = "$wAdresse ${Srv_DbTools.gZone.Zone_Adr1}";
+    }
+    if (Srv_DbTools.gZone.Zone_Adr2.isNotEmpty) {
+      wAdresse = "$wAdresse ${Srv_DbTools.gZone.Zone_Adr2}";
+    }
+    if (Srv_DbTools.gZone.Zone_Adr3.isNotEmpty) {
+      wAdresse = "$wAdresse ${Srv_DbTools.gZone.Zone_Adr3}";
+    }
+    if (Srv_DbTools.gZone.Zone_Adr4.isNotEmpty) {
+      wAdresse = "$wAdresse ${Srv_DbTools.gZone.Zone_Adr4}";
+    }
+    if (Srv_DbTools.gZone.Zone_CP.isNotEmpty) {
+      wAdresse = "$wAdresse ${Srv_DbTools.gZone.Zone_CP}";
+    }
+    if (Srv_DbTools.gZone.Zone_Ville.isNotEmpty) {
+      wAdresse = "$wAdresse ${Srv_DbTools.gZone.Zone_Ville}";
+    }
 
     final wDur = Duration(seconds: wTimer);
 
@@ -270,43 +280,43 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
           "",
           gColors.white,
           gColors.primaryBlue),
-      AffLigne("Plannification", "${Plannification}", gColors.white, "",
+      AffLigne("Plannification", Plannification, gColors.white, "",
           gColors.primaryOrange),
       AffLigne(
           "Date Programmation",
-          "${Srv_DbTools.gIntervention.Intervention_Date}",
+          Srv_DbTools.gIntervention.Intervention_Date,
           gColors.white,
           "",
           gColors.black),
       AffLigne(
           "Détail",
-          ">>>>> Vérifications : ${countX} / ${countTot} <<<<<                    >>>>> Temps Passé : ${gObj.printDurationHHMM(wDur)} <<<<<",
+          ">>>>> Vérifications : $countX / $countTot <<<<<                    >>>>> Temps Passé : ${gObj.printDurationHHMM(wDur)} <<<<<",
           gColors.white,
           "",
           gColors.primaryOrange),
       AffBtnDate(
           "",
           "Dernière Visite",
-          "${Srv_DbTools.gIntervention.Intervention_Date_Visite}",
+          Srv_DbTools.gIntervention.Intervention_Date_Visite,
           "",
           gColors.white,
           gColors.primaryBlue),
       AffLigne("Commercial", "", gColors.greyLight, "IM2", gColors.primaryBlue),
-      AffLigne("Commercial", "${Srv_DbTools.selectedUserInter}", gColors.white,
+      AffLigne("Commercial", Srv_DbTools.selectedUserInter, gColors.white,
           "IM2", gColors.black),
-      AffLigne("Manager commercial", "${Srv_DbTools.selectedUserInter2}",
+      AffLigne("Manager commercial", Srv_DbTools.selectedUserInter2,
           gColors.white, "IM2b", gColors.black),
       AffLigne(
           "Techniques : ", "", gColors.greyLight, "IM3", gColors.primaryBlue),
-      AffLigne("Manager Technique", "${Srv_DbTools.selectedUserInter3}",
+      AffLigne("Manager Technique", Srv_DbTools.selectedUserInter3,
           gColors.white, "IM3", gColors.black),
-      AffLigne("Pilot Projet", "${Srv_DbTools.selectedUserInter4}",
+      AffLigne("Pilot Projet", Srv_DbTools.selectedUserInter4,
           gColors.white, "IM3b", gColors.black),
-      AffLigne("Cond Travaux", "${Srv_DbTools.selectedUserInter5}",
+      AffLigne("Cond Travaux", Srv_DbTools.selectedUserInter5,
           gColors.white, "IM3c", gColors.black),
-      AffLigne("Chef d'équipe", "${Srv_DbTools.selectedUserInter6}",
+      AffLigne("Chef d'équipe", Srv_DbTools.selectedUserInter6,
           gColors.white, "IM3d", gColors.black),
-      AffLigne("Tech Affectés", "${wIntervenants}", gColors.white, "IM3e",
+      AffLigne("Tech Affectés", wIntervenants, gColors.white, "IM3e",
           Colors.black),
       AffLigneCercle(
           "Tâches & Ordes de missions",
@@ -315,10 +325,10 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
           "IM4",
           gColors.primaryBlue),
       AffBtn(
-          "", "", "${wInterMission}", "", gColors.white, gColors.primaryBlue),
+          "", "", wInterMission, "", gColors.white, gColors.primaryBlue),
       AffLigne(
           "Adresse", "", gColors.greyLight, "Icon_Adr2", gColors.primaryBlue),
-      AffBtnMap("", "", "${wAdresse}", "", gColors.white, gColors.black),
+      AffBtnMap("", "", wAdresse, "", gColors.white, gColors.black),
       AffLigne(
           "Contact", "", gColors.greyLight, "Icon_Cont2", gColors.primaryBlue),
     ];
@@ -331,19 +341,24 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
       print("Srv_DbTools.ListContact ZONE ${element.Desc()}");
 
       String wNom = "${element.Contact_Prenom} ${element.Contact_Nom}";
-      if (element.Contact_Fonction.isNotEmpty)
-        wNom = wNom + " - ${element.Contact_Fonction}";
-      if (element.Contact_Service.isNotEmpty)
-        wNom = wNom + "/${element.Contact_Service}";
-      if (element.Contact_Tel1.isNotEmpty)
-        wNom = wNom + " - ${element.Contact_Tel1}";
-      if (element.Contact_Tel2.isNotEmpty)
-        wNom = wNom + " - ${element.Contact_Tel2}";
-      if (element.Contact_eMail.isNotEmpty)
-        wNom = wNom + " - ${element.Contact_eMail}";
-      print("ListContact ${wNom}");
+      if (element.Contact_Fonction.isNotEmpty) {
+        wNom = "$wNom - ${element.Contact_Fonction}";
+      }
+      if (element.Contact_Service.isNotEmpty) {
+        wNom = "$wNom/${element.Contact_Service}";
+      }
+      if (element.Contact_Tel1.isNotEmpty) {
+        wNom = "$wNom - ${element.Contact_Tel1}";
+      }
+      if (element.Contact_Tel2.isNotEmpty) {
+        wNom = "$wNom - ${element.Contact_Tel2}";
+      }
+      if (element.Contact_eMail.isNotEmpty) {
+        wNom = "$wNom - ${element.Contact_eMail}";
+      }
+      print("ListContact $wNom");
       ListWidget.add(AffLigne(
-          "    Contact Zone", "$wNom", gColors.white, "", gColors.primaryBlue));
+          "    Contact Zone", wNom, gColors.white, "", gColors.primaryBlue));
     }
 
     await DbTools.getContactClientAdrType(
@@ -353,15 +368,18 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
       var element = Srv_DbTools.ListContact[i];
       print("Srv_DbTools.ListContact SITE ${element.Desc()}");
       String wNom = "${element.Contact_Prenom} ${element.Contact_Nom}";
-      if (element.Contact_Tel1.isNotEmpty)
-        wNom = wNom + " - ${element.Contact_Tel1}";
-      if (element.Contact_Tel2.isNotEmpty)
-        wNom = wNom + " - ${element.Contact_Tel2}";
-      if (element.Contact_eMail.isNotEmpty)
-        wNom = wNom + " - ${element.Contact_eMail}";
-      print("ListContact ${wNom}");
+      if (element.Contact_Tel1.isNotEmpty) {
+        wNom = "$wNom - ${element.Contact_Tel1}";
+      }
+      if (element.Contact_Tel2.isNotEmpty) {
+        wNom = "$wNom - ${element.Contact_Tel2}";
+      }
+      if (element.Contact_eMail.isNotEmpty) {
+        wNom = "$wNom - ${element.Contact_eMail}";
+      }
+      print("ListContact $wNom");
       ListWidget.add(AffLigne(
-          "    Contact Site", "$wNom", gColors.white, "", gColors.primaryBlue));
+          "    Contact Site", wNom, gColors.white, "", gColors.primaryBlue));
     }
 
     ListWidget.add(AffLigne(
@@ -371,9 +389,9 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
           Container(
             height : 200,
 //            color : Colors.red,
-              padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+              padding: const EdgeInsets.fromLTRB(20, 20, 20, 0),
               child: Text(
-                "${Srv_DbTools.gIntervention.Intervention_Remarque}",
+                Srv_DbTools.gIntervention.Intervention_Remarque,
                 textAlign: TextAlign.start,
                 maxLines: 4,
                 style: gColors.bodySaisie_B_B,
@@ -388,6 +406,7 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
   ////
 
 
+  @override
   void initState() {
     initLib();
     super.initState();
@@ -445,24 +464,25 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
 
     String wTitre2 =
         "${Srv_DbTools.gIntervention.Groupe_Nom} / ${Srv_DbTools.gIntervention.Site_Nom} / ${Srv_DbTools.gIntervention.Zone_Nom}";
-    if (Srv_DbTools.gIntervention.Groupe_Nom == Srv_DbTools.gIntervention.Site_Nom)
+    if (Srv_DbTools.gIntervention.Groupe_Nom == Srv_DbTools.gIntervention.Site_Nom) {
       wTitre2 = "";
+    }
     return Scaffold(
         appBar: appBar(),
         body: Stack(
           children: [
             Container(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
-                margin: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+                margin: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: Column(children: [
                   gObj.InterventionTitleWidget(
-                      "${Srv_DbTools.gIntervention.Client_Nom!.toUpperCase()}",
+                      Srv_DbTools.gIntervention.Client_Nom!.toUpperCase(),
                       wTitre2: wTitre2,
                       wTimer: 0),
                   gColors.wLigne(),
                   Expanded(
                     child:
-                        ListWidget.length == 0 ? Container() :
+                        ListWidget.isEmpty ? Container() :
                         ListView.builder(
                           shrinkWrap: true,
                           itemCount: ListWidget.length,
@@ -483,7 +503,7 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
                     await Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => Client_Groupe_Parc_Inter()));
+                            builder: (context) => const Client_Groupe_Parc_Inter()));
                     await initLib();
                   },
                   child: Container(
@@ -515,7 +535,7 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
 
   @override
   Widget Entete_Btn_Search() {
-    return Container(
+    return SizedBox(
         height: 57,
         child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -542,7 +562,7 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
               Container(
                 width: 8,
               ),
-              Spacer(),
+              const Spacer(),
               EdtFilterWidget(),
             ]));
   }
@@ -551,7 +571,7 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
     return !affEdtFilter
         ? InkWell(
             child: Padding(
-              padding: EdgeInsets.only(right: 8),
+              padding: const EdgeInsets.only(right: 8),
               child: Image.asset(
                 "assets/images/Btn_Loupe.png",
                 height: icoWidth,
@@ -562,7 +582,7 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
               affEdtFilter = !affEdtFilter;
               setState(() {});
             })
-        : Container(
+        : SizedBox(
             width: 320,
             child: Row(
               children: [
@@ -614,7 +634,7 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
     double icoWidth = 32;
 
     return Container(
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
         color: BckGrd,
         child: Column(
           children: [
@@ -623,9 +643,9 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
                 ImgL.isEmpty
                     ? Container()
                     : Container(
-                        padding: EdgeInsets.only(left: 10),
+                        padding: const EdgeInsets.only(left: 10),
                         child: Image.asset(
-                          "assets/images/${ImgL}.png",
+                          "assets/images/$ImgL.png",
                           height: icoWidth,
                           width: icoWidth,
                         ),
@@ -634,7 +654,7 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
                     padding: EdgeInsets.only(left: 10, top: mTop),
                     height: wHeight,
                     child: Text(
-                      "${wTextL}",
+                      wTextL,
                       textAlign: TextAlign.start,
                       maxLines: 1,
                       style: gColors.bodySaisie_B_B,
@@ -644,7 +664,7 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
                         padding: EdgeInsets.only(right: 10, top: mTop),
                         height: wHeight,
                         child: Text(
-                          "${wTextR}",
+                          wTextR,
                           overflow: TextOverflow.ellipsis,
                           softWrap: false,
                           textAlign: TextAlign.end,
@@ -671,7 +691,7 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
     double icoWidth = 32;
 
     return Container(
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
         color: BckGrd,
         child: Column(
           children: [
@@ -680,9 +700,9 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
                 ImgL.isEmpty
                     ? Container()
                     : Container(
-                        padding: EdgeInsets.only(left: 10),
+                        padding: const EdgeInsets.only(left: 10),
                         child: Image.asset(
-                          "assets/images/${ImgL}.png",
+                          "assets/images/$ImgL.png",
                           height: icoWidth,
                           width: icoWidth,
                         ),
@@ -691,20 +711,20 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
                     padding: EdgeInsets.only(left: 10, top: mTop),
                     height: wHeight,
                     child: Text(
-                      "${wTextL}",
+                      wTextL,
                       textAlign: TextAlign.start,
                       maxLines: 1,
                       style: gColors.bodySaisie_B_B,
                     )),
-                Spacer(),
+                const Spacer(),
                 Container(
-                    padding: EdgeInsets.only(right: 10, top: 0),
+                    padding: const EdgeInsets.only(right: 10, top: 0),
                     height: wHeight,
                     child: CircleAvatar(
                         radius: 15,
                         backgroundColor: ForeGrd,
                         child: Text(
-                          "${wTextR}",
+                          wTextR,
                           textAlign: TextAlign.center,
                           maxLines: 1,
                           style: gColors.bodySaisie_B_B
@@ -733,7 +753,7 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
         ),
         onPressed: () async {
           await HapticFeedback.vibrate();
-          MapsLauncher.launchQuery("${wValue}");
+          MapsLauncher.launchQuery(wValue);
         },
         child: Column(
           children: [
@@ -745,7 +765,7 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
   Widget AffBtnInter() {
     return Container(
       width: 640,
-      margin: EdgeInsets.only(top: 5, bottom: 0),
+      margin: const EdgeInsets.only(top: 5, bottom: 0),
       child: ElevatedButton(
           onPressed: () async {
             await HapticFeedback.vibrate();
@@ -753,7 +773,7 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
             await Navigator.push(
                 context,
                 MaterialPageRoute(
-                    builder: (context) => Client_Groupe_Parc_Inter()));
+                    builder: (context) => const Client_Groupe_Parc_Inter()));
             await initLib();
           },
           style: ElevatedButton.styleFrom(
@@ -766,7 +786,7 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
 
 
           child: Container(
-            margin: EdgeInsets.only(top: 30, bottom: 30),
+            margin: const EdgeInsets.only(top: 30, bottom: 30),
             child:
                 Text('Démarrage Intervention', style: gColors.bodyTitle1_B_W),
           )),
@@ -844,7 +864,7 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
           tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         ),
         onPressed: () async {
-          print("onPressed ${wValue}");
+          print("onPressed $wValue");
 
           var inputFormat = DateFormat('dd/MM/yyyy');
           var wDate = DateTime.now();
@@ -866,19 +886,19 @@ class Client_Groupe_Inter_DetState extends State<Client_Groupe_Inter_Det> {
                 );
               });
 
-          print("NEW DATE ${date}");
+          print("NEW DATE $date");
           String newDate = DateFormat('dd/MM/yyyy').format(DateTime.now());
 
           try {
             newDate = DateFormat('dd/MM/yyyy').format(date!);
           } catch (e) {}
 
-          print("NEW DATE ${date} / ${newDate}");
+          print("NEW DATE $date / $newDate");
           Srv_DbTools.gIntervention.Intervention_Date_Visite = newDate;
           await DbTools.updateInterventions(Srv_DbTools.gIntervention);
           bool wRes =
               await Srv_DbTools.setIntervention(Srv_DbTools.gIntervention);
-          print("•••• setIntervention ${wRes}");
+          print("•••• setIntervention $wRes");
           Srv_DbTools.gIntervention.Intervention_isUpdate = wRes;
           await DbTools.updateInterventions(Srv_DbTools.gIntervention);
           initLib();

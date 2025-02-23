@@ -45,20 +45,20 @@ class SvgImg extends SvgOperation {
   factory SvgImg.fromXml(
     XmlElement element,
     SvgPainter painter,
-    SvgBrush brush,
+    SvgBrush wbrush,
   ) {
-    final _brush = SvgBrush.fromXml(element, brush, painter);
+    final brush = SvgBrush.fromXml(element, wbrush, painter);
 
     final width =
-        SvgParser.getNumeric(element, 'width', _brush, defaultValue: 0)!
+        SvgParser.getNumeric(element, 'width', brush, defaultValue: 0)!
             .sizeValue;
     final height =
-        SvgParser.getNumeric(element, 'height', _brush, defaultValue: 0)!
+        SvgParser.getNumeric(element, 'height', brush, defaultValue: 0)!
             .sizeValue;
     final x =
-        SvgParser.getNumeric(element, 'x', _brush, defaultValue: 0)!.sizeValue;
+        SvgParser.getNumeric(element, 'x', brush, defaultValue: 0)!.sizeValue;
     final y =
-        SvgParser.getNumeric(element, 'y', _brush, defaultValue: 0)!.sizeValue;
+        SvgParser.getNumeric(element, 'y', brush, defaultValue: 0)!.sizeValue;
 
     PdfImage? image;
 
@@ -89,8 +89,8 @@ class SvgImg extends SvgOperation {
       width,
       height,
       image,
-      _brush,
-      SvgClipPath.fromXml(element, painter, _brush),
+      brush,
+      SvgClipPath.fromXml(element, painter, brush),
       SvgTransform.fromXml(element),
       painter,
     );

@@ -4,7 +4,6 @@ import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Tools/shared_pref.dart';
 import 'package:verifplus/Widget/2-home.dart';
-import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 enum LoginError {
   PENDING,
@@ -18,6 +17,8 @@ enum LoginError {
 enum AuthStatus { NOT_LOG, SIGNED_IN_PRO, SIGNED_IN_PATIENT }
 
 class Login extends StatefulWidget {
+  const Login({super.key});
+
   @override
   _LoginState createState() => _LoginState();
 }
@@ -70,7 +71,7 @@ class _LoginState extends State<Login> {
       keyboardType: TextInputType.emailAddress,
       controller: emailController,
       autofocus: false,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         hintText: 'Mail',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
       ),
@@ -80,31 +81,29 @@ class _LoginState extends State<Login> {
       controller: passwordController,
       autofocus: false,
       obscureText: true,
-      decoration: InputDecoration(
+      decoration: const InputDecoration(
         hintText: 'Mot de passe',
         contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
       ),
     );
 
 
-    final loginButton = Container(
+    final loginButton = SizedBox(
       width: MediaQuery.of(context).size.width / 2.5,
       child: ElevatedButton(
         onPressed: () async {
-          if (emailController != null && passwordController != null) {
-            if (await Srv_DbTools.getUserLogin(emailController.text, passwordController.text)) {
-              await SharedPref.setStrKey("username", emailController.text);
-              await SharedPref.setStrKey("password", passwordController.text);
-              await SharedPref.setBoolKey("IsRememberLogin", true);
-              Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => Home()));
-            }
+          if (await Srv_DbTools.getUserLogin(emailController.text, passwordController.text)) {
+            await SharedPref.setStrKey("username", emailController.text);
+            await SharedPref.setStrKey("password", passwordController.text);
+            await SharedPref.setBoolKey("IsRememberLogin", true);
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => const Home()));
           }
-        },
+                },
         style: ElevatedButton.styleFrom(
           backgroundColor: gColors.secondary,
           padding: const EdgeInsets.all(12.0),),
-        child: Text('Login',
+        child: const Text('Login',
             style: TextStyle(
                 fontSize: 16,
                 color: Colors.white,
@@ -112,7 +111,7 @@ class _LoginState extends State<Login> {
       ),
     );
 
-    final loginButton_TED = Container(
+    final loginbuttonTed = SizedBox(
       width: 100,
       child: ElevatedButton(
         onPressed: () async {
@@ -123,7 +122,7 @@ class _LoginState extends State<Login> {
           backgroundColor: gColors.primary,
           padding: const EdgeInsets.all(12),
         ),
-        child: Text('TED',
+        child: const Text('TED',
             style: TextStyle(
                 fontSize: 16,
                 color: Colors.white,
@@ -131,7 +130,7 @@ class _LoginState extends State<Login> {
       ),
     );
 
-    final loginButton_GD = Container(
+    final loginbuttonGd = SizedBox(
       width: 100,
       child: ElevatedButton(
         onPressed: () async {
@@ -142,7 +141,7 @@ class _LoginState extends State<Login> {
           backgroundColor: gColors.primary,
           padding: const EdgeInsets.all(12),
         ),
-        child: Text('GD',
+        child: const Text('GD',
             style: TextStyle(
                 fontSize: 16,
                 color: Colors.white,
@@ -150,7 +149,7 @@ class _LoginState extends State<Login> {
       ),
     );
 
-    final loginButton_TR = Container(
+    final loginbuttonTr = SizedBox(
       width: 100,
       child: ElevatedButton(
         onPressed: () async {
@@ -161,7 +160,7 @@ class _LoginState extends State<Login> {
           backgroundColor: gColors.primary,
           padding: const EdgeInsets.all(12),
         ),
-        child: Text('Asaf',
+        child: const Text('Asaf',
             style: TextStyle(
                 fontSize: 16,
                 color: Colors.white,
@@ -178,15 +177,15 @@ class _LoginState extends State<Login> {
     Scaffold(
       backgroundColor: gColors.primary,
       body: Container(
-        padding: EdgeInsets.fromLTRB(80.0, 100.0, 80.0, 20.0),
+        padding: const EdgeInsets.fromLTRB(80.0, 100.0, 80.0, 20.0),
         color: gColors.white,
         child: Column(
           children: <Widget>[
-            SizedBox(height: 8.0),
+            const SizedBox(height: 8.0),
             Image.asset(
               'assets/images/MondialFeu.png',
             ),
-            SizedBox(height: 80.0),
+            const SizedBox(height: 80.0),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -200,50 +199,50 @@ class _LoginState extends State<Login> {
                 ),
               ],
             ),
-            Container(
+            SizedBox(
               width: MediaQuery.of(context).size.width / 2.5,
               child:
 //            Padding(padding: EdgeInsets.fromLTRB(180.0, 0.0, 180.0, 0.0),
 //            child:
                   Column(
                 children: [
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   email,
-                  SizedBox(height: 8.0),
+                  const SizedBox(height: 8.0),
                   password,
-                  SizedBox(height: 12.0),
+                  const SizedBox(height: 12.0),
                 ],
               ),
             ),
             Row(
               children: [
-                Spacer(),
+                const Spacer(),
                 loginButton,
-                Spacer(),
+                const Spacer(),
 
               ],
             ),
 
             Row(children: [
-              Spacer(),
-              loginButton_TED,
-              Spacer(),
-              loginButton_GD,
-              Spacer(),
-              loginButton_TR,
-              Spacer(),
+              const Spacer(),
+              loginbuttonTed,
+              const Spacer(),
+              loginbuttonGd,
+              const Spacer(),
+              loginbuttonTr,
+              const Spacer(),
             ],),
 
-            Spacer(),
+            const Spacer(),
 
-            SizedBox(height: 80.0),
-            new Image.asset(
+            const SizedBox(height: 80.0),
+            Image.asset(
               'assets/images/AppIco.png',
             ),
 
-            Spacer(),
+            const Spacer(),
             Text(DbTools.gVersion,
-                style: TextStyle(
+                style: const TextStyle(
                   fontSize: 12,
                 )),
           ],
@@ -253,5 +252,5 @@ class _LoginState extends State<Login> {
   }
 
   Future<void> login(
-      String emailController_text, String passwordController_text) async {}
+      String emailcontrollerText, String passwordcontrollerText) async {}
 }

@@ -12,6 +12,8 @@ const String AP_DEFAULT_SSID = "AP_SSID";
 const String AP_DEFAULT_PASSWORD = "AP_PASSWORD";
 
 class FlutterWifiIoT extends StatefulWidget {
+  const FlutterWifiIoT({super.key});
+
   @override
   _FlutterWifiIoTState createState() => _FlutterWifiIoTState();
 }
@@ -21,17 +23,17 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
   String? _sPreviousPreSharedKey = "";
 
   List<WifiNetwork?>? _htResultNetwork;
-  Map<String, bool>? _htIsNetworkRegistered = Map();
+  final Map<String, bool> _htIsNetworkRegistered = {};
 
   bool _isEnabled = false;
   bool _isConnected = false;
   bool _isWiFiAPEnabled = false;
-  bool _isWiFiAPSSIDHidden = false;
+  final bool _isWiFiAPSSIDHidden = false;
   bool _isWifiAPSupported = true;
-  bool _isWifiEnableOpenSettings = false;
-  bool _isWifiDisableOpenSettings = false;
+  final bool _isWifiEnableOpenSettings = false;
+  final bool _isWifiDisableOpenSettings = false;
 
-  final TextStyle textStyle = TextStyle(color: Colors.white);
+  final TextStyle textStyle = const TextStyle(color: Colors.white);
 
   @override
   initState() {
@@ -166,7 +168,7 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
     }
 
     setState(() {
-      _htIsNetworkRegistered![ssid] = bIsRegistered;
+      _htIsNetworkRegistered[ssid] = bIsRegistered;
     });
   }
 
@@ -219,8 +221,8 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
 
     if (_isEnabled) {
       htPrimaryWidgets.addAll([
-        SizedBox(height: 10),
-        Text("Wifi Enabled..."),
+        const SizedBox(height: 10),
+        const Text("Wifi Enabled..."),
         MaterialButton(
           color: Colors.blue,
           child: Text("Disable", style: textStyle),
@@ -241,7 +243,7 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
 
       if (_isConnected) {
         htPrimaryWidgets.addAll(<Widget>[
-          Text("Connected"),
+          const Text("Connected"),
           FutureBuilder(
               future: WiFiForIoTPlugin.getSSID(),
               initialData: "Loading..",
@@ -258,13 +260,13 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
         ]);
       } else {
         htPrimaryWidgets.addAll(<Widget>[
-          Text("Disconnected"),
+          const Text("Disconnected"),
         ]);
       }
     } else {
       htPrimaryWidgets.addAll(<Widget>[
-        SizedBox(height: 10),
-        Text("Wifi Disabled"),
+        const SizedBox(height: 10),
+        const Text("Wifi Disabled"),
         MaterialButton(
           color: Colors.blue,
           child: Text("Enable", style: textStyle),
@@ -279,7 +281,7 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
       ]);
     }
 
-    htPrimaryWidgets.add(Divider(
+    htPrimaryWidgets.add(const Divider(
       height: 32.0,
     ));
 
@@ -297,27 +299,27 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
         }));
 
     if (_isEnabled) {
-      htPrimaryWidgets.add(Text("Wifi Enabled"));
+      htPrimaryWidgets.add(const Text("Wifi Enabled"));
       WiFiForIoTPlugin.isConnected().then((val) => setState(() {
             _isConnected = val;
           }));
 
-      String? _sSSID;
+      String? sSSID;
 
       if (_isConnected) {
         htPrimaryWidgets.addAll(<Widget>[
-          Text("Connected"),
+          const Text("Connected"),
           FutureBuilder(
               future: WiFiForIoTPlugin.getSSID(),
               initialData: "Loading..",
               builder: (BuildContext context, AsyncSnapshot<String?> ssid) {
-                _sSSID = ssid.data;
+                sSSID = ssid.data;
 
                 return Text("SSID: ${ssid.data}");
               }),
         ]);
 
-        if (_sSSID == STA_DEFAULT_SSID) {
+        if (sSSID == STA_DEFAULT_SSID) {
           htPrimaryWidgets.addAll(<Widget>[
             MaterialButton(
               color: Colors.blue,
@@ -343,7 +345,7 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
         }
       } else {
         htPrimaryWidgets.addAll(<Widget>[
-          Text("Disconnected"),
+          const Text("Disconnected"),
           MaterialButton(
             color: Colors.blue,
             child: Text("Connect to '$AP_DEFAULT_SSID'", style: textStyle),
@@ -358,7 +360,7 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
       }
     } else {
       htPrimaryWidgets.addAll(<Widget>[
-        Text("Wifi Disabled?"),
+        const Text("Wifi Disabled?"),
         MaterialButton(
           color: Colors.blue,
           child: Text("Connect to '$AP_DEFAULT_SSID'", style: textStyle),
@@ -379,7 +381,7 @@ class _FlutterWifiIoTState extends State<FlutterWifiIoT> {
   Widget build(BuildContext poContext) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Wifi tools'),
+        title: const Text('Wifi tools'),
       ),
       body: getWidgets(),
     );

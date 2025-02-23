@@ -7,7 +7,7 @@ import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 
 class CustomBottomNavigationBar2 extends StatefulWidget {
   final Function(int) onIconPresedCallback;
-  CustomBottomNavigationBar2({Key? key, required this.onIconPresedCallback}) : super(key: key);
+  const CustomBottomNavigationBar2({Key? key, required this.onIconPresedCallback}) : super(key: key);
 
   @override
   _CustomBottomNavigationBar2State createState() => _CustomBottomNavigationBar2State();
@@ -58,20 +58,20 @@ class _CustomBottomNavigationBar2State extends State<CustomBottomNavigationBar2>
   Widget _icon(String icon, String lbl, bool isEnable, int index) {
     return Expanded(
         child: InkWell(
-      borderRadius: BorderRadius.all(Radius.circular(50)),
+      borderRadius: const BorderRadius.all(Radius.circular(50)),
       onTap: () {
         _handlePressed(index);
       },
       child: Stack(fit: StackFit.expand, children: <Widget>[
         AnimatedContainer(
-            duration: Duration(milliseconds: 500),
+            duration: const Duration(milliseconds: 500),
             alignment: isEnable ? Alignment.topCenter : Alignment.center,
             child: Column(
               children: [
                 AnimatedContainer(
                     padding: isEnable ? const EdgeInsets.fromLTRB(0, 0, 0, 0) : const EdgeInsets.fromLTRB(0, 15, 0, 0),
                     height: isEnable ? 40 : 40,
-                    duration: Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 300),
                     alignment: Alignment.center,
                     decoration: BoxDecoration(
                         color: isEnable ? gColors.secondary : gColors.transparent,
@@ -87,7 +87,7 @@ class _CustomBottomNavigationBar2State extends State<CustomBottomNavigationBar2>
                       opacity: isEnable ? _yController.value : 1,
                       child: ImageIcon(AssetImage("assets/images/$icon"), color: isEnable ? LightColor.background : Theme.of(context).iconTheme.color),
                     )),
-                Text("${lbl}"),
+                Text(lbl),
               ],
             )),
       ]),
@@ -95,7 +95,7 @@ class _CustomBottomNavigationBar2State extends State<CustomBottomNavigationBar2>
   }
 
   Widget _buildBackground() {
-    final inCurve = ElasticOutCurve(0.38);
+    const inCurve = ElasticOutCurve(0.38);
     return CustomPaint(
       painter: BackgroundCurvePainter(
         _xController.value * MediaQuery.of(context).size.width,
@@ -125,21 +125,21 @@ class _CustomBottomNavigationBar2State extends State<CustomBottomNavigationBar2>
       _selectedIndex = index;
     });
     _yController.value = 1.0;
-    _xController.animateTo(_indexToPosition(index) / MediaQuery.of(context).size.width, duration: Duration(milliseconds: 620));
+    _xController.animateTo(_indexToPosition(index) / MediaQuery.of(context).size.width, duration: const Duration(milliseconds: 620));
     Future.delayed(
-      Duration(milliseconds: 500),
+      const Duration(milliseconds: 500),
       () {
-        _yController.animateTo(1.0, duration: Duration(milliseconds: 1200));
+        _yController.animateTo(1.0, duration: const Duration(milliseconds: 1200));
       },
     );
-    _yController.animateTo(0.0, duration: Duration(milliseconds: 300));
+    _yController.animateTo(0.0, duration: const Duration(milliseconds: 300));
   }
 
   @override
   Widget build(BuildContext context) {
     final appSize = MediaQuery.of(context).size;
-    final height = 60.0;
-    return Container(
+    const height = 60.0;
+    return SizedBox(
       width: appSize.width,
       height: 60,
       child: Stack(

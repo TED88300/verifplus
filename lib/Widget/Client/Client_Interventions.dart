@@ -6,16 +6,16 @@ import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Interventions.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
-import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
 import 'package:verifplus/Widget/Client/Client_Dialog.dart';
 import 'package:verifplus/Widget/Client/Client_Intervention_Type_Dialog.dart';
 import 'package:verifplus/Widget/Client/Client_Interventions_Add.dart';
-import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter.dart';
 import 'package:verifplus/Widget/Planning/Client_Groupe_Inter_Det.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
 class Client_Interventions extends StatefulWidget {
+  const Client_Interventions({super.key});
+
   @override
   Client_InterventionsState createState() => Client_InterventionsState();
 }
@@ -25,7 +25,7 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
   bool affAll = true;
   bool affEdtFilter = false;
 
-  TextEditingController ctrlFilter = new TextEditingController();
+  TextEditingController ctrlFilter = TextEditingController();
   String filterText = '';
   bool isAll = true;
   int PastilleType = 0;
@@ -46,13 +46,13 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
     List<String> lIntervention = [];
     for (int i = 0; i < Srv_DbTools.ListIntervention.length; i++) {
       Intervention wIntervention = Srv_DbTools.ListIntervention[i];
-      if (lIntervention.indexOf(wIntervention.Intervention_Parcs_Type!) == -1) {
-        lIntervention.add(wIntervention.Intervention_Parcs_Type!);
+      if (!lIntervention.contains(wIntervention.Intervention_Parcs_Type)) {
+        lIntervention.add(wIntervention.Intervention_Parcs_Type);
       }
     }
     PastilleType = lIntervention.length;
 
-    if (lIntervention.length == 0) {
+    if (lIntervention.isEmpty) {
       Srv_DbTools.gSelIntervention = Srv_DbTools.gSelInterventionBase;
     } else {
       int index = lIntervention.indexWhere((element) => element.compareTo(Srv_DbTools.gSelIntervention) == 0);
@@ -74,7 +74,7 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
     } else {
       isAll = false;
       Srv_DbTools.ListIntervention.forEach((element) async {
-        if (element.Intervention_Parcs_Type!.compareTo(Srv_DbTools.gSelIntervention) == 0) {
+        if (element.Intervention_Parcs_Type.compareTo(Srv_DbTools.gSelIntervention) == 0) {
           wListIntervention.add(element);
         }
       });
@@ -84,23 +84,24 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
 
     if (filterText.isEmpty) {
       Srv_DbTools.ListInterventionsearchresult.addAll(wListIntervention);
-    } else
+    } else {
       wListIntervention.forEach((element) async {
         {
-          String Intervention_Type = element.Intervention_Type == null ? "" : element.Intervention_Type!;
-          String Intervention_Parcs_Type = element.Intervention_Parcs_Type == null ? "" : element.Intervention_Parcs_Type!;
-          String Intervention_Status = element.Intervention_Status == null ? "" : element.Intervention_Status!;
+          String interventionType = element.Intervention_Type ?? "";
+          String interventionParcsType = element.Intervention_Parcs_Type ?? "";
+          String interventionStatus = element.Intervention_Status ?? "";
 
           String id = element.InterventionId.toString();
-          if (Intervention_Type.toUpperCase().contains(filterText.toUpperCase()))
+          if (interventionType.toUpperCase().contains(filterText.toUpperCase())) {
             Srv_DbTools.ListInterventionsearchresult.add(element);
-          else if (Intervention_Parcs_Type.toUpperCase().contains(filterText.toUpperCase()))
+          } else if (interventionParcsType.toUpperCase().contains(filterText.toUpperCase()))
             Srv_DbTools.ListInterventionsearchresult.add(element);
-          else if (Intervention_Status.toUpperCase().contains(filterText.toUpperCase()))
+          else if (interventionStatus.toUpperCase().contains(filterText.toUpperCase()))
             Srv_DbTools.ListInterventionsearchresult.add(element);
           else if (id.toUpperCase().contains(filterText.toUpperCase())) Srv_DbTools.ListInterventionsearchresult.add(element);
         }
       });
+    }
 
     print("Srv_DbTools.ListInterventionsearchresult ${Srv_DbTools.ListInterventionsearchresult.length}");
 
@@ -114,6 +115,7 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
     Reload();
   }
 
+  @override
   void initState() {
     initLib();
     super.initState();
@@ -121,14 +123,14 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
 
   @override
   Widget Entete_Btn_Search() {
-    return Container(
+    return SizedBox(
         height: 57,
         child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
           Container(
             width: 8,
           ),
           InkWell(
-              child: Container(
+              child: SizedBox(
                 width: icoWidth + 10,
                 child: Stack(children: <Widget>[
                   Image.asset(
@@ -147,8 +149,8 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
                             child: CircleAvatar(
                               radius: 10,
                               backgroundColor: gColors.tks,
-                              child: Text("${PastilleType}",
-                                  style: TextStyle(
+                              child: Text("$PastilleType",
+                                  style: const TextStyle(
                                     color: Colors.white,
                                     fontSize: 12,
                                     fontWeight: FontWeight.normal,
@@ -166,7 +168,7 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
           Container(
             width: 8,
           ),
-          Spacer(),
+          const Spacer(),
           EdtFilterWidget(),
         ]));
   }
@@ -177,7 +179,7 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
     return !affEdtFilter
         ? InkWell(
             child: Padding(
-              padding: EdgeInsets.only(right: 8),
+              padding: const EdgeInsets.only(right: 8),
               child: Image.asset(
                 "assets/images/Btn_Loupe.png",
                 height: icoWidth,
@@ -188,7 +190,7 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
               affEdtFilter = !affEdtFilter;
               setState(() {});
             })
-        : Container(
+        : SizedBox(
             width: 320,
             child: Row(
               children: [
@@ -232,7 +234,7 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
   Widget build(BuildContext context) {
     double LargeurLabel = 140;
 
-    Param_Param wParam_Param = Srv_DbTools.getParam_Param_in_Mem("Type_Organe", Srv_DbTools.gSelIntervention);
+    Param_Param wparamParam = Srv_DbTools.getParam_Param_in_Mem("Type_Organe", Srv_DbTools.gSelIntervention);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -279,10 +281,10 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
         backgroundColor: gColors.white,
       ),
       body: Padding(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Column(
             children: [
-              gObj.InterventionTitleWidgetCalc(context, "${Srv_DbTools.gClient.Client_Nom.toUpperCase()}", wTitre2: "${Srv_DbTools.gGroupe.Groupe_Nom}", wTitre3:"${Srv_DbTools.gSite.Site_Nom}", wTitre4:"${Srv_DbTools.gZone.Zone_Nom}"),
+              gObj.InterventionTitleWidgetCalc(context, Srv_DbTools.gClient.Client_Nom.toUpperCase(), wTitre2: Srv_DbTools.gGroupe.Groupe_Nom, wTitre3:Srv_DbTools.gSite.Site_Nom, wTitre4:Srv_DbTools.gZone.Zone_Nom),
               Entete_Btn_Search(),
               Expanded(
                 child: InterventionGridWidget(),
@@ -291,14 +293,14 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
           )),
       floatingActionButton: !affAll
           ? Container()
-          : new FloatingActionButton(
+          : FloatingActionButton(
               elevation: 0.0,
-              child: new Icon(Icons.add),
               backgroundColor: gColors.secondary,
               onPressed: () async {
                 await Client_Interventions_Add.Dialogs_Add(context, true);
                 Reload();
-              }),
+              },
+              child: const Icon(Icons.add)),
     );
   }
 
@@ -318,7 +320,7 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
               Expanded(
                   flex: 10,
                   child: Container(
-                      padding: EdgeInsets.only(left: 5),
+                      padding: const EdgeInsets.only(left: 5),
                       child: Text(
                         "ID",
                         textAlign: TextAlign.center,
@@ -360,7 +362,7 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
           ),
         ),
         gColors.wLigne(),
-        SizedBox(height: 5.0),
+        const SizedBox(height: 5.0),
         Expanded(
           child: ListView.builder(
             itemCount: Srv_DbTools.ListInterventionsearchresult.length,
@@ -369,7 +371,7 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
               double rowh = 24;
 
               return Column(children: [
-                new GestureDetector(
+                GestureDetector(
                     onTap: () async {
                       await HapticFeedback.vibrate();
                       Srv_DbTools.gIntervention = intervention;
@@ -382,7 +384,7 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
 
 
                       await HapticFeedback.vibrate();
-                      await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Groupe_Inter_Det()));
+                      await Navigator.push(context, MaterialPageRoute(builder: (context) => const Client_Groupe_Inter_Det()));
 
 //                      await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Groupe_Parc_Inter()));
                       Reload();
@@ -396,7 +398,7 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
                           Expanded(
                               flex: 10,
                               child:                           Container(
-                            padding: EdgeInsets.only(left: 25, bottom: 2),
+                            padding: const EdgeInsets.only(left: 25, bottom: 2),
                             child: Text(
                               "◉ --",
                               maxLines: 1,
@@ -405,7 +407,7 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
                           ) ):
                           Expanded(
                               flex: 10,
-                              child: Container(
+                              child: SizedBox(
                                   height: rowh,
                                   child: Text(
                                     "${intervention.InterventionId}",
@@ -415,7 +417,7 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
                                   ))),
                           Expanded(
                               flex: 25,
-                              child: Container(
+                              child: SizedBox(
                                 height: rowh,
                                 child: Text(
                                   "${intervention.Intervention_Type} / ${intervention.Intervention_Parcs_Type}",
@@ -426,10 +428,10 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
                           Expanded(
                               flex: 10,
                               child: Container(
-                                  padding: EdgeInsets.only(left: 5),
+                                  padding: const EdgeInsets.only(left: 5),
                                   height: rowh,
                                   child: Text(
-                                    "${intervention.Intervention_Date}",
+                                    intervention.Intervention_Date,
                                     maxLines: 1,
                                     textAlign: TextAlign.center,
                                     style: gColors.bodySaisie_B_B,
@@ -437,7 +439,7 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
                           Expanded(
                               flex: 10,
                               child: Container(
-                                  padding: EdgeInsets.only(left: 5),
+                                  padding: const EdgeInsets.only(left: 5),
                                   height: rowh,
                                   child: Text(
                                     "14/09/23",
@@ -447,10 +449,10 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
                           Expanded(
                               flex: 10,
                               child: Container(
-                                  padding: EdgeInsets.only(right: 5),
+                                  padding: const EdgeInsets.only(right: 5),
                                   height: rowh,
                                   child: Text(
-                                    "${intervention.Intervention_Status!}> ",
+                                    "${intervention.Intervention_Status}> ",
                                     textAlign: TextAlign.right,
                                     style: gColors.bodySaisie_B_B.copyWith(color: Colors.orange),
                                   ))),
@@ -462,7 +464,7 @@ class Client_InterventionsState extends State<Client_Interventions> with SingleT
             },
           ),
         ),
-        SizedBox(height: 45.0),
+        const SizedBox(height: 45.0),
       ],
     );
   }

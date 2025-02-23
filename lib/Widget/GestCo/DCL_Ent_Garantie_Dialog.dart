@@ -12,15 +12,15 @@ import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gPhotos.dart';
 
 
-Uint8List blankBytes = Base64Codec().decode("R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
+Uint8List blankBytes = const Base64Codec().decode("R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
 
 
 
 class DCL_Ent_Garantie_Dialog {
-  static Future<void> Dialogs_DCL_Ent_Garantie(BuildContext context, Article_Ebp wArticle_Ebp) async {
+  static Future<void> Dialogs_DCL_Ent_Garantie(BuildContext context, Article_Ebp warticleEbp) async {
     await showDialog(
       context: context,
-      builder: (BuildContext context) => DCL_EntGarantieDialog(wArticle_Ebp: wArticle_Ebp),
+      builder: (BuildContext context) => DCL_EntGarantieDialog(wArticle_Ebp: warticleEbp),
     );
   }
 }
@@ -94,7 +94,7 @@ class _DCL_EntGarantieDialogState extends State<DCL_EntGarantieDialog> {
     print(" B U I L D  ${widget.wArticle_Ebp!.wImageG3.height}");
 
     return SimpleDialog(
-      insetPadding: EdgeInsets.all(60),
+      insetPadding: const EdgeInsets.all(60),
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
@@ -119,11 +119,11 @@ class _DCL_EntGarantieDialogState extends State<DCL_EntGarantieDialog> {
               left: 0,
               child: Material(
                 elevation: 0,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
                 child: Container(
                   height: wHeightTitre - 2,
                   width: wWidth,
-                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))),
+                  decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))),
                   child: Container(
                       color: Colors.transparent,
                       padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
@@ -150,7 +150,7 @@ class _DCL_EntGarantieDialogState extends State<DCL_EntGarantieDialog> {
                                   padding: const EdgeInsets.fromLTRB(0, 7, 0, 0),
                                   width: wWidth - 120,
                                   child: Text(
-                                    "${DbTools.gTitre}",
+                                    DbTools.gTitre,
                                     maxLines: 3,
                                     style: gColors.bodyTitle1_B_G22,
                                     textAlign: TextAlign.start,
@@ -317,7 +317,7 @@ class _DCL_EntGarantieDialogState extends State<DCL_EntGarantieDialog> {
                               Container(
                                   width: 100,
                                   height: 100,
-                                  padding: widget.wArticle_Ebp!.wImageG1.height! > 1 ? EdgeInsets.zero : EdgeInsets.fromLTRB(10, 14, 10, 10),
+                                  padding: widget.wArticle_Ebp!.wImageG1.height! > 1 ? EdgeInsets.zero : const EdgeInsets.fromLTRB(10, 14, 10, 10),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(12),
@@ -332,7 +332,7 @@ class _DCL_EntGarantieDialogState extends State<DCL_EntGarantieDialog> {
                                         setState(() {});
                                       } else {
                                         DbTools.gImagePath = "";
-                                        await Navigator.push(context, MaterialPageRoute(builder: (ontext) => gPhotos_Gen()));
+                                        await Navigator.push(context, MaterialPageRoute(builder: (ontext) => const gPhotos_Gen()));
                                         print(" gImagePath ${DbTools.gImagePath}");
                                         if (DbTools.gImagePath != "") {
                                           print(" Add ${DbTools.gImagePath}");
@@ -361,7 +361,7 @@ class _DCL_EntGarantieDialogState extends State<DCL_EntGarantieDialog> {
                               Container(
                                   width: 100,
                                   height: 100,
-                                  padding: widget.wArticle_Ebp!.wImageG2.height! > 1 ? EdgeInsets.zero : EdgeInsets.fromLTRB(10, 14, 10, 10),
+                                  padding: widget.wArticle_Ebp!.wImageG2.height! > 1 ? EdgeInsets.zero : const EdgeInsets.fromLTRB(10, 14, 10, 10),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(12),
@@ -376,7 +376,7 @@ class _DCL_EntGarantieDialogState extends State<DCL_EntGarantieDialog> {
                                         setState(() {});
                                       } else {
                                         DbTools.gImagePath = "";
-                                        await Navigator.push(context, MaterialPageRoute(builder: (ontext) => gPhotos_Gen()));
+                                        await Navigator.push(context, MaterialPageRoute(builder: (ontext) => const gPhotos_Gen()));
                                         print(" gImagePath ${DbTools.gImagePath}");
                                         if (DbTools.gImagePath != "") {
                                           print(" Add ${DbTools.gImagePath}");
@@ -404,7 +404,7 @@ class _DCL_EntGarantieDialogState extends State<DCL_EntGarantieDialog> {
                               Container(
                                   width: 100,
                                   height: 100,
-                                  padding: widget.wArticle_Ebp!.wImageG3.height! > 1 ? EdgeInsets.zero : EdgeInsets.fromLTRB(10, 14, 10, 10),
+                                  padding: widget.wArticle_Ebp!.wImageG3.height! > 1 ? EdgeInsets.zero : const EdgeInsets.fromLTRB(10, 14, 10, 10),
                                   decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(12),
@@ -419,7 +419,7 @@ class _DCL_EntGarantieDialogState extends State<DCL_EntGarantieDialog> {
                                         setState(() {});
                                       } else {
                                         DbTools.gImagePath = "";
-                                        await Navigator.push(context, MaterialPageRoute(builder: (ontext) => gPhotos_Gen()));
+                                        await Navigator.push(context, MaterialPageRoute(builder: (ontext) => const gPhotos_Gen()));
                                         print(" gImagePath ${DbTools.gImagePath}");
                                         if (DbTools.gImagePath != "") {
                                           print(" Add ${DbTools.gImagePath}");
@@ -470,7 +470,7 @@ class _DCL_EntGarantieDialogState extends State<DCL_EntGarantieDialog> {
                                     autofocus: false,
                                     maxLines: 13,
                                     minLines: 13,
-                                    decoration: InputDecoration(
+                                    decoration: const InputDecoration(
                                       contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
                                     ),
                                   )),
@@ -491,7 +491,7 @@ class _DCL_EntGarantieDialogState extends State<DCL_EntGarantieDialog> {
     if (isZoom2) wImage = widget.wArticle_Ebp!.wImageG2;
     if (isZoom3) wImage = widget.wArticle_Ebp!.wImageG3;
 
-    return Container(
+    return SizedBox(
       width: 530,
       child: Stack(
         alignment: Alignment.bottomCenter,
@@ -530,7 +530,7 @@ class _DCL_EntGarantieDialogState extends State<DCL_EntGarantieDialog> {
               right: 0,
               child: InkWell(
                   child: Padding(
-                    padding: EdgeInsets.only(right: 12),
+                    padding: const EdgeInsets.only(right: 12),
                     child: Image.asset(
                       "assets/images/ico5b.png",
                       fit: BoxFit.contain,
@@ -575,25 +575,25 @@ class _DCL_EntGarantieDialogState extends State<DCL_EntGarantieDialog> {
       double ii = 27.0 * (index);
 
       scrollController.animateTo(ii, //scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 1300),
+          duration: const Duration(milliseconds: 1300),
           curve: Curves.elasticOut);
     } else {
-      Timer(Duration(milliseconds: 1400), () => _scrollToBottom(index));
+      Timer(const Duration(milliseconds: 1400), () => _scrollToBottom(index));
     }
   }
 
   Widget Liste(BuildContext context) {
-    List<String> lDCL_Ent = [
+    List<String> ldclEnt = [
       "Tous les types de document",
     ];
     print("elementCount ${Srv_DbTools.ListDCL_Ent.length} ");
     double index = 0;
 
     for (int i = 0; i < Srv_DbTools.ListDCL_Ent.length; i++) {
-      DCL_Ent wDCL_Ent = Srv_DbTools.ListDCL_Ent[i];
+      DCL_Ent wdclEnt = Srv_DbTools.ListDCL_Ent[i];
 
-      if (lDCL_Ent.indexOf(wDCL_Ent.DCL_Ent_Type!) == -1) {
-        lDCL_Ent.add(wDCL_Ent.DCL_Ent_Type!);
+      if (!ldclEnt.contains(wdclEnt.DCL_Ent_Type!)) {
+        ldclEnt.add(wdclEnt.DCL_Ent_Type!);
       }
     }
 
@@ -609,7 +609,7 @@ class _DCL_EntGarantieDialogState extends State<DCL_EntGarantieDialog> {
             border: Border.all(
               color: Colors.grey,
             ),
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(12.0),
             ),
           ),
@@ -621,9 +621,9 @@ class _DCL_EntGarantieDialogState extends State<DCL_EntGarantieDialog> {
                   child: ListView.builder(
                     controller: scrollController,
                     shrinkWrap: true,
-                    itemCount: lDCL_Ent.length,
+                    itemCount: ldclEnt.length,
                     itemBuilder: (context, index) {
-                      final item = lDCL_Ent[index];
+                      final item = ldclEnt[index];
                       return InkWell(
                           onTap: () async {
                             await HapticFeedback.vibrate();
@@ -637,11 +637,11 @@ class _DCL_EntGarantieDialogState extends State<DCL_EntGarantieDialog> {
                                 border: Border.all(
                                   color: (item.compareTo(Srv_DbTools.gSelDCL_Ent) == 0) ? gColors.primaryGreen : Colors.transparent,
                                 ),
-                                borderRadius: BorderRadius.all(
+                                borderRadius: const BorderRadius.all(
                                   Radius.circular(12.0),
                                 ),
                               ),
-                              padding: EdgeInsets.fromLTRB(10, 15, 10, 5), // TED
+                              padding: const EdgeInsets.fromLTRB(10, 15, 10, 5), // TED
                               height: 45,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,

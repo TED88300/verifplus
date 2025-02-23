@@ -46,8 +46,8 @@ class Pdf_BC {
     // Create a PDF document.
     Srv_DbTools.selectedUserInter4 = "";
     Srv_DbTools.selectedUserInter4RC = "";
-    if (Srv_DbTools.gIntervention.Intervention_Responsable4!.isNotEmpty) {
-      await Srv_DbTools.getUserid(Srv_DbTools.gIntervention.Intervention_Responsable4!);
+    if (Srv_DbTools.gIntervention.Intervention_Responsable4.isNotEmpty) {
+      await Srv_DbTools.getUserid(Srv_DbTools.gIntervention.Intervention_Responsable4);
       Srv_DbTools.selectedUserInter4 = "${Srv_DbTools.gUser.User_Nom} ${Srv_DbTools.gUser.User_Prenom} / ${Srv_DbTools.gUser.User_Tel} / ${Srv_DbTools.gUser.User_Mail}";
       Srv_DbTools.selectedUserInter4RC = "${Srv_DbTools.gUser.User_Nom} ${Srv_DbTools.gUser.User_Prenom}\n${Srv_DbTools.gUser.User_Tel} / ${Srv_DbTools.gUser.User_Mail}";
     }
@@ -58,16 +58,16 @@ class Pdf_BC {
     pic = await gColors.getImage(wUserImg);
     print("pic $wUserImg ${pic.length}");
 
-    if (pic.length == 0) {
-      ByteData _logo_a = await rootBundle.load('assets/images/Blank.png');
-      pic = (_logo_a)!.buffer.asUint8List();
+    if (pic.isEmpty) {
+      ByteData logoA = await rootBundle.load('assets/images/Blank.png');
+      pic = (logoA).buffer.asUint8List();
     }
 
     pw.MemoryImage wMemoryImage = pw.MemoryImage(
       pic,
     );
 
-    wImage = await pw.Image(
+    wImage = pw.Image(
       fit: BoxFit.cover,
       wMemoryImage,
     );
@@ -76,8 +76,8 @@ class Pdf_BC {
     wImage_W = wMemoryImage.width!;
     wImage_H = wMemoryImage.height!;
 
-    if (pic.length > 0) {
-      wImage = await pw.Image(
+    if (pic.isNotEmpty) {
+      wImage = pw.Image(
         fit: BoxFit.cover,
         wMemoryImage,
       );
@@ -94,17 +94,17 @@ class Pdf_BC {
       theme: fontTheme,
     );
 
-    ByteData _logo_1 = await rootBundle.load('assets/BL_Header.jpg');
-    imageData_1 = (_logo_1)!.buffer.asUint8List();
+    ByteData logo_1 = await rootBundle.load('assets/BL_Header.jpg');
+    imageData_1 = (logo_1).buffer.asUint8List();
 
-    ByteData _logo_Logo_Pied = await rootBundle.load('assets/BL_Footer.png');
-    imageData_Logo_Pied = (_logo_Logo_Pied)!.buffer.asUint8List();
+    ByteData logoLogoPied = await rootBundle.load('assets/BL_Footer.png');
+    imageData_Logo_Pied = (logoLogoPied).buffer.asUint8List();
 
-    ByteData _logo_Logo_Pied2 = await rootBundle.load('assets/BL_Footer2.jpg');
-    imageData_Footer2 = (_logo_Logo_Pied2)!.buffer.asUint8List();
+    ByteData logoLogoPied2 = await rootBundle.load('assets/BL_Footer2.jpg');
+    imageData_Footer2 = (logoLogoPied2).buffer.asUint8List();
 
-    ByteData _logo_Logo_Fili = await rootBundle.load('assets/Fond_MONDIALFEU.jpg');
-    imageData_Fili = (_logo_Logo_Fili)!.buffer.asUint8List();
+    ByteData logoLogoFili = await rootBundle.load('assets/Fond_MONDIALFEU.jpg');
+    imageData_Fili = (logoLogoFili).buffer.asUint8List();
 
     await DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "FACT");
     wAdresseFact = Srv_DbTools.gAdresse;
@@ -115,10 +115,10 @@ class Pdf_BC {
     await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gSite.SiteId, "SITE");
 
     await DbTools.getAdresseType("AGENCE");
-    Srv_DbTools.ListAdressesearchresult.forEach((wAdresse) {
-      if (wAdresse.Adresse_Nom == Srv_DbTools.gClient.Client_Depot) ;
+    for (var wAdresse in Srv_DbTools.ListAdressesearchresult) {
+      if (wAdresse.Adresse_Nom == Srv_DbTools.gClient.Client_Depot) {}
       wAdresseAg = wAdresse;
-    });
+    }
 
     final PageTheme pageTheme = PageTheme(
       buildBackground: (Context context) => pw.Image(pw.MemoryImage(imageData_Fili!)),
@@ -151,12 +151,12 @@ class Pdf_BC {
         pw.Row(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
           pw.Column(children: [
             pw.Container(
-              margin: pw.EdgeInsets.only(left: 250, top: 40, bottom: 0, right: 0),
+              margin: const pw.EdgeInsets.only(left: 250, top: 40, bottom: 0, right: 0),
               width: 300,
               child: pw.Image(pw.MemoryImage(imageData_1!)),
             ),
             pw.Container(
-                margin: pw.EdgeInsets.only(left: 100, top: 12, bottom: 20, right: 0),
+                margin: const pw.EdgeInsets.only(left: 100, top: 12, bottom: 20, right: 0),
                 width: 600,
                 child: pw.Text(
                   "${wAdresseAg.Adresse_Nom} ${wAdresseAg.Adresse_Adr1} ${wAdresseAg.Adresse_Adr2} - ${wAdresseAg.Adresse_CP} ${wAdresseAg.Adresse_Ville}",
@@ -170,7 +170,7 @@ class Pdf_BC {
           ])
         ]),
         pw.Padding(
-          padding: pw.EdgeInsets.only(left: 10, top: 0, bottom: 0, right: 10),
+          padding: const pw.EdgeInsets.only(left: 10, top: 0, bottom: 0, right: 10),
           child: pw.Row(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             mainAxisAlignment: pw.MainAxisAlignment.start,
@@ -216,7 +216,7 @@ class Pdf_BC {
                         child: pw.Text(
                           "A l'attention de ${Srv_DbTools.gContact.Contact_Civilite} ${Srv_DbTools.gContact.Contact_Prenom} ${Srv_DbTools.gContact.Contact_Nom}",
                           textAlign: pw.TextAlign.center,
-                          style: pw.TextStyle(
+                          style: const pw.TextStyle(
                             color: PdfColors.black,
                             fontSize: 12,
                           ),
@@ -226,7 +226,7 @@ class Pdf_BC {
                       pw.Container(
                         alignment: pw.Alignment.centerLeft,
                         child: pw.Text(
-                          "${Srv_DbTools.gSite.Site_Nom}",
+                          Srv_DbTools.gSite.Site_Nom,
                           textAlign: pw.TextAlign.center,
                           style: pw.TextStyle(
                             color: PdfColors.black,
@@ -239,9 +239,9 @@ class Pdf_BC {
                       pw.Container(
                         alignment: pw.Alignment.centerLeft,
                         child: pw.Text(
-                          "${Srv_DbTools.gSite.Site_Adr1}",
+                          Srv_DbTools.gSite.Site_Adr1,
                           textAlign: pw.TextAlign.center,
-                          style: pw.TextStyle(
+                          style: const pw.TextStyle(
                             color: PdfColors.black,
                             fontSize: 12,
                           ),
@@ -251,9 +251,9 @@ class Pdf_BC {
                       pw.Container(
                         alignment: pw.Alignment.centerLeft,
                         child: pw.Text(
-                          "${Srv_DbTools.gSite.Site_Adr2}",
+                          Srv_DbTools.gSite.Site_Adr2,
                           textAlign: pw.TextAlign.center,
-                          style: pw.TextStyle(
+                          style: const pw.TextStyle(
                             color: PdfColors.black,
                             fontSize: 12,
                           ),
@@ -265,7 +265,7 @@ class Pdf_BC {
                         child: pw.Text(
                           "${Srv_DbTools.gSite.Site_CP} ${Srv_DbTools.gSite.Site_Ville}",
                           textAlign: pw.TextAlign.center,
-                          style: pw.TextStyle(
+                          style: const pw.TextStyle(
                             color: PdfColors.black,
                             fontSize: 12,
                           ),
@@ -317,7 +317,7 @@ class Pdf_BC {
                         child: pw.Text(
                           "A l'attention de ${wContactFact.Contact_Civilite} ${Srv_DbTools.gContact.Contact_Prenom} ${Srv_DbTools.gContact.Contact_Nom}",
                           textAlign: pw.TextAlign.center,
-                          style: pw.TextStyle(
+                          style: const pw.TextStyle(
                             color: PdfColors.black,
                             fontSize: 12,
                           ),
@@ -327,7 +327,7 @@ class Pdf_BC {
                       pw.Container(
                         alignment: pw.Alignment.centerLeft,
                         child: pw.Text(
-                          "${Srv_DbTools.gClient.Client_Nom}",
+                          Srv_DbTools.gClient.Client_Nom,
                           textAlign: pw.TextAlign.center,
                           style: pw.TextStyle(
                             color: PdfColors.black,
@@ -340,9 +340,9 @@ class Pdf_BC {
                       pw.Container(
                         alignment: pw.Alignment.centerLeft,
                         child: pw.Text(
-                          "${wAdresseFact.Adresse_Adr1}",
+                          wAdresseFact.Adresse_Adr1,
                           textAlign: pw.TextAlign.center,
-                          style: pw.TextStyle(
+                          style: const pw.TextStyle(
                             color: PdfColors.black,
                             fontSize: 12,
                           ),
@@ -352,9 +352,9 @@ class Pdf_BC {
                       pw.Container(
                         alignment: pw.Alignment.centerLeft,
                         child: pw.Text(
-                          "${wAdresseFact.Adresse_Adr2}",
+                          wAdresseFact.Adresse_Adr2,
                           textAlign: pw.TextAlign.center,
-                          style: pw.TextStyle(
+                          style: const pw.TextStyle(
                             color: PdfColors.black,
                             fontSize: 12,
                           ),
@@ -366,7 +366,7 @@ class Pdf_BC {
                         child: pw.Text(
                           "${wAdresseFact.Adresse_CP} ${wAdresseFact.Adresse_Ville}",
                           textAlign: pw.TextAlign.center,
-                          style: pw.TextStyle(
+                          style: const pw.TextStyle(
                             color: PdfColors.black,
                             fontSize: 12,
                           ),
@@ -380,7 +380,7 @@ class Pdf_BC {
           ),
         ),
         pw.Padding(
-          padding: pw.EdgeInsets.only(left: 10, top: 0, bottom: 0, right: 10),
+          padding: const pw.EdgeInsets.only(left: 10, top: 0, bottom: 0, right: 10),
           child: pw.Row(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             mainAxisAlignment: pw.MainAxisAlignment.start,
@@ -399,7 +399,7 @@ class Pdf_BC {
                         child: pw.Text(
                           "Tél : ${Srv_DbTools.gContact.Contact_Tel1}",
                           textAlign: pw.TextAlign.center,
-                          style: pw.TextStyle(
+                          style: const pw.TextStyle(
                             color: PdfColors.black,
                             fontSize: 12,
                           ),
@@ -411,7 +411,7 @@ class Pdf_BC {
                         child: pw.Text(
                           "Tél Portable : ${Srv_DbTools.gContact.Contact_Tel2}",
                           textAlign: pw.TextAlign.center,
-                          style: pw.TextStyle(
+                          style: const pw.TextStyle(
                             color: PdfColors.black,
                             fontSize: 12,
                           ),
@@ -423,7 +423,7 @@ class Pdf_BC {
                         child: pw.Text(
                           "Email : ${Srv_DbTools.gContact.Contact_eMail}",
                           textAlign: pw.TextAlign.center,
-                          style: pw.TextStyle(
+                          style: const pw.TextStyle(
                             color: PdfColors.black,
                             fontSize: 12,
                           ),
@@ -448,7 +448,7 @@ class Pdf_BC {
                         child: pw.Text(
                           "Tél : ${wContactFact.Contact_Tel1}",
                           textAlign: pw.TextAlign.center,
-                          style: pw.TextStyle(
+                          style: const pw.TextStyle(
                             color: PdfColors.black,
                             fontSize: 12,
                           ),
@@ -460,7 +460,7 @@ class Pdf_BC {
                         child: pw.Text(
                           "Tél Portable : ${wContactFact.Contact_Tel2}",
                           textAlign: pw.TextAlign.center,
-                          style: pw.TextStyle(
+                          style: const pw.TextStyle(
                             color: PdfColors.black,
                             fontSize: 12,
                           ),
@@ -472,7 +472,7 @@ class Pdf_BC {
                         child: pw.Text(
                           "Email : ${wContactFact.Contact_eMail}",
                           textAlign: pw.TextAlign.center,
-                          style: pw.TextStyle(
+                          style: const pw.TextStyle(
                             color: PdfColors.black,
                             fontSize: 12,
                           ),
@@ -505,7 +505,7 @@ class Pdf_BC {
             padding: const pw.EdgeInsets.only(left: 5, top: 0, bottom: 1, right: 0),
             alignment: pw.Alignment.centerLeft,
             child: pw.Text(
-              "${Srv_DbTools.selectedUserInter4}",
+              Srv_DbTools.selectedUserInter4,
               textAlign: pw.TextAlign.left,
               style: pw.TextStyle(
                 color: PdfColors.black,
@@ -522,7 +522,7 @@ class Pdf_BC {
         ),
         pw.Container(
           margin: const pw.EdgeInsets.only(left: 10, top: 0, bottom: 0, right: 10),
-          child: PdfTools.C5_L1(context, "BC/Int/${Srv_DbTools.gIntervention.InterventionId}", 3, "${wDate}", 3, "${Srv_DbTools.gClient.Client_CodeGC}", 3, "0052", 3, "CR ${Srv_DbTools.gIntervention.InterventionId} du ${Srv_DbTools.gIntervention.Intervention_Date}", 12, pw.TextAlign.left, PdfColors.black, PdfColors.black, false),
+          child: PdfTools.C5_L1(context, "BC/Int/${Srv_DbTools.gIntervention.InterventionId}", 3, wDate, 3, Srv_DbTools.gClient.Client_CodeGC, 3, "0052", 3, "CR ${Srv_DbTools.gIntervention.InterventionId} du ${Srv_DbTools.gIntervention.Intervention_Date}", 12, pw.TextAlign.left, PdfColors.black, PdfColors.black, false),
         ),
         pw.SizedBox(height: 5),
       ],
@@ -537,9 +537,9 @@ class Pdf_BC {
               width: 300,
               margin: const pw.EdgeInsets.only(left: 10, top: 20, bottom: 20, right: 20),
               child: pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.center, mainAxisAlignment: pw.MainAxisAlignment.center, children: [
-                PdfTools.C1_L1(context, "", "${wAdresseAg.Adresse_Nom}", pw.TextAlign.center, PdfColors.white, PdfColors.black, wBorderPdfColor: PdfColors.grey300),
+                PdfTools.C1_L1(context, "", wAdresseAg.Adresse_Nom, pw.TextAlign.center, PdfColors.white, PdfColors.black, wBorderPdfColor: PdfColors.grey300),
                 PdfTools.C1_L1(context, "", "Client : ${Srv_DbTools.gClient.Client_Nom}", pw.TextAlign.center, PdfColors.white, PdfColors.black, wBorderPdfColor: PdfColors.grey300),
-                PdfTools.C1_L1(context, "", "Bon de commande : BL/Int/${Srv_DbTools.gIntervention.InterventionId} du ${wDate}", pw.TextAlign.center, PdfColors.white, PdfColors.black, wBorderPdfColor: PdfColors.grey300),
+                PdfTools.C1_L1(context, "", "Bon de commande : BL/Int/${Srv_DbTools.gIntervention.InterventionId} du $wDate", pw.TextAlign.center, PdfColors.white, PdfColors.black, wBorderPdfColor: PdfColors.grey300),
                 PdfTools.C1_L1(context, "", "Technicien (ne) conseil : ${Srv_DbTools.selectedUserInter4RC}", pw.TextAlign.center, PdfColors.white, PdfColors.black, wMaxLines: 2, wBorderPdfColor: PdfColors.grey300),
               ]))
         ]),
@@ -548,7 +548,7 @@ class Pdf_BC {
   }
 
   BoxDecoration CelDec(int index, dynamic data, int rowNum) {
-    return pw.BoxDecoration(
+    return const pw.BoxDecoration(
       border: pw.Border(
         left: pw.BorderSide(
           color: PdfColors.grey300,
@@ -586,7 +586,7 @@ class Pdf_BC {
       headerDirection: pw.TextDirection.rtl,
 //      border: TableBorder.all(color: PdfColors.grey300),
 
-      border: TableBorder(
+      border: const TableBorder(
         left: BorderSide(width: 1.0, color: PdfColors.grey300),
         right: BorderSide(width: 1.0, color: PdfColors.grey300),
         top: BorderSide(width: 1.0, color: PdfColors.grey300),
@@ -597,7 +597,7 @@ class Pdf_BC {
 
       headerAlignment: pw.Alignment.center,
       cellAlignment: pw.Alignment.centerLeft,
-      headerDecoration: pw.BoxDecoration(color: PdfColors.grey300), //,border: Border(bottom: BorderSide(color: PdfColors.green,width: 5))),
+      headerDecoration: const pw.BoxDecoration(color: PdfColors.grey300), //,border: Border(bottom: BorderSide(color: PdfColors.green,width: 5))),
       headerHeight: 25,
       cellHeight: 25,
       cellAlignments: {

@@ -11,6 +11,8 @@ import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
 class Client_Groupes extends StatefulWidget {
+  const Client_Groupes({super.key});
+
   @override
   Client_GroupesState createState() => Client_GroupesState();
 }
@@ -23,7 +25,7 @@ class Client_GroupesState extends State<Client_Groupes> {
   bool onCellTap = false;
   bool affEdtFilter = false;
 
-  TextEditingController ctrlFilter = new TextEditingController();
+  TextEditingController ctrlFilter = TextEditingController();
   String filterText = '';
 
   Future Reload() async {
@@ -40,15 +42,15 @@ class Client_GroupesState extends State<Client_Groupes> {
       if (filterText.isEmpty) {
         Srv_DbTools.ListGroupesearchresult.add(element);
       } else {
-        String Groupe_Nom = element.Groupe_Nom == null ? "" : element.Groupe_Nom;
-        String Groupe_CP = element.Groupe_CP == null ? "" : element.Groupe_CP;
-        String Groupe_Ville = element.Groupe_Ville == null ? "" : element.Groupe_Ville;
+        String groupeNom = element.Groupe_Nom ?? "";
+        String groupeCp = element.Groupe_CP ?? "";
+        String groupeVille = element.Groupe_Ville ?? "";
         String GroupeId = element.GroupeId.toString();
-        if (Groupe_Nom.toUpperCase().contains(filterText.toUpperCase()))
+        if (groupeNom.toUpperCase().contains(filterText.toUpperCase())) {
           Srv_DbTools.ListGroupesearchresult.add(element);
-        else if (Groupe_CP.toUpperCase().contains(filterText.toUpperCase()))
+        } else if (groupeCp.toUpperCase().contains(filterText.toUpperCase()))
           Srv_DbTools.ListGroupesearchresult.add(element);
-        else if (Groupe_Ville.toUpperCase().contains(filterText.toUpperCase()))
+        else if (groupeVille.toUpperCase().contains(filterText.toUpperCase()))
           Srv_DbTools.ListGroupesearchresult.add(element);
         else if (GroupeId.toUpperCase().contains(filterText.toUpperCase())) Srv_DbTools.ListGroupesearchresult.add(element);
       }
@@ -63,6 +65,7 @@ class Client_GroupesState extends State<Client_Groupes> {
     Reload();
   }
 
+  @override
   void initState() {
     initLib();
     super.initState();
@@ -70,13 +73,13 @@ class Client_GroupesState extends State<Client_Groupes> {
 
   @override
   Widget Entete_Btn_Search() {
-    return Container(
+    return SizedBox(
         height: 57,
         child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
           Container(
             width: 8,
           ),
-          Spacer(),
+          const Spacer(),
           EdtFilterWidget(),
         ]));
   }
@@ -87,7 +90,7 @@ class Client_GroupesState extends State<Client_Groupes> {
     return !affEdtFilter
         ? InkWell(
             child: Padding(
-              padding: EdgeInsets.only(right: 8),
+              padding: const EdgeInsets.only(right: 8),
               child: Image.asset(
                 "assets/images/Btn_Loupe.png",
                 height: icoWidth,
@@ -98,7 +101,7 @@ class Client_GroupesState extends State<Client_Groupes> {
               affEdtFilter = !affEdtFilter;
               setState(() {});
             })
-        : Container(
+        : SizedBox(
             width: 320,
             child: Row(
               children: [
@@ -184,19 +187,18 @@ class Client_GroupesState extends State<Client_Groupes> {
           backgroundColor: gColors.white,
         ),
         body: Padding(
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: Column(
               children: [
-                gObj.InterventionTitleWidget("${Srv_DbTools.gClient.Client_Nom.toUpperCase()}"),
+                gObj.InterventionTitleWidget(Srv_DbTools.gClient.Client_Nom.toUpperCase()),
                 Entete_Btn_Search(),
                 Expanded(
                   child: GroupeGridWidget(),
                 ),
               ],
             )),
-        floatingActionButton: new FloatingActionButton(
+        floatingActionButton: FloatingActionButton(
             elevation: 0.0,
-            child: new Icon(Icons.add),
             backgroundColor: gColors.secondary,
             onPressed: () async {
               await DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
@@ -205,10 +207,10 @@ class Client_GroupesState extends State<Client_Groupes> {
               Srv_DbTools.gGroupe = Groupe.GroupeInit();
               bool wRet = await Srv_DbTools.addGroupe(Srv_DbTools.gClient.ClientId);
               Srv_DbTools.gGroupe.Groupe_isUpdate = wRet;
-              if (!wRet) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
+              if (!wRet) Srv_DbTools.gLastID = DateTime.now().millisecondsSinceEpoch * -1;
               Srv_DbTools.gGroupe.GroupeId          = Srv_DbTools.gLastID;
               Srv_DbTools.gGroupe.Groupe_ClientId   = Srv_DbTools.gClient.ClientId;
-              Srv_DbTools.gGroupe.Groupe_Nom        = Srv_DbTools.gClient.Client_Nom + "_${Srv_DbTools.ListGroupe.length+1}";
+              Srv_DbTools.gGroupe.Groupe_Nom        = "${Srv_DbTools.gClient.Client_Nom}_${Srv_DbTools.ListGroupe.length+1}";
               Srv_DbTools.gGroupe.Groupe_Adr1       = Srv_DbTools.gAdresse.Adresse_Adr1;
               Srv_DbTools.gGroupe.Groupe_Adr2       = Srv_DbTools.gAdresse.Adresse_Adr2;
               Srv_DbTools.gGroupe.Groupe_Adr3       = Srv_DbTools.gAdresse.Adresse_Adr3;
@@ -232,7 +234,8 @@ class Client_GroupesState extends State<Client_Groupes> {
 setState(() {
 
 });
-            }));
+            },
+            child: const Icon(Icons.add)));
   }
 
   //***************************
@@ -253,7 +256,7 @@ setState(() {
                 child: Row(
                   children: [
                     Container(
-                      padding: EdgeInsets.all(5),
+                      padding: const EdgeInsets.all(5),
                       child: Image.asset(
                         "assets/images/Icon_Groupe.png",
                         height: icoWidth,
@@ -295,7 +298,7 @@ setState(() {
           ]),
         ),
         gColors.wLigne(),
-        SizedBox(height: 5.0),
+        const SizedBox(height: 5.0),
         Expanded(
           child: ListView.builder(
             itemCount: Srv_DbTools.ListGroupesearchresult.length,
@@ -320,19 +323,19 @@ setState(() {
 
               return Column(
                 children: [
-                  new GestureDetector(
+                  GestureDetector(
                     //You need to make my child interactive
                     onDoubleTap: () async {
                       await HapticFeedback.vibrate();
                       Srv_DbTools.gGroupe = groupe;
-                      await Navigator.push(context, MaterialPageRoute(builder: (context) => Groupe_Vue()));
+                      await Navigator.push(context, MaterialPageRoute(builder: (context) => const Groupe_Vue()));
                     },
 
                     onTap: () async {
                       await HapticFeedback.vibrate();
                       Srv_DbTools.gGroupe = groupe;
                       Srv_DbTools.gSelGroupe = groupe.Groupe_Nom;
-                      await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Sites()));
+                      await Navigator.push(context, MaterialPageRoute(builder: (context) => const Client_Sites()));
                       setState(() {});
                     },
                     child: Container(
@@ -341,7 +344,7 @@ setState(() {
                       child: Row(
                         children: <Widget>[
                           Container(
-                            padding: EdgeInsets.only(left: 5, bottom: 2),
+                            padding: const EdgeInsets.only(left: 5, bottom: 2),
                             child: Text(
                               groupe.Groupe_isUpdate ? " " : "◉",
                               maxLines: 1,
@@ -355,7 +358,7 @@ setState(() {
                                 padding: EdgeInsets.only(left: 10, top: mTop),
                                 height: rowh,
                                 child: Text(
-                                  "${groupe.Groupe_Nom}",
+                                  groupe.Groupe_Nom,
                                   maxLines: 1,
                                   style: gColors.bodySaisie_B_B,
                                 ),
@@ -375,7 +378,7 @@ setState(() {
                             flex: 10,
                             child: Container(
                               child: Image.asset(
-                                "assets/images/${wTmpImage}.png",
+                                "assets/images/$wTmpImage.png",
                                 height: icoWidth,
                                 width: icoWidth,
                               ),
@@ -387,7 +390,7 @@ setState(() {
                                   padding: EdgeInsets.only(right: 10, top: mTop),
                                   height: rowh,
                                   child: Text(
-                                    index == 5 ? "Planifié ${wV}" : wV,
+                                    index == 5 ? "Planifié $wV" : wV,
                                     textAlign: TextAlign.right,
                                     maxLines: 1,
                                     style: index > 4 ? gColors.bodySaisie_B_B.copyWith(color: Colors.orange) : gColors.bodySaisie_B_B,
@@ -402,7 +405,7 @@ setState(() {
             },
           ),
         ),
-        SizedBox(height: 45.0),
+        const SizedBox(height: 45.0),
       ],
     );
   }

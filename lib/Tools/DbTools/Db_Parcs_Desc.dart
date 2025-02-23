@@ -8,32 +8,31 @@ class Parc_Desc {
   String? ParcsDesc_Id = "";
   String? ParcsDesc_Lib = "";
 
-  static Parc_DescInit(int wParcsDesc_ParcsId, String wParcsDesc_Type) {
+  static Parc_DescInit(int wparcsdescParcsid, String wparcsdescType) {
 
-    String ParcsDesc_Lib = "---";
-    int ParcsDesc_Id = -1;
+    String parcsdescLib = "---";
+    int parcsdescId = -1;
 
 //    print("Parc_DescInit Parc_DescInit Parc_DescInit Parc_DescInit ${wParcsDesc_Type}");
 
-    Srv_DbTools.getParam_Saisie_ParamMem(wParcsDesc_Type);
-    Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
+    Srv_DbTools.getParam_Saisie_ParamMem(wparcsdescType);
+    for (var element in Srv_DbTools.ListParam_Saisie_Param) {
       if (element.Param_Saisie_Param_Init) {
-        ParcsDesc_Lib = element.Param_Saisie_Param_Label;
-        ParcsDesc_Id = element.Param_Saisie_ParamId;
+        parcsdescLib = element.Param_Saisie_Param_Label;
+        parcsdescId = element.Param_Saisie_ParamId;
 //        print(">><<<<<<<<<>>>>>>><<<<<<<<<>>>>>>> Parc_DescInit ${element.Desc()}");
 
-        return;
+        continue;
         }
       }
-    );
-    Parc_Desc wParc_Desc = Parc_Desc();
-    wParc_Desc.ParcsDescId = -1;
-    wParc_Desc.ParcsDesc_ParcsId = wParcsDesc_ParcsId;
-    wParc_Desc.ParcsDesc_Type = wParcsDesc_Type;
-    wParc_Desc.ParcsDesc_Id = "${ParcsDesc_Id}";
-    wParc_Desc.ParcsDesc_Lib = ParcsDesc_Lib;
+    Parc_Desc wparcDesc = Parc_Desc();
+    wparcDesc.ParcsDescId = -1;
+    wparcDesc.ParcsDesc_ParcsId = wparcsdescParcsid;
+    wparcDesc.ParcsDesc_Type = wparcsdescType;
+    wparcDesc.ParcsDesc_Id = "$parcsdescId";
+    wparcDesc.ParcsDesc_Lib = parcsdescLib;
 
-    return wParc_Desc;
+    return wparcDesc;
   }
 
 
@@ -66,14 +65,14 @@ class Parc_Desc {
   }
 
   factory Parc_Desc.fromMap(Map<String, dynamic> map) {
-    Parc_Desc wParc_Desc = Parc_Desc(
+    Parc_Desc wparcDesc = Parc_Desc(
       ParcsDescId: map["ParcsDescId"],
       ParcsDesc_ParcsId: map["ParcsDesc_ParcsId"],
       ParcsDesc_Type: map["ParcsDesc_Type"],
       ParcsDesc_Id: map["ParcsDesc_Id"],
       ParcsDesc_Lib: map["ParcsDesc_Lib"],
     );
-    return wParc_Desc;
+    return wparcDesc;
   }
 
 

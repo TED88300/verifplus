@@ -674,20 +674,20 @@ class ListView extends StatelessWidget {
 
   @override
   Widget build(Context context) {
-    final _children = <Widget>[];
+    final children = <Widget>[];
 
     if (reverse) {
       for (var index = itemCount - 1; index >= 0; index--) {
-        _children.add(_getItem(context, index));
+        children.add(_getItem(context, index));
         if (spacing != 0 && index > 0) {
-          _children.add(_getSeparator(context, index));
+          children.add(_getSeparator(context, index));
         }
       }
     } else {
       for (var index = 0; index < itemCount; index++) {
-        _children.add(_getItem(context, index));
+        children.add(_getItem(context, index));
         if (spacing != 0 && index < itemCount - 1) {
-          _children.add(_getSeparator(context, index));
+          children.add(_getSeparator(context, index));
         }
       }
     }
@@ -698,7 +698,7 @@ class ListView extends StatelessWidget {
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.center,
       verticalDirection: VerticalDirection.down,
-      children: _children,
+      children: children,
     );
 
     if (padding != null) {

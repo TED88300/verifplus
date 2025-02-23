@@ -9,6 +9,8 @@ import 'package:verifplus/Widget/Catalogue_Grig/product_icon.dart';
 import 'package:verifplus/Widget/Catalogue_Grig/extentions.dart';
 
 class Catalogue_Grid extends StatefulWidget {
+  const Catalogue_Grid({super.key});
+
   @override
   _Catalogue_GridState createState() => _Catalogue_GridState();
 }
@@ -24,13 +26,13 @@ class _Catalogue_GridState extends State<Catalogue_Grid> {
 
   Widget _icon(IconData icon, {Color color = LightColor.iconColor}) {
     return Container(
-      padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(borderRadius: BorderRadius.all(Radius.circular(13)), color: Theme.of(context).primaryColor, boxShadow: AppTheme.shadow),
+      padding: const EdgeInsets.all(10),
+      decoration: BoxDecoration(borderRadius: const BorderRadius.all(Radius.circular(13)), color: Theme.of(context).primaryColor, boxShadow: AppTheme.shadow),
       child: Icon(
         icon,
         color: color,
       ),
-    ).ripple(() {}, borderRadius: BorderRadius.all(Radius.circular(13)));
+    ).ripple(() {}, borderRadius: const BorderRadius.all(Radius.circular(13)));
   }
 
   /*
@@ -40,7 +42,7 @@ class _Catalogue_GridState extends State<Catalogue_Grid> {
   Widget _categoryWidget() {
     return Row(
       children: [
-        Container(
+        SizedBox(
 
           width: AppTheme.fullWidth(context),
           height: 60,
@@ -52,9 +54,9 @@ class _Catalogue_GridState extends State<Catalogue_Grid> {
                     model: category,
                     onSelected: (model) {
                       setState(() {
-                        AppData.categoryList.forEach((item) {
+                        for (var item in AppData.categoryList) {
                           item.isSelected = false;
-                        });
+                        }
                         model.isSelected = true;
                         wSelCat = model.name;
                         Search_TextController.text = "";
@@ -85,18 +87,16 @@ class _Catalogue_GridState extends State<Catalogue_Grid> {
       // margin: EdgeInsets.all(padding),
       decoration: BoxDecoration(
         border: Border.all(color: LightColor.iconColor, style: isOutLine ? BorderStyle.solid : BorderStyle.none),
-        borderRadius: BorderRadius.all(Radius.circular(13)),
+        borderRadius: const BorderRadius.all(Radius.circular(13)),
         color: isOutLine ? Colors.transparent : Theme.of(context).primaryColor,
-        boxShadow: <BoxShadow>[
+        boxShadow: const <BoxShadow>[
           BoxShadow(color: Color(0xfff8f8f8), blurRadius: 5, spreadRadius: 10, offset: Offset(5, 5)),
         ],
       ),
       child: Icon(icon, color: color, size: size),
     ).ripple(() {
-      if (onPressed != null) {
-        onPressed();
-      }
-    }, borderRadius: BorderRadius.all(Radius.circular(13)));
+      onPressed();
+        }, borderRadius: const BorderRadius.all(Radius.circular(13)));
   }
 
   Widget _productWidget() {
@@ -111,13 +111,13 @@ class _Catalogue_GridState extends State<Catalogue_Grid> {
     }
 
     return Container(
-      margin: EdgeInsets.symmetric(vertical: 10),
+      margin: const EdgeInsets.symmetric(vertical: 10),
       width: AppTheme.fullWidth(context),
       height: MediaQuery.of(context).size.height - 300,
 
       child: GridView(
-        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 1 / 2, mainAxisSpacing: 10, crossAxisSpacing: 20),
-        padding: EdgeInsets.only(left: 20),
+        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3, childAspectRatio: 1 / 2, mainAxisSpacing: 10, crossAxisSpacing: 20),
+        padding: const EdgeInsets.only(left: 20),
         scrollDirection: Axis.vertical,
         children: wproductList
             .map(
@@ -125,9 +125,9 @@ class _Catalogue_GridState extends State<Catalogue_Grid> {
                 product: product,
                 onSelected: (model) {
                   setState(() {
-                    AppData.productList.forEach((item) {
+                    for (var item in AppData.productList) {
                       item.isSelected = false;
-                    });
+                    }
                     model.isSelected = true;
                     wSelCat = model.name;
                     wSearch = "";
@@ -149,11 +149,11 @@ class _Catalogue_GridState extends State<Catalogue_Grid> {
             child: Container(
               height: 40,
               alignment: Alignment.center,
-              decoration: BoxDecoration(color: LightColor.lightGrey.withAlpha(100), borderRadius: BorderRadius.all(Radius.circular(10))),
+              decoration: BoxDecoration(color: LightColor.lightGrey.withAlpha(100), borderRadius: const BorderRadius.all(Radius.circular(10))),
               child: TextField(
                 controller: Search_TextController,
                 focusNode: ctrlSearch,
-                decoration: InputDecoration(border: InputBorder.none, hintText: "Search Products", hintStyle: TextStyle(fontSize: 12), contentPadding: EdgeInsets.only(left: 10, right: 10, bottom: 0, top: 5), prefixIcon: Icon(Icons.search, color: Colors.black54)),
+                decoration: const InputDecoration(border: InputBorder.none, hintText: "Search Products", hintStyle: TextStyle(fontSize: 12), contentPadding: EdgeInsets.only(left: 10, right: 10, bottom: 0, top: 5), prefixIcon: Icon(Icons.search, color: Colors.black54)),
                 onChanged: (String value) async {
                   wSearch = value;
                   setState(() {});
@@ -174,7 +174,7 @@ class _Catalogue_GridState extends State<Catalogue_Grid> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         gradient: LinearGradient(
           colors: [
             Color(0xfff0f0f0),
@@ -186,7 +186,7 @@ class _Catalogue_GridState extends State<Catalogue_Grid> {
       ),
       height: MediaQuery.of(context).size.height ,
       child: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         dragStartBehavior: DragStartBehavior.down,
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

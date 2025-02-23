@@ -2,15 +2,15 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Widget_Tools/Client_Groupe_Parc_Inter_Obs_Photos.dart';
-import 'package:verifplus/Widget/Widget_Tools/ImagePainterTools.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 
 
 class Client_Groupe_Parc_Inter_Obs extends StatefulWidget {
+  const Client_Groupe_Parc_Inter_Obs({super.key});
+
   @override
   Client_Groupe_Parc_Inter_ObsState createState() => Client_Groupe_Parc_Inter_ObsState();
 }
@@ -23,7 +23,7 @@ class Client_Groupe_Parc_Inter_ObsState extends State<Client_Groupe_Parc_Inter_O
   @override
   void initLib() async {
     imgList.clear();
-    DbTools.glfParc_Imgs.forEach((element) {
+    for (var element in DbTools.glfParc_Imgs) {
       Widget wWidget = Container(
         child: Image.file(
           File(element.Parc_Imgs_Path!),
@@ -32,11 +32,12 @@ class Client_Groupe_Parc_Inter_ObsState extends State<Client_Groupe_Parc_Inter_O
         ),
       );
       imgList.add(wWidget);
-    });
+    }
 
     setState(() {});
   }
 
+  @override
   void initState() {
     initLib();
     super.initState();
@@ -58,7 +59,7 @@ class Client_Groupe_Parc_Inter_ObsState extends State<Client_Groupe_Parc_Inter_O
             children: [
               Row(
                 children: [
-                  new Flexible(
+                  Flexible(
                     child: TextFormField(
                       minLines: 5, //Normal textInputField will be displayed
                       maxLines:
@@ -67,7 +68,7 @@ class Client_Groupe_Parc_Inter_ObsState extends State<Client_Groupe_Parc_Inter_O
                       style: gColors.bodySaisie_N_B,
                       controller: ObsController,
                       autofocus: false,
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         hintText: 'Observation',
                         contentPadding:
                             EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
@@ -121,14 +122,14 @@ class Client_Groupe_Parc_Inter_ObsState extends State<Client_Groupe_Parc_Inter_O
 
 */
               IconButton(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                 icon: Image.asset("assets/images/Photo.png"),
                 onPressed: () async {
                   DbTools.gImagePath = "";
                   await Navigator.push(
                       context,
                       MaterialPageRoute(
-                          builder: (context) => Client_Groupe_Parc_Inter_Obs_Photos()));
+                          builder: (context) => const Client_Groupe_Parc_Inter_Obs_Photos()));
 
                   print("gImagePath ${DbTools.gImagePath}");
 
@@ -195,8 +196,8 @@ class Client_Groupe_Parc_Inter_ObsState extends State<Client_Groupe_Parc_Inter_O
 
                             if (DbTools.gImagePath == "") {
                               await DbTools.deleteParc_Img(DbTools.glfParc_Imgs[Itemindex].Parc_Imgid!, 99);
-                              await DbTools.glfParc_Imgs.removeAt(Itemindex);
-                              await imgList.removeAt(Itemindex);
+                              DbTools.glfParc_Imgs.removeAt(Itemindex);
+                              imgList.removeAt(Itemindex);
                             }
                             else
                               {
@@ -252,7 +253,7 @@ class DisplayImageScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: AutoSizeText(
+        title: const AutoSizeText(
 //          "Client : ${DbTools.gClient.Clients_Nom} (${DbTools.gClient.Clients_Cp}) / ${DbTools.gSite.Sites_Nom} (${DbTools.gSite.Sites_Cp})",
           "Client : xxxxx",
           maxLines: 1,

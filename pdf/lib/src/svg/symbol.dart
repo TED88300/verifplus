@@ -34,19 +34,19 @@ class SvgSymbol extends SvgGroup {
   ) : super(children, brush, clip, transform, painter);
 
   factory SvgSymbol.fromXml(
-      XmlElement element, SvgPainter painter, SvgBrush brush) {
-    final _brush = SvgBrush.fromXml(element, brush, painter);
+      XmlElement element, SvgPainter painter, SvgBrush wbrush) {
+    final brush = SvgBrush.fromXml(element, wbrush, painter);
 
     final children = element.children
         .whereType<XmlElement>()
         .map<SvgOperation?>(
-            (child) => SvgOperation.fromXml(child, painter, _brush))
+            (child) => SvgOperation.fromXml(child, painter, brush))
         .whereType<SvgOperation>();
 
     return SvgSymbol(
       children,
-      _brush,
-      SvgClipPath.fromXml(element, painter, _brush),
+      brush,
+      SvgClipPath.fromXml(element, painter, brush),
       SvgTransform.fromXml(element),
       painter,
     );

@@ -159,27 +159,27 @@ class User {
 
   static User fromMap(Map<String, dynamic> map) {
 
-    String User_DCL_Ent_Validite      = "${map['User_DCL_Ent_Validite']}";
-    String User_DCL_Ent_LivrPrev      = "${map["User_DCL_Ent_LivrPrev"]}";
-    String User_DCL_Ent_ModeRegl      = "${map["User_DCL_Ent_ModeRegl"]}";
-    String User_DCL_Ent_MoyRegl       = "${map["User_DCL_Ent_MoyRegl"]}";
-    String User_DCL_Ent_PrefAff       = "${map["User_DCL_Ent_PrefAff"]}";
-    String User_DCL_Ent_RelAuto       = "${map["User_DCL_Ent_RelAuto"]}";
-    String User_DCL_Ent_RelAnniv      = "${map["User_DCL_Ent_RelAnniv"]}";
-    String User_User_DCL_Ent_CopRel   = "${map["User_User_DCL_Ent_CopRel"]}";
+    String userDclEntValidite      = "${map['User_DCL_Ent_Validite']}";
+    String userDclEntLivrprev      = "${map["User_DCL_Ent_LivrPrev"]}";
+    String userDclEntModeregl      = "${map["User_DCL_Ent_ModeRegl"]}";
+    String userDclEntMoyregl       = "${map["User_DCL_Ent_MoyRegl"]}";
+    String userDclEntPrefaff       = "${map["User_DCL_Ent_PrefAff"]}";
+    String userDclEntRelauto       = "${map["User_DCL_Ent_RelAuto"]}";
+    String userDclEntRelanniv      = "${map["User_DCL_Ent_RelAnniv"]}";
+    String userUserDclEntCoprel   = "${map["User_User_DCL_Ent_CopRel"]}";
 
 
-    if (User_DCL_Ent_Validite    == "null") User_DCL_Ent_Validite     = "";
-    if (User_DCL_Ent_LivrPrev    == "null") User_DCL_Ent_LivrPrev     = "";
-    if (User_DCL_Ent_ModeRegl    == "null") User_DCL_Ent_ModeRegl     = "";
-    if (User_DCL_Ent_MoyRegl     == "null") User_DCL_Ent_MoyRegl      = "";
-    if (User_DCL_Ent_PrefAff     == "null") User_DCL_Ent_PrefAff      = "";
-    if (User_DCL_Ent_RelAuto     == "null") User_DCL_Ent_RelAuto      = "";
-    if (User_DCL_Ent_RelAnniv    == "null") User_DCL_Ent_RelAnniv     = "";
-    if (User_User_DCL_Ent_CopRel == "null") User_User_DCL_Ent_CopRel  = "";
+    if (userDclEntValidite    == "null") userDclEntValidite     = "";
+    if (userDclEntLivrprev    == "null") userDclEntLivrprev     = "";
+    if (userDclEntModeregl    == "null") userDclEntModeregl     = "";
+    if (userDclEntMoyregl     == "null") userDclEntMoyregl      = "";
+    if (userDclEntPrefaff     == "null") userDclEntPrefaff      = "";
+    if (userDclEntRelauto     == "null") userDclEntRelauto      = "";
+    if (userDclEntRelanniv    == "null") userDclEntRelanniv     = "";
+    if (userUserDclEntCoprel == "null") userUserDclEntCoprel  = "";
 
 
-    return new User(
+    return User(
       map["UserID"],
       map['User_Actif'].toString() == 'true',
       map["User_Token_FBM"],
@@ -201,43 +201,43 @@ class User {
       map['User_Niv_Isole'].toString() == 'true',
       map["User_TypeUser"],
       map["User_Art_Fav"],
-        User_DCL_Ent_Validite,
-        User_DCL_Ent_LivrPrev,
-        User_DCL_Ent_ModeRegl,
-        User_DCL_Ent_MoyRegl,
+        userDclEntValidite,
+        userDclEntLivrprev,
+        userDclEntModeregl,
+        userDclEntMoyregl,
         int.tryParse("${map["User_DCL_Ent_Valo"]}") ?? 1,
-        User_DCL_Ent_PrefAff,
-        User_DCL_Ent_RelAuto,
-        User_DCL_Ent_RelAnniv,
-        User_User_DCL_Ent_CopRel
+        userDclEntPrefaff,
+        userDclEntRelauto,
+        userDclEntRelanniv,
+        userUserDclEntCoprel
     );
   }
 
   factory User.fromJson(Map<String, dynamic> json) {
-    int iUser_Actif = int.parse(json['User_Actif'].toString());
-    bool bUser_Actif = (iUser_Actif == 1);
-    int iUser_Niv_Isole = int.parse(json['User_Niv_Isole'].toString());
-    bool bUser_Niv_Isole = (iUser_Niv_Isole == 1);
+    int iuserActif = int.parse(json['User_Actif'].toString());
+    bool buserActif = (iuserActif == 1);
+    int iuserNivIsole = int.parse(json['User_Niv_Isole'].toString());
+    bool buserNivIsole = (iuserNivIsole == 1);
 
 
-    String User_DCL_Ent_Validite      = "${json['User_DCL_Ent_Validite']}";
-    String User_DCL_Ent_LivrPrev      = "${json["User_DCL_Ent_LivrPrev"]}";
-    String User_DCL_Ent_ModeRegl      = "${json["User_DCL_Ent_ModeRegl"]}";
-    String User_DCL_Ent_MoyRegl       = "${json["User_DCL_Ent_MoyRegl"]}";
-    String User_DCL_Ent_PrefAff       = "${json["User_DCL_Ent_PrefAff"]}";
-    String User_DCL_Ent_RelAuto       = "${json["User_DCL_Ent_RelAuto"]}";
-    String User_DCL_Ent_RelAnniv      = "${json["User_DCL_Ent_RelAnniv"]}";
-    String User_User_DCL_Ent_CopRel   = "${json["User_User_DCL_Ent_CopRel"]}";
+    String userDclEntValidite      = "${json['User_DCL_Ent_Validite']}";
+    String userDclEntLivrprev      = "${json["User_DCL_Ent_LivrPrev"]}";
+    String userDclEntModeregl      = "${json["User_DCL_Ent_ModeRegl"]}";
+    String userDclEntMoyregl       = "${json["User_DCL_Ent_MoyRegl"]}";
+    String userDclEntPrefaff       = "${json["User_DCL_Ent_PrefAff"]}";
+    String userDclEntRelauto       = "${json["User_DCL_Ent_RelAuto"]}";
+    String userDclEntRelanniv      = "${json["User_DCL_Ent_RelAnniv"]}";
+    String userUserDclEntCoprel   = "${json["User_User_DCL_Ent_CopRel"]}";
 
 
-    if (User_DCL_Ent_Validite    == "null") User_DCL_Ent_Validite     = "";
-    if (User_DCL_Ent_LivrPrev    == "null") User_DCL_Ent_LivrPrev     = "";
-    if (User_DCL_Ent_ModeRegl    == "null") User_DCL_Ent_ModeRegl     = "";
-    if (User_DCL_Ent_MoyRegl     == "null") User_DCL_Ent_MoyRegl      = "";
-    if (User_DCL_Ent_PrefAff     == "null") User_DCL_Ent_PrefAff      = "";
-    if (User_DCL_Ent_RelAuto     == "null") User_DCL_Ent_RelAuto      = "";
-    if (User_DCL_Ent_RelAnniv    == "null") User_DCL_Ent_RelAnniv     = "";
-    if (User_User_DCL_Ent_CopRel == "null") User_User_DCL_Ent_CopRel  = "";
+    if (userDclEntValidite    == "null") userDclEntValidite     = "";
+    if (userDclEntLivrprev    == "null") userDclEntLivrprev     = "";
+    if (userDclEntModeregl    == "null") userDclEntModeregl     = "";
+    if (userDclEntMoyregl     == "null") userDclEntMoyregl      = "";
+    if (userDclEntPrefaff     == "null") userDclEntPrefaff      = "";
+    if (userDclEntRelauto     == "null") userDclEntRelauto      = "";
+    if (userDclEntRelanniv    == "null") userDclEntRelanniv     = "";
+    if (userUserDclEntCoprel == "null") userUserDclEntCoprel  = "";
 
 
 
@@ -252,7 +252,7 @@ class User {
 
     User wUser = User(
       int.parse(json['UserID'].toString()),
-      bUser_Actif,
+      buserActif,
       json['User_Token_FBM'],
       json['User_Matricule'],
       json['User_Nom'],
@@ -269,18 +269,18 @@ class User {
       json['User_Famille'],
       json['User_Depot'],
       int.parse(json['User_NivHabID'].toString()),
-      bUser_Niv_Isole,
+      buserNivIsole,
       json['User_TypeUser'],
       json['User_Art_Fav'],
-        User_DCL_Ent_Validite,
-        User_DCL_Ent_LivrPrev,
-        User_DCL_Ent_ModeRegl,
-        User_DCL_Ent_MoyRegl,
+        userDclEntValidite,
+        userDclEntLivrprev,
+        userDclEntModeregl,
+        userDclEntMoyregl,
         int.tryParse("${json["User_DCL_Ent_Valo"]}") ?? 1,
-        User_DCL_Ent_PrefAff,
-        User_DCL_Ent_RelAuto,
-        User_DCL_Ent_RelAnniv,
-        User_User_DCL_Ent_CopRel
+        userDclEntPrefaff,
+        userDclEntRelauto,
+        userDclEntRelanniv,
+        userUserDclEntCoprel
     );
     return wUser;
   }

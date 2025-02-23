@@ -25,13 +25,13 @@ class Client_Groupe_Parc_Inter_Article_Dialog {
   static Future<void> Dialogs_Saisie(
     BuildContext context,
     VoidCallback onSaisie,
-    String art_Type,
+    String artType,
   ) async {
     await showDialog(
       context: context,
       builder: (BuildContext context) => Client_Groupe_Parc_Inter_ArticleDialog(
         onSaisie: onSaisie,
-        art_Type: art_Type,
+        art_Type: artType,
           isDevis : false,
       ),
     );
@@ -40,13 +40,13 @@ class Client_Groupe_Parc_Inter_Article_Dialog {
   static Future<void> Dialogs_SaisieDevis(
       BuildContext context,
       VoidCallback onSaisie,
-      String art_Type,
+      String artType,
       ) async {
     await showDialog(
       context: context,
       builder: (BuildContext context) => Client_Groupe_Parc_Inter_ArticleDialog(
         onSaisie: onSaisie,
-        art_Type: art_Type,
+        art_Type: artType,
         isDevis : true,
       ),
     );
@@ -82,8 +82,8 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
   Widget wIco = Container();
 
   List<Widget> views = <Widget>[
-    Text('Pièces Détachées'),
-    Text('Catalogue Articles'),
+    const Text('Pièces Détachées'),
+    const Text('Catalogue Articles'),
   ];
 
   final List<bool> _selectedView = <bool>[true, false, false];
@@ -112,7 +112,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
 
   bool affEdtFilter = false;
   double icoWidth = 40;
-  TextEditingController ctrlFilter = new TextEditingController();
+  TextEditingController ctrlFilter = TextEditingController();
   String filterText = '';
   static List<Parc_Art> searchParcs_Art = [];
 
@@ -126,10 +126,10 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
 
     Srv_DbTools.ListArticle_Fam_Ebp_Fam.clear();
     for (int i = 0; i < Srv_DbTools.ListArticle_Fam_Ebp.length; i++) {
-      Article_Fam_Ebp wArticle_Fam_Ebp = Srv_DbTools.ListArticle_Fam_Ebp[i];
-      if (wArticle_Fam_Ebp.Article_Fam_Code_Parent.compareTo(FiltreFamID) == 0) {
-        ListParam_FiltreSousFam.add(wArticle_Fam_Ebp.Article_Fam_Libelle);
-        ListParam_FiltreSousFamID.add(wArticle_Fam_Ebp.Article_Fam_Code);
+      Article_Fam_Ebp warticleFamEbp = Srv_DbTools.ListArticle_Fam_Ebp[i];
+      if (warticleFamEbp.Article_Fam_Code_Parent.compareTo(FiltreFamID) == 0) {
+        ListParam_FiltreSousFam.add(warticleFamEbp.Article_Fam_Libelle);
+        ListParam_FiltreSousFamID.add(warticleFamEbp.Article_Fam_Code);
       }
     }
     FiltreSousFam = ListParam_FiltreSousFam[0];
@@ -139,23 +139,23 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
   }
 
   Future Filtre() async {
-    print("Client_Groupe_Parc_Inter_ArticleDialog filtre ${widget.art_Type} isGamme ${isGamme} isProp ${isProp} isES ${isES}");
+    print("Client_Groupe_Parc_Inter_ArticleDialog filtre ${widget.art_Type} isGamme $isGamme isProp $isProp isES $isES");
 
-    Srv_DbTools.ListArticle_Ebp.forEach((element) {
+    for (var element in Srv_DbTools.ListArticle_Ebp) {
       element.Art_Sel = false;
-    });
+    }
 
     if (isGamme) {
       Srv_DbTools.ListArticle_Ebpsearchresult.clear();
       for (int i = 0; i < Srv_DbTools.ListArticle_Ebp.length; i++) {
         Article_Ebp element = Srv_DbTools.ListArticle_Ebp[i];
         for (int i = 0; i < DbTools.glfNF074_Gammes.length; i++) {
-          NF074_Gammes wNF074_Gammes = DbTools.glfNF074_Gammes[i];
-          if (element.Article_codeArticle.compareTo(wNF074_Gammes.NF074_Gammes_REF) == 0) {
+          NF074_Gammes wnf074Gammes = DbTools.glfNF074_Gammes[i];
+          if (element.Article_codeArticle.compareTo(wnf074Gammes.NF074_Gammes_REF) == 0) {
             bool trv = false;
             for (int j = 0; j < Srv_DbTools.ListArticle_Ebpsearchresult.length; j++) {
               Article_Ebp elementAdd = Srv_DbTools.ListArticle_Ebpsearchresult[j];
-              if (elementAdd.Article_codeArticle.compareTo(wNF074_Gammes.NF074_Gammes_REF) == 0) trv = true;
+              if (elementAdd.Article_codeArticle.compareTo(wnf074Gammes.NF074_Gammes_REF) == 0) trv = true;
             }
             if (!trv) Srv_DbTools.ListArticle_Ebpsearchresult.add(element);
           }
@@ -171,37 +171,38 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
       ListArtsearchresultTmp.clear();
 //      Srv_DbTools.ListArticle_Ebpsearchresult.addAll(Srv_DbTools.ListArticle_Ebp_ES);
 
-      Parc_Art parc_Art = Parc_Art.Parc_ArtInit(DbTools.gParc_Ent.ParcsId!);
-      String ParcsArt_Id = "";
+      Parc_Art parcArt = Parc_Art.Parc_ArtInit(DbTools.gParc_Ent.ParcsId!);
+      String parcsartId = "";
 
       DbTools.lParcs_Art = await DbTools.getParcs_Art(DbTools.gParc_Ent.ParcsId!, "ES");
-      if (DbTools.lParcs_Art.length > 0) {
-        parc_Art = DbTools.lParcs_Art[0];
-        ParcsArt_Id = parc_Art.ParcsArt_Id!;
-        print("parc_Art RECH ${parc_Art.toString()}");
+      if (DbTools.lParcs_Art.isNotEmpty) {
+        parcArt = DbTools.lParcs_Art[0];
+        parcsartId = parcArt.ParcsArt_Id!;
+        print("parc_Art RECH ${parcArt.toString()}");
       } else {
-        ParcsArt_Id = Srv_DbTools.gArticle_EbpEnt.Article_codeArticle;
+        parcsartId = Srv_DbTools.gArticle_EbpEnt.Article_codeArticle;
       }
 
       for (int i = 0; i < Srv_DbTools.ListArticle_Ebp_ES.length; i++) {
-        Article_Ebp wArticle_Ebp = Srv_DbTools.ListArticle_Ebp_ES[i];
-        if (wArticle_Ebp.Article_codeArticle.compareTo(ParcsArt_Id) == 0) {
+        Article_Ebp warticleEbp = Srv_DbTools.ListArticle_Ebp_ES[i];
+        if (warticleEbp.Article_codeArticle.compareTo(parcsartId) == 0) {
           print("parc_Art trv");
-          wArticle_Ebp.Art_Sel = true;
-          ListArtsearchresultTmp.insert(0, wArticle_Ebp);
-        } else
-          ListArtsearchresultTmp.add(wArticle_Ebp);
+          warticleEbp.Art_Sel = true;
+          ListArtsearchresultTmp.insert(0, warticleEbp);
+        } else {
+          ListArtsearchresultTmp.add(warticleEbp);
+        }
       }
 
       if (Search_TextController.text.isEmpty) {
         Srv_DbTools.ListArticle_Ebpsearchresult.addAll(ListArtsearchresultTmp);
       } else {
         print("_buildFieldTextSearch liste ${Search_TextController.text}");
-        ListArtsearchresultTmp.forEach((element) {
+        for (var element in ListArtsearchresultTmp) {
           if (element.Article_codeArticle.toLowerCase().contains(Search_TextController.text.toLowerCase())) {
             Srv_DbTools.ListArticle_Ebpsearchresult.add(element);
           }
-        });
+        }
       }
 
 
@@ -224,8 +225,8 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
           Article_Ebp element = Srv_DbTools.ListArticle_Ebp[i];
 
           for (int i = 0; i < Srv_DbTools.ListResult_Article_Link_Verif_PROP.length; i++) {
-            Result_Article_Link_Verif wResult_Article_Link_Verif = Srv_DbTools.ListResult_Article_Link_Verif_PROP[i];
-            if (element.Article_codeArticle.compareTo(wResult_Article_Link_Verif.ChildID) == 0) {
+            Result_Article_Link_Verif wresultArticleLinkVerif = Srv_DbTools.ListResult_Article_Link_Verif_PROP[i];
+            if (element.Article_codeArticle.compareTo(wresultArticleLinkVerif.ChildID) == 0) {
               Srv_DbTools.ListArticle_Ebpsearchresult.add(element);
               break;
             }
@@ -237,8 +238,8 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
         for (int i = 0; i < Srv_DbTools.ListArticle_Ebp.length; i++) {
           Article_Ebp element = Srv_DbTools.ListArticle_Ebp[i];
           for (int i = 0; i < Srv_DbTools.ListResult_Article_Link_Verif_PROP_Mixte.length; i++) {
-            Result_Article_Link_Verif wResult_Article_Link_Verif = Srv_DbTools.ListResult_Article_Link_Verif_PROP_Mixte[i];
-            if (element.Article_codeArticle.compareTo(wResult_Article_Link_Verif.ChildID) == 0) {
+            Result_Article_Link_Verif wresultArticleLinkVerif = Srv_DbTools.ListResult_Article_Link_Verif_PROP_Mixte[i];
+            if (element.Article_codeArticle.compareTo(wresultArticleLinkVerif.ChildID) == 0) {
               Srv_DbTools.ListArticle_Ebpsearchresult.add(element);
               break;
             }
@@ -250,8 +251,8 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
         for (int i = 0; i < Srv_DbTools.ListArticle_Ebp.length; i++) {
           Article_Ebp element = Srv_DbTools.ListArticle_Ebp[i];
           for (int i = 0; i < Srv_DbTools.ListResult_Article_Link_Verif_PROP_Service.length; i++) {
-            Result_Article_Link_Verif wResult_Article_Link_Verif = Srv_DbTools.ListResult_Article_Link_Verif_PROP_Service[i];
-            if (element.Article_codeArticle.compareTo(wResult_Article_Link_Verif.ChildID) == 0) {
+            Result_Article_Link_Verif wresultArticleLinkVerif = Srv_DbTools.ListResult_Article_Link_Verif_PROP_Service[i];
+            if (element.Article_codeArticle.compareTo(wresultArticleLinkVerif.ChildID) == 0) {
               Srv_DbTools.ListArticle_Ebpsearchresult.add(element);
               break;
             }
@@ -263,19 +264,19 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
       ListArtsearchresultTmp.addAll(Srv_DbTools.ListArticle_Ebpsearchresult);
       Srv_DbTools.ListArticle_Ebpsearchresult.clear();
 
-      print("Filtre isProp $isProp widget.art_Type ${ListArtsearchresultTmp.length} filterText ${filterText} ");
+      print("Filtre isProp $isProp widget.art_Type ${ListArtsearchresultTmp.length} filterText $filterText ");
 
 
       if (filterText.isEmpty) {
         Srv_DbTools.ListArticle_Ebpsearchresult.addAll(ListArtsearchresultTmp);
       } else {
-        print("_buildFieldTextSearch liste ${filterText}");
-        ListArtsearchresultTmp.forEach((element) {
+        print("_buildFieldTextSearch liste $filterText");
+        for (var element in ListArtsearchresultTmp) {
           String wComp = "${element.Article_codeArticle} ${element.Article_descriptionCommercialeEnClair}";
           if (wComp.toLowerCase().contains(filterText.toLowerCase())) {
             Srv_DbTools.ListArticle_Ebpsearchresult.add(element);
           }
-        });
+        }
       }
 
 
@@ -306,13 +307,13 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
     } else {
       print("_buildFieldTextSearch liste ${Search_TextController.text}");
 
-      Srv_DbTools.ListArticle_Ebp.forEach((element) {
+      for (var element in Srv_DbTools.ListArticle_Ebp) {
         if (element.Article_codeArticle.toLowerCase().compareTo(Search_TextController.text.toLowerCase()) == 0) {
           ListArtsearchresultTmp.add(element);
         }
-      });
+      }
 
-      Srv_DbTools.ListArticle_Ebp.forEach((element) {
+      for (var element in Srv_DbTools.ListArticle_Ebp) {
         if (element.Article_codeArticle.toLowerCase().contains(Search_TextController.text.toLowerCase())) {
           int index = ListArtsearchresultTmp.indexWhere((a) => a.Article_codeArticle.compareTo(element.Article_codeArticle) == 0);
           if (index < 0) {
@@ -324,7 +325,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
             ListArtsearchresultTmp.add(element);
           }
         }
-      });
+      }
     }
 
     if (FiltreSousFam.compareTo("Tous") == 0 && FiltreFam.compareTo("Tous") == 0) {
@@ -342,9 +343,9 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
 
       ListArtsearchresultTmpF.addAll(ListArtsearchresultTmp);
     } else {
-      ListArtsearchresultTmp.forEach((element) {
+      for (var element in ListArtsearchresultTmp) {
         if (FiltreFam.compareTo(element.Article_Fam) == 0) ListArtsearchresultTmpF.add(element);
-      });
+      }
     }
 
     print("Filtre ListArtsearchresultTmpF ${ListArtsearchresultTmpF.length}");
@@ -352,9 +353,9 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
     if (FiltreSousFam.compareTo("Tous") == 0) {
       Srv_DbTools.ListArticle_Ebpsearchresult.addAll(ListArtsearchresultTmpF);
     } else {
-      ListArtsearchresultTmpF.forEach((element) {
+      for (var element in ListArtsearchresultTmpF) {
         if (FiltreSousFam.compareTo(element.Article_Sous_Fam) == 0) Srv_DbTools.ListArticle_Ebpsearchresult.add(element);
-      });
+      }
     }
 
     print("Filtre ListArticle_Ebpsearchresult ${Srv_DbTools.ListArticle_Ebpsearchresult.length}");
@@ -371,9 +372,9 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
       return;
     }
 
-    Srv_DbTools.ListArticle_Ebp.forEach((element) {
+    for (var element in Srv_DbTools.ListArticle_Ebp) {
       element.Art_Sel = false;
-    });
+    }
 
     if (Srv_DbTools.REF_Lib.isNotEmpty) {
       isRef = true;
@@ -381,7 +382,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
       isRef = false;
     }
 
-    print("ARTICLES ${Srv_DbTools.REF_Lib} => ${isRef}");
+    print("ARTICLES ${Srv_DbTools.REF_Lib} => $isRef");
 
     if (!isRef) isProp = false;
 
@@ -392,10 +393,10 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
 
     Srv_DbTools.ListArticle_Fam_Ebp_Fam.clear();
     for (int i = 0; i < Srv_DbTools.ListArticle_Fam_Ebp.length; i++) {
-      Article_Fam_Ebp wArticle_Fam_Ebp = Srv_DbTools.ListArticle_Fam_Ebp[i];
-      if (wArticle_Fam_Ebp.Article_Fam_Code_Parent.isEmpty) {
-        ListParam_FiltreFam.add("${wArticle_Fam_Ebp.Article_Fam_Libelle}");
-        ListParam_FiltreFamID.add(wArticle_Fam_Ebp.Article_Fam_Code);
+      Article_Fam_Ebp warticleFamEbp = Srv_DbTools.ListArticle_Fam_Ebp[i];
+      if (warticleFamEbp.Article_Fam_Code_Parent.isEmpty) {
+        ListParam_FiltreFam.add(warticleFamEbp.Article_Fam_Libelle);
+        ListParam_FiltreFamID.add(warticleFamEbp.Article_Fam_Code);
       }
     }
 
@@ -452,12 +453,12 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
     print("ARTICLES wDialogHeight $wDialogHeight");
 
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
       surfaceTintColor: Colors.white,
       backgroundColor: gColors.white,
       title: Container(
           color: gColors.white,
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
           child: Column(
             children: [
               Text(
@@ -529,7 +530,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                   ],
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               Container(
                 color: gColors.black,
                 height: 1,
@@ -588,8 +589,8 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
             children: views,
           ),
 
-          Spacer(),
-          new ElevatedButton(
+          const Spacer(),
+          ElevatedButton(
             onPressed: () async {
               Srv_DbTools.gArticle_EbpSelRef = Article_Ebp.Article_EbpInit();
               await HapticFeedback.vibrate();
@@ -604,7 +605,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
 
@@ -617,20 +618,20 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                     print(" Saisie Article SOSOSOSOSOS ${art.Article_codeArticle}");
 
 
-                    Parc_Art wParc_Art = Parc_Art.Parc_ArtInit(Srv_DbTools.gIntervention.InterventionId);
-                    wParc_Art.ParcsArt_Id = art.Article_codeArticle;
-                    wParc_Art.ParcsArt_Type = widget.art_Type;
-                    wParc_Art.ParcsArt_Lib = "SO ${art.Article_descriptionCommercialeEnClair}";
-                    wParc_Art.ParcsArt_Qte = 1;
-                    wParc_Art.ParcsArt_lnk = "SO";
+                    Parc_Art wparcArt = Parc_Art.Parc_ArtInit(Srv_DbTools.gIntervention.InterventionId);
+                    wparcArt.ParcsArt_Id = art.Article_codeArticle;
+                    wparcArt.ParcsArt_Type = widget.art_Type;
+                    wparcArt.ParcsArt_Lib = "SO ${art.Article_descriptionCommercialeEnClair}";
+                    wparcArt.ParcsArt_Qte = 1;
+                    wparcArt.ParcsArt_lnk = "SO";
                     if(widget.isDevis)
                       {
-                        wParc_Art.ParcsArt_Fact = "Devis";
-                        wParc_Art.ParcsArt_Livr = "Reliquat";
+                        wparcArt.ParcsArt_Fact = "Devis";
+                        wparcArt.ParcsArt_Livr = "Reliquat";
 
                       }
-                    print(" SOSOSOSOSOS > insertParc_Art ${wParc_Art.toString()}");
-                    await DbTools.insertParc_Art(wParc_Art);
+                    print(" SOSOSOSOSOS > insertParc_Art ${wparcArt.toString()}");
+                    await DbTools.insertParc_Art(wparcArt);
 
 
                   }
@@ -654,15 +655,15 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
 
                 // Effacement interne
                 for (int i = 0; i < DbTools.lParcs_Art.length; i++) {
-                  Parc_Art parc_Art = DbTools.lParcs_Art[i];
-                  await DbTools.deleteParc_Art(parc_Art.ParcsArtId!);
+                  Parc_Art parcArt = DbTools.lParcs_Art[i];
+                  await DbTools.deleteParc_Art(parcArt.ParcsArtId!);
                 }
 
                 // Effacement externe
-                Parc_Ent wParc_Ent = await DbTools.getParcs_Ent_Parcs_UUID_Child(DbTools.gParc_Ent.Parcs_UUID!);
+                Parc_Ent wparcEnt = await DbTools.getParcs_Ent_Parcs_UUID_Child(DbTools.gParc_Ent.Parcs_UUID!);
                 print(" SES  deleteParc_EntTrigger}");
-                if (wParc_Ent.Parcs_InterventionId != -1) {
-                  await DbTools.deleteParc_EntTrigger(wParc_Ent.ParcsId!);
+                if (wparcEnt.Parcs_InterventionId != -1) {
+                  await DbTools.deleteParc_EntTrigger(wparcEnt.ParcsId!);
                 }
 
                 for (int i = 0; i < Srv_DbTools.ListArticle_Ebpsearchresult.length; i++) {
@@ -675,68 +676,68 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                     DbTools.updateParc_Ent(DbTools.gParc_Ent);
 
 
-                    Parc_Art wParc_Art = Parc_Art.Parc_ArtInit(DbTools.gParc_Ent.ParcsId!);
-                    wParc_Art.ParcsArt_Id = art.Article_codeArticle;
-                    wParc_Art.ParcsArt_Type = widget.art_Type;
-                    wParc_Art.ParcsArt_Lib = "${art.Article_descriptionCommercialeEnClair}";
-                    wParc_Art.ParcsArt_Qte = 1;
+                    Parc_Art wparcArt = Parc_Art.Parc_ArtInit(DbTools.gParc_Ent.ParcsId!);
+                    wparcArt.ParcsArt_Id = art.Article_codeArticle;
+                    wparcArt.ParcsArt_Type = widget.art_Type;
+                    wparcArt.ParcsArt_Lib = art.Article_descriptionCommercialeEnClair;
+                    wparcArt.ParcsArt_Qte = 1;
 
-                    print(" SES > insertParc_Art ${wParc_Art.toString()}");
-                    await DbTools.insertParc_Art(wParc_Art);
+                    print(" SES > insertParc_Art ${wparcArt.toString()}");
+                    await DbTools.insertParc_Art(wparcArt);
                     print(" SES < insertParc_Art ");
 
-                    List<Parc_Art> xParcs_Art = await DbTools.getParcs_Art_AllType(DbTools.gParc_Ent.ParcsId!);
-                    for (int i = 0; i < xParcs_Art.length; i++) {
-                      Parc_Art xparc_Art = xParcs_Art[i];
-                      print(" SES xparc_Art ${xparc_Art.Desc()} ");
+                    List<Parc_Art> xparcsArt = await DbTools.getParcs_Art_AllType(DbTools.gParc_Ent.ParcsId!);
+                    for (int i = 0; i < xparcsArt.length; i++) {
+                      Parc_Art xparcArt = xparcsArt[i];
+                      print(" SES xparc_Art ${xparcArt.Desc()} ");
                     }
 
 
 
                     //Construction Parc_Ent
-                    wParc_Ent = Parc_Ent.Parc_EntInit(Srv_DbTools.gIntervention.InterventionId!, DbTools.gParc_Ent.Parcs_Type!, DbTools.gParc_Ent.Parcs_order!);
-                    wParc_Ent.Parcs_UUID_Parent = DbTools.gParc_Ent.Parcs_UUID;
+                    wparcEnt = Parc_Ent.Parc_EntInit(Srv_DbTools.gIntervention.InterventionId, DbTools.gParc_Ent.Parcs_Type!, DbTools.gParc_Ent.Parcs_order!);
+                    wparcEnt.Parcs_UUID_Parent = DbTools.gParc_Ent.Parcs_UUID;
 
-                    wParc_Ent.Parcs_FREQ_Id = DbTools.gParc_Ent.Parcs_FREQ_Id;
-                    wParc_Ent.Parcs_FREQ_Label = DbTools.gParc_Ent.Parcs_FREQ_Label;
+                    wparcEnt.Parcs_FREQ_Id = DbTools.gParc_Ent.Parcs_FREQ_Id;
+                    wparcEnt.Parcs_FREQ_Label = DbTools.gParc_Ent.Parcs_FREQ_Label;
 
-                    wParc_Ent.Parcs_ANN_Id = DbTools.gParc_Ent.Parcs_ANN_Id;
+                    wparcEnt.Parcs_ANN_Id = DbTools.gParc_Ent.Parcs_ANN_Id;
                     DateTime now = DateTime.now();
                     String formattedDate = DateFormat('MM-yyyy').format(now);
-                    wParc_Ent.Parcs_ANN_Label = formattedDate;
-                    wParc_Ent.Parcs_FAB_Label = formattedDate;
+                    wparcEnt.Parcs_ANN_Label = formattedDate;
+                    wparcEnt.Parcs_FAB_Label = formattedDate;
 
-                    wParc_Ent.Parcs_NIV_Id = DbTools.gParc_Ent.Parcs_NIV_Id;
-                    wParc_Ent.Parcs_NIV_Label = DbTools.gParc_Ent.Parcs_NIV_Label;
-                    wParc_Ent.Parcs_ZNE_Id = DbTools.gParc_Ent.Parcs_ZNE_Id;
-                    wParc_Ent.Parcs_ZNE_Label = DbTools.gParc_Ent.Parcs_ZNE_Label;
-                    wParc_Ent.Parcs_EMP_Id = DbTools.gParc_Ent.Parcs_EMP_Id;
-                    wParc_Ent.Parcs_EMP_Label = DbTools.gParc_Ent.Parcs_EMP_Label;
+                    wparcEnt.Parcs_NIV_Id = DbTools.gParc_Ent.Parcs_NIV_Id;
+                    wparcEnt.Parcs_NIV_Label = DbTools.gParc_Ent.Parcs_NIV_Label;
+                    wparcEnt.Parcs_ZNE_Id = DbTools.gParc_Ent.Parcs_ZNE_Id;
+                    wparcEnt.Parcs_ZNE_Label = DbTools.gParc_Ent.Parcs_ZNE_Label;
+                    wparcEnt.Parcs_EMP_Id = DbTools.gParc_Ent.Parcs_EMP_Id;
+                    wparcEnt.Parcs_EMP_Label = DbTools.gParc_Ent.Parcs_EMP_Label;
 
-                    wParc_Ent.Parcs_CodeArticle =  art.Article_codeArticle;
+                    wparcEnt.Parcs_CodeArticle =  art.Article_codeArticle;
                     DbTools.updateParc_Ent(DbTools.gParc_Ent);
 
 
 
-                    await DbTools.insertParc_Ent(wParc_Ent);
+                    await DbTools.insertParc_Ent(wparcEnt);
 
-                    print(" SES  insertParc_Ent ${wParc_Ent.toString()}");
+                    print(" SES  insertParc_Ent ${wparcEnt.toString()}");
                     print("Set Article ${art.Article_descriptionCommercialeEnClair}");
 
                     for (int i = 0; i < DbTools.glfNF074_Gammes.length; i++) {
-                      NF074_Gammes wNF074_Gammes = DbTools.glfNF074_Gammes[i];
-                      if (art.Article_codeArticle.compareTo(wNF074_Gammes.NF074_Gammes_REF) == 0) {
-                        print("Selection wParam_Gamme ${wNF074_Gammes.NF074_Gammes_CODF} gLastID ${DbTools.gLastID}");
+                      NF074_Gammes wnf074Gammes = DbTools.glfNF074_Gammes[i];
+                      if (art.Article_codeArticle.compareTo(wnf074Gammes.NF074_Gammes_REF) == 0) {
+                        print("Selection wParam_Gamme ${wnf074Gammes.NF074_Gammes_CODF} gLastID ${DbTools.gLastID}");
 
 
-                        print("Selection wParam_Gamme ${wNF074_Gammes.toMap()}");
+                        print("Selection wParam_Gamme ${wnf074Gammes.toMap()}");
 
 
-                        List<Parc_Desc> wParcs_Desc = [];
-                        wParcs_Desc.addAll(DbTools.glfParcs_Desc);
+                        List<Parc_Desc> wparcsDesc = [];
+                        wparcsDesc.addAll(DbTools.glfParcs_Desc);
 
-                        for (int i = 0; i < wParcs_Desc.length; i++) {
-                          var element2 = wParcs_Desc[i];
+                        for (int i = 0; i < wparcsDesc.length; i++) {
+                          var element2 = wparcsDesc[i];
                           element2.ParcsDesc_ParcsId = DbTools.gLastID;
 
                           if ((element2.ParcsDesc_Type!.compareTo("FREG") == 0) || (element2.ParcsDesc_Type!.compareTo("EMP") == 0) || (element2.ParcsDesc_Type!.compareTo("ZNE") == 0) || (element2.ParcsDesc_Type!.compareTo("NIV") == 0) || (element2.ParcsDesc_Type!.compareTo("ANN") == 0)) {
@@ -744,36 +745,36 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                             await DbTools.insertIntoParc_Desc(element2);
                           } else if (element2.ParcsDesc_Type!.compareTo("DESC") == 0) {
                             element2.ParcsDesc_Id = "";
-                            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_DESC;
+                            element2.ParcsDesc_Lib = wnf074Gammes.NF074_Gammes_DESC;
                             print("INSERT ParcsDesc_Type ${element2.ParcsDesc_Type} ParcsDesc_Id ${element2.ParcsDesc_Id} ParcsDesc_Lib ${element2.ParcsDesc_Lib}");
                             await DbTools.insertIntoParc_Desc(element2);
                           } else if (element2.ParcsDesc_Type!.compareTo("FAB") == 0) {
                             element2.ParcsDesc_Id = "";
-                            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_FAB;
+                            element2.ParcsDesc_Lib = wnf074Gammes.NF074_Gammes_FAB;
                             await DbTools.insertIntoParc_Desc(element2);
                           } else if (element2.ParcsDesc_Type!.compareTo("PRS") == 0) {
                             element2.ParcsDesc_Id = "";
-                            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_PRS;
+                            element2.ParcsDesc_Lib = wnf074Gammes.NF074_Gammes_PRS;
                             await DbTools.insertIntoParc_Desc(element2);
                           } else if (element2.ParcsDesc_Type!.compareTo("CLF") == 0) {
                             element2.ParcsDesc_Id = "";
-                            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_CLF;
+                            element2.ParcsDesc_Lib = wnf074Gammes.NF074_Gammes_CLF;
                             await DbTools.insertIntoParc_Desc(element2);
                           } else if (element2.ParcsDesc_Type!.compareTo("MOB") == 0) {
                             element2.ParcsDesc_Id = "";
-                            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_MOB;
+                            element2.ParcsDesc_Lib = wnf074Gammes.NF074_Gammes_MOB;
                             await DbTools.insertIntoParc_Desc(element2);
                           } else if (element2.ParcsDesc_Type!.compareTo("PDT") == 0) {
                             element2.ParcsDesc_Id = "";
-                            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_PDT;
+                            element2.ParcsDesc_Lib = wnf074Gammes.NF074_Gammes_PDT;
                             await DbTools.insertIntoParc_Desc(element2);
                           } else if (element2.ParcsDesc_Type!.compareTo("POIDS") == 0) {
                             element2.ParcsDesc_Id = "";
-                            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_POIDS;
+                            element2.ParcsDesc_Lib = wnf074Gammes.NF074_Gammes_POIDS;
                             await DbTools.insertIntoParc_Desc(element2);
                           } else if (element2.ParcsDesc_Type!.compareTo("GAM") == 0) {
                             element2.ParcsDesc_Id = "";
-                            element2.ParcsDesc_Lib = wNF074_Gammes.NF074_Gammes_GAM;
+                            element2.ParcsDesc_Lib = wnf074Gammes.NF074_Gammes_GAM;
                             Srv_DbTools.GAM_ID = element2.ParcsDesc_Id.toString();
                             await DbTools.insertIntoParc_Desc(element2);
                           }
@@ -790,8 +791,8 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                   if (art.Art_Sel) {
                     bool Trv = false;
                     for (int i = 0; i < DbTools.lParcs_Art.length; i++) {
-                      Parc_Art parc_Art = DbTools.lParcs_Art[i];
-                      if (parc_Art.ParcsArt_Id!.compareTo(art.Article_codeArticle) == 0) {
+                      Parc_Art parcArt = DbTools.lParcs_Art[i];
+                      if (parcArt.ParcsArt_Id!.compareTo(art.Article_codeArticle) == 0) {
 //                        parc_Art.ParcsArt_Qte =  1;
                         //                      await DbTools.updateParc_Art(parc_Art);
                         Trv = true;
@@ -800,12 +801,12 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                     }
 
                     if (!Trv) {
-                      Parc_Art wParc_Art = Parc_Art.Parc_ArtInit(DbTools.gParc_Ent.ParcsId!);
-                      wParc_Art.ParcsArt_Id = art.Article_codeArticle;
-                      wParc_Art.ParcsArt_Type = widget.art_Type;
-                      wParc_Art.ParcsArt_Lib = art.Article_descriptionCommercialeEnClair;
-                      wParc_Art.ParcsArt_Qte = 1;
-                      await DbTools.insertParc_Art(wParc_Art);
+                      Parc_Art wparcArt = Parc_Art.Parc_ArtInit(DbTools.gParc_Ent.ParcsId!);
+                      wparcArt.ParcsArt_Id = art.Article_codeArticle;
+                      wparcArt.ParcsArt_Type = widget.art_Type;
+                      wparcArt.ParcsArt_Lib = art.Article_descriptionCommercialeEnClair;
+                      wparcArt.ParcsArt_Qte = 1;
+                      await DbTools.insertParc_Art(wparcArt);
                     }
                   }
                 }
@@ -854,7 +855,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
               width: 10,
             ),
             Container(
-              padding: EdgeInsets.fromLTRB(5, 0, 0, 0),
+              padding: const EdgeInsets.fromLTRB(5, 0, 0, 0),
               width: wDropdown - 1,
               height: 32,
               color: gColors.white,
@@ -866,7 +867,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                   print("_buildFieldTextSearch search ${Search_TextController.text}");
                   Filtre();
                 },
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   border: InputBorder.none,
                   isDense: true,
                 ),
@@ -877,7 +878,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
   }
 
   Widget DropdownFiltreFam() {
-    if (ListParam_FiltreFam.length == 0) return Container();
+    if (ListParam_FiltreFam.isEmpty) return Container();
 
     return Container(
         decoration: BoxDecoration(
@@ -908,7 +909,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
               items: ListParam_FiltreFam.map((item) => DropdownMenuItem<String>(
                     value: item,
                     child: Text(
-                      "  ${item}",
+                      "  $item",
                       style: gColors.bodyTitle1_N_Gr,
                     ),
                   )).toList(),
@@ -917,8 +918,8 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                 setState(() {
                   String sValue = value as String;
                   FiltreFamID = ListParam_FiltreFamID[ListParam_FiltreFam.indexOf(sValue)];
-                  FiltreFam = value as String;
-                  print(">>>>>>>>>>>>>>>>> FiltreFam ${FiltreFamID} ${FiltreFam}");
+                  FiltreFam = value;
+                  print(">>>>>>>>>>>>>>>>> FiltreFam $FiltreFamID $FiltreFam");
 
                   ListParam_FiltreSousFam.clear();
                   ListParam_FiltreSousFamID.clear();
@@ -926,15 +927,15 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                   ListParam_FiltreSousFamID.add("*");
                   Srv_DbTools.ListArticle_Fam_Ebp_Fam.clear();
                   for (int i = 0; i < Srv_DbTools.ListArticle_Fam_Ebp.length; i++) {
-                    Article_Fam_Ebp wArticle_Fam_Ebp = Srv_DbTools.ListArticle_Fam_Ebp[i];
-                    if (wArticle_Fam_Ebp.Article_Fam_Code_Parent.compareTo(FiltreFamID) == 0) {
-                      ListParam_FiltreSousFam.add(wArticle_Fam_Ebp.Article_Fam_Libelle);
-                      ListParam_FiltreSousFamID.add(wArticle_Fam_Ebp.Article_Fam_Code);
+                    Article_Fam_Ebp warticleFamEbp = Srv_DbTools.ListArticle_Fam_Ebp[i];
+                    if (warticleFamEbp.Article_Fam_Code_Parent.compareTo(FiltreFamID) == 0) {
+                      ListParam_FiltreSousFam.add(warticleFamEbp.Article_Fam_Libelle);
+                      ListParam_FiltreSousFamID.add(warticleFamEbp.Article_Fam_Code);
                     }
                   }
                   FiltreSousFam = ListParam_FiltreSousFam[0];
                   FiltreSousFamID = ListParam_FiltreSousFamID[0];
-                  print(">>>>>>>>>>>>>>>>> FiltreSousFam ${FiltreSousFamID} ${FiltreSousFam}");
+                  print(">>>>>>>>>>>>>>>>> FiltreSousFam $FiltreSousFamID $FiltreSousFam");
                   Filtre();
                 });
               },
@@ -968,7 +969,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
   }
 
   Widget DropdownFiltreSousFam() {
-    if (ListParam_FiltreSousFam.length == 0) return Container();
+    if (ListParam_FiltreSousFam.isEmpty) return Container();
 
     return Container(
         decoration: BoxDecoration(
@@ -999,7 +1000,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
               items: ListParam_FiltreSousFam.map((item) => DropdownMenuItem<String>(
                     value: item,
                     child: Text(
-                      "  ${item}",
+                      "  $item",
                       style: gColors.bodyTitle1_N_Gr,
                     ),
                   )).toList(),
@@ -1008,8 +1009,8 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                 String sValue = value as String;
 
                 FiltreSousFamID = ListParam_FiltreSousFam[ListParam_FiltreSousFam.indexOf(sValue)];
-                FiltreSousFam = value as String;
-                print("FiltreSousFam ${FiltreSousFamID} ${FiltreSousFam}");
+                FiltreSousFam = value;
+                print("FiltreSousFam $FiltreSousFamID $FiltreSousFam");
 
                 Filtre();
               },
@@ -1062,14 +1063,14 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
     double wb = MediaQuery.of(context).viewInsets.bottom;
     double bas = 380 + wb;
 
-    return Container(
+    return SizedBox(
       height: wDialogHeight - bas,
       width: 699,
       child: Container(
-        padding: EdgeInsets.fromLTRB(0, 1, 0, 0),
+        padding: const EdgeInsets.fromLTRB(0, 1, 0, 0),
         color: gColors.greyDark,
         child: Container(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
           color: gColors.greyLight,
           child: Scrollbar(
               child: ListView.separated(
@@ -1094,7 +1095,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
     if (art.Art_Sel || isProp) {
       await Srv_DbTools.getArticlesImg_Ebp( art.Article_codeArticle);
       gObj.pic = base64Decode(Srv_DbTools.gArticlesImg_Ebp.ArticlesImg_Image);
-      if (gObj.pic.length > 0) {
+      if (gObj.pic.isNotEmpty) {
         art.wImgeTrv = true;
         art.wImage = Image.memory(
           gObj.pic,
@@ -1113,13 +1114,13 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
   }
 
   Widget buildImage(BuildContext context, Article_Ebp art) {
-    return new FutureBuilder(
+    return FutureBuilder(
       future: GetImage(art),
       builder: (BuildContext context, AsyncSnapshot<Image> image) {
         if (image.hasData) {
           return image.data!;
         } else {
-          return new Container(width: 30);
+          return Container(width: 30);
         }
       },
     );
@@ -1141,18 +1142,18 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
           Container(
             width: 100,
             height: 20,
-            padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+            padding: const EdgeInsets.fromLTRB(0, 2, 8, 0),
             child: Text(
-              "${art.Article_codeArticle}",
+              art.Article_codeArticle,
               style: gColors.bodyTitle1_N_Gr,
             ),
           ),
           Expanded(
             child: Container(
               height: 20,
-              padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+              padding: const EdgeInsets.fromLTRB(0, 2, 8, 0),
               child: Text(
-                "${art.Article_descriptionCommercialeEnClair}",
+                art.Article_descriptionCommercialeEnClair,
                 style: gColors.bodyTitle1_N_Gr,
               ),
             ),
@@ -1193,14 +1194,14 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
 
   @override
   Widget Entete_Btn_Search() {
-    return Container(
+    return SizedBox(
         height: 57,
         child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
           Container(
             width: 8,
           ),
 
-          Spacer(),
+          const Spacer(),
 
           EdtFilterWidget(),
         ]));
@@ -1211,7 +1212,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
     return !affEdtFilter
         ? InkWell(
         child: Padding(
-          padding: EdgeInsets.only(right: 8),
+          padding: const EdgeInsets.only(right: 8),
           child: Image.asset(
             "assets/images/Btn_Loupe.png",
             height: icoWidth,
@@ -1222,7 +1223,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
           affEdtFilter = !affEdtFilter;
           setState(() {});
         })
-        : Container(
+        : SizedBox(
         width: 320,
         child: Row(
           children: [

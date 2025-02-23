@@ -26,7 +26,7 @@ class NF074_Avertissements {
   }
 
   factory NF074_Avertissements.fromJson(Map<String, dynamic> json) {
-    NF074_Avertissements wNF074_Avertissements = NF074_Avertissements(
+    NF074_Avertissements wnf074Avertissements = NF074_Avertissements(
       int.parse(json['NF074_AvertissementsId']),
       json['NF074_AvertissementsId'],
       json['NF074_Avertissements_No'],
@@ -35,7 +35,7 @@ class NF074_Avertissements {
       json['NF074_Avertissements_Date_Fact'],
       json['NF074_Avertissements_Procedure'],
     );
-    return wNF074_Avertissements;
+    return wnf074Avertissements;
   }
 }
 
@@ -180,45 +180,45 @@ class NF074_Gammes {
 
 
   NF074_Gammes_Date(
-      int    NF074_GammesId,
-      String NF074_Gammes_DESC,
-      String NF074_Gammes_FAB,
-      String NF074_Gammes_PRS,
-      String NF074_Gammes_CLF,
-      String NF074_Gammes_MOB,
-      String NF074_Gammes_PDT,
-      String NF074_Gammes_POIDS,
-      String NF074_Gammes_GAM,
-      String NF074_Gammes_CODF,
-      String NF074_Gammes_REF,
-      String NF074_Gammes_SERG,
-      String NF074_Gammes_APD4,
-      String NF074_Gammes_AVT,
-      String NF074_Gammes_NCERT,
-      String NF074_Histo_Normes_ENTR_MM,
-      String NF074_Histo_Normes_ENTR_AAAA,
-      String NF074_Histo_Normes_SORT_MM,
-      String NF074_Histo_Normes_SORT_AAAA,
+      int    nf074Gammesid,
+      String nf074GammesDesc,
+      String nf074GammesFab,
+      String nf074GammesPrs,
+      String nf074GammesClf,
+      String nf074GammesMob,
+      String nf074GammesPdt,
+      String nf074GammesPoids,
+      String nf074GammesGam,
+      String nf074GammesCodf,
+      String nf074GammesRef,
+      String nf074GammesSerg,
+      String nf074GammesApd4,
+      String nf074GammesAvt,
+      String nf074GammesNcert,
+      String nf074HistoNormesEntrMm,
+      String nf074HistoNormesEntrAaaa,
+      String nf074HistoNormesSortMm,
+      String nf074HistoNormesSortAaaa,
       ) {
-    this.NF074_GammesId = NF074_GammesId;
-    this.NF074_Gammes_DESC = NF074_Gammes_DESC;
-    this.NF074_Gammes_FAB = NF074_Gammes_FAB;
-    this.NF074_Gammes_PRS = NF074_Gammes_PRS;
-    this.NF074_Gammes_CLF = NF074_Gammes_CLF;
-    this.NF074_Gammes_MOB = NF074_Gammes_MOB;
-    this.NF074_Gammes_PDT = NF074_Gammes_PDT;
-    this.NF074_Gammes_POIDS = NF074_Gammes_POIDS;
-    this.NF074_Gammes_GAM = NF074_Gammes_GAM;
-    this.NF074_Gammes_CODF = NF074_Gammes_CODF;
-    this.NF074_Gammes_REF = NF074_Gammes_REF;
-    this.NF074_Gammes_SERG = NF074_Gammes_SERG;
-    this.NF074_Gammes_APD4 = NF074_Gammes_APD4;
-    this.NF074_Gammes_AVT = NF074_Gammes_AVT;
-    this.NF074_Gammes_NCERT = NF074_Gammes_NCERT;
-    this.NF074_Histo_Normes_ENTR_MM = NF074_Histo_Normes_ENTR_MM;
-    this.NF074_Histo_Normes_ENTR_AAAA = NF074_Histo_Normes_ENTR_AAAA;
-    this.NF074_Histo_Normes_SORT_MM = NF074_Histo_Normes_SORT_MM;
-    this.NF074_Histo_Normes_SORT_AAAA = NF074_Histo_Normes_SORT_AAAA;
+    NF074_GammesId = nf074Gammesid;
+    NF074_Gammes_DESC = nf074GammesDesc;
+    NF074_Gammes_FAB = nf074GammesFab;
+    NF074_Gammes_PRS = nf074GammesPrs;
+    NF074_Gammes_CLF = nf074GammesClf;
+    NF074_Gammes_MOB = nf074GammesMob;
+    NF074_Gammes_PDT = nf074GammesPdt;
+    NF074_Gammes_POIDS = nf074GammesPoids;
+    NF074_Gammes_GAM = nf074GammesGam;
+    NF074_Gammes_CODF = nf074GammesCodf;
+    NF074_Gammes_REF = nf074GammesRef;
+    NF074_Gammes_SERG = nf074GammesSerg;
+    NF074_Gammes_APD4 = nf074GammesApd4;
+    NF074_Gammes_AVT = nf074GammesAvt;
+    NF074_Gammes_NCERT = nf074GammesNcert;
+    NF074_Histo_Normes_ENTR_MM = nf074HistoNormesEntrMm;
+    NF074_Histo_Normes_ENTR_AAAA = nf074HistoNormesEntrAaaa;
+    NF074_Histo_Normes_SORT_MM = nf074HistoNormesSortMm;
+    NF074_Histo_Normes_SORT_AAAA = nf074HistoNormesSortAaaa;
   }
 
   NF074_Gammes(
@@ -256,7 +256,7 @@ class NF074_Gammes {
   }
 
   factory NF074_Gammes.fromJson(Map<String, dynamic> json) {
-    NF074_Gammes wNF074_Gammes = NF074_Gammes(
+    NF074_Gammes wnf074Gammes = NF074_Gammes(
       int.parse(json['NF074_GammesId']),
       json['NF074_Gammes_DESC'],
       json['NF074_Gammes_FAB'],
@@ -273,7 +273,7 @@ class NF074_Gammes {
       json['NF074_Gammes_AVT'],
       json['NF074_Gammes_NCERT'],
     );
-    return wNF074_Gammes;
+    return wnf074Gammes;
   }
 
   Map<String, dynamic> toMap() {
@@ -399,7 +399,7 @@ class NF074_Histo_Normes {
   }
 
   factory NF074_Histo_Normes.fromJson(Map<String, dynamic> json) {
-    NF074_Histo_Normes wNF074_Histo_Normes = NF074_Histo_Normes(
+    NF074_Histo_Normes wnf074HistoNormes = NF074_Histo_Normes(
       int.parse(json['NF074_Histo_NormesId']),
       json['NF074_Histo_Normes_FAB'],
       json['NF074_Histo_Normes_NCERT'],
@@ -423,7 +423,7 @@ class NF074_Histo_Normes {
       json['NF074_Histo_Normes_GAZ'],
       json['NF074_Histo_Normes_USIN'],
     );
-    return wNF074_Histo_Normes;
+    return wnf074HistoNormes;
   }
 
   Map<String, dynamic> toMap() {
@@ -617,7 +617,7 @@ class NF074_Pieces_Det {
   }
 
   factory NF074_Pieces_Det.fromJson(Map<String, dynamic> json) {
-    NF074_Pieces_Det wNF074_Pieces_Det = NF074_Pieces_Det(
+    NF074_Pieces_Det wnf074PiecesDet = NF074_Pieces_Det(
       int.parse(json['NF074_Pieces_DetId']),
       json['NF074_Pieces_Det_NCERT'],
       json['NF074_Pieces_Det_RTYP'],
@@ -655,7 +655,7 @@ class NF074_Pieces_Det {
       json['NF074_Pieces_Det_Description_PD3'],
       int.parse(json['NF074_Pieces_Det_Qte_PD3']),
     );
-    return wNF074_Pieces_Det;
+    return wnf074PiecesDet;
   }
 
   Map<String, dynamic> toMap() {
@@ -815,7 +815,7 @@ class NF074_Pieces_Det_Inc {
   }
 
   factory NF074_Pieces_Det_Inc.fromJson(Map<String, dynamic> json) {
-    NF074_Pieces_Det_Inc wNF074_Pieces_Det_Inc = NF074_Pieces_Det_Inc(
+    NF074_Pieces_Det_Inc wnf074PiecesDetInc = NF074_Pieces_Det_Inc(
       int.parse(json['NF074_Pieces_Det_IncId']),
       json['NF074_Pieces_Det_Inc_DESC'],
       json['NF074_Pieces_Det_Inc_FAB'],
@@ -842,7 +842,7 @@ class NF074_Pieces_Det_Inc {
       json['NF074_Pieces_Det_Inc_Description_PD3'],
     int.parse(json['NF074_Pieces_Det_Inc_Qte_PD3']),
     );
-    return wNF074_Pieces_Det_Inc;
+    return wnf074PiecesDetInc;
   }
   Map<String, dynamic> toMap() {
     return {
@@ -994,7 +994,7 @@ class NF074_Mixte_Produit {
   }
 
   factory NF074_Mixte_Produit.fromJson(Map<String, dynamic> json) {
-    NF074_Mixte_Produit wNF074_Mixte_Produit = NF074_Mixte_Produit(
+    NF074_Mixte_Produit wnf074MixteProduit = NF074_Mixte_Produit(
       int.parse(json['NF074_Mixte_ProduitId']),
       json['NF074_Mixte_Produit_DESC'],
       json['NF074_Mixte_Produit_POIDS'],
@@ -1021,7 +1021,7 @@ class NF074_Mixte_Produit {
       json['NF074_Mixte_Produit_Description_PD3'],
     int.parse(json['NF074_Mixte_Produit_Qte_PD3']),
     );
-    return wNF074_Mixte_Produit;
+    return wnf074MixteProduit;
   }
 
   Map<String, dynamic> toMap() {
@@ -1160,7 +1160,7 @@ class NF074_Pieces_Actions {
   }
 
   factory NF074_Pieces_Actions.fromJson(Map<String, dynamic> json) {
-    NF074_Pieces_Actions wNF074_Pieces_Actions = NF074_Pieces_Actions(
+    NF074_Pieces_Actions wnf074PiecesActions = NF074_Pieces_Actions(
       int.parse(json['NF074_Pieces_ActionsId']),
       json['NF074_Pieces_Actions_DESC'],
       json['NF074_Pieces_Actions_PDT'],
@@ -1183,7 +1183,7 @@ class NF074_Pieces_Actions {
       json['NF074_Pieces_Actions_Description_PD3'],
       int.parse(json['NF074_Pieces_Actions_Qte_PD3']),
     );
-    return wNF074_Pieces_Actions;
+    return wnf074PiecesActions;
   }
 
   Map<String, dynamic> toMap() {
@@ -1324,21 +1324,21 @@ class RIA_Gammes {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['RIA_GammesId'] = this.RIA_GammesId;
-    data['RIA_Gammes_DESC'] = this.RIA_Gammes_DESC;
-    data['RIA_Gammes_FAB'] = this.RIA_Gammes_FAB;
-    data['RIA_Gammes_TYPE'] = this.RIA_Gammes_TYPE;
-    data['RIA_Gammes_ARM'] = this.RIA_Gammes_ARM;
-    data['RIA_Gammes_INOX'] = this.RIA_Gammes_INOX;
-    data['RIA_Gammes_PDT'] = this.RIA_Gammes_PDT;
-    data['RIA_Gammes_DIAM'] = this.RIA_Gammes_DIAM;
-    data['RIA_Gammes_LONG'] = this.RIA_Gammes_LONG;
-    data['RIA_Gammes_DIF'] = this.RIA_Gammes_DIF;
-    data['RIA_Gammes_DISP'] = this.RIA_Gammes_DISP;
-    data['RIA_Gammes_PREM'] = this.RIA_Gammes_PREM;
-    data['RIA_Gammes_REF'] = this.RIA_Gammes_REF;
-    data['RIA_Gammes_NCERT'] = this.RIA_Gammes_NCERT;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['RIA_GammesId'] = RIA_GammesId;
+    data['RIA_Gammes_DESC'] = RIA_Gammes_DESC;
+    data['RIA_Gammes_FAB'] = RIA_Gammes_FAB;
+    data['RIA_Gammes_TYPE'] = RIA_Gammes_TYPE;
+    data['RIA_Gammes_ARM'] = RIA_Gammes_ARM;
+    data['RIA_Gammes_INOX'] = RIA_Gammes_INOX;
+    data['RIA_Gammes_PDT'] = RIA_Gammes_PDT;
+    data['RIA_Gammes_DIAM'] = RIA_Gammes_DIAM;
+    data['RIA_Gammes_LONG'] = RIA_Gammes_LONG;
+    data['RIA_Gammes_DIF'] = RIA_Gammes_DIF;
+    data['RIA_Gammes_DISP'] = RIA_Gammes_DISP;
+    data['RIA_Gammes_PREM'] = RIA_Gammes_PREM;
+    data['RIA_Gammes_REF'] = RIA_Gammes_REF;
+    data['RIA_Gammes_NCERT'] = RIA_Gammes_NCERT;
     return data;
   }
 }

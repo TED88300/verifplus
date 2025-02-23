@@ -76,11 +76,11 @@ class _PdfViewState extends State<PdfView> {
       appBar: appBar(),
       backgroundColor: gColors.primary,
       body: Container(
-        padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+        padding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
         color: gColors.white,
         child: Column(
           children: <Widget>[
-            Container(
+            SizedBox(
               width: width,
               height: height,
               child: widget.pdf,

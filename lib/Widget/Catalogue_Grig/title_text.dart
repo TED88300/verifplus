@@ -29,6 +29,6 @@ class TitleText extends StatelessWidget {
     return Text(text,
         maxLines: maxLines,
         style: GoogleFonts.mulish(
-            fontSize: fontSize, fontWeight: fontWeight, color: color, decoration: this.lineThrough ? TextDecoration.lineThrough : null));
+            fontSize: fontSize, fontWeight: fontWeight, color: color, decoration: lineThrough ? TextDecoration.lineThrough : null));
   }
 }

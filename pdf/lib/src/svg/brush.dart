@@ -187,16 +187,16 @@ class SvgBrush {
       return this;
     }
 
-    var _fill = other.fill ?? fill;
+    var fill = other.fill ?? this.fill;
 
-    if (_fill?.inherit ?? false) {
-      _fill = fill!.merge(other.fill!);
+    if (fill?.inherit ?? false) {
+      fill = fill!.merge(other.fill!);
     }
 
-    var _stroke = other.stroke ?? stroke;
+    var stroke = other.stroke ?? this.stroke;
 
-    if (_stroke?.inherit ?? false) {
-      _stroke = stroke!.merge(other.stroke!);
+    if (stroke?.inherit ?? false) {
+      stroke = stroke!.merge(other.stroke!);
     }
 
     return SvgBrush(
@@ -204,9 +204,9 @@ class SvgBrush {
       blendMode: other.blendMode,
       fillOpacity: other.fillOpacity ?? fillOpacity,
       strokeOpacity: other.strokeOpacity ?? strokeOpacity,
-      fill: _fill,
+      fill: fill,
       fillEvenOdd: other.fillEvenOdd ?? fillEvenOdd,
-      stroke: _stroke,
+      stroke: stroke,
       strokeWidth: other.strokeWidth ?? strokeWidth,
       strokeDashArray: other.strokeDashArray ?? strokeDashArray,
       strokeDashOffset: other.strokeDashOffset ?? strokeDashOffset,

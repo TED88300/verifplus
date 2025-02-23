@@ -10,7 +10,7 @@ import 'package:intl/intl.dart';
 class ProductCard extends StatelessWidget {
   final Product product;
   final ValueChanged<Product> onSelected;
-  ProductCard({Key? key, required this.product, required this.onSelected}) : super(key: key);
+  const ProductCard({Key? key, required this.product, required this.onSelected}) : super(key: key);
 
 //   @override
 //   _ProductCardState createState() => _ProductCardState();
@@ -29,7 +29,7 @@ class ProductCard extends StatelessWidget {
     var formatter = NumberFormat('###,###.00');
 
     return Container(
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: LightColor.background,
         borderRadius: BorderRadius.all(Radius.circular(20)),
         boxShadow: <BoxShadow>[
@@ -38,7 +38,7 @@ class ProductCard extends StatelessWidget {
       ),
 
       child: Container(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
@@ -119,7 +119,7 @@ class ProductCard extends StatelessWidget {
         ),
       ).ripple(() {
         Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProductDetailPage(product : product)));
-      }, borderRadius: BorderRadius.all(Radius.circular(20))),
+      }, borderRadius: const BorderRadius.all(Radius.circular(20))),
     );
   }
 }

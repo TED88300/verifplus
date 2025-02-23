@@ -6,19 +6,19 @@ class Siret {
 
   Siret.fromJson(Map<dynamic, dynamic> json) {
     header =
-    json['header'] != null ? new Header.fromJson(json['header']) : null;
+    json['header'] != null ? Header.fromJson(json['header']) : null;
     etablissement = json['etablissement'] != null
-        ? new Etablissement.fromJson(json['etablissement'])
+        ? Etablissement.fromJson(json['etablissement'])
         : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.header != null) {
-      data['header'] = this.header!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (header != null) {
+      data['header'] = header!.toJson();
     }
-    if (this.etablissement != null) {
-      data['etablissement'] = this.etablissement!.toJson();
+    if (etablissement != null) {
+      data['etablissement'] = etablissement!.toJson();
     }
     return data;
   }
@@ -36,9 +36,9 @@ class Header {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['statut'] = this.statut;
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['statut'] = statut;
+    data['message'] = message;
     return data;
   }
 }
@@ -92,49 +92,49 @@ class Etablissement {
     etablissementSiege = json['etablissementSiege'];
     nombrePeriodesEtablissement = json['nombrePeriodesEtablissement'];
     uniteLegale = json['uniteLegale'] != null
-        ? new UniteLegale.fromJson(json['uniteLegale'])
+        ? UniteLegale.fromJson(json['uniteLegale'])
         : null;
     adresseEtablissement = json['adresseEtablissement'] != null
-        ? new AdresseEtablissement.fromJson(json['adresseEtablissement'])
+        ? AdresseEtablissement.fromJson(json['adresseEtablissement'])
         : null;
     adresse2Etablissement = json['adresse2Etablissement'] != null
-        ? new Adresse2Etablissement.fromJson(json['adresse2Etablissement'])
+        ? Adresse2Etablissement.fromJson(json['adresse2Etablissement'])
         : null;
     if (json['periodesEtablissement'] != null) {
       periodesEtablissement = <PeriodesEtablissement>[];
       json['periodesEtablissement'].forEach((v) {
-        periodesEtablissement!.add(new PeriodesEtablissement.fromJson(v));
+        periodesEtablissement!.add(PeriodesEtablissement.fromJson(v));
       });
     }
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['siren'] = this.siren;
-    data['nic'] = this.nic;
-    data['siret'] = this.siret;
-    data['statutDiffusionEtablissement'] = this.statutDiffusionEtablissement;
-    data['dateCreationEtablissement'] = this.dateCreationEtablissement;
-    data['trancheEffectifsEtablissement'] = this.trancheEffectifsEtablissement;
-    data['anneeEffectifsEtablissement'] = this.anneeEffectifsEtablissement;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['siren'] = siren;
+    data['nic'] = nic;
+    data['siret'] = siret;
+    data['statutDiffusionEtablissement'] = statutDiffusionEtablissement;
+    data['dateCreationEtablissement'] = dateCreationEtablissement;
+    data['trancheEffectifsEtablissement'] = trancheEffectifsEtablissement;
+    data['anneeEffectifsEtablissement'] = anneeEffectifsEtablissement;
     data['activitePrincipaleRegistreMetiersEtablissement'] =
-        this.activitePrincipaleRegistreMetiersEtablissement;
+        activitePrincipaleRegistreMetiersEtablissement;
     data['dateDernierTraitementEtablissement'] =
-        this.dateDernierTraitementEtablissement;
-    data['etablissementSiege'] = this.etablissementSiege;
-    data['nombrePeriodesEtablissement'] = this.nombrePeriodesEtablissement;
-    if (this.uniteLegale != null) {
-      data['uniteLegale'] = this.uniteLegale!.toJson();
+        dateDernierTraitementEtablissement;
+    data['etablissementSiege'] = etablissementSiege;
+    data['nombrePeriodesEtablissement'] = nombrePeriodesEtablissement;
+    if (uniteLegale != null) {
+      data['uniteLegale'] = uniteLegale!.toJson();
     }
-    if (this.adresseEtablissement != null) {
-      data['adresseEtablissement'] = this.adresseEtablissement!.toJson();
+    if (adresseEtablissement != null) {
+      data['adresseEtablissement'] = adresseEtablissement!.toJson();
     }
-    if (this.adresse2Etablissement != null) {
-      data['adresse2Etablissement'] = this.adresse2Etablissement!.toJson();
+    if (adresse2Etablissement != null) {
+      data['adresse2Etablissement'] = adresse2Etablissement!.toJson();
     }
-    if (this.periodesEtablissement != null) {
+    if (periodesEtablissement != null) {
       data['periodesEtablissement'] =
-          this.periodesEtablissement!.map((v) => v.toJson()).toList();
+          periodesEtablissement!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -241,44 +241,44 @@ class UniteLegale {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['etatAdministratifUniteLegale'] = this.etatAdministratifUniteLegale;
-    data['statutDiffusionUniteLegale'] = this.statutDiffusionUniteLegale;
-    data['dateCreationUniteLegale'] = this.dateCreationUniteLegale;
-    data['categorieJuridiqueUniteLegale'] = this.categorieJuridiqueUniteLegale;
-    data['denominationUniteLegale'] = this.denominationUniteLegale;
-    data['sigleUniteLegale'] = this.sigleUniteLegale;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['etatAdministratifUniteLegale'] = etatAdministratifUniteLegale;
+    data['statutDiffusionUniteLegale'] = statutDiffusionUniteLegale;
+    data['dateCreationUniteLegale'] = dateCreationUniteLegale;
+    data['categorieJuridiqueUniteLegale'] = categorieJuridiqueUniteLegale;
+    data['denominationUniteLegale'] = denominationUniteLegale;
+    data['sigleUniteLegale'] = sigleUniteLegale;
     data['denominationUsuelle1UniteLegale'] =
-        this.denominationUsuelle1UniteLegale;
+        denominationUsuelle1UniteLegale;
     data['denominationUsuelle2UniteLegale'] =
-        this.denominationUsuelle2UniteLegale;
+        denominationUsuelle2UniteLegale;
     data['denominationUsuelle3UniteLegale'] =
-        this.denominationUsuelle3UniteLegale;
-    data['sexeUniteLegale'] = this.sexeUniteLegale;
-    data['nomUniteLegale'] = this.nomUniteLegale;
-    data['nomUsageUniteLegale'] = this.nomUsageUniteLegale;
-    data['prenom1UniteLegale'] = this.prenom1UniteLegale;
-    data['prenom2UniteLegale'] = this.prenom2UniteLegale;
-    data['prenom3UniteLegale'] = this.prenom3UniteLegale;
-    data['prenom4UniteLegale'] = this.prenom4UniteLegale;
-    data['prenomUsuelUniteLegale'] = this.prenomUsuelUniteLegale;
-    data['pseudonymeUniteLegale'] = this.pseudonymeUniteLegale;
-    data['activitePrincipaleUniteLegale'] = this.activitePrincipaleUniteLegale;
+        denominationUsuelle3UniteLegale;
+    data['sexeUniteLegale'] = sexeUniteLegale;
+    data['nomUniteLegale'] = nomUniteLegale;
+    data['nomUsageUniteLegale'] = nomUsageUniteLegale;
+    data['prenom1UniteLegale'] = prenom1UniteLegale;
+    data['prenom2UniteLegale'] = prenom2UniteLegale;
+    data['prenom3UniteLegale'] = prenom3UniteLegale;
+    data['prenom4UniteLegale'] = prenom4UniteLegale;
+    data['prenomUsuelUniteLegale'] = prenomUsuelUniteLegale;
+    data['pseudonymeUniteLegale'] = pseudonymeUniteLegale;
+    data['activitePrincipaleUniteLegale'] = activitePrincipaleUniteLegale;
     data['nomenclatureActivitePrincipaleUniteLegale'] =
-        this.nomenclatureActivitePrincipaleUniteLegale;
+        nomenclatureActivitePrincipaleUniteLegale;
     data['identifiantAssociationUniteLegale'] =
-        this.identifiantAssociationUniteLegale;
+        identifiantAssociationUniteLegale;
     data['economieSocialeSolidaireUniteLegale'] =
-        this.economieSocialeSolidaireUniteLegale;
-    data['societeMissionUniteLegale'] = this.societeMissionUniteLegale;
-    data['caractereEmployeurUniteLegale'] = this.caractereEmployeurUniteLegale;
-    data['trancheEffectifsUniteLegale'] = this.trancheEffectifsUniteLegale;
-    data['anneeEffectifsUniteLegale'] = this.anneeEffectifsUniteLegale;
-    data['nicSiegeUniteLegale'] = this.nicSiegeUniteLegale;
+        economieSocialeSolidaireUniteLegale;
+    data['societeMissionUniteLegale'] = societeMissionUniteLegale;
+    data['caractereEmployeurUniteLegale'] = caractereEmployeurUniteLegale;
+    data['trancheEffectifsUniteLegale'] = trancheEffectifsUniteLegale;
+    data['anneeEffectifsUniteLegale'] = anneeEffectifsUniteLegale;
+    data['nicSiegeUniteLegale'] = nicSiegeUniteLegale;
     data['dateDernierTraitementUniteLegale'] =
-        this.dateDernierTraitementUniteLegale;
-    data['categorieEntreprise'] = this.categorieEntreprise;
-    data['anneeCategorieEntreprise'] = this.anneeCategorieEntreprise;
+        dateDernierTraitementUniteLegale;
+    data['categorieEntreprise'] = categorieEntreprise;
+    data['anneeCategorieEntreprise'] = anneeCategorieEntreprise;
     return data;
   }
 }
@@ -336,25 +336,25 @@ class AdresseEtablissement {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['complementAdresseEtablissement'] =
-        this.complementAdresseEtablissement;
-    data['numeroVoieEtablissement'] = this.numeroVoieEtablissement;
-    data['indiceRepetitionEtablissement'] = this.indiceRepetitionEtablissement;
-    data['typeVoieEtablissement'] = this.typeVoieEtablissement;
-    data['libelleVoieEtablissement'] = this.libelleVoieEtablissement;
-    data['codePostalEtablissement'] = this.codePostalEtablissement;
-    data['libelleCommuneEtablissement'] = this.libelleCommuneEtablissement;
+        complementAdresseEtablissement;
+    data['numeroVoieEtablissement'] = numeroVoieEtablissement;
+    data['indiceRepetitionEtablissement'] = indiceRepetitionEtablissement;
+    data['typeVoieEtablissement'] = typeVoieEtablissement;
+    data['libelleVoieEtablissement'] = libelleVoieEtablissement;
+    data['codePostalEtablissement'] = codePostalEtablissement;
+    data['libelleCommuneEtablissement'] = libelleCommuneEtablissement;
     data['libelleCommuneEtrangerEtablissement'] =
-        this.libelleCommuneEtrangerEtablissement;
+        libelleCommuneEtrangerEtablissement;
     data['distributionSpecialeEtablissement'] =
-        this.distributionSpecialeEtablissement;
-    data['codeCommuneEtablissement'] = this.codeCommuneEtablissement;
-    data['codeCedexEtablissement'] = this.codeCedexEtablissement;
-    data['libelleCedexEtablissement'] = this.libelleCedexEtablissement;
-    data['codePaysEtrangerEtablissement'] = this.codePaysEtrangerEtablissement;
+        distributionSpecialeEtablissement;
+    data['codeCommuneEtablissement'] = codeCommuneEtablissement;
+    data['codeCedexEtablissement'] = codeCedexEtablissement;
+    data['libelleCedexEtablissement'] = libelleCedexEtablissement;
+    data['codePaysEtrangerEtablissement'] = codePaysEtrangerEtablissement;
     data['libellePaysEtrangerEtablissement'] =
-        this.libellePaysEtrangerEtablissement;
+        libellePaysEtrangerEtablissement;
     return data;
   }
 }
@@ -412,27 +412,27 @@ class Adresse2Etablissement {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['complementAdresse2Etablissement'] =
-        this.complementAdresse2Etablissement;
-    data['numeroVoie2Etablissement'] = this.numeroVoie2Etablissement;
+        complementAdresse2Etablissement;
+    data['numeroVoie2Etablissement'] = numeroVoie2Etablissement;
     data['indiceRepetition2Etablissement'] =
-        this.indiceRepetition2Etablissement;
-    data['typeVoie2Etablissement'] = this.typeVoie2Etablissement;
-    data['libelleVoie2Etablissement'] = this.libelleVoie2Etablissement;
-    data['codePostal2Etablissement'] = this.codePostal2Etablissement;
-    data['libelleCommune2Etablissement'] = this.libelleCommune2Etablissement;
+        indiceRepetition2Etablissement;
+    data['typeVoie2Etablissement'] = typeVoie2Etablissement;
+    data['libelleVoie2Etablissement'] = libelleVoie2Etablissement;
+    data['codePostal2Etablissement'] = codePostal2Etablissement;
+    data['libelleCommune2Etablissement'] = libelleCommune2Etablissement;
     data['libelleCommuneEtranger2Etablissement'] =
-        this.libelleCommuneEtranger2Etablissement;
+        libelleCommuneEtranger2Etablissement;
     data['distributionSpeciale2Etablissement'] =
-        this.distributionSpeciale2Etablissement;
-    data['codeCommune2Etablissement'] = this.codeCommune2Etablissement;
-    data['codeCedex2Etablissement'] = this.codeCedex2Etablissement;
-    data['libelleCedex2Etablissement'] = this.libelleCedex2Etablissement;
+        distributionSpeciale2Etablissement;
+    data['codeCommune2Etablissement'] = codeCommune2Etablissement;
+    data['codeCedex2Etablissement'] = codeCedex2Etablissement;
+    data['libelleCedex2Etablissement'] = libelleCedex2Etablissement;
     data['codePaysEtranger2Etablissement'] =
-        this.codePaysEtranger2Etablissement;
+        codePaysEtranger2Etablissement;
     data['libellePaysEtranger2Etablissement'] =
-        this.libellePaysEtranger2Etablissement;
+        libellePaysEtranger2Etablissement;
     return data;
   }
 }
@@ -495,32 +495,32 @@ class PeriodesEtablissement {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['dateFin'] = this.dateFin;
-    data['dateDebut'] = this.dateDebut;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['dateFin'] = dateFin;
+    data['dateDebut'] = dateDebut;
     data['etatAdministratifEtablissement'] =
-        this.etatAdministratifEtablissement;
+        etatAdministratifEtablissement;
     data['changementEtatAdministratifEtablissement'] =
-        this.changementEtatAdministratifEtablissement;
-    data['enseigne1Etablissement'] = this.enseigne1Etablissement;
-    data['enseigne2Etablissement'] = this.enseigne2Etablissement;
-    data['enseigne3Etablissement'] = this.enseigne3Etablissement;
+        changementEtatAdministratifEtablissement;
+    data['enseigne1Etablissement'] = enseigne1Etablissement;
+    data['enseigne2Etablissement'] = enseigne2Etablissement;
+    data['enseigne3Etablissement'] = enseigne3Etablissement;
     data['changementEnseigneEtablissement'] =
-        this.changementEnseigneEtablissement;
+        changementEnseigneEtablissement;
     data['denominationUsuelleEtablissement'] =
-        this.denominationUsuelleEtablissement;
+        denominationUsuelleEtablissement;
     data['changementDenominationUsuelleEtablissement'] =
-        this.changementDenominationUsuelleEtablissement;
+        changementDenominationUsuelleEtablissement;
     data['activitePrincipaleEtablissement'] =
-        this.activitePrincipaleEtablissement;
+        activitePrincipaleEtablissement;
     data['nomenclatureActivitePrincipaleEtablissement'] =
-        this.nomenclatureActivitePrincipaleEtablissement;
+        nomenclatureActivitePrincipaleEtablissement;
     data['changementActivitePrincipaleEtablissement'] =
-        this.changementActivitePrincipaleEtablissement;
+        changementActivitePrincipaleEtablissement;
     data['caractereEmployeurEtablissement'] =
-        this.caractereEmployeurEtablissement;
+        caractereEmployeurEtablissement;
     data['changementCaractereEmployeurEtablissement'] =
-        this.changementCaractereEmployeurEtablissement;
+        changementCaractereEmployeurEtablissement;
     return data;
   }
 }

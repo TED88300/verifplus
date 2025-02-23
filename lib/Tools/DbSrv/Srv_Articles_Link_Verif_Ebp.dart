@@ -12,14 +12,14 @@ class Result_Article_Link_Verif_Indisp {
 
   factory Result_Article_Link_Verif_Indisp.fromJson(Map<String, dynamic> json) {
 //    print("json $json");
-    Result_Article_Link_Verif_Indisp wResult_Article_Link_Verif_Indisp = Result_Article_Link_Verif_Indisp(
+    Result_Article_Link_Verif_Indisp wresultArticleLinkVerifIndisp = Result_Article_Link_Verif_Indisp(
       json['Articles_Link_Verif_TypeVerif'],
     );
-    return wResult_Article_Link_Verif_Indisp;
+    return wresultArticleLinkVerifIndisp;
   }
 
   String Desc() {
-    return '$Articles_Link_Verif_TypeVerif';
+    return Articles_Link_Verif_TypeVerif;
   }
 }
 
@@ -52,7 +52,7 @@ class Result_Article_Link_Verif {
 
   factory Result_Article_Link_Verif.fromJson(Map<String, dynamic> json) {
 //    print("json $json");
-    Result_Article_Link_Verif wResult_Article_Link_Verif = Result_Article_Link_Verif(
+    Result_Article_Link_Verif wresultArticleLinkVerif = Result_Article_Link_Verif(
       json['ParentID'],
       json['TypeChildID'],
       json['ChildID'],
@@ -61,7 +61,7 @@ class Result_Article_Link_Verif {
       json['Livr'],
       false,
     );
-    return wResult_Article_Link_Verif;
+    return wresultArticleLinkVerif;
   }
 
   String Desc() {

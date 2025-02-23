@@ -1,15 +1,14 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:quill_html_editor/quill_html_editor.dart';
+import 'package:flutter_quill/flutter_quill.dart';
+import 'package:flutter_quill_delta_from_html/flutter_quill_delta_from_html.dart';
+
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
-import 'package:verifplus/Widget/GestCo/DCL_Param.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
+import 'package:vsc_quill_delta_to_html/vsc_quill_delta_to_html.dart';
 
 class HTML_Text {
   HTML_Text();
@@ -40,20 +39,7 @@ class HTMLText extends StatefulWidget {
 }
 
 class _HTMLTextState extends State<HTMLText> {
-  late QuillEditorController controller;
-
-  final customToolBarList = [
-    ToolBarStyle.bold,
-    ToolBarStyle.italic,
-    ToolBarStyle.underline,
-    ToolBarStyle.color,
-    ToolBarStyle.align,
-    ToolBarStyle.headerOne,
-    ToolBarStyle.headerTwo,
-    ToolBarStyle.blockQuote,
-    ToolBarStyle.undo,
-    ToolBarStyle.redo,
-  ];
+  QuillController _controller = QuillController.basic();
 
   final _toolbarColor = Colors.grey.shade200;
   final _backgroundColor = Colors.white70;
@@ -71,21 +57,22 @@ class _HTMLTextState extends State<HTMLText> {
   void initLib() async {
     HTML_Text.wHTML_Text = HTML_Text.gHTML_Text;
 
+    String htmlContent = "${HTML_Text.gHTML_Text}";
+    var delta = HtmlToDelta().convert(htmlContent);
+    _controller.document = Document.fromDelta(delta);
+
     Reload();
   }
 
   @override
   void initState() {
-    controller = QuillEditorController();
-    SelTitre = "${Srv_DbTools.ListParam_Param_TitresRel[0].Param_Param_Text}";
-
+    SelTitre = Srv_DbTools.ListParam_Param_TitresRel[0].Param_Param_Text;
     initLib();
   }
 
   @override
   void dispose() {
-    /// please do not forget to dispose the controller
-    controller.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -97,9 +84,6 @@ class _HTMLTextState extends State<HTMLText> {
     double wHeight = 1024;
     double wHeightDet = 585;
     double wHeightDet2 = 610;
-
-    double wHeightBtn = 45;
-
     double wHeightBtnValider = 40;
 
     return SimpleDialog(
@@ -133,7 +117,7 @@ class _HTMLTextState extends State<HTMLText> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
+                          SizedBox(
                             width: wWidth,
                             child: Text(
                               widget.wTitre,
@@ -217,8 +201,17 @@ class _HTMLTextState extends State<HTMLText> {
                                   ),
                                 ),
                                 onPressed: () async {
-                                  HTML_Text.gHTML_Text = await controller.getText();
+                                  // HTML_Text.gHTML_Text = await controller.getText();
 
+                                  final converter = QuillDeltaToHtmlConverter(
+                                    _controller.document.toDelta().toJson(),
+                                    ConverterOptions.forEmail(),
+                                  );
+
+                                  final html = converter.convert();
+                                  //   print(html);
+                                  HTML_Text.gHTML_Text = html;
+                                  // print("❤️❤️❤️❤️ document  ${_controller.document.toDelta().toJson()}");
                                   Navigator.pop(context);
                                 },
                               )
@@ -233,53 +226,44 @@ class _HTMLTextState extends State<HTMLText> {
               top: 190,
               left: 5,
               child: Container(
-                color: Colors.white,
+                color: gColors.LinearGradient3,
                 padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                 height: wHeightDet2,
                 width: wWidth,
                 child: Column(
                   children: [
-                    ToolBar(
-                      toolBarColor: _toolbarColor,
-                      padding: const EdgeInsets.all(8),
-                      iconSize: 25,
-                      iconColor: _toolbarIconColor,
-                      activeIconColor: Colors.greenAccent.shade400,
-                      controller: controller,
-                      crossAxisAlignment: WrapCrossAlignment.start,
-                      direction: Axis.horizontal,
-                      toolBarConfig: customToolBarList,
+                    QuillSimpleToolbar(
+                      controller: _controller,
+                      config: const QuillSimpleToolbarConfig(
+                        showDividers: true,
+                        showFontFamily: false,
+                        showSmallButton: false,
+                        showUnderLineButton: false,
+                        showLineHeightButton: false,
+                        showStrikeThrough: false,
+                        showInlineCode: false,
+                        showClearFormat: false,
+                        showLink: false,
+                        showSearchButton: false,
+                        showAlignmentButtons: true,
+                        showSubscript: false,
+                        showSuperscript: false,
+                        showListCheck: false,
+                        showCodeBlock: false,
+                        showQuote: false,
+                        showListNumbers: false,
+                      ),
                     ),
                     DropdownTitre(),
-
-gColors.wLigne(),
-                    Container(
-                      height: 10,
-                    ),
-
-
+                    gColors.wLigne(),
                     Expanded(
-                      child: QuillHtmlEditor(
-                        text: HTML_Text.wHTML_Text,
-                        controller: controller,
-                        isEnabled: true,
-                        ensureVisible: false,
-                        minHeight: 500,
-                        autoFocus: true,
-                        hintText : 'Saisir texte',
-                        textStyle: _editorTextStyle,
-                        hintTextStyle: _hintTextStyle,
-                        hintTextAlign: TextAlign.start,
-                        backgroundColor: _backgroundColor,
-                        inputAction: InputAction.newline,
-                        onEditingComplete: (s) => debugPrint('Editing completed $s'),
-                        loadingBuilder: (context) {
-                          return const Center(
-                              child: CircularProgressIndicator(
-                            strokeWidth: 1,
-                            color: gColors.primary,
-                          ));
-                        },
+                      child: Container(
+                        padding: const EdgeInsets.fromLTRB(10, 10, 10, 0),
+                        color: gColors.white,
+                        child: QuillEditor.basic(
+                          controller: _controller,
+                          config: const QuillEditorConfig(),
+                        ),
                       ),
                     ),
                   ],
@@ -306,108 +290,157 @@ gColors.wLigne(),
     );
   }
 
-  ///[getHtmlText] to get the html text from editor
-  void getHtmlText() async {
-    String? htmlText = await controller.getText();
-    debugPrint(htmlText);
-  }
-
-  ///[setHtmlText] to set the html text to editor
-  void setHtmlText(String text) async {
-    await controller.setText(text);
-  }
-
-  ///[insertNetworkImage] to set the html text to editor
-  void insertNetworkImage(String url) async {
-    await controller.embedImage(url);
-  }
-
-  ///[insertVideoURL] to set the video url to editor
-  ///this method recognises the inserted url and sanitize to make it embeddable url
-  ///eg: converts youtube video to embed video, same for vimeo
-  void insertVideoURL(String url) async {
-    await controller.embedVideo(url);
-  }
-
-  /// to set the html text to editor
-  /// if index is not set, it will be inserted at the cursor postion
-  void insertHtmlText(String text, {int? index}) async {
-    await controller.insertText(text, index: index);
-  }
-
-  /// to clear the editor
-  void clearEditor() => controller.clear();
-
-  /// to enable/disable the editor
-  void enableEditor(bool enable) => controller.enableEditor(enable);
-
-  /// method to un focus editor
-  void unFocusEditor() => controller.unFocus();
-
 //***************************
 //***************************
 //***************************
 
   Widget DropdownTitre() {
-    if (Srv_DbTools.ListParam_Param_TitresRel.length == 0) return Container();
+    if (Srv_DbTools.ListParam_Param_TitresRel.isEmpty) return Container();
 
-    print(" SelTitre ${SelTitre}");
+    print(" SelTitre $SelTitre");
 
     return Container(
-        decoration: BoxDecoration(
-          color: Colors.white,
-          border: Border.all(
-            color: Colors.white,
-          ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        border: Border.all(
+          color: gColors.LinearGradient5,
+          width: 1.5,
         ),
-        child: Row(children: [
+      ),
+      width: 510,
+      height: 57,
+      margin: const EdgeInsets.fromLTRB(0, 10, 0, 20),
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
           Container(
-            width: 5,
+            decoration: BoxDecoration(
+              color: gColors.LinearGradient5,
+              borderRadius: BorderRadius.only(topLeft: Radius.circular(10), bottomLeft: Radius.circular(10)),
+            ),
+            width: 110,
+            child: Center(
+              child: Text(
+                "Texte rapide",
+                textAlign: TextAlign.center,
+                style: gColors.bodyTitle1_B_W,
+              ),
+            ),
           ),
           Container(
-            child: DropdownButtonHideUnderline(
-                child: DropdownButton2(
-              hint: Text(
-                'Séléctionner une titre',
-                style: gColors.bodyTitle1_N_Gr,
-              ),
-              items: Srv_DbTools.ListParam_Param_TitresRel.map((item) => DropdownMenuItem<String>(
-                  value: item.Param_Param_Text,
-                  child: Container(
-                    width: 480,
-                    child: Text(
-                      "${item.Param_Param_Text}",
-                      style: gColors.bodyTitle1_N_Gr,
-                      maxLines: 1,
-                    ),
-                  ))).toList(),
-              value: SelTitre,
-              onChanged: (value) {
-                setState(() {
-                  String sValue = value as String;
-                  SelTitre = sValue;
-                  controller.setText(SelTitre);
-                });
-              },
-              buttonStyleData: ButtonStyleData(
-                height: 34,
-                width: 520,
-              ),
-              menuItemStyleData: const MenuItemStyleData(
-                height: 32,
-              ),
-              dropdownStyleData: DropdownStyleData(
-                maxHeight: 750,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(8),
-                  border: Border.all(
-                    color: Colors.black,
-                  ),
+            width: 12,
+          ),
+          Container(
+              decoration: BoxDecoration(
+                color: Colors.white,
+                border: Border.all(
                   color: Colors.white,
                 ),
               ),
-            )),
-          ),
-        ]));
+              child: Row(children: [
+                Container(
+                  width: 5,
+                ),
+                Container(
+                  child: DropdownButtonHideUnderline(
+                      child: DropdownButton2(
+                    hint: Text(
+                      'Séléctionner une titre',
+                      style: gColors.bodyTitle1_N_Gr,
+                    ),
+                    items: Srv_DbTools.ListParam_Param_TitresRel.map((item) => DropdownMenuItem<String>(
+                          value: item.Param_Param_Text,
+                          child: Container(
+
+                              color: gColors.LinearGradient5,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Expanded(
+                                    child: Container(
+                                      padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                      decoration: BoxDecoration(
+                                        border: Border.all(
+                                          color: gColors.LinearGradient5,
+                                        ),
+                                        color: Colors.white,
+                                      ),
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.center,
+                                        children: [
+                                          Expanded(
+                                            child: Container(
+                                              margin: const EdgeInsets.fromLTRB(0, 15, 20, 20),
+                                              child: Text(
+                                                "${item.Param_Param_Text}",
+                                                style: gColors.bodyTitle1_N_Gr,
+                                                maxLines: 5,
+                                              ),
+                                            ),
+                                          ),
+                                          gColors.gCircle(item.Param_Param_Text == SelTitre ? gColors.primaryGreen : gColors.LinearGradient4, wSize: 20),
+                                        ],
+                                      ),
+                                    ),
+                                  ),
+                                  Container(
+                                    height: 2,
+                                  )
+                                ],
+                              )),
+                        )).toList(),
+                    selectedItemBuilder: (BuildContext context) {
+                      return Srv_DbTools.ListParam_Param_TitresRel.map((item) => DropdownMenuItem<String>(
+                          value: item.Param_Param_Text,
+                          child: Container(
+                            width: 340,
+                            child: Text(
+                              "${item.Param_Param_Text}",
+                              softWrap: true,
+                              overflow: TextOverflow.ellipsis,
+                              style: gColors.bodyTitle1_N_Gr,
+                              maxLines: 1,
+                            ),
+                          ))).toList();
+                    },
+                    value: SelTitre,
+                    onChanged: (value) {
+                      setState(() {
+                        String sValue = value as String;
+                        SelTitre = sValue;
+//                  controller.setText(SelTitre);
+                        String htmlContent = "${SelTitre}";
+                        var delta = HtmlToDelta().convert(htmlContent);
+                        _controller.document = Document.fromDelta(delta);
+                      });
+                    },
+                    buttonStyleData: const ButtonStyleData(
+                      height: 57,
+                      width: 370,
+                    ),
+                    menuItemStyleData: const MenuItemStyleData(
+                      height: 100,
+                    ),
+                    dropdownStyleData: DropdownStyleData(
+                      padding: EdgeInsets.zero,
+                      maxHeight: 550,
+                      width: 540,
+                      offset: Offset(-145, 10),
+                      elevation: 0,
+                      decoration: BoxDecoration(
+                        color: Colors.transparent,
+                      ),
+                    ),
+                  )),
+                ),
+              ]))
+        ],
+      ),
+    );
   }
 }

@@ -101,10 +101,10 @@ class Site {
   }
   factory Site.fromJson(Map<String, dynamic> json) {
 
-    String wGroupe_Nom = "";
+    String wgroupeNom = "";
     if (json['Groupe_Nom'] != null)
       {
-        wGroupe_Nom = json['Groupe_Nom']   ;
+        wgroupeNom = json['Groupe_Nom']   ;
       }
 
 
@@ -126,7 +126,7 @@ class Site {
         json['Site_Rem'],
         int.parse(json['Site_ResourceId']),
         json['Livr'],
-        wGroupe_Nom,
+        wgroupeNom,
         true,
         );
 

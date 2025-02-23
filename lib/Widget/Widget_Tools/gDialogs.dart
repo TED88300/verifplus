@@ -7,7 +7,6 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Articles_Ebp.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_DCL_Det.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
@@ -23,7 +22,7 @@ class gDialogs {
   static Future<void> Dialog_QrCode(BuildContext context) async {
     await showDialog(
       context: context,
-      builder: (BuildContext context) => QrCodeDialog(),
+      builder: (BuildContext context) => const QrCodeDialog(),
     );
   }
 
@@ -51,59 +50,59 @@ class gDialogs {
   static Future<void> Dialog_MiseEnServ(BuildContext context) async {
     await showDialog(
       context: context,
-      builder: (BuildContext context) => MiseEnServDialog(),
+      builder: (BuildContext context) => const MiseEnServDialog(),
     );
   }
 
   static Future<void> Dialog_CdeDate(BuildContext context) async {
     await showDialog(
       context: context,
-      builder: (BuildContext context) => CdeDateDialog(),
+      builder: (BuildContext context) => const CdeDateDialog(),
     );
   }
 
   static Future<void> Dialog_SelPeriode(BuildContext context) async {
     await showDialog(
       context: context,
-      builder: (BuildContext context) => SelPeriodeDialog(),
+      builder: (BuildContext context) => const SelPeriodeDialog(),
     );
   }
 
   static Future<void> Dialog_Action(BuildContext context) async {
     await showDialog(
       context: context,
-      builder: (BuildContext context) => ActionDialog(),
+      builder: (BuildContext context) => const ActionDialog(),
     );
   }
 
   static Future<void> Dialog_ActionSel(BuildContext context) async {
     await showDialog(
       context: context,
-      barrierColor: Color(0xC8000000),
-      builder: (BuildContext context) => ActionDialogSel(),
+      barrierColor: const Color(0xC8000000),
+      builder: (BuildContext context) => const ActionDialogSel(),
     );
   }
 
   static Future<void> Dialog_ActionType(BuildContext context) async {
     await showDialog(
       context: context,
-      barrierColor: Color(0xC8000000),
-      builder: (BuildContext context) => ActionDialogType(),
+      barrierColor: const Color(0xC8000000),
+      builder: (BuildContext context) => const ActionDialogType(),
     );
   }
 
   static Future<void> Dialog_ActionLigne(BuildContext context) async {
     await showDialog(
       context: context,
-      barrierColor: Color(0xC8000000),
-      builder: (BuildContext context) => ActionLigneDialog(),
+      barrierColor: const Color(0xC8000000),
+      builder: (BuildContext context) => const ActionLigneDialog(),
     );
   }
 
   static Future<void> Dialog_ActionDevis(BuildContext context) async {
     await showDialog(
       context: context,
-      builder: (BuildContext context) => ActionDialogDevis(),
+      builder: (BuildContext context) => const ActionDialogDevis(),
     );
   }
 }
@@ -113,6 +112,8 @@ class gDialogs {
 //**********************************
 
 class ActionDialogType extends StatefulWidget {
+  const ActionDialogType({super.key});
+
   @override
   _ActionDialogTypeState createState() => _ActionDialogTypeState();
 }
@@ -126,7 +127,7 @@ class _ActionDialogTypeState extends State<ActionDialogType> {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      insetPadding: EdgeInsets.only(left: 0, bottom: 0),
+      insetPadding: const EdgeInsets.only(left: 0, bottom: 0),
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
@@ -159,7 +160,7 @@ class _ActionDialogTypeState extends State<ActionDialogType> {
                                     "Choisissez un document de vente",
                                     style: gColors.bodyTitle1_B_W24,
                                   ),
-                                  Spacer(),
+                                  const Spacer(),
                                   SvgPicture.asset(
                                     "assets/images/Btn_Clear.svg",
                                     width: 60,
@@ -236,7 +237,7 @@ class _ActionDialogTypeState extends State<ActionDialogType> {
                                 Srv_DbTools.gSelDCL_Ent = "Devis";
                                 Navigator.pop(context);
                               }),
-                          Container(
+                          SizedBox(
                             width: 300,
                             child: Text(
                               'Devis (DEV)',
@@ -278,7 +279,7 @@ class _ActionDialogTypeState extends State<ActionDialogType> {
                                 Srv_DbTools.gSelDCL_Ent = "Commande";
                                 Navigator.pop(context);
                               }),
-                          Container(
+                          SizedBox(
                             width: 300,
                             child: Text(
                               'Bon de Commande (BDC)',
@@ -320,7 +321,7 @@ class _ActionDialogTypeState extends State<ActionDialogType> {
                                 Srv_DbTools.gSelDCL_Ent = "Bon de livraison";
                                 Navigator.pop(context);
                               }),
-                          Container(
+                          SizedBox(
                             width: 300,
                             child: Text(
                               'Bon de Livraison (BDL)',
@@ -362,7 +363,7 @@ class _ActionDialogTypeState extends State<ActionDialogType> {
                                 Srv_DbTools.gSelDCL_Ent = "Bon de retour";
                                 Navigator.pop(context);
                               }),
-                          Container(
+                          SizedBox(
                             width: 300,
                             child: Text(
                               'Bon de Retours (BDR)',
@@ -391,6 +392,8 @@ class _ActionDialogTypeState extends State<ActionDialogType> {
 //**********************************
 
 class ActionLigneDialog extends StatefulWidget {
+  const ActionLigneDialog({super.key});
+
   @override
   _ActionLigneDialogState createState() => _ActionLigneDialogState();
 }
@@ -406,7 +409,7 @@ class _ActionLigneDialogState extends State<ActionLigneDialog> {
     DCL_Devis_Det.gLongPressAction = 0;
 
     return SimpleDialog(
-      insetPadding: EdgeInsets.only(left: 180, top: 240),
+      insetPadding: const EdgeInsets.only(left: 180, top: 240),
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
       surfaceTintColor: Colors.transparent,
@@ -641,6 +644,8 @@ class _ActionLigneDialogState extends State<ActionLigneDialog> {
 //**********************************
 
 class SelPeriodeDialog extends StatefulWidget {
+  const SelPeriodeDialog({super.key});
+
   @override
   _SelPeriodeDialogState createState() => _SelPeriodeDialogState();
 }
@@ -686,7 +691,7 @@ class _SelPeriodeDialogState extends State<SelPeriodeDialog> {
                                 borderRadius: BorderRadius.circular(15),
                               ),
                               child: PopupMenuButton(
-                                child: Tooltip(textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.normal), decoration: BoxDecoration(color: Colors.orange), message: "Filtre Date", child: Container(width: 10, height: 10, child: Image.asset("assets/images/DCL_Date.png"))),
+                                child: Tooltip(textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.normal), decoration: const BoxDecoration(color: Colors.orange), message: "Filtre Date", child: SizedBox(width: 10, height: 10, child: Image.asset("assets/images/DCL_Date.png"))),
                                 onSelected: (value) async {
                                   if (value == "S0") {
                                     Srv_DbTools.selDateTools(0);
@@ -728,7 +733,7 @@ class _SelPeriodeDialogState extends State<SelPeriodeDialog> {
                                     height: 36,
                                     child: Row(
                                       children: [
-                                        Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+                                        Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
                                         Text(
                                           "Aujourd'hui",
                                           style: gColors.bodySaisie_N_G,
@@ -741,7 +746,7 @@ class _SelPeriodeDialogState extends State<SelPeriodeDialog> {
                                     height: 36,
                                     child: Row(
                                       children: [
-                                        Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+                                        Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
                                         Text(
                                           "Hier",
                                           style: gColors.bodySaisie_N_G,
@@ -754,7 +759,7 @@ class _SelPeriodeDialogState extends State<SelPeriodeDialog> {
                                     height: 36,
                                     child: Row(
                                       children: [
-                                        Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+                                        Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
                                         Text(
                                           "Avant hier",
                                           style: gColors.bodySaisie_N_G,
@@ -767,7 +772,7 @@ class _SelPeriodeDialogState extends State<SelPeriodeDialog> {
                                     height: 36,
                                     child: Row(
                                       children: [
-                                        Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+                                        Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
                                         Text(
                                           "Semaine courante",
                                           style: gColors.bodySaisie_N_G,
@@ -780,7 +785,7 @@ class _SelPeriodeDialogState extends State<SelPeriodeDialog> {
                                     height: 36,
                                     child: Row(
                                       children: [
-                                        Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+                                        Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
                                         Text(
                                           "Semaine précédente",
                                           style: gColors.bodySaisie_N_G,
@@ -793,7 +798,7 @@ class _SelPeriodeDialogState extends State<SelPeriodeDialog> {
                                     height: 36,
                                     child: Row(
                                       children: [
-                                        Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+                                        Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
                                         Text(
                                           "Semaine précédent la précédente",
                                           style: gColors.bodySaisie_N_G,
@@ -806,7 +811,7 @@ class _SelPeriodeDialogState extends State<SelPeriodeDialog> {
                                     height: 36,
                                     child: Row(
                                       children: [
-                                        Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+                                        Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
                                         Text(
                                           "Mois courant",
                                           style: gColors.bodySaisie_N_G,
@@ -819,7 +824,7 @@ class _SelPeriodeDialogState extends State<SelPeriodeDialog> {
                                     height: 36,
                                     child: Row(
                                       children: [
-                                        Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+                                        Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
                                         Text(
                                           "Mois précédent",
                                           style: gColors.bodySaisie_N_G,
@@ -832,7 +837,7 @@ class _SelPeriodeDialogState extends State<SelPeriodeDialog> {
                                     height: 36,
                                     child: Row(
                                       children: [
-                                        Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+                                        Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
                                         Text(
                                           "Mois précédent le précédent",
                                           style: gColors.bodySaisie_N_G,
@@ -845,7 +850,7 @@ class _SelPeriodeDialogState extends State<SelPeriodeDialog> {
                                     height: 36,
                                     child: Row(
                                       children: [
-                                        Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+                                        Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
                                         Text(
                                           "Année courante",
                                           style: gColors.bodySaisie_N_G,
@@ -858,7 +863,7 @@ class _SelPeriodeDialogState extends State<SelPeriodeDialog> {
                                     height: 36,
                                     child: Row(
                                       children: [
-                                        Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+                                        Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
                                         Text(
                                           "Année précédente",
                                           style: gColors.bodySaisie_N_G,
@@ -886,6 +891,8 @@ class _SelPeriodeDialogState extends State<SelPeriodeDialog> {
 //**********************************
 
 class ActionDialog extends StatefulWidget {
+  const ActionDialog({super.key});
+
   @override
   _ActionDialogState createState() => _ActionDialogState();
 }
@@ -899,7 +906,7 @@ class _ActionDialogState extends State<ActionDialog> {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      insetPadding: EdgeInsets.only(left: 200, bottom: 300),
+      insetPadding: const EdgeInsets.only(left: 200, bottom: 300),
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
@@ -1025,6 +1032,8 @@ class _ActionDialogState extends State<ActionDialog> {
 //**********************************
 
 class ActionDialogSel extends StatefulWidget {
+  const ActionDialogSel({super.key});
+
   @override
   _ActionDialogSelState createState() => _ActionDialogSelState();
 }
@@ -1038,7 +1047,7 @@ class _ActionDialogSelState extends State<ActionDialogSel> {
   @override
   Widget build(BuildContext context) {
     return SimpleDialog(
-      insetPadding: EdgeInsets.only(left: 0, bottom: 0),
+      insetPadding: const EdgeInsets.only(left: 0, bottom: 0),
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
@@ -1071,7 +1080,7 @@ class _ActionDialogSelState extends State<ActionDialogSel> {
                                     "Choisissez l'état du Devis",
                                     style: gColors.bodyTitle1_B_W24,
                                   ),
-                                  Spacer(),
+                                  const Spacer(),
                                   SvgPicture.asset(
                                     "assets/images/Btn_Clear.svg",
                                     width: 60,
@@ -1143,7 +1152,7 @@ class _ActionDialogSelState extends State<ActionDialogSel> {
 
                                 Navigator.pop(context);
                               }),
-                          Container(
+                          SizedBox(
                             width: 250,
                             child: Text(
                               'Devis en préparation',
@@ -1178,7 +1187,7 @@ class _ActionDialogSelState extends State<ActionDialogSel> {
                                 DbTools.wStatusCde = 'En cours';
                                 Navigator.pop(context);
                               }),
-                          Container(
+                          SizedBox(
                             width: 250,
                             child: Text(
                               'Devis en cours',
@@ -1213,7 +1222,7 @@ class _ActionDialogSelState extends State<ActionDialogSel> {
                                 DbTools.wStatusCde = 'Accepté';
                                 Navigator.pop(context);
                               }),
-                          Container(
+                          SizedBox(
                             width: 250,
                             child: Text(
                               'Devis Accepté',
@@ -1248,7 +1257,7 @@ class _ActionDialogSelState extends State<ActionDialogSel> {
                                 DbTools.wStatusCde = 'Refusé';
                                 Navigator.pop(context);
                               }),
-                          Container(
+                          SizedBox(
                             width: 250,
                             child: Text(
                               'Devis Refusé',
@@ -1272,6 +1281,8 @@ class _ActionDialogSelState extends State<ActionDialogSel> {
 //**********************************
 //**********************************
 class ActionDialogDevis extends StatefulWidget {
+  const ActionDialogDevis({super.key});
+
   @override
   _ActionDialogDevisState createState() => _ActionDialogDevisState();
 }
@@ -1307,7 +1318,7 @@ class _ActionDialogDevisState extends State<ActionDialogDevis> {
                             color: gColors.LinearGradient4,
                             borderRadius: BorderRadius.circular(18),
                           ),
-                          child: Icon(
+                          child: const Icon(
                             Icons.clear,
                             size: 18,
                             color: Colors.white,
@@ -1473,7 +1484,7 @@ class _MsgBoxDialogState extends State<MsgBoxDialog> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            padding: EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.only(bottom: 8),
             child: Image.asset(
               "assets/images/${widget.wImg}.png",
               fit: BoxFit.cover,
@@ -1482,7 +1493,7 @@ class _MsgBoxDialogState extends State<MsgBoxDialog> {
             ),
           ),
           Container(
-            padding: EdgeInsets.only(bottom: 4),
+            padding: const EdgeInsets.only(bottom: 4),
             width: wWidth,
             child: Text(
               widget.wLabel1,
@@ -1490,7 +1501,7 @@ class _MsgBoxDialogState extends State<MsgBoxDialog> {
               textAlign: TextAlign.center,
             ),
           ),
-          Container(
+          SizedBox(
             width: wWidth,
             child: Text(
               widget.wLabel2,
@@ -1533,7 +1544,7 @@ class _MsgBoxDialogState extends State<MsgBoxDialog> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
+                          SizedBox(
                             width: wWidth,
                             child: Text(
                               widget.wTxt,
@@ -1541,7 +1552,7 @@ class _MsgBoxDialogState extends State<MsgBoxDialog> {
                               textAlign: TextAlign.center,
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             width: wWidth,
                             child: Text(
                               widget.wTxt2,
@@ -1549,7 +1560,7 @@ class _MsgBoxDialogState extends State<MsgBoxDialog> {
                               textAlign: TextAlign.center,
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             width: wWidth,
                             child: Text(
                               widget.wTxt3,
@@ -1726,7 +1737,7 @@ class _MsgBoxDialog2State extends State<MsgBoxDialog2> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           Container(
-            padding: EdgeInsets.only(bottom: 8),
+            padding: const EdgeInsets.only(bottom: 8),
             child: Image.asset(
               "assets/images/${widget.wImg}.png",
               fit: BoxFit.cover,
@@ -1735,7 +1746,7 @@ class _MsgBoxDialog2State extends State<MsgBoxDialog2> {
             ),
           ),
           Container(
-            padding: EdgeInsets.only(bottom: 4),
+            padding: const EdgeInsets.only(bottom: 4),
             width: wWidth,
             child: Text(
               widget.wLabel1,
@@ -1743,7 +1754,7 @@ class _MsgBoxDialog2State extends State<MsgBoxDialog2> {
               textAlign: TextAlign.center,
             ),
           ),
-          Container(
+          SizedBox(
             width: wWidth,
             child: Text(
               widget.wLabel2,
@@ -1786,8 +1797,8 @@ class _MsgBoxDialog2State extends State<MsgBoxDialog2> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Spacer(),
-                          Container(
+                          const Spacer(),
+                          SizedBox(
                             width: wWidth,
                             child: Text(
                               widget.wTxt,
@@ -1795,7 +1806,7 @@ class _MsgBoxDialog2State extends State<MsgBoxDialog2> {
                               textAlign: TextAlign.center,
                             ),
                           ),
-                          Spacer(),
+                          const Spacer(),
                         ],
                       ),
                     )),
@@ -1945,10 +1956,10 @@ class _PhotoDialogState extends State<PhotoDialog> {
     DbTools.glfParc_Imgs = await DbTools.getParc_Imgs(DbTools.gParc_Ent.ParcsId!, 1);
 
     for (int i = 0; i < DbTools.glfParc_Imgs.length; i++) {
-      var wParc_Imgs = DbTools.glfParc_Imgs[i];
-      var bytes = base64Decode(wParc_Imgs.Parc_Imgs_Data!);
+      var wparcImgs = DbTools.glfParc_Imgs[i];
+      var bytes = base64Decode(wparcImgs.Parc_Imgs_Data!);
       Widget wWidget = Container();
-      if (bytes.length > 0) {
+      if (bytes.isNotEmpty) {
         wWidget = Column(
           children: [
             Container(
@@ -1976,14 +1987,14 @@ class _PhotoDialogState extends State<PhotoDialog> {
         Uint8ListList.add(bytes);
 
         if (!isPrinc) {
-          if (wParc_Imgs.Parc_Imgs_Principale == 1) {
+          if (wparcImgs.Parc_Imgs_Principale == 1) {
             isPrinc = true;
           }
         } else {
-          wParc_Imgs.Parc_Imgs_Principale = 0;
+          wparcImgs.Parc_Imgs_Principale = 0;
         }
 
-        lParc_Imgs.add(wParc_Imgs);
+        lParc_Imgs.add(wparcImgs);
       }
     }
     setState(() {});
@@ -2043,7 +2054,7 @@ class _PhotoDialogState extends State<PhotoDialog> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
+                          SizedBox(
                             width: wWidth,
                             child: Text(
                               widget.wTxt,
@@ -2051,7 +2062,7 @@ class _PhotoDialogState extends State<PhotoDialog> {
                               textAlign: TextAlign.center,
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             width: wWidth,
                             child: Text(
                               widget.wTxt2,
@@ -2059,7 +2070,7 @@ class _PhotoDialogState extends State<PhotoDialog> {
                               textAlign: TextAlign.center,
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             width: wWidth,
                             child: Text(
                               widget.wTxt3,
@@ -2206,12 +2217,12 @@ class _PhotoDialogState extends State<PhotoDialog> {
   }
 
   Widget Photo(BuildContext context) {
-    var formatter = new DateFormat('dd/MM/yy');
+    var formatter = DateFormat('dd/MM/yy');
     var inputFormat = DateFormat('yyyy-MM-dd');
 
     print("photo >>>>>>>>< ${imgList.length}");
 
-    return Container(
+    return SizedBox(
       width: 530,
       child: Column(
         children: [
@@ -2226,7 +2237,7 @@ class _PhotoDialogState extends State<PhotoDialog> {
 
                   DbTools.gImagePath = "";
                   gPhotos.wImg = 0;
-                  await Navigator.push(context, MaterialPageRoute(builder: (context) => gPhotos()));
+                  await Navigator.push(context, MaterialPageRoute(builder: (context) => const gPhotos()));
 
                   print("gImagePath ${DbTools.gImagePath}");
                   if (DbTools.gImagePath != "") {
@@ -2278,7 +2289,7 @@ class _PhotoDialogState extends State<PhotoDialog> {
                           child: Column(
                             children: [
                               Text(
-                                "${formattedDate}",
+                                formattedDate,
                                 style: gColors.bodySaisie_B_G,
                               ),
                               Container(
@@ -2308,7 +2319,7 @@ class _PhotoDialogState extends State<PhotoDialog> {
                                       }
                                     }
                                     lParc_Imgs[Itemindex].Parc_Imgs_Principale = value ? 1 : 0;
-                                    print("SWITCH ${value} ${lParc_Imgs[Itemindex].Parc_Imgs_Principale}");
+                                    print("SWITCH $value ${lParc_Imgs[Itemindex].Parc_Imgs_Principale}");
                                   });
                                 },
                               ),
@@ -2329,7 +2340,7 @@ class _PhotoDialogState extends State<PhotoDialog> {
   }
 
   Widget Photo2(BuildContext context) {
-    var formatter = new DateFormat('dd/MM/yy');
+    var formatter = DateFormat('dd/MM/yy');
     var inputFormat = DateFormat('yyyy-MM-dd');
 
     String formattedDate = lParc_Imgs[zoomIndex].Parc_Imgs_Date!;
@@ -2337,10 +2348,10 @@ class _PhotoDialogState extends State<PhotoDialog> {
 //    var wParc_Imgs_Date = inputFormat.parse(lParc_Imgs[zoomIndex].Parc_Imgs_Date!);
 //    String formattedDate = formatter.format(wParc_Imgs_Date);
 
-    var wParc_Imgs = DbTools.glfParc_Imgs[zoomIndex];
-    var bytes = base64Decode(wParc_Imgs.Parc_Imgs_Data!);
+    var wparcImgs = DbTools.glfParc_Imgs[zoomIndex];
+    var bytes = base64Decode(wparcImgs.Parc_Imgs_Data!);
     Widget wWidget = Container();
-    if (bytes.length > 0) {
+    if (bytes.isNotEmpty) {
       wWidget = Column(
         children: [
           Container(
@@ -2365,7 +2376,7 @@ class _PhotoDialogState extends State<PhotoDialog> {
       );
     }
 
-    return Container(
+    return SizedBox(
       width: 530,
       child: Stack(
         alignment: Alignment.bottomCenter,
@@ -2390,7 +2401,7 @@ class _PhotoDialogState extends State<PhotoDialog> {
                       child: Column(
                         children: [
                           Text(
-                            "${formattedDate}",
+                            formattedDate,
                             style: gColors.bodyTitle1_B_G_20,
                           ),
                           Container(
@@ -2420,7 +2431,7 @@ class _PhotoDialogState extends State<PhotoDialog> {
               right: 0,
               child: InkWell(
                   child: Padding(
-                    padding: EdgeInsets.only(right: 12),
+                    padding: const EdgeInsets.only(right: 12),
                     child: Image.asset(
                       "assets/images/ico5b.png",
                       fit: BoxFit.contain,
@@ -2430,9 +2441,9 @@ class _PhotoDialogState extends State<PhotoDialog> {
                   onTap: () async {
                     await gDialogs.Dialog_MsgBox(
                       context,
-                      "${DbTools.DescAff}",
-                      "${DbTools.DescAff2}",
-                      "${DbTools.DescAff3}",
+                      DbTools.DescAff,
+                      DbTools.DescAff2,
+                      DbTools.DescAff3,
                       "ico5b",
                       "Êtes-vous sur de vouloir",
                       "éffacer la photo ?",
@@ -2454,6 +2465,8 @@ class _PhotoDialogState extends State<PhotoDialog> {
 //**********************************
 
 class CdeDateDialog extends StatefulWidget {
+  const CdeDateDialog({super.key});
+
   @override
   _CdeDateDialogState createState() => _CdeDateDialogState();
 }
@@ -2469,12 +2482,12 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
   @override
   Widget build(BuildContext context) {
     var formatter = DateFormat('dd/MM/yyyy');
-    String fSelDCL_DateDeb = formatter.format(Srv_DbTools.SelDCL_DateDeb);
+    String fseldclDatedeb = formatter.format(Srv_DbTools.SelDCL_DateDeb);
 
-    String fSelDCL_DateFin = formatter.format(Srv_DbTools.SelDCL_DateFin);
+    String fseldclDatefin = formatter.format(Srv_DbTools.SelDCL_DateFin);
 
     return SimpleDialog(
-      insetPadding: EdgeInsets.only(bottom: 400, right: 300),
+      insetPadding: const EdgeInsets.only(bottom: 400, right: 300),
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
@@ -2515,7 +2528,7 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
                                           style: gColors.bodySaisie_B_G,
                                         ),
                                         Text(
-                                          "${fSelDCL_DateDeb}",
+                                          fseldclDatedeb,
                                           style: gColors.bodySaisie_N_G,
                                         ),
                                       ],
@@ -2579,7 +2592,7 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
                                           style: gColors.bodySaisie_B_G,
                                         ),
                                         Text(
-                                          "${fSelDCL_DateFin}",
+                                          fseldclDatefin,
                                           style: gColors.bodySaisie_N_G,
                                         ),
                                       ],
@@ -2630,7 +2643,7 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
 
   DateTime selectedDate = DateTime.now();
   Future<void> _selectDate(BuildContext context, DateTime firstDate, DateTime lastDate) async {
-    print("selectedDate >> ${selectedDate}");
+    print("selectedDate >> $selectedDate");
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
@@ -2640,7 +2653,7 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
           return Theme(
             data: ThemeData(
               dividerColor: gColors.LinearGradient5,
-              colorScheme: ColorScheme.light(
+              colorScheme: const ColorScheme.light(
                 primary: gColors.LinearGradient5,
                 onPrimary: Colors.white, // header text color
                 surface: Colors.white, // fond
@@ -2654,7 +2667,7 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        print("selectedDate << ${selectedDate}");
+        print("selectedDate << $selectedDate");
       });
     }
   }
@@ -2663,9 +2676,9 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
     double hLigne = 72;
 
     return PopupMenuButton(
-      child: Tooltip(textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.normal), decoration: BoxDecoration(color: Colors.orange), message: "Filtre Date", child: Container(width: 40, height: 40, child: SvgPicture.asset("assets/images/Icon_circle_down2.svg", height: 40, width: 40, colorFilter: ColorFilter.mode(Colors.grey, BlendMode.srcIn), semanticsLabel: 'A red up arrow'))),
+      child: Tooltip(textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.normal), decoration: const BoxDecoration(color: Colors.orange), message: "Filtre Date", child: SizedBox(width: 40, height: 40, child: SvgPicture.asset("assets/images/Icon_circle_down2.svg", height: 40, width: 40, colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn), semanticsLabel: 'A red up arrow'))),
       onSelected: (value) async {
-        print(" onSelected ${value}");
+        print(" onSelected $value");
 
         if (value == "S0") {
           Srv_DbTools.selDateTools(0);
@@ -2708,7 +2721,7 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Aujourd'hui",
                 style: gColors.bodySaisie_N_G,
@@ -2721,7 +2734,7 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Hier",
                 style: gColors.bodySaisie_N_G,
@@ -2734,7 +2747,7 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Avant hier",
                 style: gColors.bodySaisie_N_G,
@@ -2747,7 +2760,7 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Semaine courante",
                 style: gColors.bodySaisie_N_G,
@@ -2760,7 +2773,7 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Semaine précédente",
                 style: gColors.bodySaisie_N_G,
@@ -2773,7 +2786,7 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Semaine précédent la précédente",
                 style: gColors.bodySaisie_N_G,
@@ -2786,7 +2799,7 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Mois courant",
                 style: gColors.bodySaisie_N_G,
@@ -2799,7 +2812,7 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Mois précédent",
                 style: gColors.bodySaisie_N_G,
@@ -2812,7 +2825,7 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Mois précédent le précédent",
                 style: gColors.bodySaisie_N_G,
@@ -2825,7 +2838,7 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Année courante",
                 style: gColors.bodySaisie_N_G,
@@ -2838,7 +2851,7 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Année précédente",
                 style: gColors.bodySaisie_N_G,
@@ -2856,6 +2869,8 @@ class _CdeDateDialogState extends State<CdeDateDialog> {
 //**********************************
 
 class MiseEnServDialog extends StatefulWidget {
+  const MiseEnServDialog({super.key});
+
   @override
   _MiseEnServDialogState createState() => _MiseEnServDialogState();
 }
@@ -2955,13 +2970,13 @@ class _MiseEnServDialogState extends State<MiseEnServDialog> {
       TxtColor = gColors.white;
     }
 
-    return new Container(
+    return SizedBox(
       width: 250,
       height: 60,
       child: Card(
         color: BgColor,
         elevation: 0.2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0), side: BorderSide(width: 1, color: Colors.grey)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0), side: const BorderSide(width: 1, color: Colors.grey)),
         child: InkWell(
           onTap: () async {
             await HapticFeedback.vibrate();
@@ -3015,7 +3030,7 @@ class _MiseEnServDialogState extends State<MiseEnServDialog> {
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
               DbTools.gParc_Art_MS.ParcsArtId = -98;
@@ -3031,33 +3046,33 @@ class _MiseEnServDialogState extends State<MiseEnServDialog> {
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               if (isSel) {
                 await HapticFeedback.vibrate();
 
                 if (wSel[0]) {
                   print("MS MS MS DbTools.gParc_Ent.Parcs_CodeArticle! ${DbTools.gParc_Ent.Parcs_CodeArticle!}");
-                  Article_Ebp wArticle_Ebp = Srv_DbTools.IMPORT_Article_Ebp(DbTools.gParc_Ent.Parcs_CodeArticle!);
-                  Parc_Art wParc_Art = Parc_Art.Parc_ArtInit(DbTools.gParc_Ent.ParcsId!);
-                  wParc_Art.ParcsArt_Id = "${DbTools.gParc_Ent.Parcs_CodeArticle}";
-                  wParc_Art.ParcsArt_Type = "MS";
-                  wParc_Art.ParcsArt_Lib = "${wArticle_Ebp.Article_descriptionCommercialeEnClair}";
-                  wParc_Art.ParcsArt_Qte = 1;
-                  wParc_Art.ParcsArt_Fact = "Fact.";
-                  wParc_Art.ParcsArt_Livr = "Livré";
-                  DbTools.gParc_Art_MS = wParc_Art;
+                  Article_Ebp warticleEbp = Srv_DbTools.IMPORT_Article_Ebp(DbTools.gParc_Ent.Parcs_CodeArticle!);
+                  Parc_Art wparcArt = Parc_Art.Parc_ArtInit(DbTools.gParc_Ent.ParcsId!);
+                  wparcArt.ParcsArt_Id = "${DbTools.gParc_Ent.Parcs_CodeArticle}";
+                  wparcArt.ParcsArt_Type = "MS";
+                  wparcArt.ParcsArt_Lib = warticleEbp.Article_descriptionCommercialeEnClair;
+                  wparcArt.ParcsArt_Qte = 1;
+                  wparcArt.ParcsArt_Fact = "Fact.";
+                  wparcArt.ParcsArt_Livr = "Livré";
+                  DbTools.gParc_Art_MS = wparcArt;
                 } else if (wSel[2]) {
                   print("MS MS MS DbTools.gParc_Ent.Parcs_CodeArticle! ${DbTools.gParc_Ent.Parcs_CodeArticle!}");
-                  Article_Ebp wArticle_Ebp = Srv_DbTools.IMPORT_Article_Ebp(DbTools.gParc_Ent.Parcs_CodeArticle!);
-                  Parc_Art wParc_Art = Parc_Art.Parc_ArtInit(DbTools.gParc_Ent.ParcsId!);
-                  wParc_Art.ParcsArt_Id = "${DbTools.gParc_Ent.Parcs_CodeArticle}";
-                  wParc_Art.ParcsArt_Type = "MS";
-                  wParc_Art.ParcsArt_Lib = "${wArticle_Ebp.Article_descriptionCommercialeEnClair}";
-                  wParc_Art.ParcsArt_Qte = 1;
-                  wParc_Art.ParcsArt_Fact = "Devis";
-                  wParc_Art.ParcsArt_Livr = "Reliquat";
-                  DbTools.gParc_Art_MS = wParc_Art;
+                  Article_Ebp warticleEbp = Srv_DbTools.IMPORT_Article_Ebp(DbTools.gParc_Ent.Parcs_CodeArticle!);
+                  Parc_Art wparcArt = Parc_Art.Parc_ArtInit(DbTools.gParc_Ent.ParcsId!);
+                  wparcArt.ParcsArt_Id = "${DbTools.gParc_Ent.Parcs_CodeArticle}";
+                  wparcArt.ParcsArt_Type = "MS";
+                  wparcArt.ParcsArt_Lib = warticleEbp.Article_descriptionCommercialeEnClair;
+                  wparcArt.ParcsArt_Qte = 1;
+                  wparcArt.ParcsArt_Fact = "Devis";
+                  wparcArt.ParcsArt_Livr = "Reliquat";
+                  DbTools.gParc_Art_MS = wparcArt;
                 }
 
                 Navigator.of(context).pop();
@@ -3087,6 +3102,8 @@ class _MiseEnServDialogState extends State<MiseEnServDialog> {
 //**********************************
 
 class QrCodeDialog extends StatefulWidget {
+  const QrCodeDialog({super.key});
+
   @override
   _QrCodeDialogState createState() => _QrCodeDialogState();
 }
@@ -3201,7 +3218,7 @@ class _QrCodeDialogState extends State<QrCodeDialog> {
 
         setState(() {});
       },
-      child: Container(
+      child: SizedBox(
           width: 350,
 //              color: Colors.amberAccent,
           child: Column(
@@ -3213,7 +3230,7 @@ class _QrCodeDialogState extends State<QrCodeDialog> {
                     width: 20,
                   ),
                   Text(
-                    "Code:  ${QrcValue}",
+                    "Code:  $QrcValue",
                     style: gColors.bodyTitle1_B_Gr,
                   ),
                 ],
@@ -3222,7 +3239,7 @@ class _QrCodeDialogState extends State<QrCodeDialog> {
                 height: 20,
               ),
               Text(
-                "${ErrorQrc}",
+                ErrorQrc,
                 style: gColors.bodyTitle1_B_Gr.copyWith(
                   color: gColors.primaryRed,
                 ),
@@ -3251,7 +3268,7 @@ class _QrCodeDialogState extends State<QrCodeDialog> {
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
 
@@ -3266,7 +3283,7 @@ class _QrCodeDialogState extends State<QrCodeDialog> {
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
               DbTools.gParc_Ent.Parcs_QRCode = QrcValue;

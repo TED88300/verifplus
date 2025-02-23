@@ -1,11 +1,9 @@
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:camera/camera.dart';
 import 'package:crop_image/crop_image.dart';
 import 'package:flutter/material.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Widget_Tools/gPhotoCrop.dart';
@@ -16,6 +14,8 @@ class gPhotos extends StatefulWidget {
 
   static int wImg = 0;
   static int ImgDoc = 0;
+
+  const gPhotos({super.key});
 
   @override
   gPhotosState createState() =>
@@ -65,7 +65,7 @@ class gPhotosState
 
     return Scaffold(
       appBar: AppBar(
-        title: AutoSizeText(
+        title: const AutoSizeText(
           "Photo",
           maxLines: 1,
         ),
@@ -150,7 +150,7 @@ class DisplayPictureScreen extends StatelessWidget {
     var size = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: AutoSizeText(
+        title: const AutoSizeText(
           "Photo Organe gPhotos",
           maxLines: 1,
         ),
@@ -195,7 +195,7 @@ class DisplayPictureScreen extends StatelessWidget {
           DbTools.gImagePath = imagePath;
 
 //          print(">>>>>>>>>>>>>>>>>>>>>>>>>>>> E3_New");
-          await Navigator.of(context).push(MaterialPageRoute(builder: (context) => gPhotoCrop()));
+          await Navigator.of(context).push(MaterialPageRoute(builder: (context) => const gPhotoCrop()));
 //          print("<<<<<<<<<<<<<<<<<<<<<<<<<<<< E3_New");
 
 
@@ -214,6 +214,8 @@ class DisplayPictureScreen extends StatelessWidget {
 
 
 class gPhotos_Gen extends StatefulWidget {
+  const gPhotos_Gen({super.key});
+
   @override
   gPhotos_GenState createState() =>
       gPhotos_GenState();
@@ -262,7 +264,7 @@ class gPhotos_GenState
 
     return Scaffold(
       appBar: AppBar(
-        title: AutoSizeText(
+        title: const AutoSizeText(
           "Photo",
           maxLines: 1,
         ),
@@ -347,7 +349,7 @@ class DisplayPictureScreen_Gen extends StatelessWidget {
     var size = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
-        title: AutoSizeText(
+        title: const AutoSizeText(
           "Photo Organe gPhotos",
           maxLines: 1,
         ),
@@ -392,7 +394,7 @@ class DisplayPictureScreen_Gen extends StatelessWidget {
           DbTools.gImagePath = imagePath;
 
 //          print(">>>>>>>>>>>>>>>>>>>>>>>>>>>> E3_New");
-          await Navigator.of(context).push(MaterialPageRoute(builder: (context) => gPhotoCrop_Gen()));
+          await Navigator.of(context).push(MaterialPageRoute(builder: (context) => const gPhotoCrop_Gen()));
 //          print("<<<<<<<<<<<<<<<<<<<<<<<<<<<< E3_New");
 
 
@@ -405,8 +407,10 @@ class DisplayPictureScreen_Gen extends StatelessWidget {
 }
 
 class gPhotoCrop_Gen extends StatefulWidget {
+  const gPhotoCrop_Gen({super.key});
+
   @override
-  gPhotoCrop_GenState createState() => new gPhotoCrop_GenState();
+  gPhotoCrop_GenState createState() => gPhotoCrop_GenState();
 }
 
 class gPhotoCrop_GenState extends State<gPhotoCrop_Gen> {
@@ -438,6 +442,7 @@ class gPhotoCrop_GenState extends State<gPhotoCrop_Gen> {
     int lig = lig2.toInt() + ligmod;
   }
 
+  @override
   void initState() {
     super.initState();
 //    image = gimage;
@@ -496,10 +501,10 @@ class gPhotoCrop_GenState extends State<gPhotoCrop_Gen> {
 
 
           leading: IconButton(
-            icon: Icon(Icons.cancel, color: gColors.white),
+            icon: const Icon(Icons.cancel, color: gColors.white),
             onPressed: () => Navigator.of(context).pop(),
           ),
-          iconTheme: IconThemeData(
+          iconTheme: const IconThemeData(
             color: gColors.black, //change your color here
           ),
 //        centerTitle: false,
@@ -516,7 +521,7 @@ class gPhotoCrop_GenState extends State<gPhotoCrop_Gen> {
             Container(
               height: 20,
             ),
-            Container(
+            SizedBox(
               height: MediaQuery.of(context).size.height -110,
               child:
               Center(
@@ -529,9 +534,9 @@ class gPhotoCrop_GenState extends State<gPhotoCrop_Gen> {
 
           ],
         ),
-        floatingActionButton: new FloatingActionButton(
+        floatingActionButton: FloatingActionButton(
             elevation: 0.0,
-            child: new Icon(Icons.check),
+            child: const Icon(Icons.check),
             onPressed: () async {
               ui.Image croppedImage = await cropController.croppedBitmap();
 

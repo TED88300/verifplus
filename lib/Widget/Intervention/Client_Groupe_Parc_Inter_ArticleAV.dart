@@ -15,7 +15,7 @@ class Client_Groupe_Parc_Inter_ArticleAv_Dialog {
   ) async {
     await showDialog(
       context: context,
-      builder: (BuildContext context) => Client_Groupe_Parc_Inter_ArticleDialog(),
+      builder: (BuildContext context) => const Client_Groupe_Parc_Inter_ArticleDialog(),
     );
   }
 }
@@ -60,7 +60,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
   Widget wTitre() {
     return
       Container(
-          padding: EdgeInsets.fromLTRB(0, 10, 0, 20),
+          padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
         child:
         Row(
           children: [
@@ -105,10 +105,10 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
 
   Widget wDet() {
     return Container(
-      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
       height: MediaQuery.of(context).size.height,
       child: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -122,10 +122,10 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
 
   Widget wProc() {
     return Container(
-      padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
       height: MediaQuery.of(context).size.height,
       child: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -151,16 +151,16 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
             elevation: 0,
           ),
           child: Container(
-            padding: EdgeInsets.only(top: 5, bottom: 5),
+            padding: const EdgeInsets.only(top: 5, bottom: 5),
             child: Text(
-              '${Lbls[0].trim()}',
+              Lbls[0].trim(),
               style: gColors.smallSaisie_N_G.copyWith(color: Colors.blue, decoration: TextDecoration.underline),
             ),
           ),
           onPressed: () async {
             await HapticFeedback.vibrate();
             print("LNK ${Lbls[1].trim()}");
-            var url = Uri.parse('${Lbls[1].trim()}');
+            var url = Uri.parse(Lbls[1].trim());
             if (await canLaunchUrl(url)) {
               await launchUrl(url, webOnlyWindowName: '_blank');
             } else {
@@ -174,10 +174,10 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
     }
 
     return Container(
-      padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
       height: MediaQuery.of(context).size.height,
       child: SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
+        physics: const BouncingScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           mainAxisAlignment: MainAxisAlignment.start,
@@ -213,7 +213,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
     ];
 
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
       backgroundColor: Colors.yellow,
       title: wTitre(),
       contentPadding: EdgeInsets.zero,
@@ -236,7 +236,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
-                  new ElevatedButton(
+                  ElevatedButton(
                     onPressed: () async {
                       await HapticFeedback.vibrate();
                       pageController.jumpToPage(0);
@@ -251,7 +251,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                           width: 1.0,
                           color: gColors.greyLight,
                         )),
-                    child: Container(
+                    child: SizedBox(
                       width: 120,
                       height: 50,
                       child: Center(
@@ -259,7 +259,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                       ),
                     ),
                   ),
-                  new ElevatedButton(
+                  ElevatedButton(
                       onPressed: () async {
                         await HapticFeedback.vibrate();
                         pageController.jumpToPage(1);
@@ -274,13 +274,13 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                             width: 1.0,
                             color: gColors.greyLight,
                           )),
-                      child: Container(
+                      child: SizedBox(
                           width: 120,
                           height: 50,
                           child: Center(
                             child: Text('Procédure', style: currentIndex == 1 ? gColors.bodyTitle1_N_G_20 : gColors.bodyTitle1_N_Gr),
                           ))),
-                  new ElevatedButton(
+                  ElevatedButton(
                     onPressed: () async {
                       await HapticFeedback.vibrate();
                       pageController.jumpToPage(2);
@@ -295,7 +295,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                           width: 1.0,
                           color: gColors.greyLight,
                         )),
-                    child: Container(
+                    child: SizedBox(
                         width: 120,
                         height: 50,
                         child: Center(
@@ -315,9 +315,9 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
             ),
             Expanded(
               child: PageView(
-                children: widgets,
                 controller: pageController,
                 onPageChanged: onBottomIconPressed,
+                children: widgets,
               ),
             ),
             Container(
@@ -348,7 +348,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
 
   Valider(BuildContext context) {
     return Container(
-      padding: EdgeInsets.fromLTRB(40, 10, 40, 10),
+      padding: const EdgeInsets.fromLTRB(40, 10, 40, 10),
       width: 560,
       color: gColors.greyLight,
       alignment: Alignment.centerRight,
@@ -361,9 +361,9 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
             color: gColors.primary,
             width: 8,
           ),
-          Spacer(),
+          const Spacer(),
 
-          new ElevatedButton(
+          ElevatedButton(
               onPressed: () async {
                 await HapticFeedback.vibrate();
                 Navigator.of(context).pop();
@@ -377,7 +377,7 @@ class Client_Groupe_Parc_Inter_ArticleDialogState extends State<Client_Groupe_Pa
                     width: 1.0,
                     color: gColors.greyLight,
                   )),
-              child: Container(
+              child: SizedBox(
                   width: 120,
                   height: 50,
                   child: Center(

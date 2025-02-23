@@ -60,20 +60,20 @@ class User_Hab {
   }
 
   factory User_Hab.fromJson(Map<String, dynamic> json) {
-    int iUser_Hab_MaintPrev = int.parse(json['User_Hab_MaintPrev']);
-    int iUser_Hab_Install = int.parse(json['User_Hab_Install']);
-    int iUser_Hab_MaintCorrect = int.parse(json['User_Hab_MaintCorrect']);
-    bool bUser_Hab_MaintPrev = (iUser_Hab_MaintPrev == 1);
-    bool bUser_Hab_Install = (iUser_Hab_Install == 1);
-    bool bUser_Hab_MaintCorrect = (iUser_Hab_MaintCorrect == 1);
+    int iuserHabMaintprev = int.parse(json['User_Hab_MaintPrev']);
+    int iuserHabInstall = int.parse(json['User_Hab_Install']);
+    int iuserHabMaintcorrect = int.parse(json['User_Hab_MaintCorrect']);
+    bool buserHabMaintprev = (iuserHabMaintprev == 1);
+    bool buserHabInstall = (iuserHabInstall == 1);
+    bool buserHabMaintcorrect = (iuserHabMaintcorrect == 1);
 
     User_Hab wUser = User_Hab(
       int.parse(json['User_HabID']),
       int.parse(json['User_Hab_UserID']),
       int.parse(json['User_Hab_Param_HabID']),
-      bUser_Hab_MaintPrev,
-      bUser_Hab_Install,
-      bUser_Hab_MaintCorrect,
+      buserHabMaintprev,
+      buserHabInstall,
+      buserHabMaintcorrect,
       int.parse(json['User_Hab_Ordre']),
     );
 

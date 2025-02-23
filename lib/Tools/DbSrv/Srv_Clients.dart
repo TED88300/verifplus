@@ -1,7 +1,6 @@
 
 
 
-import 'package:path/path.dart';
 
 class Client {
   int ClientId = -1;
@@ -92,8 +91,8 @@ class Client {
 
 
   Map<String, dynamic> toMap() {
-    if (Client_CL_Pr == null) Client_CL_Pr = false;
-    if (Client_CL_Pr == null) Client_CL_Pr = false;
+    Client_CL_Pr ??= false;
+    Client_CL_Pr ??= false;
     return {
       'ClientId': ClientId,
       'Client_CodeGC': Client_CodeGC,

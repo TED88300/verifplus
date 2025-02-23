@@ -418,7 +418,7 @@ class AnnotationTextField extends AnnotationBuilder {
 
   @override
   PdfAnnot build(Context context, PdfRect? box) {
-    final _textStyle = Theme.of(context).defaultTextStyle.merge(textStyle);
+    final textStyle = Theme.of(context).defaultTextStyle.merge(this.textStyle);
 
     return PdfAnnot(
       context.page,
@@ -439,9 +439,9 @@ class AnnotationTextField extends AnnotationBuilder {
         fieldFlags: fieldFlags,
         value: value,
         defaultValue: defaultValue,
-        font: _textStyle.font!.getFont(context),
-        fontSize: _textStyle.fontSize!,
-        textColor: _textStyle.color!,
+        font: textStyle.font!.getFont(context),
+        fontSize: textStyle.fontSize!,
+        textColor: textStyle.color!,
       ),
       objser: replaces?.ser,
       objgen: replaces?.gen ?? 0,

@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -33,7 +32,7 @@ class _ImagePainterToolsState extends State<ImagePainterTools> {
 
   Future saveImage() async {
     Uint8List? wUint8List = await imagePainterController.exportImage();
-    widget.wParc_Img.Parc_Imgs_Data = await base64Encode(wUint8List!);
+    widget.wParc_Img.Parc_Imgs_Data = base64Encode(wUint8List!);
     await DbTools.insertParc_Img(widget.wParc_Img);
     Navigator.of(context).pop();
   }
@@ -93,7 +92,7 @@ class _ImagePainterTools2State extends State<ImagePainterTools2> {
 
   Future saveImage() async {
     Uint8List? wUint8List = await imagePainterController.exportImage();
-    widget.wDCL_Ent_Img.dCLEntImgData = await base64Encode(wUint8List!);
+    widget.wDCL_Ent_Img.dCLEntImgData = base64Encode(wUint8List!);
     await Srv_DbTools.setDCL_Ent_Img(widget.wDCL_Ent_Img);
     Navigator.of(context).pop();
   }

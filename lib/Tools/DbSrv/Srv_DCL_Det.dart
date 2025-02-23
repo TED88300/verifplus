@@ -95,26 +95,26 @@ DCL_Det.fromJson(Map<String, dynamic> json) {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['DCL_DetID'] = this.DCL_DetID;
-    data['DCL_Det_EntID'] = this.DCL_Det_EntID;
-    data['DCL_Det_ParcsArtId'] = this.DCL_Det_ParcsArtId;
-    data['DCL_Det_Ordre'] = this.DCL_Det_Ordre;
-    data['DCL_Det_Type'] = this.DCL_Det_Type;
-    data['DCL_Det_NoArt'] = this.DCL_Det_NoArt;
-    data['DCL_Det_Lib'] = this.DCL_Det_Lib;
-    data['DCL_Det_Qte'] = this.DCL_Det_Qte;
-    data['DCL_Det_PU'] = this.DCL_Det_PU;
-    data['DCL_Det_Rem_P'] = this.DCL_Det_RemP;
-    data['DCL_Det_Rem_Mt'] = this.DCL_Det_RemMt;
-    data['DCL_Det_TVA'] = this.DCL_Det_TVA;
-    data['DCL_Det_Livr'] = this.DCL_Det_Livr;
-    data['DCL_Det_DateLivr'] = this.DCL_Det_DateLivr;
-    data['DCL_Det_Rel'] = this.DCL_Det_Rel;
-    data['DCL_Det_DateRel'] = this.DCL_Det_DateRel;
-    data['DCL_Det_Statut'] = this.DCL_Det_Statut;
-    data['DCL_Det_Note'] = this.DCL_Det_Note;
-    data['DCL_Det_Garantie'] = this.DCL_Det_Garantie;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['DCL_DetID'] = DCL_DetID;
+    data['DCL_Det_EntID'] = DCL_Det_EntID;
+    data['DCL_Det_ParcsArtId'] = DCL_Det_ParcsArtId;
+    data['DCL_Det_Ordre'] = DCL_Det_Ordre;
+    data['DCL_Det_Type'] = DCL_Det_Type;
+    data['DCL_Det_NoArt'] = DCL_Det_NoArt;
+    data['DCL_Det_Lib'] = DCL_Det_Lib;
+    data['DCL_Det_Qte'] = DCL_Det_Qte;
+    data['DCL_Det_PU'] = DCL_Det_PU;
+    data['DCL_Det_Rem_P'] = DCL_Det_RemP;
+    data['DCL_Det_Rem_Mt'] = DCL_Det_RemMt;
+    data['DCL_Det_TVA'] = DCL_Det_TVA;
+    data['DCL_Det_Livr'] = DCL_Det_Livr;
+    data['DCL_Det_DateLivr'] = DCL_Det_DateLivr;
+    data['DCL_Det_Rel'] = DCL_Det_Rel;
+    data['DCL_Det_DateRel'] = DCL_Det_DateRel;
+    data['DCL_Det_Statut'] = DCL_Det_Statut;
+    data['DCL_Det_Note'] = DCL_Det_Note;
+    data['DCL_Det_Garantie'] = DCL_Det_Garantie;
     return data;
   }
 

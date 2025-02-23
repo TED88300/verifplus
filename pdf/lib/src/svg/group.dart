@@ -34,21 +34,21 @@ class SvgGroup extends SvgOperation {
     SvgPainter painter,
   ) : super(brush, clip, transform, painter);
 
-  factory SvgGroup.fromXml(
-      XmlElement element, SvgPainter painter, SvgBrush brush) {
-    final _brush = SvgBrush.fromXml(element, brush, painter);
+  factory SvgGroup.fromXml(XmlElement element, SvgPainter painter, SvgBrush wbrush) {
+
+    final brush = SvgBrush.fromXml(element, wbrush, painter);
 
     final children = element.children
         .whereType<XmlElement>()
         .where((element) => element.name.local != 'symbol')
         .map<SvgOperation?>(
-            (child) => SvgOperation.fromXml(child, painter, _brush))
+            (child) => SvgOperation.fromXml(child, painter, brush))
         .whereType<SvgOperation>();
 
     return SvgGroup(
       children,
-      _brush,
-      SvgClipPath.fromXml(element, painter, _brush),
+      brush,
+      SvgClipPath.fromXml(element, painter, brush),
       SvgTransform.fromXml(element),
       painter,
     );

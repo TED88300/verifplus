@@ -83,14 +83,14 @@ class PdfImage extends PdfXObject {
     im.params['/ColorSpace'] = const PdfName('/DeviceRGB');
 
     if (alpha) {
-      final _sMask = PdfImage._alpha(
+      final sMask = PdfImage._alpha(
         pdfDocument,
         image,
         width,
         height,
         orientation,
       );
-      im.params['/SMask'] = PdfIndirect(_sMask.objser, 0);
+      im.params['/SMask'] = PdfIndirect(sMask.objser, 0);
     }
 
     final w = width;

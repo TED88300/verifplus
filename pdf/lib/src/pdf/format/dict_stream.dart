@@ -53,46 +53,46 @@ class PdfDictStream extends PdfDict<PdfDataType> {
 
   @override
   void output(PdfObjectBase o, PdfStream s, [int? indent]) {
-    final _values = PdfDict(values);
+    final values = PdfDict(this.values);
 
-    Uint8List? _data;
+    Uint8List? data;
 
-    if (_values.containsKey('/Filter')) {
+    if (values.containsKey('/Filter')) {
       // The data is already in the right format
-      _data = data;
+      data = data;
     } else if (compress && o.settings.deflate != null) {
       // Compress the data
-      final newData = Uint8List.fromList(o.settings.deflate!(data));
-      if (newData.lengthInBytes < data.lengthInBytes) {
-        _values['/Filter'] = const PdfName('/FlateDecode');
-        _data = newData;
+      final newData = Uint8List.fromList(o.settings.deflate!(this.data));
+      if (newData.lengthInBytes < this.data.lengthInBytes) {
+        values['/Filter'] = const PdfName('/FlateDecode');
+        data = newData;
       }
     }
 
-    if (_data == null) {
+    if (data == null) {
       if (isBinary) {
         // This is an Ascii85 stream
         final e = Ascii85Encoder();
-        _data = e.convert(data);
-        _values['/Filter'] = const PdfName('/ASCII85Decode');
+        data = e.convert(this.data);
+        values['/Filter'] = const PdfName('/ASCII85Decode');
       } else {
         // This is a non-deflated stream
-        _data = data;
+        data = data;
       }
     }
 
     if (encrypt && o.settings.encryptCallback != null) {
-      _data = o.settings.encryptCallback!(_data, o);
+      data = o.settings.encryptCallback!(this.data, o);
     }
 
-    _values['/Length'] = PdfNum(_data.length);
+    values['/Length'] = PdfNum(this.data.length);
 
-    _values.output(o, s, indent);
+    values.output(o, s, indent);
     if (indent != null) {
       s.putByte(0x0a);
     }
     s.putString('stream\n');
-    s.putBytes(_data);
+    s.putBytes(this.data);
     s.putString('\nendstream');
   }
 }

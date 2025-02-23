@@ -15,6 +15,8 @@ import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 //**********************************
 
 class Groupe_Vue extends StatefulWidget {
+  const Groupe_Vue({super.key});
+
   @override
   _Groupe_VueState createState() => _Groupe_VueState();
 }
@@ -36,31 +38,31 @@ class _Groupe_VueState extends State<Groupe_Vue> {
 
     if (Srv_DbTools.gGroupe.Groupe_CP.length >= 2) Dep = Srv_DbTools.gGroupe.Groupe_CP.substring(0, 2);
     String wAdr = "${Srv_DbTools.gGroupe.Groupe_Adr1} ";
-    if (Srv_DbTools.gGroupe.Groupe_Adr2.isNotEmpty) wAdr = wAdr + "${Srv_DbTools.gGroupe.Groupe_Adr2} ";
-    if (Srv_DbTools.gGroupe.Groupe_Adr3.isNotEmpty) wAdr = wAdr + "${Srv_DbTools.gGroupe.Groupe_Adr3} ";
+    if (Srv_DbTools.gGroupe.Groupe_Adr2.isNotEmpty) wAdr = "$wAdr${Srv_DbTools.gGroupe.Groupe_Adr2} ";
+    if (Srv_DbTools.gGroupe.Groupe_Adr3.isNotEmpty) wAdr = "$wAdr${Srv_DbTools.gGroupe.Groupe_Adr3} ";
 
-    if (Srv_DbTools.gGroupe.Groupe_Adr4.isNotEmpty) wAdr = wAdr + "${Srv_DbTools.gGroupe.Groupe_Adr4} ";
-    if (Srv_DbTools.gGroupe.Groupe_CP.isNotEmpty) wAdr = wAdr + "${Srv_DbTools.gGroupe.Groupe_CP} ";
-    if (Srv_DbTools.gGroupe.Groupe_Ville.isNotEmpty) wAdr = wAdr + "${Srv_DbTools.gGroupe.Groupe_Ville} ";
-    if (Srv_DbTools.gGroupe.Groupe_Pays.isNotEmpty) wAdr = wAdr + "${Srv_DbTools.gGroupe.Groupe_Pays} ";
+    if (Srv_DbTools.gGroupe.Groupe_Adr4.isNotEmpty) wAdr = "$wAdr${Srv_DbTools.gGroupe.Groupe_Adr4} ";
+    if (Srv_DbTools.gGroupe.Groupe_CP.isNotEmpty) wAdr = "$wAdr${Srv_DbTools.gGroupe.Groupe_CP} ";
+    if (Srv_DbTools.gGroupe.Groupe_Ville.isNotEmpty) wAdr = "$wAdr${Srv_DbTools.gGroupe.Groupe_Ville} ";
+    if (Srv_DbTools.gGroupe.Groupe_Pays.isNotEmpty) wAdr = "$wAdr${Srv_DbTools.gGroupe.Groupe_Pays} ";
 
     wAff = [
       AffLigne("Groupe", "", gColors.greyLight, "Icon_Groupe", "", "", "", ""),
-      AffBtn("Groupe_Nom", "Nom", "${Srv_DbTools.gGroupe.Groupe_Nom}"),
+      AffBtn("Groupe_Nom", "Nom", Srv_DbTools.gGroupe.Groupe_Nom),
       AffLigne("Adresse du Groupe", "", gColors.greyLight, "Icon_Adr", !affAdresseAll ? "Icon_circle_down" : "Icon_circle_up", "", "", ""),
-      AffBtn("Adresse", "Adresse", "${Srv_DbTools.gGroupe.Groupe_Adr1}"),
-      !affAdresseAll ? Container() : AffBtn("Adresse", "Adresse (Suite)", "${Srv_DbTools.gGroupe.Groupe_Adr2}"),
-      !affAdresseAll ? Container() : AffBtn("Adresse", "Adresse (Suite)", "${Srv_DbTools.gGroupe.Groupe_Adr3}"),
-      !affAdresseAll ? Container() : AffBtn("Adresse", "Adresse (Fin)", "${Srv_DbTools.gGroupe.Groupe_Adr4}"),
-      AffBtn("Adresse", "CP", "${Srv_DbTools.gGroupe.Groupe_CP}"),
-      AffBtn("Adresse", "Villle", "${Srv_DbTools.gGroupe.Groupe_Ville}"),
-      !affAdresseAll ? Container() : AffLigne("Département", "${Dep}", gColors.white, "", "", "", "", ""),
+      AffBtn("Adresse", "Adresse", Srv_DbTools.gGroupe.Groupe_Adr1),
+      !affAdresseAll ? Container() : AffBtn("Adresse", "Adresse (Suite)", Srv_DbTools.gGroupe.Groupe_Adr2),
+      !affAdresseAll ? Container() : AffBtn("Adresse", "Adresse (Suite)", Srv_DbTools.gGroupe.Groupe_Adr3),
+      !affAdresseAll ? Container() : AffBtn("Adresse", "Adresse (Fin)", Srv_DbTools.gGroupe.Groupe_Adr4),
+      AffBtn("Adresse", "CP", Srv_DbTools.gGroupe.Groupe_CP),
+      AffBtn("Adresse", "Villle", Srv_DbTools.gGroupe.Groupe_Ville),
+      !affAdresseAll ? Container() : AffLigne("Département", Dep, gColors.white, "", "", "", "", ""),
       !affAdresseAll ? Container() : AffBtn("Adresse", "Pays", "${Srv_DbTools.gGroupe.Groupe_Pays} "),
       AffLigne("", "", gColors.white, "", "", "", "", wAdr),
       AffLigne("Contact du Groupe", "", gColors.greyLight, "Icon_Cont", "", !affContactAll ? "Icon_circle_down" : "Icon_circle_up", "", ""),
-      !affContactAll ? AffBtn("Contact", "Nom", "${Srv_DbTools.gContact.Contact_Civilite} ${Srv_DbTools.gContact.Contact_Prenom} ${Srv_DbTools.gContact.Contact_Nom} ") : AffBtn("Contact", "Civilité", "${Srv_DbTools.gContact.Contact_Civilite}"),
+      !affContactAll ? AffBtn("Contact", "Nom", "${Srv_DbTools.gContact.Contact_Civilite} ${Srv_DbTools.gContact.Contact_Prenom} ${Srv_DbTools.gContact.Contact_Nom} ") : AffBtn("Contact", "Civilité", Srv_DbTools.gContact.Contact_Civilite),
       !affContactAll ? Container() : AffBtn("Contact", "Prénom", "${Srv_DbTools.gContact.Contact_Prenom} "),
-      !affContactAll ? Container() : AffBtn("Contact", "Nom", "${Srv_DbTools.gContact.Contact_Nom}"),
+      !affContactAll ? Container() : AffBtn("Contact", "Nom", Srv_DbTools.gContact.Contact_Nom),
       !affContactAll
           ? Container()
           : AffBtn(
@@ -68,9 +70,9 @@ class _Groupe_VueState extends State<Groupe_Vue> {
               "Fonction / Service",
               "${Srv_DbTools.gContact.Contact_Fonction} ${Srv_DbTools.gContact.Contact_Service}",
             ),
-      !affContactAll ? Container() : AffBtn("Contact", "Tel Fixe", "${Srv_DbTools.gContact.Contact_Tel1}"),
-      AffBtn("Contact", "Portable", "${Srv_DbTools.gContact.Contact_Tel2}"),
-      AffLigne("Email", "", gColors.white, "", "", "", "${Srv_DbTools.gContact.Contact_eMail}", ""),
+      !affContactAll ? Container() : AffBtn("Contact", "Tel Fixe", Srv_DbTools.gContact.Contact_Tel1),
+      AffBtn("Contact", "Portable", Srv_DbTools.gContact.Contact_Tel2),
+      AffLigne("Email", "", gColors.white, "", "", "", Srv_DbTools.gContact.Contact_eMail, ""),
       AffBtnAdd("Autres Contacts"),
     ];
 
@@ -78,12 +80,12 @@ class _Groupe_VueState extends State<Groupe_Vue> {
       for (int i = 1; i < Srv_DbTools.ListContact.length; i++) {
         var element = Srv_DbTools.ListContact[i];
         String wNom = "${element.Contact_Prenom} ${element.Contact_Nom}";
-        if (element.Contact_Fonction.isNotEmpty) wNom = wNom + " - ${element.Contact_Fonction}";
-        if (element.Contact_Service.isNotEmpty) wNom = wNom + "/${element.Contact_Service}";
-        if (element.Contact_Tel1.isNotEmpty) wNom = wNom + " - ${element.Contact_Tel1}";
-        if (element.Contact_Tel2.isNotEmpty) wNom = wNom + " - ${element.Contact_Tel2}";
-        if (element.Contact_eMail.isNotEmpty) wNom = wNom + " - ${element.Contact_eMail}";
-        wAff.add(AffBtnAutr("Contact", i, "${wNom}"));
+        if (element.Contact_Fonction.isNotEmpty) wNom = "$wNom - ${element.Contact_Fonction}";
+        if (element.Contact_Service.isNotEmpty) wNom = "$wNom/${element.Contact_Service}";
+        if (element.Contact_Tel1.isNotEmpty) wNom = "$wNom - ${element.Contact_Tel1}";
+        if (element.Contact_Tel2.isNotEmpty) wNom = "$wNom - ${element.Contact_Tel2}";
+        if (element.Contact_eMail.isNotEmpty) wNom = "$wNom - ${element.Contact_eMail}";
+        wAff.add(AffBtnAutr("Contact", i, wNom));
       }
     }
 
@@ -147,7 +149,7 @@ class _Groupe_VueState extends State<Groupe_Vue> {
             color: gColors.white,
             child: Column(
               children: [
-                gObj.InterventionTitleWidget("${Srv_DbTools.gGroupe.Groupe_Nom.toUpperCase()}"),
+                gObj.InterventionTitleWidget(Srv_DbTools.gGroupe.Groupe_Nom.toUpperCase()),
                 Container(
                   height: 6,
                 ),
@@ -169,7 +171,7 @@ class _Groupe_VueState extends State<Groupe_Vue> {
     double mTop = 15;
     double icoWidth = 32;
     return Container(
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
         color: BckGrd,
         child: Column(
           children: [
@@ -178,9 +180,9 @@ class _Groupe_VueState extends State<Groupe_Vue> {
                 ImgL.isEmpty
                     ? Container()
                     : Container(
-                        padding: EdgeInsets.only(left: 10),
+                        padding: const EdgeInsets.only(left: 10),
                         child: Image.asset(
-                          "assets/images/${ImgL}.png",
+                          "assets/images/$ImgL.png",
                           height: icoWidth,
                           width: icoWidth,
                         ),
@@ -189,7 +191,7 @@ class _Groupe_VueState extends State<Groupe_Vue> {
                     padding: EdgeInsets.only(left: 10, top: mTop),
                     height: wHeight,
                     child: Text(
-                      "${wTextL}",
+                      wTextL,
                       textAlign: TextAlign.start,
                       maxLines: 1,
                       style: gColors.bodySaisie_B_B,
@@ -199,7 +201,7 @@ class _Groupe_VueState extends State<Groupe_Vue> {
                         padding: EdgeInsets.only(right: 10, top: mTop),
                         height: wHeight,
                         child: Text(
-                          "${wTextR}",
+                          wTextR,
                           textAlign: TextAlign.end,
                           maxLines: 1,
                           style: gColors.bodySaisie_B_B.copyWith(color: gColors.primaryGreen),
@@ -208,9 +210,9 @@ class _Groupe_VueState extends State<Groupe_Vue> {
                     ? Container()
                     : IconButton(
                         icon: Container(
-                          padding: EdgeInsets.only(right: 10),
+                          padding: const EdgeInsets.only(right: 10),
                           child: Image.asset(
-                            "assets/images/${ImgR}.png",
+                            "assets/images/$ImgR.png",
                             height: icoWidth,
                             width: icoWidth,
                           ),
@@ -226,9 +228,9 @@ class _Groupe_VueState extends State<Groupe_Vue> {
                     ? Container()
                     : IconButton(
                         icon: Container(
-                          padding: EdgeInsets.only(right: 10),
+                          padding: const EdgeInsets.only(right: 10),
                           child: Image.asset(
-                            "assets/images/${ImgR2}.png",
+                            "assets/images/$ImgR2.png",
                             height: icoWidth,
                             width: icoWidth,
                           ),
@@ -257,7 +259,7 @@ class _Groupe_VueState extends State<Groupe_Vue> {
                             padding: EdgeInsets.only(right: 10, top: mTop),
                             height: wHeight,
                             child: Text(
-                              "${eMail}",
+                              eMail,
                               textAlign: TextAlign.end,
                               maxLines: 1,
                               style: gColors.bodySaisie_B_B.copyWith(
@@ -271,7 +273,7 @@ class _Groupe_VueState extends State<Groupe_Vue> {
                         onTap: () async {
                           await HapticFeedback.vibrate();
 
-                          MapsLauncher.launchQuery("${Map}");
+                          MapsLauncher.launchQuery(Map);
                         },
                         child: Container(
                             padding: EdgeInsets.only(right: 10, top: mTop),
@@ -303,7 +305,7 @@ class _Groupe_VueState extends State<Groupe_Vue> {
               context: context,
               builder: (BuildContext context) {
                 Srv_DbTools.gContact = Srv_DbTools.ListContact[0];
-                return Container(padding: EdgeInsets.fromLTRB(30, 0, 30, 30), child: Groupe_Vue_Popup(bFact: true, wChamps: wChamps));
+                return Container(padding: const EdgeInsets.fromLTRB(30, 0, 30, 30), child: Groupe_Vue_Popup(bFact: true, wChamps: wChamps));
               });
           Reload();
         },
@@ -328,7 +330,7 @@ class _Groupe_VueState extends State<Groupe_Vue> {
               context: context,
               builder: (BuildContext context) {
                 Srv_DbTools.gContact = Srv_DbTools.ListContact[i];
-                return Container(padding: EdgeInsets.fromLTRB(30, 0, 30, 30), child: Groupe_Vue_Popup(bFact: true, wChamps: wChamps));
+                return Container(padding: const EdgeInsets.fromLTRB(30, 0, 30, 30), child: Groupe_Vue_Popup(bFact: true, wChamps: wChamps));
               });
           Reload();
         },
@@ -354,7 +356,7 @@ class _Groupe_VueState extends State<Groupe_Vue> {
           await showDialog(
               context: context,
               builder: (BuildContext context) {
-                return Container(padding: EdgeInsets.fromLTRB(30, 0, 30, 30), child: Groupe_Vue_Popup(bFact: true, wChamps: "Contact"));
+                return Container(padding: const EdgeInsets.fromLTRB(30, 0, 30, 30), child: const Groupe_Vue_Popup(bFact: true, wChamps: "Contact"));
               });
           Reload();
         },
@@ -370,7 +372,7 @@ class _Groupe_VueState extends State<Groupe_Vue> {
     double mTop = 15;
     double icoWidth = 32;
     return Container(
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
         color: BckGrd,
         child: Column(
           children: [
@@ -379,9 +381,9 @@ class _Groupe_VueState extends State<Groupe_Vue> {
                 ImgL.isEmpty
                     ? Container()
                     : Container(
-                        padding: EdgeInsets.only(left: 10),
+                        padding: const EdgeInsets.only(left: 10),
                         child: Image.asset(
-                          "assets/images/${ImgL}.png",
+                          "assets/images/$ImgL.png",
                           height: icoWidth,
                           width: icoWidth,
                         ),
@@ -390,7 +392,7 @@ class _Groupe_VueState extends State<Groupe_Vue> {
                     padding: EdgeInsets.only(left: 10, top: mTop),
                     height: wHeight,
                     child: Text(
-                      "${wTextL}",
+                      wTextL,
                       textAlign: TextAlign.start,
                       maxLines: 1,
                       style: gColors.bodySaisie_B_B,
@@ -400,7 +402,7 @@ class _Groupe_VueState extends State<Groupe_Vue> {
                         padding: EdgeInsets.only(right: 10, top: mTop),
                         height: wHeight,
                         child: Text(
-                          "${wTextR}",
+                          wTextR,
                           textAlign: TextAlign.end,
                           maxLines: 1,
                           style: gColors.bodySaisie_B_B.copyWith(color: gColors.primaryGreen),
@@ -408,9 +410,9 @@ class _Groupe_VueState extends State<Groupe_Vue> {
 
 
                 Container(
-                  padding: EdgeInsets.only(right: 10),
+                  padding: const EdgeInsets.only(right: 10),
                   child: Image.asset(
-                    "assets/images/${ImgR}.png",
+                    "assets/images/$ImgR.png",
                     height: icoWidth,
                     width: icoWidth,
                   ),

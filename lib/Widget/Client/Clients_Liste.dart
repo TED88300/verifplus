@@ -30,7 +30,7 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
 
   double icoWidth = 38;
 
-  TextEditingController ctrlFilter = new TextEditingController();
+  TextEditingController ctrlFilter = TextEditingController();
   String filterText = '';
 
   Future Reload() async {
@@ -49,13 +49,13 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
       if (filterText.isEmpty) {
         Srv_DbTools.ListClientsearchresult.add(element);
       } else {
-        String nom = element.Client_Nom == null ? "" : element.Client_Nom;
-        String cp = element.Adresse_CP == null ? "" : element.Adresse_CP;
-        String ville = element.Adresse_Ville == null ? "" : element.Adresse_Ville;
+        String nom = element.Client_Nom ?? "";
+        String cp = element.Adresse_CP ?? "";
+        String ville = element.Adresse_Ville ?? "";
         String id = element.ClientId.toString();
-        if (nom.toUpperCase().contains(filterText.toUpperCase()))
+        if (nom.toUpperCase().contains(filterText.toUpperCase())) {
           Srv_DbTools.ListClientsearchresult.add(element);
-        else if (cp.toUpperCase().contains(filterText.toUpperCase()))
+        } else if (cp.toUpperCase().contains(filterText.toUpperCase()))
           Srv_DbTools.ListClientsearchresult.add(element);
         else if (ville.toUpperCase().contains(filterText.toUpperCase()))
           Srv_DbTools.ListClientsearchresult.add(element);
@@ -74,6 +74,7 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
     Reload();
   }
 
+  @override
   void initState() {
 
     initLib();
@@ -92,7 +93,7 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
 
   @override
   Widget Entete_Btn_Search() {
-    return Container(
+    return SizedBox(
         height: 57,
         child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
           Container(
@@ -113,7 +114,7 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
           Container(
             width: 8,
           ),
-          Spacer(),
+          const Spacer(),
           EdtFilterWidget(),
         ]));
   }
@@ -122,7 +123,7 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
     return !affEdtFilter
         ? InkWell(
             child: Padding(
-              padding: EdgeInsets.only(right: 8),
+              padding: const EdgeInsets.only(right: 8),
               child: Image.asset(
                 "assets/images/Btn_Loupe.png",
                 height: icoWidth,
@@ -133,7 +134,7 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
               affEdtFilter = !affEdtFilter;
               setState(() {});
             })
-        : Container(
+        : SizedBox(
             width: 320,
             child: Row(
               children: [
@@ -191,12 +192,12 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
             padding: const EdgeInsets.only(right : 60, bottom: 40.0),
             child: FloatingActionButton(
                 elevation: 0.0,
-                child: new Icon(Icons.add),
                 backgroundColor: gColors.secondary,
                 onPressed: () async {
                   await ToolsBarAdd();
                   setState(() {});
-                })));
+                },
+                child: const Icon(Icons.add))));
   }
 
   late Map<String, double> columnWidths = {
@@ -217,7 +218,7 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
     Client wClient = await Client.ClientInit();
     bool wRet = await Srv_DbTools.addClient(wClient);
     wClient.Client_isUpdate = wRet;
-    if (!wRet) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
+    if (!wRet) Srv_DbTools.gLastID = DateTime.now().millisecondsSinceEpoch * -1;
     wClient.ClientId = Srv_DbTools.gLastID;
     wClient.Client_Nom = "???";
     await DbTools.inserClients(wClient);
@@ -242,7 +243,7 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
       Srv_DbTools.gGroupe = Groupe.GroupeInit();
       bool wRet = await Srv_DbTools.addGroupe(Srv_DbTools.gClient.ClientId);
       Srv_DbTools.gGroupe.Groupe_isUpdate = wRet;
-      if (!wRet) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
+      if (!wRet) Srv_DbTools.gLastID = DateTime.now().millisecondsSinceEpoch * -1;
       Srv_DbTools.gGroupe.GroupeId = Srv_DbTools.gLastID;
       Srv_DbTools.gGroupe.Groupe_ClientId = Srv_DbTools.gClient.ClientId;
       Srv_DbTools.gGroupe.Groupe_Nom = Srv_DbTools.gClient.Client_Nom;
@@ -272,22 +273,22 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
       }
       print(" OpenGroupe() Client_Sites ListGroupe vide");
 
-      await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Sites()));
+      await Navigator.push(context, MaterialPageRoute(builder: (context) => const Client_Sites()));
     } else if (Srv_DbTools.ListGroupe.length == 1) {
       Srv_DbTools.gGroupe = Srv_DbTools.ListGroupe[0];
       Srv_DbTools.gSelGroupe = Srv_DbTools.ListGroupe[0].Groupe_Nom;
       print(" OpenGroupe() Client_Sites ListGroupe = 1 ${Srv_DbTools.gSelGroupe}");
-      await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Sites()));
+      await Navigator.push(context, MaterialPageRoute(builder: (context) => const Client_Sites()));
     } else {
       print(" OpenGroupe() Client_Sites ListGroupe > 1");
 //      await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Groupes()));
-      await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Sites()));
+      await Navigator.push(context, MaterialPageRoute(builder: (context) => const Client_Sites()));
     }
     setState(() {});
   }
 
   Future OpenClient() async {
-    await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Vue()));
+    await Navigator.push(context, MaterialPageRoute(builder: (context) => const Client_Vue()));
     Reload();
   }
   //***************************
@@ -311,7 +312,7 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
                   child: Row(
                     children: [
                       Container(
-                        padding: EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(5),
                         child: Image.asset(
                           "assets/images/Icon_Client.png",
                           height: icoWidth,
@@ -354,11 +355,11 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
           ),
         ),
         gColors.wLigne(),
-        SizedBox(height: 5.0),
+        const SizedBox(height: 5.0),
 
         Expanded(
           child:   Container(
-            padding: EdgeInsets.only(bottom: 60),
+            padding: const EdgeInsets.only(bottom: 60),
             child :ListView.builder(
             itemCount: Srv_DbTools.ListClientsearchresult.length,
             itemBuilder: (BuildContext context, int index) {
@@ -380,7 +381,7 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
 
               return Column(
                 children: [
-                  new GestureDetector(
+                  GestureDetector(
                     //You need to make my child interactive
                     onDoubleTap: () async {
                       await HapticFeedback.vibrate();
@@ -401,7 +402,7 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
                       child: Row(
                         children: <Widget>[
                           Container(
-                            padding: EdgeInsets.only(left: 5, bottom: 2),
+                            padding: const EdgeInsets.only(left: 5, bottom: 2),
                             child: Text(
                               client.Client_isUpdate ? " " : "◉",
                               maxLines: 1,
@@ -414,7 +415,7 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
                                 padding: EdgeInsets.only(left: 5, top: mTop),
                                 height: rowh,
                                 child: Text(
-                                  "${client.Client_Nom}",
+                                  client.Client_Nom,
                                   maxLines: 1,
                                   style: gColors.bodySaisie_B_B,
                                 ),
@@ -434,7 +435,7 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
                             flex: 10,
                             child: Container(
                               child: Image.asset(
-                                "assets/images/${wTmpImage}.png",
+                                "assets/images/$wTmpImage.png",
                                 height: icoWidth,
                                 width: icoWidth,
                               ),
@@ -446,7 +447,7 @@ class Liste_ClientsState extends State<Liste_Clients>  with AutomaticKeepAliveCl
                                   padding: EdgeInsets.only(right: 10, top: mTop),
                                   height: rowh,
                                   child: Text(
-                                    index == 5 ? "Planifié ${wV}" : wV,
+                                    index == 5 ? "Planifié $wV" : wV,
                                     textAlign: TextAlign.right,
                                     maxLines: 1,
                                     style: index > 4 ? gColors.bodySaisie_B_B.copyWith(color: gColors.primaryOrange) : gColors.bodySaisie_B_B,

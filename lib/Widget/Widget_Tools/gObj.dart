@@ -88,7 +88,7 @@ return wTmp;
 
     String wString2Tmp = "";
     var textspan = TextSpan(
-      text: "${wTitre}",
+      text: wTitre,
       style: gColors.bodyTitle1_B_Gr,
     );
     var tp = TextPainter(text: textspan, textDirection: TextDirection.ltr);
@@ -151,31 +151,31 @@ return wTmp;
             await showDialog(
                 context: context,
                 builder: (BuildContext context) {
-                  return Container(padding: EdgeInsets.fromLTRB(30, 0, 30, 30), child: Titre_Popup());
+                  return Container(padding: const EdgeInsets.fromLTRB(30, 0, 30, 30), child: const Titre_Popup());
                 });
           },
           child: Container(
             height: 57,
-            padding: EdgeInsets.fromLTRB(10, 12, 10, 10),
+            padding: const EdgeInsets.fromLTRB(10, 12, 10, 10),
             child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
 //          Spacer(),
               Text(
-                "${wTitre}",
+                wTitre,
                 style: gColors.bodyTitle1_B_Gr,
                 textAlign: TextAlign.center,
               ),
               wTitre2.isEmpty
                   ? Container()
                   : Text(
-                      "$wString2Tmp",
+                      wString2Tmp,
                       style: gColors.bodyTitle1_N_Gr,
                       textAlign: TextAlign.center,
                     ),
-              Spacer(),
+              const Spacer(),
               wTimer == 0
                   ? Container()
                   : Text(
-                      "${printDurationHHMM(now)}",
+                      printDurationHHMM(now),
                     ),
             ]),
           ),
@@ -185,7 +185,7 @@ return wTmp;
   static Widget InterventionTitleWidget(String wTitre, {String wTitre2 = "", int wTimer = 0}) {
     final now = Duration(seconds: wTimer);
     var textspan = TextSpan(
-      text: "${wTitre}",
+      text: wTitre,
       style: gColors.bodyTitle1_B_Gr,
     );
     var tp = TextPainter(text: textspan, textDirection: TextDirection.ltr);
@@ -203,7 +203,7 @@ return wTmp;
       elevation: 4,
       child: Container(
         height: 57,
-        padding: EdgeInsets.fromLTRB(10, 12, 10, 10),
+        padding: const EdgeInsets.fromLTRB(10, 12, 10, 10),
         child: Row(mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
@@ -216,7 +216,7 @@ return wTmp;
 */
           child : Row(children: [
             Text(
-              "${wTitre}",
+              wTitre,
               style: gColors.bodyTitle1_B_Gr,
               textAlign: TextAlign.center,
             ),
@@ -233,14 +233,14 @@ return wTmp;
         ),
 
 
-          Spacer(),
+          const Spacer(),
           wTimer == 0
               ? Container()
               :
           Container(
             child:
             Text(
-              "${printDurationHHMM(now)}",
+              printDurationHHMM(now),
             ),
           )
         ]),
@@ -255,19 +255,19 @@ return wTmp;
       elevation: 4,
       child: Container(
         height: 57,
-        padding: EdgeInsets.fromLTRB(10, 20, 10, 10),
+        padding: const EdgeInsets.fromLTRB(10, 20, 10, 10),
         child: Marquee(
-          text: "${wTitre}  / $wTitre2",
+          text: "$wTitre  / $wTitre2",
           style: gColors.bodyTitle1_B_G_20,
           scrollAxis: Axis.horizontal,
           crossAxisAlignment: CrossAxisAlignment.start,
           blankSpace: 100.0,
           velocity: 50.0,
-          pauseAfterRound: Duration(seconds: 3),
+          pauseAfterRound: const Duration(seconds: 3),
           startPadding: 10.0,
-          accelerationDuration: Duration(seconds: 1),
+          accelerationDuration: const Duration(seconds: 1),
           accelerationCurve: Curves.linear,
-          decelerationDuration: Duration(seconds: 1),
+          decelerationDuration: const Duration(seconds: 1),
           decelerationCurve: Curves.easeOut,
         ),
       ),
@@ -280,21 +280,21 @@ return wTmp;
       elevation: 4,
       child: Container(
         height: 57,
-        padding: EdgeInsets.fromLTRB(10, 12, 10, 10),
+        padding: const EdgeInsets.fromLTRB(10, 12, 10, 10),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
           Container(
             width: 68,
           ),
-          Spacer(),
+          const Spacer(),
           Text(
             "${Srv_DbTools.gIntervention.Intervention_Type}/${Srv_DbTools.gIntervention.Intervention_Parcs_Type} - ${Srv_DbTools.gIntervention.Intervention_Status} - Cr N° : ${Srv_DbTools.gIntervention.InterventionId} -Anthony FUNDONI",
             style: gColors.bodySaisie_B_G,
             textAlign: TextAlign.center,
           ),
-          Spacer(),
-          Container(
+          const Spacer(),
+          SizedBox(
             width: 50,
-            child: Text("${printDurationHHMM(now)}"),
+            child: Text(printDurationHHMM(now)),
           ),
           Container(
             width: 8,
@@ -306,13 +306,13 @@ return wTmp;
 
   static Widget InfoWidget(BuildContext context, bool isModifiable) {
     return Container(
-      margin: EdgeInsets.fromLTRB(10, 8, 10, 0),
-      padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
+      margin: const EdgeInsets.fromLTRB(10, 8, 10, 0),
+      padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
       decoration: BoxDecoration(
           border: Border.all(
             color: gColors.LinearGradient1,
           ),
-          borderRadius: BorderRadius.all(Radius.circular(20))),
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -321,7 +321,7 @@ return wTmp;
             children: [
               Container(
                 width: LargeurLabel,
-                padding: EdgeInsets.fromLTRB(0, 0, 12, 0),
+                padding: const EdgeInsets.fromLTRB(0, 0, 12, 0),
                 child: Text(
                   "Status :",
                   style: gColors.bodySaisie_N_G,
@@ -329,7 +329,7 @@ return wTmp;
                 ),
               ),
               Text(
-                "${Srv_DbTools.gIntervention.Intervention_Status}",
+                Srv_DbTools.gIntervention.Intervention_Status,
                 style: gColors.bodySaisie_N_G,
               ),
             ],
@@ -341,7 +341,7 @@ return wTmp;
             children: [
               Container(
                 width: LargeurLabel,
-                padding: EdgeInsets.fromLTRB(0, 0, 12, 0),
+                padding: const EdgeInsets.fromLTRB(0, 0, 12, 0),
                 child: Text(
                   "Inrevenant(s) :",
                   style: gColors.bodySaisie_N_G,
@@ -362,19 +362,19 @@ return wTmp;
   static Widget Adr_Fact(BuildContext context) {
     return Container(
       width: 584,
-      padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
+      padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
       decoration: BoxDecoration(
           border: Border.all(
             color: gColors.LinearGradient1,
           ),
-          borderRadius: BorderRadius.all(Radius.circular(20))),
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
       child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
         Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(
             children: [
               Container(
                 width: LargeurLabel,
-                padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
+                padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
                 child: Text(
                   "Adresse de facturation : ",
                   style: gColors.bodySaisie_B_G,
@@ -382,7 +382,7 @@ return wTmp;
                 ),
               ),
               Text(
-                "${Srv_DbTools.gAdresse.Adresse_Adr1}",
+                Srv_DbTools.gAdresse.Adresse_Adr1,
                 style: gColors.bodySaisie_B_G,
               ),
             ],
@@ -393,7 +393,7 @@ return wTmp;
                 width: LargeurLabel,
               ),
               Text(
-                "${Srv_DbTools.gAdresse.Adresse_Adr2}",
+                Srv_DbTools.gAdresse.Adresse_Adr2,
                 style: gColors.bodySaisie_B_G,
               ),
             ],
@@ -425,7 +425,7 @@ return wTmp;
           children: [
             Container(
               width: LargeurLabel,
-              padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
+              padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
               child: Text(
                 "Contact de facturation : ",
                 style: gColors.bodySaisie_B_B,
@@ -445,7 +445,7 @@ return wTmp;
           children: [
             Container(
               width: LargeurLabel,
-              padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
+              padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
               child: Text(
                 "Tel Fixe : ",
                 style: gColors.bodySaisie_N_B,
@@ -453,7 +453,7 @@ return wTmp;
               ),
             ),
             Text(
-              "${Srv_DbTools.gContact.Contact_Tel1}",
+              Srv_DbTools.gContact.Contact_Tel1,
               style: gColors.bodySaisie_N_G,
             ),
           ],
@@ -465,7 +465,7 @@ return wTmp;
           children: [
             Container(
               width: LargeurLabel,
-              padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
+              padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
               child: Text(
                 "Tel Portable : ",
                 style: gColors.bodySaisie_N_B,
@@ -473,7 +473,7 @@ return wTmp;
               ),
             ),
             Text(
-              "${Srv_DbTools.gContact.Contact_Tel2}",
+              Srv_DbTools.gContact.Contact_Tel2,
               style: gColors.bodySaisie_N_G,
             ),
           ],
@@ -485,7 +485,7 @@ return wTmp;
           children: [
             Container(
               width: LargeurLabel,
-              padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
+              padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
               child: Text(
                 "Mail Contact : ",
                 style: gColors.bodySaisie_N_B,
@@ -493,7 +493,7 @@ return wTmp;
               ),
             ),
             Text(
-              "${Srv_DbTools.gContact.Contact_eMail}",
+              Srv_DbTools.gContact.Contact_eMail,
               style: gColors.bodySaisie_N_G,
             ),
           ],
@@ -505,7 +505,7 @@ return wTmp;
           children: [
             Container(
               width: LargeurLabel,
-              padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
+              padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
               child: Text(
                 "Service : ",
                 style: gColors.bodySaisie_N_B,
@@ -525,19 +525,19 @@ return wTmp;
   static Widget Adr_Site(BuildContext context) {
     return Container(
       width: 584,
-      padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
+      padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
       decoration: BoxDecoration(
           border: Border.all(
             color: gColors.LinearGradient1,
           ),
-          borderRadius: BorderRadius.all(Radius.circular(20))),
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
       child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
         Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(
             children: [
               Container(
                 width: LargeurLabel,
-                padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                 child: Text(
                   "Adresse du site : ",
                   style: gColors.bodySaisie_B_B,
@@ -545,7 +545,7 @@ return wTmp;
                 ),
               ),
               Text(
-                "${Srv_DbTools.gSite.Site_Nom}",
+                Srv_DbTools.gSite.Site_Nom,
                 style: gColors.bodySaisie_B_G,
               ),
             ],
@@ -556,7 +556,7 @@ return wTmp;
                 width: LargeurLabel,
               ),
               Text(
-                "${Srv_DbTools.gSite.Site_Adr1}",
+                Srv_DbTools.gSite.Site_Adr1,
                 style: gColors.bodySaisie_B_G,
               ),
             ],
@@ -567,7 +567,7 @@ return wTmp;
                 width: LargeurLabel,
               ),
               Text(
-                "${Srv_DbTools.gSite.Site_Adr2}",
+                Srv_DbTools.gSite.Site_Adr2,
                 style: gColors.bodySaisie_B_G,
               ),
             ],
@@ -599,7 +599,7 @@ return wTmp;
           children: [
             Container(
               width: LargeurLabel,
-              padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
               child: Text(
                 "Contact du site : ",
                 style: gColors.bodySaisie_B_B,
@@ -619,7 +619,7 @@ return wTmp;
           children: [
             Container(
               width: LargeurLabel,
-              padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
               child: Text(
                 "Tel Fixe : ",
                 style: gColors.bodySaisie_N_B,
@@ -627,7 +627,7 @@ return wTmp;
               ),
             ),
             Text(
-              "${Srv_DbTools.gContact.Contact_Tel1}",
+              Srv_DbTools.gContact.Contact_Tel1,
               style: gColors.bodySaisie_N_G,
             ),
           ],
@@ -639,7 +639,7 @@ return wTmp;
           children: [
             Container(
               width: LargeurLabel,
-              padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
               child: Text(
                 "Tel Portable : ",
                 style: gColors.bodySaisie_N_B,
@@ -647,7 +647,7 @@ return wTmp;
               ),
             ),
             Text(
-              "${Srv_DbTools.gContact.Contact_Tel2}",
+              Srv_DbTools.gContact.Contact_Tel2,
               style: gColors.bodySaisie_N_G,
             ),
           ],
@@ -659,7 +659,7 @@ return wTmp;
           children: [
             Container(
               width: LargeurLabel,
-              padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
               child: Text(
                 "Mail Contact : ",
                 style: gColors.bodySaisie_N_B,
@@ -667,7 +667,7 @@ return wTmp;
               ),
             ),
             Text(
-              "${Srv_DbTools.gContact.Contact_eMail}",
+              Srv_DbTools.gContact.Contact_eMail,
               style: gColors.bodySaisie_N_G,
             ),
           ],
@@ -679,7 +679,7 @@ return wTmp;
           children: [
             Container(
               width: LargeurLabel,
-              padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
               child: Text(
                 "Service : ",
                 style: gColors.bodySaisie_N_B,
@@ -699,19 +699,19 @@ return wTmp;
   static Widget Adr_Client(BuildContext context) {
     return Container(
       width: 584,
-      padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
+      padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
       decoration: BoxDecoration(
           border: Border.all(
             color: gColors.LinearGradient1,
           ),
-          borderRadius: BorderRadius.all(Radius.circular(20))),
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
       child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
         Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(
             children: [
               Container(
                 width: LargeurLabel,
-                padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                 child: Text(
                   "Adresse Client : ",
                   style: gColors.bodySaisie_B_B,
@@ -719,7 +719,7 @@ return wTmp;
                 ),
               ),
               Text(
-                "${Srv_DbTools.gAdresse.Adresse_Adr1}",
+                Srv_DbTools.gAdresse.Adresse_Adr1,
                 style: gColors.bodySaisie_B_G,
               ),
             ],
@@ -730,7 +730,7 @@ return wTmp;
                 width: LargeurLabel,
               ),
               Text(
-                "${Srv_DbTools.gAdresse.Adresse_Adr2}",
+                Srv_DbTools.gAdresse.Adresse_Adr2,
                 style: gColors.bodySaisie_B_G,
               ),
             ],
@@ -762,7 +762,7 @@ return wTmp;
           children: [
             Container(
               width: LargeurLabel,
-              padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
               child: Text(
                 "Contact Client : ",
                 style: gColors.bodySaisie_B_B,
@@ -782,7 +782,7 @@ return wTmp;
           children: [
             Container(
               width: LargeurLabel,
-              padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
               child: Text(
                 "Tel Fixe : ",
                 style: gColors.bodySaisie_N_B,
@@ -790,7 +790,7 @@ return wTmp;
               ),
             ),
             Text(
-              "${Srv_DbTools.gContact.Contact_Tel1}",
+              Srv_DbTools.gContact.Contact_Tel1,
               style: gColors.bodySaisie_N_G,
             ),
           ],
@@ -802,7 +802,7 @@ return wTmp;
           children: [
             Container(
               width: LargeurLabel,
-              padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
               child: Text(
                 "Tel Portable : ",
                 style: gColors.bodySaisie_N_B,
@@ -810,7 +810,7 @@ return wTmp;
               ),
             ),
             Text(
-              "${Srv_DbTools.gContact.Contact_Tel2}",
+              Srv_DbTools.gContact.Contact_Tel2,
               style: gColors.bodySaisie_N_G,
             ),
           ],
@@ -822,7 +822,7 @@ return wTmp;
           children: [
             Container(
               width: LargeurLabel,
-              padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
               child: Text(
                 "Mail Contact : ",
                 style: gColors.bodySaisie_N_B,
@@ -830,7 +830,7 @@ return wTmp;
               ),
             ),
             Text(
-              "${Srv_DbTools.gContact.Contact_eMail}",
+              Srv_DbTools.gContact.Contact_eMail,
               style: gColors.bodySaisie_N_G,
             ),
           ],
@@ -842,7 +842,7 @@ return wTmp;
           children: [
             Container(
               width: LargeurLabel,
-              padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+              padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
               child: Text(
                 "Service : ",
                 style: gColors.bodySaisie_N_B,
@@ -862,19 +862,19 @@ return wTmp;
   static Widget Adr_Groupe(BuildContext context) {
     return Container(
       width: 584,
-      padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
+      padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
       decoration: BoxDecoration(
           border: Border.all(
             color: gColors.LinearGradient1,
           ),
-          borderRadius: BorderRadius.all(Radius.circular(20))),
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
       child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
         Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(
             children: [
               Container(
                 width: LargeurLabel,
-                padding: EdgeInsets.fromLTRB(8, 0, 8, 0),
+                padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
                 child: Text(
                   "Adresse Groupe : ",
                   style: gColors.bodySaisie_B_B,
@@ -882,7 +882,7 @@ return wTmp;
                 ),
               ),
               Text(
-                "${Srv_DbTools.gGroupe.Groupe_Nom}",
+                Srv_DbTools.gGroupe.Groupe_Nom,
                 style: gColors.bodySaisie_B_G,
               ),
             ],
@@ -893,7 +893,7 @@ return wTmp;
                 width: LargeurLabel,
               ),
               Text(
-                "${Srv_DbTools.gGroupe.Groupe_Adr1}",
+                Srv_DbTools.gGroupe.Groupe_Adr1,
                 style: gColors.bodySaisie_B_G,
               ),
             ],
@@ -904,7 +904,7 @@ return wTmp;
                 width: LargeurLabel,
               ),
               Text(
-                "${Srv_DbTools.gGroupe.Groupe_Adr2}",
+                Srv_DbTools.gGroupe.Groupe_Adr2,
                 style: gColors.bodySaisie_B_G,
               ),
             ],
@@ -926,7 +926,7 @@ return wTmp;
   }
 
   static Widget AffCertif() {
-    DaviModel<Certif>? _model;
+    DaviModel<Certif>? model;
 
     List<Certif> rows = [
       Certif('Oui', "N4", "01/01/2018", "Non", ""),
@@ -935,7 +935,7 @@ return wTmp;
       Certif('Oui', "Q4", "01/01/2021", "Oui", ""),
     ];
 
-    _model = DaviModel<Certif>(rows: rows, columns: [
+    model = DaviModel<Certif>(rows: rows, columns: [
       DaviColumn(
         name: 'O/N',
         width: 45,
@@ -970,7 +970,7 @@ return wTmp;
           headerAlignment: Alignment.center,
           cellAlignment: Alignment.center,
           cellBuilder: (BuildContext context, DaviRow<Certif> data) {
-            return Icon(
+            return const Icon(
               Icons.file_download,
             );
           }),
@@ -978,13 +978,13 @@ return wTmp;
 
     return Container(
         width: 584,
-        margin: EdgeInsets.fromLTRB(8, 8, 8, 0),
-        padding: EdgeInsets.fromLTRB(8, 8, 8, 8),
+        margin: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+        padding: const EdgeInsets.fromLTRB(8, 8, 8, 8),
         decoration: BoxDecoration(
             border: Border.all(
               color: gColors.LinearGradient1,
             ),
-            borderRadius: BorderRadius.all(Radius.circular(20))),
+            borderRadius: const BorderRadius.all(Radius.circular(20))),
         child: Column(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.start,
@@ -992,23 +992,23 @@ return wTmp;
             children: [
               Container(
                 width: LargeurLabel,
-                padding: EdgeInsets.fromLTRB(8, 12, 0, 0),
+                padding: const EdgeInsets.fromLTRB(8, 12, 0, 0),
                 child: Text(
                   "Site certifé APSAD",
                   style: gColors.bodySaisie_N_B,
                 ),
               ),
-              Container(
+              SizedBox(
                 width: 382,
                 child: DaviTheme(
-                  child: Davi<Certif>(
-                    _model,
-                    visibleRowsCount: 4,
-                  ),
-                  data: DaviThemeData(
+                  data: const DaviThemeData(
                     header: HeaderThemeData(
                       color: gColors.LinearGradient3,
                     ),
+                  ),
+                  child: Davi<Certif>(
+                    model,
+                    visibleRowsCount: 4,
                   ),
                 ),
               ),
@@ -1021,7 +1021,7 @@ return wTmp;
     try {
       await rootBundle.load(path);
 //      print("getAssetImage path ${path}");
-      return await Image.asset(
+      return Image.asset(
         path,
         height: 140,
       );
@@ -1039,10 +1039,10 @@ return wTmp;
         return response.bodyBytes;
       } else {
 //        print("networkImageToByte Error");
-        return new Uint8List(0);
+        return Uint8List(0);
       }
     } catch (e) {
-      return new Uint8List(0);
+      return Uint8List(0);
     }
   }
 
@@ -1050,21 +1050,21 @@ return wTmp;
     await showDialog(
         context: context,
         barrierDismissible: false,
-        builder: (_) => new AlertDialog(
+        builder: (_) => AlertDialog(
           surfaceTintColor: Colors.white,
               backgroundColor: Colors.white,
               insetPadding: EdgeInsets.zero,
               contentPadding: EdgeInsets.zero,
               clipBehavior: Clip.antiAliasWithSaveLayer,
               title: Text(
-                "${title}",
+                title,
                 style: gColors.bodyTitle1_B_Pr,
                 textAlign: TextAlign.center,
               ),
               content: Container(
-                padding: EdgeInsets.fromLTRB(20, 20, 20, 0), // TED
+                padding: const EdgeInsets.fromLTRB(20, 20, 20, 0), // TED
                 child: Text(
-                  "${body}",
+                  body,
                   style: gColors.bodyTitle1_N_G,
                   textAlign: TextAlign.center,
                 ),
@@ -1080,7 +1080,7 @@ return wTmp;
                         backgroundColor: Colors.grey,
                         //padding: EdgeInsets.symmetric(horizontal: 50, vertical: 20),
                       ),
-                      child: Icon(
+                      child: const Icon(
                         Icons.check,
                         color: Colors.white,
                       ),
@@ -1286,6 +1286,8 @@ return wTmp;
 //**********************************
 
 class Titre_Popup extends StatefulWidget {
+  const Titre_Popup({super.key});
+
   @override
   Titre_PopupState createState() => Titre_PopupState();
 }
@@ -1315,16 +1317,16 @@ class Titre_PopupState extends State<Titre_Popup> {
     if (gObj.gTitre4.isNotEmpty) {wTitre = "$wTitre ${gObj.gTitre4}\n";}
 
     return AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
         surfaceTintColor: Colors.white,
         backgroundColor: gColors.white,
         title: Container(
             color: gColors.white,
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
             child: Column(
               children: [
                 Text(
-                  "${gObj.gTitre}",
+                  gObj.gTitre,
                   textAlign: TextAlign.center,
                   style: gColors.bodyTitle1_B_G_20,
                 ),
@@ -1333,7 +1335,7 @@ class Titre_PopupState extends State<Titre_Popup> {
                 ),
               ],
             )),
-        contentPadding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 20.0),
+        contentPadding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 20.0),
         content: SingleChildScrollView(
           // won't be scrollable
           child: Container(
@@ -1350,7 +1352,7 @@ class Titre_PopupState extends State<Titre_Popup> {
                     color: gColors.greyLight,
                     padding: const EdgeInsets.fromLTRB(20, 15, 20, 0),
                     child: Text(
-                      "${wTitre}",
+                      wTitre,
                       textAlign: TextAlign.center,
                       style: gColors.bodyTitle1_N_G_20,
                     ),

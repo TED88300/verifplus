@@ -1,4 +1,3 @@
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
@@ -12,7 +11,7 @@ class Client_Groupe_Parc_Inter_Entete_TypeOrg_Dialog {
   static Future<void> Dialogs_TypeOrg(BuildContext context) async {
     await showDialog(
       context: context,
-      builder: (BuildContext context) => Client_Groupe_Parc_Inter_Entete_TypeOrgDialog(),
+      builder: (BuildContext context) => const Client_Groupe_Parc_Inter_Entete_TypeOrgDialog(),
     );
   }
 }
@@ -47,12 +46,13 @@ class _Client_Groupe_Parc_Inter_Entete_TypeOrgDialogState extends State<Client_G
 
     DbTools.lParc_Ent_CountUsed.clear();
     DbTools.lParc_Ent_CountUnUsed.clear();
-    DbTools.lParc_Ent_CountAll.forEach((elementCount) {
-      if (elementCount.ParamTypeOg_count == 0)
+    for (var elementCount in DbTools.lParc_Ent_CountAll) {
+      if (elementCount.ParamTypeOg_count == 0) {
         DbTools.lParc_Ent_CountUnUsed.add(elementCount);
-      else
+      } else {
         DbTools.lParc_Ent_CountUsed.add(elementCount);
-    });
+      }
+    }
     DbTools.lParc_Ent_CountAff.clear();
     DbTools.lParc_Ent_CountAff.addAll(DbTools.lParc_Ent_CountUsed);
 
@@ -80,7 +80,7 @@ class _Client_Groupe_Parc_Inter_Entete_TypeOrgDialogState extends State<Client_G
             Container(
               height: 5,
             ),
-            Container(
+            SizedBox(
               width: 500,
               child: ModeAjout ? Text("Ajout d'un organe", style: gColors.bodyTitle1_B_G_20, textAlign: TextAlign.center,) :
                           Text("Selection du type d'organe", style: gColors.bodyTitle1_B_G_20, textAlign: TextAlign.center,),
@@ -148,8 +148,8 @@ class _Client_Groupe_Parc_Inter_Entete_TypeOrgDialogState extends State<Client_G
           ModeAjout
               ? Container()
               : IconButton(
-                  padding: new EdgeInsets.all(0),
-                  icon: Icon(
+                  padding: const EdgeInsets.all(0),
+                  icon: const Icon(
                     Icons.add_box,
                     color: gColors.primaryGreen,
                     size: 46,
@@ -169,8 +169,8 @@ class _Client_Groupe_Parc_Inter_Entete_TypeOrgDialogState extends State<Client_G
                     setState(() {});
                   },
                 ),
-          ModeAjout ? Container() : Spacer(),
-          new ElevatedButton(
+          ModeAjout ? Container() : const Spacer(),
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
               Navigator.of(context).pop();
@@ -184,7 +184,7 @@ class _Client_Groupe_Parc_Inter_Entete_TypeOrgDialogState extends State<Client_G
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
               DbTools.ParamTypeOg = wParamTypeOg;
@@ -220,8 +220,8 @@ class _Client_Groupe_Parc_Inter_Entete_TypeOrgDialogState extends State<Client_G
           ModeAjout
               ? Container()
               : IconButton(
-            padding: new EdgeInsets.all(0),
-            icon: Icon(
+            padding: const EdgeInsets.all(0),
+            icon: const Icon(
               Icons.add_box,
               color: gColors.primaryGreen,
               size: 46,
@@ -232,8 +232,8 @@ class _Client_Groupe_Parc_Inter_Entete_TypeOrgDialogState extends State<Client_G
               setState(() {});
             },
           ),
-          ModeAjout ? Container() : Spacer(),
-          new ElevatedButton(
+          ModeAjout ? Container() : const Spacer(),
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
 
@@ -248,13 +248,13 @@ class _Client_Groupe_Parc_Inter_Entete_TypeOrgDialogState extends State<Client_G
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
               DbTools.ParamTypeOg = wParamTypeOg;
-              Parc_Ent wParc_Ent = Parc_Ent.Parc_EntInit(Srv_DbTools.gIntervention.InterventionId!, wParamType, 1);
+              Parc_Ent wparcEnt = Parc_Ent.Parc_EntInit(Srv_DbTools.gIntervention.InterventionId, wParamType, 1);
 
-              DbTools.insertParc_Ent(wParc_Ent);
+              DbTools.insertParc_Ent(wparcEnt);
               Navigator.of(context).pop();
             },
             style: ElevatedButton.styleFrom(
@@ -282,10 +282,10 @@ class _Client_Groupe_Parc_Inter_Entete_TypeOrgDialogState extends State<Client_G
       double ii = 27.0 * (index);
 
       scrollController.animateTo(ii, //scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 1300),
+          duration: const Duration(milliseconds: 1300),
           curve: Curves.elasticOut);
     } else {
-      Timer(Duration(milliseconds: 1400), () => _scrollToBottom(index));
+      Timer(const Duration(milliseconds: 1400), () => _scrollToBottom(index));
     }
   }
 
@@ -298,7 +298,7 @@ class _Client_Groupe_Parc_Inter_Entete_TypeOrgDialogState extends State<Client_G
 
     for (int i = 0; i < DbTools.lParc_Ent_CountAff.length; i++) {
       if (DbTools.lParc_Ent_CountAff[i].ParamTypeOg.compareTo(wParamTypeOg) == 0) {
-        index = double.parse("${i}");
+        index = double.parse("$i");
         break;
       }
     }
@@ -315,7 +315,7 @@ class _Client_Groupe_Parc_Inter_Entete_TypeOrgDialogState extends State<Client_G
             border: Border.all(
               color: Colors.grey,
             ),
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(12.0),
             ),
           ),
@@ -340,7 +340,7 @@ class _Client_Groupe_Parc_Inter_Entete_TypeOrgDialogState extends State<Client_G
                             setState(() {});
                           },
                           child: Container(
-                              padding: EdgeInsets.fromLTRB(10, 5, 10, 5), // TED
+                              padding: const EdgeInsets.fromLTRB(10, 5, 10, 5), // TED
                               color: (item.ParamTypeOg.compareTo(wParamTypeOg) == 0) ? gColors.primaryGreen : Colors.transparent,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -348,7 +348,7 @@ class _Client_Groupe_Parc_Inter_Entete_TypeOrgDialogState extends State<Client_G
                                 children: [
                                   Row(
                                     children: [
-                                      Container(
+                                      SizedBox(
                                         width: 50,
                                         child: Text("${item.ParamTypeOg_count}",
                                             textAlign: TextAlign.center,
@@ -394,7 +394,7 @@ class _Client_Groupe_Parc_Inter_Entete_TypeOrgDialogState extends State<Client_G
 
     for (int i = 0; i < DbTools.lParc_Ent_CountAff.length; i++) {
       if (DbTools.lParc_Ent_CountAff[i].ParamTypeOg.compareTo(wParamTypeOg) == 0) {
-        index = double.parse("${i}");
+        index = double.parse("$i");
         break;
       }
     }
@@ -411,7 +411,7 @@ class _Client_Groupe_Parc_Inter_Entete_TypeOrgDialogState extends State<Client_G
             border: Border.all(
               color: Colors.grey,
             ),
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(12.0),
             ),
           ),
@@ -437,7 +437,7 @@ class _Client_Groupe_Parc_Inter_Entete_TypeOrgDialogState extends State<Client_G
                             setState(() {});
                           },
                           child: Container(
-                              padding: EdgeInsets.fromLTRB(10, 5, 10, 5), // TED
+                              padding: const EdgeInsets.fromLTRB(10, 5, 10, 5), // TED
                               color: (item.ParamTypeOg.compareTo(wParamTypeOg) == 0) ? gColors.primaryGreen : Colors.transparent,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,

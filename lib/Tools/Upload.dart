@@ -17,7 +17,7 @@ class Upload {
   static late var image;
 
   static Future pickerCamera(String imagepath, VoidCallback onSetState) async {
-    print("UploadFilePicker A ${imagepath}");
+    print("UploadFilePicker A $imagepath");
     final picker = ImagePicker();
     print("UploadFilePicker B");
 
@@ -30,28 +30,28 @@ class Upload {
     if (pickedImage == null) return;
     var streamthumbnail = await pickedImage.readAsBytes();
     IMG.Image? image = IMG.decodeImage(streamthumbnail);
-    memStream = await IMG.encodePng(image!);
+    memStream = IMG.encodePng(image!);
 
     print("UploadFilePicker memStream.lenght ${memStream.length}");
 
     Srv_DbTools.setSrvToken();
     String wPath = Srv_DbTools.SrvUrl;
     var uri = Uri.parse(wPath.toString());
-    var request = new http.MultipartRequest("POST", uri);
+    var request = http.MultipartRequest("POST", uri);
     request.fields.addAll({
       'tic12z': Srv_DbTools.SrvToken,
       'zasq': 'uploadphoto',
       'imagepath': imagepath,
     });
 
-    var multipartFile = new http.MultipartFile.fromBytes('uploadfile', memStream, filename: basename("xxx.jpg"));
+    var multipartFile = http.MultipartFile.fromBytes('uploadfile', memStream, filename: basename("xxx.jpg"));
     request.files.add(multipartFile);
     var response = await request.send();
-    print("uploadfile statusCode " + response.statusCode.toString());
+    print("uploadfile statusCode ${response.statusCode}");
 
     response.stream.transform(utf8.decoder).listen((value) {
-      print("value " + value);
-      print("Fin " + imagepath);
+      print("value $value");
+      print("Fin $imagepath");
       onSetState();
       print("Fin Fin" );
     });
@@ -64,25 +64,25 @@ class Upload {
       width: 300,
       height: 300,
     );
-    memStream = await IMG.encodePng(thumbnail);
+    memStream = IMG.encodePng(thumbnail);
     Srv_DbTools.setSrvToken();
     String wPath = Srv_DbTools.SrvUrl;
     var uri = Uri.parse(wPath.toString());
-    var request = new http.MultipartRequest("POST", uri);
+    var request = http.MultipartRequest("POST", uri);
     request.fields.addAll({
       'tic12z': Srv_DbTools.SrvToken,
       'zasq': 'uploadphoto',
       'imagepath': imagepath,
     });
 
-    var multipartFile = new http.MultipartFile.fromBytes('uploadfile', memStream, filename: basename("xxx.jpg"));
+    var multipartFile = http.MultipartFile.fromBytes('uploadfile', memStream, filename: basename("xxx.jpg"));
     request.files.add(multipartFile);
     var response = await request.send();
-    print("uploadfile statusCode " + response.statusCode.toString());
+    print("uploadfile statusCode ${response.statusCode}");
 
     response.stream.transform(utf8.decoder).listen((value) {
-      print("value " + value);
-      print("Fin " + imagepath);
+      print("value $value");
+      print("Fin $imagepath");
     });
   }
 
@@ -94,25 +94,25 @@ class Upload {
       width: 400,
       height: 400,
     );
-    memStream = await IMG.encodePng(thumbnail);
+    memStream = IMG.encodePng(thumbnail);
     Srv_DbTools.setSrvToken();
     String wPath = Srv_DbTools.SrvUrl;
     var uri = Uri.parse(wPath.toString());
-    var request = new http.MultipartRequest("POST", uri);
+    var request = http.MultipartRequest("POST", uri);
     request.fields.addAll({
       'tic12z': Srv_DbTools.SrvToken,
       'zasq': 'uploadphoto',
       'imagepath': imagepath,
     });
 
-    var multipartFile = new http.MultipartFile.fromBytes('uploadfile', memStream, filename: basename("xxx.jpg"));
+    var multipartFile = http.MultipartFile.fromBytes('uploadfile', memStream, filename: basename("xxx.jpg"));
     request.files.add(multipartFile);
     var response = await request.send();
-    print("uploadfile statusCode " + response.statusCode.toString());
+    print("uploadfile statusCode ${response.statusCode}");
 
     response.stream.transform(utf8.decoder).listen((value) {
-      print("value " + value);
-      print("Fin " + imagepath);
+      print("value $value");
+      print("Fin $imagepath");
     });
   }
 /*

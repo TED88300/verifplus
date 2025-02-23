@@ -1,7 +1,6 @@
 // SELECTION INTERVENTION
 
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Clients.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
@@ -30,12 +29,14 @@ class Select_Inter {
   static Future<void> Dialogs_Sel(BuildContext context) async {
     await showDialog(
       context: context,
-      builder: (BuildContext context) => SelectInter(),
+      builder: (BuildContext context) => const SelectInter(),
     );
   }
 }
 
 class SelectInter extends StatefulWidget {
+  const SelectInter({super.key});
+
 
   @override
   State<StatefulWidget> createState() => SelectInterState();
@@ -143,12 +144,13 @@ class SelectInterState extends State<SelectInter> {
   void initLib() async {
     await DbTools.getAdresseType("AGENCE");
     ListDepot.clear();
-    Srv_DbTools.ListAdressesearchresult.forEach((wAdresse) {
+    for (var wAdresse in Srv_DbTools.ListAdressesearchresult) {
       ListDepot.add(wAdresse.Adresse_Nom);
-    });
+    }
     await Relaod();
   }
 
+  @override
   void initState() {
     initLib();
     super.initState();
@@ -171,56 +173,56 @@ class SelectInterState extends State<SelectInter> {
                 InkWell(
                   child: SizedBox(
                       height: 30.0,
-                      child: new Image.asset(
+                      child: Image.asset(
                         'assets/images/AppIcow.png',
                       )),
                   onTap: () {
                     Navigator.pop(context);
                   },
                 ),
-                Spacer(),
+                const Spacer(),
                 Text(
                   "Recherche Intervention",
                   textAlign: TextAlign.center,
                   style: gColors.bodyTitle1_B_W,
                 ),
-                Spacer(),
+                const Spacer(),
                 Container(
                   width: 40,
                 ),
               ],
             ),
           ),
-          content: Container(
+          content: SizedBox(
               width: 2000,
               height: 500,
               child: Row(
                 children: [
                   listDepots(),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   listClients(),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   listGroupes(),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   listSites(),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   listZones(),
-                  SizedBox(
+                  const SizedBox(
                     width: 10,
                   ),
                   listInterventions(),
                 ],
               )),
           actions: <Widget>[
-            new ElevatedButton(
+            ElevatedButton(
               onPressed: () {
                 setState(() {
 //                  widget.onChanged(selChangedDetails(depot: selDepot, client: selClient, groupe: selGroupe, site: selSite, zone: selZone, intervention: selIntervention));
@@ -249,7 +251,7 @@ class SelectInterState extends State<SelectInter> {
     double h = 500;
     return Column(
       children: [
-        Container(
+        const SizedBox(
           width: 200,
           height: 32,
         ),
@@ -273,7 +275,7 @@ class SelectInterState extends State<SelectInter> {
                   style: gColors.bodySaisie_B_W,
                 ),
               ),
-              Container(
+              SizedBox(
                   width: 200,
                   height: h - 54,
                   child: ListView.builder(
@@ -281,21 +283,22 @@ class SelectInterState extends State<SelectInter> {
                     itemCount: ListDepot.length,
                     itemBuilder: (BuildContext context, int index) {
                       final String wDepot = ListDepot[index];
-                      return new Container(
-                        decoration: new BoxDecoration(
+                      return Container(
+                        decoration: BoxDecoration(
                           color: (wDepot == selDepot) ? Colors.blue : Colors.white,
                         ),
                         child: ListTile(
                           dense: true,
                           selected: (wDepot == selDepot),
                           selectedColor: Colors.white,
-                          visualDensity: VisualDensity(vertical: -4),
+                          visualDensity: const VisualDensity(vertical: -4),
                           title: Text(wDepot),
                           onTap: () async {
-                            if (selDepot != wDepot)
+                            if (selDepot != wDepot) {
                               selDepot = wDepot;
-                            else
+                            } else {
                               selDepot = "";
+                            }
                             await Relaod();
                           },
                         ),
@@ -343,7 +346,7 @@ class SelectInterState extends State<SelectInter> {
               style: gColors.bodySaisie_B_W,
             ),
           ),
-          Container(
+          SizedBox(
               width: W,
               height: h - 54,
               child: ListView.builder(
@@ -351,23 +354,24 @@ class SelectInterState extends State<SelectInter> {
                 itemCount: ListClient.length,
                 itemBuilder: (BuildContext context, int index) {
                   final Client wClient = ListClient[index];
-                  return new Container(
-                    decoration: new BoxDecoration(
+                  return Container(
+                    decoration: BoxDecoration(
                       color: (wClient.ClientId == selClient.ClientId) ? Colors.blue : Colors.white,
                     ),
                     child: ListTile(
                       dense: true,
                       selected: (wClient.ClientId == selClient.ClientId),
                       selectedColor: Colors.white,
-                      visualDensity: VisualDensity(vertical: -4),
+                      visualDensity: const VisualDensity(vertical: -4),
                       title: Text(wClient.Client_Nom),
                       onTap: () async {
                         if (selClient.ClientId != wClient.ClientId) {
                           selClient = wClient;
                           Search_Client_TextController.text = "";
                           selDepot = selClient.Client_Depot;
-                        } else
+                        } else {
                           selClient = Client.ClientInit();
+                        }
                         await Relaod();
                       },
                     ),
@@ -383,7 +387,7 @@ class SelectInterState extends State<SelectInter> {
     double h = 500;
     return Column(
       children: [
-        Container(
+        const SizedBox(
           width: 200,
           height: 32,
         ),
@@ -407,7 +411,7 @@ class SelectInterState extends State<SelectInter> {
                   style: gColors.bodySaisie_B_W,
                 ),
               ),
-              Container(
+              SizedBox(
                   width: 200,
                   height: h - 54,
                   child: ListView.builder(
@@ -415,21 +419,22 @@ class SelectInterState extends State<SelectInter> {
                     itemCount: ListGroupe.length,
                     itemBuilder: (BuildContext context, int index) {
                       final Groupe wGroupe = ListGroupe[index];
-                      return new Container(
-                        decoration: new BoxDecoration(
+                      return Container(
+                        decoration: BoxDecoration(
                           color: (wGroupe.GroupeId == selGroupe.GroupeId) ? Colors.blue : Colors.white,
                         ),
                         child: ListTile(
                           dense: true,
                           selected: (wGroupe.GroupeId == selGroupe.GroupeId),
                           selectedColor: Colors.white,
-                          visualDensity: VisualDensity(vertical: -4),
+                          visualDensity: const VisualDensity(vertical: -4),
                           title: Text(wGroupe.Groupe_Nom),
                           onTap: () async {
-                            if (selGroupe.GroupeId != wGroupe.GroupeId)
+                            if (selGroupe.GroupeId != wGroupe.GroupeId) {
                               selGroupe = wGroupe;
-                            else
+                            } else {
                               selGroupe = Groupe.GroupeInit();
+                            }
                             await Relaod();
                           },
                         ),
@@ -478,7 +483,7 @@ class SelectInterState extends State<SelectInter> {
               style: gColors.bodySaisie_B_W,
             ),
           ),
-          Container(
+          SizedBox(
               width: w,
               height: h - 54,
               child: ListView.builder(
@@ -486,15 +491,15 @@ class SelectInterState extends State<SelectInter> {
                 itemCount: ListSite.length,
                 itemBuilder: (BuildContext context, int index) {
                   final Site wSite = ListSite[index];
-                  return new Container(
-                    decoration: new BoxDecoration(
+                  return Container(
+                    decoration: BoxDecoration(
                       color: (wSite.SiteId == selSite.SiteId) ? Colors.blue : Colors.white,
                     ),
                     child: ListTile(
                       dense: true,
                       selected: (wSite.SiteId == selSite.SiteId),
                       selectedColor: Colors.white,
-                      visualDensity: VisualDensity(vertical: -4),
+                      visualDensity: const VisualDensity(vertical: -4),
                       title: Text(wSite.Site_Nom),
                       onTap: () async {
                         if (selSite.SiteId != wSite.SiteId) {
@@ -505,8 +510,9 @@ class SelectInterState extends State<SelectInter> {
                           await DbTools.getClient(selGroupe.Groupe_ClientId);
                           selClient = Srv_DbTools.gClient;
                           selDepot = selClient.Client_Depot;
-                        } else
+                        } else {
                           selSite = Site.SiteInit();
+                        }
                         await Relaod();
                       },
                     ),
@@ -522,7 +528,7 @@ class SelectInterState extends State<SelectInter> {
     double h = 500;
     return Column(
       children: [
-        Container(
+        const SizedBox(
           width: 200,
           height: 32,
         ),
@@ -546,7 +552,7 @@ class SelectInterState extends State<SelectInter> {
                   style: gColors.bodySaisie_B_W,
                 ),
               ),
-              Container(
+              SizedBox(
                   width: 200,
                   height: h - 54,
                   child: ListView.builder(
@@ -554,21 +560,22 @@ class SelectInterState extends State<SelectInter> {
                     itemCount: ListZone.length,
                     itemBuilder: (BuildContext context, int index) {
                       final Zone wZone = ListZone[index];
-                      return new Container(
-                        decoration: new BoxDecoration(
+                      return Container(
+                        decoration: BoxDecoration(
                           color: (wZone.ZoneId == selZone.ZoneId) ? Colors.blue : Colors.white,
                         ),
                         child: ListTile(
                           dense: true,
                           selected: (wZone.ZoneId == selZone.ZoneId),
                           selectedColor: Colors.white,
-                          visualDensity: VisualDensity(vertical: -4),
+                          visualDensity: const VisualDensity(vertical: -4),
                           title: Text(wZone.Zone_Nom),
                           onTap: () async {
-                            if (selZone.ZoneId != wZone.ZoneId)
+                            if (selZone.ZoneId != wZone.ZoneId) {
                               selZone = wZone;
-                            else
+                            } else {
                               selZone = Zone.ZoneInit();
+                            }
                             await Relaod();
                           },
                         ),
@@ -588,7 +595,7 @@ class SelectInterState extends State<SelectInter> {
 
     return Column(
       children: [
-        Container(
+        const SizedBox(
           width: 200,
           height: 32,
         ),
@@ -612,7 +619,7 @@ class SelectInterState extends State<SelectInter> {
                   style: gColors.bodySaisie_B_W,
                 ),
               ),
-              Container(
+              SizedBox(
                   width: w,
                   height: h - 54,
                   child: ListView.builder(
@@ -621,22 +628,23 @@ class SelectInterState extends State<SelectInter> {
                     itemBuilder: (BuildContext context, int index) {
                       final Intervention wIntervention = ListIntervention[index];
                       String wDate = "----/----/-------";
-                      if (wIntervention.Intervention_Date!.isNotEmpty) wDate = wIntervention.Intervention_Date!;
-                      return new Container(
-                        decoration: new BoxDecoration(
+                      if (wIntervention.Intervention_Date.isNotEmpty) wDate = wIntervention.Intervention_Date;
+                      return Container(
+                        decoration: BoxDecoration(
                           color: (wIntervention.InterventionId == selIntervention.InterventionId) ? Colors.blue : Colors.white,
                         ),
                         child: ListTile(
                           dense: true,
                           selected: (wIntervention.InterventionId == selIntervention.InterventionId),
                           selectedColor: Colors.white,
-                          visualDensity: VisualDensity(vertical: -4),
-                          title: Text("[${wIntervention.InterventionId}] ${wDate} ${wIntervention.Intervention_Type} ${wIntervention.Intervention_Parcs_Type} ${wIntervention.Intervention_Status}"),
+                          visualDensity: const VisualDensity(vertical: -4),
+                          title: Text("[${wIntervention.InterventionId}] $wDate ${wIntervention.Intervention_Type} ${wIntervention.Intervention_Parcs_Type} ${wIntervention.Intervention_Status}"),
                           onTap: () async {
-                            if (selIntervention.InterventionId != wIntervention.InterventionId)
+                            if (selIntervention.InterventionId != wIntervention.InterventionId) {
                               selIntervention = wIntervention;
-                            else
+                            } else {
                               selIntervention = Intervention.InterventionInit();
+                            }
                             await Relaod();
                           },
                         ),

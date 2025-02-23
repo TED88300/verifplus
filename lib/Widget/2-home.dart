@@ -22,6 +22,8 @@ import 'package:verifplus/Widget/Widget_Tools/bottom_navigation_bar.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 
 class Home extends StatefulWidget {
+  const Home({super.key});
+
   @override
   _HomeState createState() => _HomeState();
 }
@@ -34,7 +36,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
   String notificationData = 'No Data';
   late BuildContext ctx;
 
-  ConnectivityResult _connectionStatus = ConnectivityResult.none;
+  final ConnectivityResult _connectionStatus = ConnectivityResult.none;
   final Connectivity _connectivity = Connectivity();
   late StreamSubscription<ConnectivityResult> _connectivitySubscription;
 
@@ -59,7 +61,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     await Srv_ImportExport.getErrorSync();
     await DbTools.checkConnection();
 
-    if (Srv_DbTools.ListParam_ParamAll.length == 0)
+    if (Srv_DbTools.ListParam_ParamAll.isEmpty)
       {
         print("⚄⚄⚄⚄⚄⚄⚄ Call import Param >");
       await Import_Data_Dialog.Dialogs_Saisie(context, onSaisie, "Param");
@@ -127,11 +129,11 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
     P_children = [
       Liste_Clients(onSaisie: onSaisie),
-      Interventions_Liste(),
-      Catalogue_Grid(),
-      Planning(),
+      const Interventions_Liste(),
+      const Catalogue_Grid(),
+      const Planning(),
 //      P_Notifications(),
-      DCL_List(),
+      const DCL_List(),
     ];
 
     print("HOME initState");
@@ -149,7 +151,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
     late ConnectivityResult result;
     try {
       result = await _connectivity.checkConnectivity();
-    } on PlatformException catch (e) {
+    } on PlatformException {
       return;
     }
     if (!mounted) {
@@ -181,8 +183,8 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
   @override
   Widget Block_MenuApp(BuildContext context) {
-    String title_string = P_itemsTitre[DbTools.gCurrentIndex];
-    print("Block_MenuApp ${title_string}");
+    String titleString = P_itemsTitre[DbTools.gCurrentIndex];
+    print("Block_MenuApp $titleString");
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -190,7 +192,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
       backgroundColor: Colors.transparent,
       appBar: AppBar(
 //        centerTitle: true,
-        title: (title_string.isEmpty)
+        title: (titleString.isEmpty)
             ? Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 mainAxisSize: MainAxisSize.min,
@@ -207,7 +209,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "${title_string}",
+                    titleString,
                     maxLines: 1,
                     style: gColors.bodyTitle1_B_G24,
                   ),
@@ -232,7 +234,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
         actions: <Widget>[
 
           IconButton(
-            icon: Icon(
+            icon: const Icon(
                Icons.sync_problem ,
               color: Colors.orange,
             ),
@@ -271,7 +273,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
               await SharedPref.setBoolKey("IsRememberLogin", false);
               Navigator.pushReplacement(
                 context,
-                MaterialPageRoute(builder: (context) => Login()),
+                MaterialPageRoute(builder: (context) => const Login()),
               );
             },
           ),
@@ -284,10 +286,10 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
           fit: StackFit.expand,
           children: <Widget>[
             PageView(
-              children: P_children,
               controller: pageController,
-              physics: NeverScrollableScrollPhysics(),
+              physics: const NeverScrollableScrollPhysics(),
               onPageChanged: onBottomIconPressed,
+              children: P_children,
             ),
             Positioned(
               bottom: 0,
@@ -316,24 +318,24 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
 
     showDialog(
         context: context,
-        builder: (_) => new AlertDialog(
+        builder: (_) => AlertDialog(
               surfaceTintColor: Colors.white,
               title: Column(
                   //Slide3
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    Image(
+                    const Image(
                       image: AssetImage('assets/images/AppIco.png'),
                       height: 50,
                     ),
-                    SizedBox(height: 8.0),
+                    const SizedBox(height: 8.0),
                     Container(color: Colors.grey, height: 1.0),
-                    SizedBox(height: 8.0),
+                    const SizedBox(height: 8.0),
                     Padding(
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: Text(
                         title,
-                        style: TextStyle(
+                        style: const TextStyle(
                           fontSize: 22,
                         ),
                       ),
@@ -342,7 +344,7 @@ class _HomeState extends State<Home> with WidgetsBindingObserver {
               content: Text(body),
               actions: <Widget>[
                 ElevatedButton(
-                  child: Text(
+                  child: const Text(
                     "OK",
                     style: TextStyle(
                       fontSize: 22,

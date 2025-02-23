@@ -1,11 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
-import 'package:verifplus/Tools/DbTools/DbTools.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Desc.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
-import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Equip_Saisie.dart';
 
 // Freq
 // Année ....
@@ -17,7 +12,7 @@ class Client_Dialog {
       BuildContext context) async {
     await showDialog(
       context: context,
-      builder: (BuildContext context) => ClientDialog(),
+      builder: (BuildContext context) => const ClientDialog(),
     );
   }
 }
@@ -27,6 +22,8 @@ class Client_Dialog {
 //**********************************
 
 class ClientDialog extends StatefulWidget {
+  const ClientDialog({super.key});
+
 
 
   @override
@@ -68,7 +65,7 @@ class _ClientDialogState extends State<ClientDialog> {
             Container(
               height: 5,
             ),
-            Container(
+            SizedBox(
               width: 500,
               child: Text(
                 wTitle,

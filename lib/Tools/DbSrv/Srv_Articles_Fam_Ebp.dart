@@ -54,7 +54,7 @@ class Article_Fam_Ebp {
 
   factory Article_Fam_Ebp.fromJson(Map<String, dynamic> json) {
 //    print("json $json");
-    Article_Fam_Ebp wArticle_Fam_Ebp = Article_Fam_Ebp(
+    Article_Fam_Ebp warticleFamEbp = Article_Fam_Ebp(
       int.parse(json['Article_FamId']),
       json['Article_Fam_Code'],
       json['Article_Fam_Code_Parent'],
@@ -63,16 +63,16 @@ class Article_Fam_Ebp {
       json['Article_Fam_UUID'],
     );
 
-    return wArticle_Fam_Ebp;
+    return warticleFamEbp;
   }
 
   String Desc() {
     return '  $Article_FamId,$Article_Fam_Code,$Article_Fam_Code_Parent,$Article_Fam_Description,$Article_Fam_Libelle, $Article_Fam_UUID ';
   }
 
-  static Future<void> insertArticle_Fam_Ebp(Article_Fam_Ebp article_Fam_Ebp) async {
+  static Future<void> insertArticle_Fam_Ebp(Article_Fam_Ebp articleFamEbp) async {
     final db = await DbTools.database;
-    int? repid = await db.insert("Articles_Fam_Ebp", article_Fam_Ebp.toMap());
+    int? repid = await db.insert("Articles_Fam_Ebp", articleFamEbp.toMap());
 
   }
 

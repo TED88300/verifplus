@@ -34,14 +34,14 @@ class InterMissions_Document {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['InterMissionsDocInterMissionId'] = this.InterMissionsDocInterMissionId;
-    data['DocID'] = this.DocID;
-    data['DocNom'] = this.DocNom;
-    data['DocDate'] = this.DocDate;
-    data['DocLength'] = this.DocLength;
-    data['DocCRC'] = this.DocCRC;
-    data['DocUserMat'] = this.DocUserMat;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['InterMissionsDocInterMissionId'] = InterMissionsDocInterMissionId;
+    data['DocID'] = DocID;
+    data['DocNom'] = DocNom;
+    data['DocDate'] = DocDate;
+    data['DocLength'] = DocLength;
+    data['DocCRC'] = DocCRC;
+    data['DocUserMat'] = DocUserMat;
     return data;
   }
 }

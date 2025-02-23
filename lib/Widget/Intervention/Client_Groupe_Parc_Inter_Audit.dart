@@ -1,9 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie_Param.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Desc.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
@@ -31,12 +29,13 @@ class Client_Groupe_Parc_Inter_AuditState extends State<Client_Groupe_Parc_Inter
 
     for (int i = 0; i < Srv_DbTools.ListParam_Audit_Base.length; i++) {
       Param_Saisie element = Srv_DbTools.ListParam_Audit_Base[i];
-      Parc_Desc wParc_Desc = await  DbTools.getParcs_Desc_Id_Type_Add(DbTools.gParc_Ent.ParcsId!, element.Param_Saisie_ID);
+      Parc_Desc wparcDesc = await  DbTools.getParcs_Desc_Id_Type_Add(DbTools.gParc_Ent.ParcsId!, element.Param_Saisie_ID);
     }
     DbTools.glfParcs_Desc = await DbTools.getParcs_Desc(DbTools.gParc_Ent.ParcsId!);
     setState(() {});
   }
 
+  @override
   void initState() {
     initLib();
     super.initState();
@@ -51,7 +50,7 @@ class Client_Groupe_Parc_Inter_AuditState extends State<Client_Groupe_Parc_Inter
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
 
 
     child: Column(
@@ -80,7 +79,7 @@ class Client_Groupe_Parc_Inter_AuditState extends State<Client_Groupe_Parc_Inter
     double IcoWidth = 30;
     return Container(
       width: 640,
-      padding: EdgeInsets.fromLTRB(10, 10, 10, 8),
+      padding: const EdgeInsets.fromLTRB(10, 10, 10, 8),
       color: gColors.greyLight,
       child: Row(
         children: [
@@ -94,7 +93,7 @@ class Client_Groupe_Parc_Inter_AuditState extends State<Client_Groupe_Parc_Inter
           ),
           Container(
             height: 20,
-            padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+            padding: const EdgeInsets.fromLTRB(0, 2, 8, 0),
             child: Text(
               "Audit Situation avant vérif",
               style: gColors.bodyTitle1_B_Gr,
@@ -110,7 +109,7 @@ class Client_Groupe_Parc_Inter_AuditState extends State<Client_Groupe_Parc_Inter
 
   Widget buildNote(BuildContext context) {
     return Container(
-        padding: EdgeInsets.fromLTRB(10, 10, 10, 1),
+        padding: const EdgeInsets.fromLTRB(10, 10, 10, 1),
         color: gColors.white,
         child: Container(
           width: 638,
@@ -120,18 +119,18 @@ class Client_Groupe_Parc_Inter_AuditState extends State<Client_Groupe_Parc_Inter
             border: Border.all(
               color: gColors.black,
             ),
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(12),
             ),
           ),
-          padding: EdgeInsets.fromLTRB(10, 10, 10, 10),
+          padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
           child: TextField(
             keyboardType: TextInputType.text,
             controller: txtController,
             style: gColors.bodyTitle1_N_Gr,
             autofocus: false,
             maxLines: 4,
-            decoration: InputDecoration(
+            decoration: const InputDecoration(
               contentPadding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
               border: InputBorder.none,
             ),
@@ -158,10 +157,10 @@ class Client_Groupe_Parc_Inter_AuditState extends State<Client_Groupe_Parc_Inter
     }
     return Expanded(
       child: Container(
-          padding: EdgeInsets.fromLTRB(0, 1, 0, 0),
+          padding: const EdgeInsets.fromLTRB(0, 1, 0, 0),
           color: gColors.greyDark,
           child: Container(
-            padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
             color: gColors.white,
             child: ListView.separated(
               shrinkWrap: true,
@@ -177,16 +176,16 @@ class Client_Groupe_Parc_Inter_AuditState extends State<Client_Groupe_Parc_Inter
     );
   }
 
-  Widget RowSaisie(Param_Saisie param_Saisie, double LargeurCol, double LargeurCol2, double H2) {
-    Parc_Desc wParc_Desc = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, param_Saisie.Param_Saisie_ID);
+  Widget RowSaisie(Param_Saisie paramSaisie, double LargeurCol, double LargeurCol2, double H2) {
+    Parc_Desc wparcDesc = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, paramSaisie.Param_Saisie_ID);
     double IcoWidth = 30;
-    Param_Saisie_Param wParam_Saisie_Param = Srv_DbTools.getParam_Saisie_ParamMem_Lib(param_Saisie.Param_Saisie_ID, wParc_Desc.ParcsDesc_Lib!);
-    if (param_Saisie.Param_Saisie_Icon.compareTo("") == 0) LargeurCol += 40;
+    Param_Saisie_Param wparamSaisieParam = Srv_DbTools.getParam_Saisie_ParamMem_Lib(paramSaisie.Param_Saisie_ID, wparcDesc.ParcsDesc_Lib!);
+    if (paramSaisie.Param_Saisie_Icon.compareTo("") == 0) LargeurCol += 40;
     return InkWell(
       onTap: () async {
         await HapticFeedback.vibrate();
-        print("onTap ${wParc_Desc.toString()} ${wParc_Desc.ParcsDesc_Lib}");
-        await Client_Groupe_Parc_Inter_Audit_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, param_Saisie, wParc_Desc);
+        print("onTap ${wparcDesc.toString()} ${wparcDesc.ParcsDesc_Lib}");
+        await Client_Groupe_Parc_Inter_Audit_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, paramSaisie, wparcDesc);
 
         setState(() {});
       },
@@ -195,16 +194,16 @@ class Client_Groupe_Parc_Inter_AuditState extends State<Client_Groupe_Parc_Inter
           Container(
             width: 10,
           ),
-          param_Saisie.Param_Saisie_Icon.compareTo("") == 0
+          paramSaisie.Param_Saisie_Icon.compareTo("") == 0
               ? Container(
                   width: 0,
                 )
               : Image.asset(
-                  "assets/images/${param_Saisie.Param_Saisie_Icon}.png",
+                  "assets/images/${paramSaisie.Param_Saisie_Icon}.png",
                   height: IcoWidth,
                   width: IcoWidth,
                 ),
-          param_Saisie.Param_Saisie_Icon.compareTo("") == 0
+          paramSaisie.Param_Saisie_Icon.compareTo("") == 0
               ? Container()
               : Container(
                   width: 10,
@@ -212,13 +211,13 @@ class Client_Groupe_Parc_Inter_AuditState extends State<Client_Groupe_Parc_Inter
           Container(
             width: LargeurCol,
             height: 20,
-            padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+            padding: const EdgeInsets.fromLTRB(0, 2, 8, 0),
             child: Text(
-              "${param_Saisie.Param_Saisie_Label}",
+              paramSaisie.Param_Saisie_Label,
               style: gColors.bodyTitle1_B_Gr,
             ),
           ),
-          BtnCard("${wParc_Desc.ParcsDesc_Lib} >", LargeurCol2, wParam_Saisie_Param.Param_Saisie_Param_Color),
+          BtnCard("${wparcDesc.ParcsDesc_Lib} >", LargeurCol2, wparamSaisieParam.Param_Saisie_Param_Color),
         ],
       ),
     );
@@ -227,8 +226,8 @@ class Client_Groupe_Parc_Inter_AuditState extends State<Client_Groupe_Parc_Inter
   Widget BtnCard(String? wText, double LargeurCol2, String color) {
     Color wColor = gColors.getColor(color);
 
-    return new Container(
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+    return Container(
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       width: LargeurCol2,
       height: 31,
       child: Card(

@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Sites.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
-import 'package:verifplus/Tools/DbTools/Db_Parcs_Ent.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'dart:async';
 
@@ -12,7 +11,7 @@ class Client_Groupe_Dialog {
   static Future<void> Dialogs_Groupe(BuildContext context) async {
     await showDialog(
       context: context,
-      builder: (BuildContext context) => Client_GroupeDialog(),
+      builder: (BuildContext context) => const Client_GroupeDialog(),
     );
   }
 }
@@ -66,7 +65,7 @@ class _Client_GroupeDialogState extends State<Client_GroupeDialog> {
             Container(
               height: 5,
             ),
-            Container(
+            SizedBox(
               width: 500,
               child: Text(
                 "Selection d'un groupe",
@@ -133,10 +132,10 @@ class _Client_GroupeDialogState extends State<Client_GroupeDialog> {
       double ii = 27.0 * (index);
 
       scrollController.animateTo(ii, //scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 1300),
+          duration: const Duration(milliseconds: 1300),
           curve: Curves.elasticOut);
     } else {
-      Timer(Duration(milliseconds: 1400), () => _scrollToBottom(index));
+      Timer(const Duration(milliseconds: 1400), () => _scrollToBottom(index));
     }
   }
 
@@ -151,7 +150,7 @@ class _Client_GroupeDialogState extends State<Client_GroupeDialog> {
       Site wSite = Srv_DbTools.ListSite[i];
       print("wSite.Groupe_Nom ${wSite.Groupe_Nom} ");
 
-      if (lGroupe.indexOf(wSite.Groupe_Nom) == -1) {
+      if (!lGroupe.contains(wSite.Groupe_Nom)) {
         lGroupe.add(wSite.Groupe_Nom);
       }
     }
@@ -168,7 +167,7 @@ class _Client_GroupeDialogState extends State<Client_GroupeDialog> {
             border: Border.all(
               color: Colors.grey,
             ),
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(12.0),
             ),
           ),
@@ -197,12 +196,12 @@ class _Client_GroupeDialogState extends State<Client_GroupeDialog> {
                                     border: Border.all(
                                       color: (item.compareTo(Srv_DbTools.gSelGroupe) == 0) ? gColors.primaryGreen : Colors.transparent,
                                     ),
-                                    borderRadius: BorderRadius.all(
+                                    borderRadius: const BorderRadius.all(
                                       Radius.circular(12.0),
                                     ),
                                   ),
 
-                                  padding: EdgeInsets.fromLTRB(10, 15, 10, 5), // TED
+                                  padding: const EdgeInsets.fromLTRB(10, 15, 10, 5), // TED
                                   height: 45,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,

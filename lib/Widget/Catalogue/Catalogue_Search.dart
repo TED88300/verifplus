@@ -14,6 +14,8 @@ import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 //**********************************
 
 class Catalogue_Search extends StatefulWidget {
+  const Catalogue_Search({super.key});
+
   @override
   Catalogue_SearchState createState() => Catalogue_SearchState();
 }
@@ -49,12 +51,12 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
     ListParam_FiltreSousFamID.clear();
     ListParam_FiltreSousFam.add("Tous");
     ListParam_FiltreSousFamID.add("*");
-    Srv_DbTools.ListParam_ParamAll.forEach((element) {
-      if (element.Param_Param_Type.compareTo("${FiltreFamID}") == 0) {
+    for (var element in Srv_DbTools.ListParam_ParamAll) {
+      if (element.Param_Param_Type.compareTo(FiltreFamID) == 0) {
         ListParam_FiltreSousFam.add(element.Param_Param_Text);
         ListParam_FiltreSousFamID.add(element.Param_Param_ID);
       }
-    });
+    }
     FiltreSousFam = ListParam_FiltreSousFam[0];
     FiltreSousFamID = ListParam_FiltreSousFamID[0];
 
@@ -74,28 +76,28 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
       ListArtsearchresultTmp.addAll(Srv_DbTools.ListArt);
     } else {
       print("_buildFieldTextSearch liste ${Search_TextController.text}");
-      Srv_DbTools.ListArt.forEach((element) {
+      for (var element in Srv_DbTools.ListArt) {
         print("_buildFieldTextSearch element ${element.Desc()}");
         if (element.Art_Lib.toLowerCase().contains(Search_TextController.text.toLowerCase())) {
           ListArtsearchresultTmp.add(element);
         }
-      });
+      }
     }
 
     if (FiltreGroupe.compareTo("Tous") == 0) {
       ListArtsearchresultTmpG.addAll(ListArtsearchresultTmp);
     } else {
-      ListArtsearchresultTmp.forEach((element) {
+      for (var element in ListArtsearchresultTmp) {
         if (FiltreGroupe.compareTo(element.Art_Groupe) == 0) ListArtsearchresultTmpG.add(element);
-      });
+      }
     }
 
     if (FiltreFam.compareTo("Tous") == 0) {
       ListArtsearchresultTmpF.addAll(ListArtsearchresultTmpG);
     } else {
-      ListArtsearchresultTmpG.forEach((element) {
+      for (var element in ListArtsearchresultTmpG) {
         if (FiltreFam.compareTo(element.Art_Fam) == 0) ListArtsearchresultTmpF.add(element);
-      });
+      }
     }
 
     Srv_DbTools.ListArtsearchresult.clear();
@@ -103,9 +105,9 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
     if (FiltreSousFam.compareTo("Tous") == 0) {
       Srv_DbTools.ListArtsearchresult.addAll(ListArtsearchresultTmpF);
     } else {
-      ListArtsearchresultTmpF.forEach((element) {
+      for (var element in ListArtsearchresultTmpF) {
         if (FiltreSousFam.compareTo(element.Art_Sous_Fam) == 0) Srv_DbTools.ListArtsearchresult.add(element);
-      });
+      }
     }
 
     setState(() {});
@@ -123,13 +125,13 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
     ListParam_FiltreGroupeID.add("*");
 
 //    print("Desc ${Srv_DbTools.ListParam_ParamAll.length}");
-    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+    for (var element in Srv_DbTools.ListParam_ParamAll) {
       //    print("Desc ${element.Desc()}");
       if (element.Param_Param_Type.compareTo("GrpHab") == 0) {
         ListParam_FiltreGroupe.add(element.Param_Param_Text);
         ListParam_FiltreGroupeID.add(element.Param_Param_ID);
       }
-    });
+    }
     FiltreGroupe = ListParam_FiltreGroupe[0];
     FiltreGroupeID = ListParam_FiltreGroupeID[0];
 /*
@@ -143,13 +145,13 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
     ListParam_FiltreFamID.add("*");
 
 //    print("Desc ${Srv_DbTools.ListParam_ParamAll.length}");
-    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+    for (var element in Srv_DbTools.ListParam_ParamAll) {
       //    print("Desc ${element.Desc()}");
       if (element.Param_Param_Type.compareTo("Fam") == 0) {
         ListParam_FiltreFam.add(element.Param_Param_Text);
         ListParam_FiltreFamID.add(element.Param_Param_ID);
       }
-    });
+    }
     FiltreFam = ListParam_FiltreFam[0];
     FiltreFamID = ListParam_FiltreFamID[0];
 /*
@@ -210,7 +212,7 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
                 ],
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Container(
               color: gColors.black,
               height: 1,
@@ -230,7 +232,7 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
           border: Border.all(
             color: gColors.greyDark,
           ),
-          borderRadius: BorderRadius.all(
+          borderRadius: const BorderRadius.all(
             Radius.circular(12),
           ),
         ),
@@ -249,7 +251,7 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
               width: 10,
             ),
             Container(
-              padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+              padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
               width: wDropdown - 1,
               height: wHeightSel,
               color: gColors.transparent,
@@ -266,7 +268,7 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
                   fillColor: Colors.white,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
-                    borderSide: BorderSide(color: Colors.transparent),
+                    borderSide: const BorderSide(color: Colors.transparent),
 
                   ),
 //                  border: InputBorder.none,
@@ -279,7 +281,7 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
   }
 
   Widget DropdownFiltreFam() {
-    if (ListParam_FiltreFam.length == 0) return Container();
+    if (ListParam_FiltreFam.isEmpty) return Container();
 
     return Container(
         decoration: BoxDecoration(
@@ -287,7 +289,7 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
           border: Border.all(
             color: gColors.secondary,
           ),
-          borderRadius: BorderRadius.all(
+          borderRadius: const BorderRadius.all(
             Radius.circular(12),
           ),
         ),
@@ -313,7 +315,7 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
               items: ListParam_FiltreFam.map((item) => DropdownMenuItem<String>(
                     value: item,
                     child: Text(
-                      "  ${item}",
+                      "  $item",
                       style: gColors.bodyTitle1_N_Gr,
                     ),
                   )).toList(),
@@ -322,27 +324,27 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
                 setState(() {
                   String sValue = value as String;
                   FiltreFamID = ListParam_FiltreFamID[ListParam_FiltreFam.indexOf(sValue)];
-                  FiltreFam = value as String;
-                  print(">>>>>>>>>>>>>>>>> FiltreFam ${FiltreFamID} ${FiltreFam}");
+                  FiltreFam = value;
+                  print(">>>>>>>>>>>>>>>>> FiltreFam $FiltreFamID $FiltreFam");
 
                   ListParam_FiltreSousFam.clear();
                   ListParam_FiltreSousFamID.clear();
                   ListParam_FiltreSousFam.add("Tous");
                   ListParam_FiltreSousFamID.add("*");
-                  Srv_DbTools.ListParam_ParamAll.forEach((element) {
-                    if (element.Param_Param_Type.compareTo("${FiltreFamID}") == 0) {
+                  for (var element in Srv_DbTools.ListParam_ParamAll) {
+                    if (element.Param_Param_Type.compareTo(FiltreFamID) == 0) {
                       ListParam_FiltreSousFam.add(element.Param_Param_Text);
                       ListParam_FiltreSousFamID.add(element.Param_Param_ID);
                     }
-                  });
+                  }
                   FiltreSousFam = ListParam_FiltreSousFam[0];
                   FiltreSousFamID = ListParam_FiltreSousFamID[0];
-                  print(">>>>>>>>>>>>>>>>> FiltreSousFam ${FiltreSousFamID} ${FiltreSousFam}");
+                  print(">>>>>>>>>>>>>>>>> FiltreSousFam $FiltreSousFamID $FiltreSousFam");
                   Filtre();
                 });
               },
                   buttonStyleData: const ButtonStyleData(
-                    padding: const EdgeInsets.only(left: 14, right: 14),
+                    padding: EdgeInsets.only(left: 14, right: 14),
                     height: 30,
                     width: 350,
                   ),
@@ -368,7 +370,7 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
   }
 
   Widget DropdownFiltreSousFam() {
-    if (ListParam_FiltreSousFam.length == 0) return Container();
+    if (ListParam_FiltreSousFam.isEmpty) return Container();
 
     return Container(
         decoration: BoxDecoration(
@@ -376,7 +378,7 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
           border: Border.all(
             color: gColors.secondary,
           ),
-          borderRadius: BorderRadius.all(
+          borderRadius: const BorderRadius.all(
             Radius.circular(12),
           ),
         ),
@@ -402,7 +404,7 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
               items: ListParam_FiltreSousFam.map((item) => DropdownMenuItem<String>(
                     value: item,
                     child: Text(
-                      "  ${item}",
+                      "  $item",
                       style: gColors.bodyTitle1_N_Gr,
                     ),
                   )).toList(),
@@ -411,13 +413,13 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
                 String sValue = value as String;
 
                 FiltreSousFamID = ListParam_FiltreSousFam[ListParam_FiltreSousFam.indexOf(sValue)];
-                FiltreSousFam = value as String;
-                print("FiltreSousFam ${FiltreSousFamID} ${FiltreSousFam}");
+                FiltreSousFam = value;
+                print("FiltreSousFam $FiltreSousFamID $FiltreSousFam");
 
                 Filtre();
               },
                   buttonStyleData: const ButtonStyleData(
-                    padding: const EdgeInsets.only(left: 14, right: 14),
+                    padding: EdgeInsets.only(left: 14, right: 14),
                     height: 30,
                     width: 350,
                   ),
@@ -463,14 +465,14 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
     double wb = MediaQuery.of(context).viewInsets.bottom;
 
     double bas = 277 + wb;
-    return Container(
+    return SizedBox(
       height: wDialogHeight - bas,
       width: 599,
       child: Container(
-        padding: EdgeInsets.fromLTRB(0, 1, 0, 0),
+        padding: const EdgeInsets.fromLTRB(0, 1, 0, 0),
         color: gColors.greyDark,
         child: Container(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
           color: gColors.greyLight,
           child: Scrollbar(
               child: ListView.separated(
@@ -495,14 +497,14 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
 
     print("wTxt ${wTxt.length}");
 
-    Random random = new Random();
+    Random random = Random();
 
     int randomNumber = random.nextInt(wTxt.length - 100) + 100;
     int randomCode = random.nextInt(1000 - 100) + 100;
     int randomPrix = random.nextInt(300 - 100) + 100;
 
     return Container(
-        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
         color: Colors.white,
         child: InkWell(
             onTap: () async {
@@ -522,10 +524,10 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
                     child: Container(
                       height: 32,
                       color: gColors.secondary,
-                      margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
-                      padding: EdgeInsets.fromLTRB(0, 5, 0, 2),
+                      margin: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 2),
                       child: Text(
-                        "${art.Art_Fam}",
+                        art.Art_Fam,
                         style: gColors.bodyTitle1_B_Wr,
                         textAlign: TextAlign.center,
 
@@ -539,8 +541,8 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
                     width: 100,
                     height: 32,
                     color: gColors.greyLight,
-                    margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
-                    padding: EdgeInsets.fromLTRB(0, 5, 0, 2),
+                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 2),
                     child: Text(
                       "Code",
                       style: gColors.bodyTitle1_B_Sr,
@@ -551,10 +553,10 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
                     child: FiltreSousFam.compareTo("Tous") == 0 ? Container(
                       height: 32,
                       color: gColors.greyDark,
-                      margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
-                      padding: EdgeInsets.fromLTRB(0, 5, 0, 2),
+                      margin: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                      padding: const EdgeInsets.fromLTRB(0, 5, 0, 2),
                       child: Text(
-                        "${art.Art_Sous_Fam}",
+                        art.Art_Sous_Fam,
                         style: gColors.bodyTitle1_B_Wr,
                         textAlign: TextAlign.center,
 
@@ -565,8 +567,8 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
                     width: 100,
                     height: 32,
                     color: gColors.greyLight,
-                    margin: EdgeInsets.fromLTRB(0, 0, 0, 5),
-                    padding: EdgeInsets.fromLTRB(0, 5, 0, 2),
+                    margin: const EdgeInsets.fromLTRB(0, 0, 0, 5),
+                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 2),
                     child: Text(
                       "Prix HT",
                       style: gColors.bodyTitle1_B_Sr,
@@ -581,9 +583,9 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
                     height: 32,
                     color: gColors.greyLight,
 
-                    padding: EdgeInsets.fromLTRB(0, 5, 0, 2),
+                    padding: const EdgeInsets.fromLTRB(0, 5, 0, 2),
                     child: Text(
-                      "${randomCode}",
+                      "$randomCode",
                       style: gColors.bodyTitle1_B_Sr,
                       textAlign: TextAlign.center,
                     ),
@@ -593,9 +595,9 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
                       height: 32,
                       color: gColors.white,
 
-                      padding: EdgeInsets.fromLTRB(10, 5, 0, 2),
+                      padding: const EdgeInsets.fromLTRB(10, 5, 0, 2),
                       child: Text(
-                        "${art.Art_Lib}",
+                        art.Art_Lib,
                         style: gColors.bodyTitle1_B_G_20,
                         textAlign: TextAlign.left,
 
@@ -606,9 +608,9 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
                     width: 100,
                     height: 32,
                     color: gColors.greyLight,
-                    padding: EdgeInsets.fromLTRB(0, 5, 10, 2),
+                    padding: const EdgeInsets.fromLTRB(0, 5, 10, 2),
                     child: Text(
-                      "${randomCode}€",
+                      "$randomCode€",
                       style: gColors.bodyTitle1_B_Sr,
                       textAlign: TextAlign.right,
                     ),
@@ -629,7 +631,7 @@ class Catalogue_SearchState extends State<Catalogue_Search> {
                     Expanded(
                       child: Container(
 //                        height: 200,
-                        padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+                        padding: const EdgeInsets.fromLTRB(0, 2, 8, 0),
                         child: Text(
                           wTxt.substring(0, randomNumber),
                           style: gColors.bodyTitle1_N_Gr,

@@ -14,16 +14,7 @@
  * limitations under the License.
  */
 
-import 'box_border.dart';
-import 'container.dart';
-import 'decoration.dart';
-import 'geometry.dart';
-import 'table.dart';
-import 'text.dart';
 import '../../pdf.dart';
-import 'text_style.dart';
-import 'theme.dart';
-import 'widget.dart';
 import 'dart:math';
 
 import 'package:pdf/widgets.dart';
@@ -104,12 +95,12 @@ mixin TableHelper {
           headerDirections![i] == 1 ?
           Container(
               alignment: headerAlignments[tableRow.length] ?? headerAlignment,
-              padding :  EdgeInsets.only(left: 0, top: 0, bottom: 0, right: 0),
+              padding :  const EdgeInsets.only(left: 0, top: 0, bottom: 0, right: 0),
               decoration: headerCellDecoration,
               constraints: BoxConstraints(minHeight: headerHeight),
               child:
               Container(
-                padding :  EdgeInsets.only(left: 0, top: 7, bottom: 7, right: 0),
+                padding :  const EdgeInsets.only(left: 0, top: 7, bottom: 7, right: 0),
                 child :
                 Row(
                     mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center,
@@ -128,12 +119,12 @@ mixin TableHelper {
               ))
               :Container(
               alignment: headerAlignments[tableRow.length] ?? headerAlignment,
-              padding :  EdgeInsets.only(left: 0, top: 0, bottom: 0, right: 0),
+              padding :  const EdgeInsets.only(left: 0, top: 0, bottom: 0, right: 0),
               decoration: headerCellDecoration,
               constraints: BoxConstraints(minHeight: headerHeight),
               child:
               Container(
-                padding :  EdgeInsets.only(left: 0, top: 0, bottom: 0, right: 0),
+                padding :  const EdgeInsets.only(left: 0, top: 0, bottom: 0, right: 0),
                 child :
                 Text(
                   cell.toString(),
@@ -300,12 +291,12 @@ mixin TableHelper {
           headerDirections![i] == 1 ?
           Container(
               alignment: headerAlignments[tableRow.length] ?? headerAlignment,
-              padding :  EdgeInsets.only(left: 0, top: 0, bottom: 0, right: 0),
+              padding :  const EdgeInsets.only(left: 0, top: 0, bottom: 0, right: 0),
               decoration: headerCellDecoration,
               constraints: BoxConstraints(minHeight: headerHeight),
               child:
               Container(
-                padding :  EdgeInsets.only(left: 0, top: 7, bottom: 7, right: 0),
+                padding :  const EdgeInsets.only(left: 0, top: 7, bottom: 7, right: 0),
                 child :
                 Row(
                     mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center,
@@ -324,12 +315,12 @@ mixin TableHelper {
               ))
               :Container(
               alignment: headerAlignments[tableRow.length] ?? headerAlignment,
-              padding :  EdgeInsets.only(left: 0, top: 0, bottom: 0, right: 0),
+              padding :  const EdgeInsets.only(left: 0, top: 0, bottom: 0, right: 0),
               decoration: headerCellDecoration,
               constraints: BoxConstraints(minHeight: headerHeight),
               child:
               Container(
-                padding :  EdgeInsets.only(left: 0, top: 0, bottom: 0, right: 0),
+                padding :  const EdgeInsets.only(left: 0, top: 0, bottom: 0, right: 0),
                 child :
                 Text(
                   cell.toString(),

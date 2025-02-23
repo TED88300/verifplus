@@ -2,14 +2,14 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:auto_size_text/auto_size_text.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
-import 'package:verifplus/Widget/Widget_Tools/ImagePainterTools.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 
 
 class Client_Groupe_Parc_Inter_Construction extends StatefulWidget {
+  const Client_Groupe_Parc_Inter_Construction({super.key});
+
   @override
   Client_Groupe_Parc_Inter_ConstructionState createState() => Client_Groupe_Parc_Inter_ConstructionState();
 }
@@ -23,6 +23,7 @@ class Client_Groupe_Parc_Inter_ConstructionState extends State<Client_Groupe_Par
     setState(() {});
   }
 
+  @override
   void initState() {
     initLib();
     super.initState();
@@ -36,7 +37,7 @@ class Client_Groupe_Parc_Inter_ConstructionState extends State<Client_Groupe_Par
   @override
   Widget build(BuildContext context) {
 
-    return Scaffold(
+    return const Scaffold(
       backgroundColor: Colors.white,
       body:
       Column(
@@ -74,7 +75,7 @@ class DisplayImageScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: AutoSizeText(
+        title: const AutoSizeText(
 //          "Client : ${DbTools.gClient.Clients_Nom} (${DbTools.gClient.Clients_Cp}) / ${DbTools.gSite.Sites_Nom} (${DbTools.gSite.Sites_Cp})",
           "Client : XXXXXX XXXXXX XXXXXX XXXX ",
           maxLines: 1,

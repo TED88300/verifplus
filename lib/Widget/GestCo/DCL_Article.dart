@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:convert';
 import 'package:dropdown_button2/dropdown_button2.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -40,8 +39,8 @@ class DCL_ArticlesState extends State<DCL_Articles> {
   Widget wIco = Container();
 
   List<Widget> views = <Widget>[
-    Text('Pièces Détachées'),
-    Text('Catalogue Articles'),
+    const Text('Pièces Détachées'),
+    const Text('Catalogue Articles'),
   ];
 
   final List<bool> _selectedView = <bool>[true, false, false];
@@ -66,7 +65,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
 
   bool affEdtFilter = false;
   double icoWidth = 40;
-  TextEditingController ctrlFilter = new TextEditingController();
+  TextEditingController ctrlFilter = TextEditingController();
   String filterText = '';
   static List<Parc_Art> searchParcs_Art = [];
 
@@ -101,13 +100,13 @@ class DCL_ArticlesState extends State<DCL_Articles> {
     ListParam_FiltreSousFam.clear();
 
     FiltreGrp = "";
-    List<String> wListParam_FiltreGrp = [];
+    List<String> wlistparamFiltregrp = [];
     for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
-      Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
-      if (!wListParam_FiltreGrp.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Groupe)) wListParam_FiltreGrp.add(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Groupe);
+      Article_GrpFamSsFam_Ebp warticleGrpfamssfamEbp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
+      if (!wlistparamFiltregrp.contains(warticleGrpfamssfamEbp.Article_GrpFamSsFam_Groupe)) wlistparamFiltregrp.add(warticleGrpfamssfamEbp.Article_GrpFamSsFam_Groupe);
     }
-    wListParam_FiltreGrp.sort();
-    ListParam_FiltreGrp.addAll(wListParam_FiltreGrp);
+    wlistparamFiltregrp.sort();
+    ListParam_FiltreGrp.addAll(wlistparamFiltregrp);
 
     await Filtre();
   }
@@ -116,9 +115,9 @@ class DCL_ArticlesState extends State<DCL_Articles> {
     print(" FILTRE");
 
     for (int i = 0; i < Srv_DbTools.ListArticle_Ebp.length; i++) {
-      Article_Ebp wArticle_Ebp = Srv_DbTools.ListArticle_Ebp[i];
-      wArticle_Ebp.Art_Sel = false;
-      wArticle_Ebp.Art_Qte = 1;
+      Article_Ebp warticleEbp = Srv_DbTools.ListArticle_Ebp[i];
+      warticleEbp.Art_Sel = false;
+      warticleEbp.Art_Qte = 1;
     }
 
     List<Article_Ebp> ListArtsearchresultTmp = [];
@@ -129,14 +128,14 @@ class DCL_ArticlesState extends State<DCL_Articles> {
     Srv_DbTools.ListArticle_Ebpsearchresult.clear();
 
     if (filterText.isEmpty) {
-      print("_buildFieldTextSearch VIDE ${filterText}");
+      print("_buildFieldTextSearch VIDE $filterText");
       ListArtsearchresultTmp.addAll(Srv_DbTools.ListArticle_Ebp);
     } else {
-      print("_buildFieldTextSearch liste ${filterText}");
+      print("_buildFieldTextSearch liste $filterText");
       for (int i = 0; i < Srv_DbTools.ListArticle_Ebp.length; i++) {
-        Article_Ebp wArticle_Ebp = Srv_DbTools.ListArticle_Ebp[i];
-        if (wArticle_Ebp.DescRech().toLowerCase().contains(filterText.toLowerCase())) {
-          ListArtsearchresultTmp.add(wArticle_Ebp);
+        Article_Ebp warticleEbp = Srv_DbTools.ListArticle_Ebp[i];
+        if (warticleEbp.DescRech().toLowerCase().contains(filterText.toLowerCase())) {
+          ListArtsearchresultTmp.add(warticleEbp);
         }
       }
     }
@@ -153,19 +152,19 @@ class DCL_ArticlesState extends State<DCL_Articles> {
       ListParam_FiltreFam.clear();
       FiltreFam = "";
       for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
-        Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
-        if (!ListParam_FiltreFam.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam))
+        Article_GrpFamSsFam_Ebp warticleGrpfamssfamEbp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
+        if (!ListParam_FiltreFam.contains(warticleGrpfamssfamEbp.Article_GrpFamSsFam_Fam))
           {
 
-            ListParam_FiltreFam.add(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam);
+            ListParam_FiltreFam.add(warticleGrpfamssfamEbp.Article_GrpFamSsFam_Fam);
           }
       }
 
       ListParam_FiltreSousFam.clear();
       FiltreSousFam = "";
       for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
-        Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
-        if (!ListParam_FiltreSousFam.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam)) ListParam_FiltreSousFam.add(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam);
+        Article_GrpFamSsFam_Ebp warticleGrpfamssfamEbp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
+        if (!ListParam_FiltreSousFam.contains(warticleGrpfamssfamEbp.Article_GrpFamSsFam_Sous_Fam)) ListParam_FiltreSousFam.add(warticleGrpfamssfamEbp.Article_GrpFamSsFam_Sous_Fam);
       }
 
       print(" FILTRE VIDES ListParam_FiltreGrp ${ListParam_FiltreGrp.length}");
@@ -183,7 +182,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
     print("FILTRE PAS VIDES FiltreGrp $FiltreGrp FiltreFam $FiltreFam FiltreSousFam $FiltreSousFam");
 
     Srv_DbTools.ListArticle_Ebpsearchresult.clear();
-    ListArtsearchresultTmp.forEach((element) {
+    for (var element in ListArtsearchresultTmp) {
       bool TestGrp = (FiltreGrp == "") || (FiltreGrp.contains(element.Article_Groupe));
       bool TestFam = (FiltreFam == "") || (FiltreFam.contains(element.Article_LibelleFamilleArticle) && element.Article_LibelleFamilleArticle.isNotEmpty);
       bool TestSousFam = (FiltreSousFam == "") || (FiltreSousFam.contains(element.Article_LibelleSousFamilleArticle)  && element.Article_LibelleSousFamilleArticle.isNotEmpty);
@@ -193,7 +192,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
           Srv_DbTools.ListArticle_Ebpsearchresult.add(element);
         }
 
-    });
+    }
 
     print("Filtre ListArticle_Ebpsearchresult ${Srv_DbTools.ListArticle_Ebpsearchresult.length}");
 
@@ -202,19 +201,19 @@ class DCL_ArticlesState extends State<DCL_Articles> {
 
   @override
   void initLib() async {
-    Srv_DbTools.ListArticle_Ebp.forEach((element) {
+    for (var element in Srv_DbTools.ListArticle_Ebp) {
       element.Art_Sel = false;
-    });
+    }
 
     ListParam_FiltreFam.clear();
     ListParam_FiltreFamID.clear();
 
     Srv_DbTools.ListArticle_Fam_Ebp_Fam.clear();
     for (int i = 0; i < Srv_DbTools.ListArticle_Fam_Ebp.length; i++) {
-      Article_Fam_Ebp wArticle_Fam_Ebp = Srv_DbTools.ListArticle_Fam_Ebp[i];
-      if (wArticle_Fam_Ebp.Article_Fam_Code_Parent.isEmpty) {
-        ListParam_FiltreFam.add("${wArticle_Fam_Ebp.Article_Fam_Libelle}");
-        ListParam_FiltreFamID.add(wArticle_Fam_Ebp.Article_Fam_Code);
+      Article_Fam_Ebp warticleFamEbp = Srv_DbTools.ListArticle_Fam_Ebp[i];
+      if (warticleFamEbp.Article_Fam_Code_Parent.isEmpty) {
+        ListParam_FiltreFam.add(warticleFamEbp.Article_Fam_Libelle);
+        ListParam_FiltreFamID.add(warticleFamEbp.Article_Fam_Code);
       }
     }
     FiltreFam = "";
@@ -265,7 +264,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
     wDialogHeight = MediaQuery.of(context).size.height;
     wDialogWidth = MediaQuery.of(context).size.width;
 
-    List<Article_Ebp> ListArticle_Ebpsearchresult = Srv_DbTools.ListArticle_Ebpsearchresult.where((element) => element.Art_Sel == true).toList();
+    List<Article_Ebp> listarticleEbpsearchresult = Srv_DbTools.ListArticle_Ebpsearchresult.where((element) => element.Art_Sel == true).toList();
 
     return SimpleDialog(
       titlePadding: EdgeInsets.zero,
@@ -292,11 +291,11 @@ class DCL_ArticlesState extends State<DCL_Articles> {
               top: 0,
               left: 0,
               child: Material(
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
                 child: Container(
                   height: wHeightTitre - 9,
                   width: 560,
-                  decoration: BoxDecoration(color: gColors.LinearGradient2,
+                  decoration: const BoxDecoration(color: gColors.LinearGradient2,
                       borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))
                   ),
                   child: Column(
@@ -370,7 +369,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
                         ),
                         ElevatedButton(
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: ListArticle_Ebpsearchresult.length > 0 ? gColors.blueCyan : gColors.LinearGradient4,
+                              backgroundColor: listarticleEbpsearchresult.isNotEmpty ? gColors.blueCyan : gColors.LinearGradient4,
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(8),
                               )),
@@ -385,10 +384,10 @@ class DCL_ArticlesState extends State<DCL_Articles> {
                             ),
                           ),
                           onPressed: () async {
-                            if (ListArticle_Ebpsearchresult.length > 0) {
+                            if (listarticleEbpsearchresult.isNotEmpty) {
                               await showDialog(
                                 context: context,
-                                builder: (BuildContext context) => DCL_Article_Det(
+                                builder: (BuildContext context) => const DCL_Article_Det(
                                   wTitre: "Listing",
                                 ),
                               );
@@ -398,7 +397,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
                         ),
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
-                                backgroundColor: ListArticle_Ebpsearchresult.length > 0 ? gColors.primaryGreen : gColors.LinearGradient4,
+                                backgroundColor: listarticleEbpsearchresult.isNotEmpty ? gColors.primaryGreen : gColors.LinearGradient4,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(8),
                                 )),
@@ -413,44 +412,44 @@ class DCL_ArticlesState extends State<DCL_Articles> {
                               ),
                             ),
                             onPressed: () async {
-                              if (ListArticle_Ebpsearchresult.length > 0) {
+                              if (listarticleEbpsearchresult.isNotEmpty) {
                                 int wOrder = Srv_DbTools.getLastOrder() + 1;
                                 if (Srv_DbTools.gDCL_Det.DCL_DetID != -1) {
                                   wOrder = Srv_DbTools.gDCL_Det.DCL_Det_Ordre!;
                                 }
 
                                 for (int i = 0; i < Srv_DbTools.ListArticle_Ebpsearchresult.length; i++) {
-                                  Article_Ebp wArticle_Ebp = Srv_DbTools.ListArticle_Ebpsearchresult[i];
+                                  Article_Ebp warticleEbp = Srv_DbTools.ListArticle_Ebpsearchresult[i];
 
-                                  if (!wArticle_Ebp.Art_Sel) continue;
-
-
-                                  DCL_Det aDCL_Det = DCL_Det();
-                                  aDCL_Det.DCL_Det_EntID = Srv_DbTools.gDCL_Ent.DCL_EntID;
-                                  aDCL_Det.DCL_Det_Type = "A";
-                                  aDCL_Det.DCL_Det_ParcsArtId = 0;
-                                  aDCL_Det.DCL_Det_Ordre = wOrder++;
-                                  aDCL_Det.DCL_Det_NoArt = wArticle_Ebp.Article_codeArticle;
-                                  aDCL_Det.DCL_Det_Lib = wArticle_Ebp.Article_descriptionCommercialeEnClair;
-                                  aDCL_Det.DCL_Det_Qte = wArticle_Ebp.Art_Qte;
-                                  aDCL_Det.DCL_Det_PU = wArticle_Ebp.Article_Promo_PVHT > 0 ? wArticle_Ebp.Article_Promo_PVHT : wArticle_Ebp.Article_PVHT;
-                                  aDCL_Det.DCL_Det_RemP = 0;
-                                  aDCL_Det.DCL_Det_RemMt = 0;
-                                  aDCL_Det.DCL_Det_TVA = 0;
-                                  aDCL_Det.DCL_Det_Livr = 0;
-                                  aDCL_Det.DCL_Det_DateLivr = "";
-                                  aDCL_Det.DCL_Det_Rel = 0;
-                                  aDCL_Det.DCL_Det_DateRel = "";
-                                  aDCL_Det.DCL_Det_Statut = "Facturable";
-                                  aDCL_Det.DCL_Det_Note = "";
-                                  aDCL_Det.DCL_Det_Garantie = "";
-                                  aDCL_Det.DCL_Det_Garantie = wArticle_Ebp.DCL_Det_Garantie;
+                                  if (!warticleEbp.Art_Sel) continue;
 
 
-                                  print(" aDCL_Det.DCL_Det_Garantie ${aDCL_Det.DCL_Det_Garantie}");
+                                  DCL_Det adclDet = DCL_Det();
+                                  adclDet.DCL_Det_EntID = Srv_DbTools.gDCL_Ent.DCL_EntID;
+                                  adclDet.DCL_Det_Type = "A";
+                                  adclDet.DCL_Det_ParcsArtId = 0;
+                                  adclDet.DCL_Det_Ordre = wOrder++;
+                                  adclDet.DCL_Det_NoArt = warticleEbp.Article_codeArticle;
+                                  adclDet.DCL_Det_Lib = warticleEbp.Article_descriptionCommercialeEnClair;
+                                  adclDet.DCL_Det_Qte = warticleEbp.Art_Qte;
+                                  adclDet.DCL_Det_PU = warticleEbp.Article_Promo_PVHT > 0 ? warticleEbp.Article_Promo_PVHT : warticleEbp.Article_PVHT;
+                                  adclDet.DCL_Det_RemP = 0;
+                                  adclDet.DCL_Det_RemMt = 0;
+                                  adclDet.DCL_Det_TVA = 0;
+                                  adclDet.DCL_Det_Livr = 0;
+                                  adclDet.DCL_Det_DateLivr = "";
+                                  adclDet.DCL_Det_Rel = 0;
+                                  adclDet.DCL_Det_DateRel = "";
+                                  adclDet.DCL_Det_Statut = "Facturable";
+                                  adclDet.DCL_Det_Note = "";
+                                  adclDet.DCL_Det_Garantie = "";
+                                  adclDet.DCL_Det_Garantie = warticleEbp.DCL_Det_Garantie;
 
 
-                                  await Srv_DbTools.InsertUpdateDCL_Det(aDCL_Det);
+                                  print(" aDCL_Det.DCL_Det_Garantie ${adclDet.DCL_Det_Garantie}");
+
+
+                                  await Srv_DbTools.InsertUpdateDCL_Det(adclDet);
                                 }
                               }
                               Navigator.pop(context);
@@ -514,7 +513,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
             color: gColors.primary,
             width: 8,
           ),
-          Spacer(),
+          const Spacer(),
           ElevatedButton(
             onPressed: () async {
               Srv_DbTools.gArticle_EbpSelRef = Article_Ebp.Article_EbpInit();
@@ -556,7 +555,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
     print(" DropdownFiltreGrp ListParam_FiltreGrp ${ListParam_FiltreGrp.length}");
 
 
-    if (ListParam_FiltreGrp.length == 0) return Container();
+    if (ListParam_FiltreGrp.isEmpty) return Container();
 
     return Container(
         child: Row(children: [
@@ -566,7 +565,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
         decoration: BoxDecoration(
           color: Colors.green,
           borderRadius: BorderRadius.circular(8),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.grey,
               offset: Offset(0.0, 1.0), //(x,y)
@@ -584,7 +583,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
           ],
         ),
       ),
-      Container(
+      SizedBox(
         width: 310,
         child: DropdownButtonHideUnderline(
             child: DropdownButton2(
@@ -650,7 +649,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
             ).toList();
           },
           menuItemStyleData: const MenuItemStyleData(
-            padding: const EdgeInsets.fromLTRB(1, 0, 0, 0),
+            padding: EdgeInsets.fromLTRB(1, 0, 0, 0),
             height: 57,
           ),
           dropdownSearchData: DropdownSearchData(
@@ -706,7 +705,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
       ),
 
 
-    if (ListParam_FiltreGrp.length > 0)
+    if (ListParam_FiltreGrp.isNotEmpty)
         InkWell(
           onTap: () async {
             FiltreGrp = "";
@@ -735,21 +734,21 @@ class DCL_ArticlesState extends State<DCL_Articles> {
     setState(() {
       String sValue = selectedItems_Grp.join(', ');
 
-      FiltreGrp = sValue as String;
-      print(">>>>>>>>>>>>>>>>> FiltreGrp ${FiltreGrp}");
+      FiltreGrp = sValue;
+      print(">>>>>>>>>>>>>>>>> FiltreGrp $FiltreGrp");
 
       if (FiltreGrp == "") {
         ListParam_FiltreFam.clear();
         FiltreFam = "";
         for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
-          Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
-          if (!ListParam_FiltreFam.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam)) ListParam_FiltreFam.add(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam);
+          Article_GrpFamSsFam_Ebp warticleGrpfamssfamEbp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
+          if (!ListParam_FiltreFam.contains(warticleGrpfamssfamEbp.Article_GrpFamSsFam_Fam)) ListParam_FiltreFam.add(warticleGrpfamssfamEbp.Article_GrpFamSsFam_Fam);
         }
         ListParam_FiltreSousFam.clear();
         FiltreSousFam = "";
         for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
-          Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
-          if (!ListParam_FiltreSousFam.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam)) ListParam_FiltreSousFam.add(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam);
+          Article_GrpFamSsFam_Ebp warticleGrpfamssfamEbp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
+          if (!ListParam_FiltreSousFam.contains(warticleGrpfamssfamEbp.Article_GrpFamSsFam_Sous_Fam)) ListParam_FiltreSousFam.add(warticleGrpfamssfamEbp.Article_GrpFamSsFam_Sous_Fam);
         }
       } else {
         ListParam_FiltreFam.clear();
@@ -758,16 +757,16 @@ class DCL_ArticlesState extends State<DCL_Articles> {
         ListParam_FiltreSousFam.clear();
         FiltreSousFam = "";
         for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
-          Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_EbpGrp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
+          Article_GrpFamSsFam_Ebp warticleGrpfamssfamEbpgrp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
 
-          if (FiltreGrp.contains(wArticle_GrpFamSsFam_EbpGrp.Article_GrpFamSsFam_Groupe)) {
-            if (!ListParam_FiltreFam.contains(wArticle_GrpFamSsFam_EbpGrp.Article_GrpFamSsFam_Fam)) {
-              ListParam_FiltreFam.add(wArticle_GrpFamSsFam_EbpGrp.Article_GrpFamSsFam_Fam);
+          if (FiltreGrp.contains(warticleGrpfamssfamEbpgrp.Article_GrpFamSsFam_Groupe)) {
+            if (!ListParam_FiltreFam.contains(warticleGrpfamssfamEbpgrp.Article_GrpFamSsFam_Fam)) {
+              ListParam_FiltreFam.add(warticleGrpfamssfamEbpgrp.Article_GrpFamSsFam_Fam);
 
               for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
-                Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_EbpFam = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
-                if (wArticle_GrpFamSsFam_EbpFam.Article_GrpFamSsFam_Fam == wArticle_GrpFamSsFam_EbpGrp.Article_GrpFamSsFam_Fam) {
-                  if (!ListParam_FiltreSousFam.contains(wArticle_GrpFamSsFam_EbpFam.Article_GrpFamSsFam_Sous_Fam)) ListParam_FiltreSousFam.add(wArticle_GrpFamSsFam_EbpFam.Article_GrpFamSsFam_Sous_Fam);
+                Article_GrpFamSsFam_Ebp warticleGrpfamssfamEbpfam = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
+                if (warticleGrpfamssfamEbpfam.Article_GrpFamSsFam_Fam == warticleGrpfamssfamEbpgrp.Article_GrpFamSsFam_Fam) {
+                  if (!ListParam_FiltreSousFam.contains(warticleGrpfamssfamEbpfam.Article_GrpFamSsFam_Sous_Fam)) ListParam_FiltreSousFam.add(warticleGrpfamssfamEbpfam.Article_GrpFamSsFam_Sous_Fam);
                 }
               }
             }
@@ -785,7 +784,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
   Widget DropdownFiltreFam() {
     print(" DropdownFiltreFam ListParam_FiltreFam ${ListParam_FiltreFam.length}");
 
-    if (ListParam_FiltreFam.length == 0) return Container();
+    if (ListParam_FiltreFam.isEmpty) return Container();
 
 
       return Container(
@@ -796,7 +795,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
         decoration: BoxDecoration(
           color: Colors.green,
           borderRadius: BorderRadius.circular(8),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.grey,
               offset: Offset(0.0, 1.0), //(x,y)
@@ -814,7 +813,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
           ],
         ),
       ),
-      Container(
+      SizedBox(
         width: 310,
         child: DropdownButtonHideUnderline(
             child: DropdownButton2(
@@ -883,7 +882,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
           },
 
           menuItemStyleData: const MenuItemStyleData(
-            padding: const EdgeInsets.fromLTRB(1, 0, 0, 0),
+            padding: EdgeInsets.fromLTRB(1, 0, 0, 0),
             height: 57,
           ),
           dropdownSearchData: DropdownSearchData(
@@ -937,7 +936,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
           ),
         )),
       ),
-      if (ListParam_FiltreFam.length > 0)
+      if (ListParam_FiltreFam.isNotEmpty)
         InkWell(
           onTap: () async {
             FiltreFam = "";
@@ -962,14 +961,14 @@ class DCL_ArticlesState extends State<DCL_Articles> {
     String value = selectedItems_Fam.join(', ');
 
     if (FiltreFam != value) {
-      FiltreFam = value as String;
+      FiltreFam = value;
 
       ListParam_FiltreSousFam.clear();
       FiltreSousFam = "";
       for (int i = 0; i < Srv_DbTools.list_Article_GrpFamSsFam_Ebp.length; i++) {
-        Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
-        if (FiltreFam.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam)) {
-          if (!ListParam_FiltreSousFam.contains(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam)) ListParam_FiltreSousFam.add(wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam);
+        Article_GrpFamSsFam_Ebp warticleGrpfamssfamEbp = Srv_DbTools.list_Article_GrpFamSsFam_Ebp[i];
+        if (FiltreFam.contains(warticleGrpfamssfamEbp.Article_GrpFamSsFam_Fam)) {
+          if (!ListParam_FiltreSousFam.contains(warticleGrpfamssfamEbp.Article_GrpFamSsFam_Sous_Fam)) ListParam_FiltreSousFam.add(warticleGrpfamssfamEbp.Article_GrpFamSsFam_Sous_Fam);
         }
       }
     }
@@ -982,7 +981,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
   Widget DropdownFiltreSousFam() {
     print(" DropdownFiltreSousFam ListParam_FiltreSousFam ${ListParam_FiltreSousFam.length}");
 
-    if (ListParam_FiltreSousFam.length == 0) return Container();
+    if (ListParam_FiltreSousFam.isEmpty) return Container();
 
     return Container(
         child: Row(children: [
@@ -992,7 +991,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
         decoration: BoxDecoration(
           color: Colors.green,
           borderRadius: BorderRadius.circular(8),
-          boxShadow: [
+          boxShadow: const [
             BoxShadow(
               color: Colors.grey,
               offset: Offset(0.0, 1.0), //(x,y)
@@ -1010,7 +1009,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
           ],
         ),
       ),
-      Container(
+      SizedBox(
         width: 310,
         child: DropdownButtonHideUnderline(
             child: DropdownButton2(
@@ -1079,7 +1078,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
           },
 
           menuItemStyleData: const MenuItemStyleData(
-            padding: const EdgeInsets.fromLTRB(1, 0, 0, 0),
+            padding: EdgeInsets.fromLTRB(1, 0, 0, 0),
             height: 57,
           ),
           dropdownSearchData: DropdownSearchData(
@@ -1133,7 +1132,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
           ),
         )),
       ),
-      if (ListParam_FiltreSousFam.length > 0)
+      if (ListParam_FiltreSousFam.isNotEmpty)
         InkWell(
           onTap: () async {
             FiltreSousFam = "";
@@ -1157,7 +1156,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
     String value = selectedItems_SousFam.join(', ');
 
     if (FiltreSousFam != value) {
-      FiltreSousFam = value as String;
+      FiltreSousFam = value;
     }
     Filtre();
   }
@@ -1177,26 +1176,26 @@ class DCL_ArticlesState extends State<DCL_Articles> {
     int wCount = 0;
     bool bSup50 = false;
 
-    List<Article_Ebp> ListArticle_Ebpsearchresult = [];
+    List<Article_Ebp> listarticleEbpsearchresult = [];
     if (wBtn == 1) {
-      ListArticle_Ebpsearchresult = Srv_DbTools.ListArticle_Ebpsearchresult.where((element) => element.Article_New == true).toList();
+      listarticleEbpsearchresult = Srv_DbTools.ListArticle_Ebpsearchresult.where((element) => element.Article_New == true).toList();
     } else if (wBtn == 2) {
-      ListArticle_Ebpsearchresult = Srv_DbTools.ListArticle_Ebpsearchresult.where((element) => Srv_DbTools.gUserLogin_Art_Fav.contains(element.Article_codeArticle)).toList();
-      print("wBtn == 2 ${ListArticle_Ebpsearchresult.length}");
+      listarticleEbpsearchresult = Srv_DbTools.ListArticle_Ebpsearchresult.where((element) => Srv_DbTools.gUserLogin_Art_Fav.contains(element.Article_codeArticle)).toList();
+      print("wBtn == 2 ${listarticleEbpsearchresult.length}");
     } else {
-      ListArticle_Ebpsearchresult = Srv_DbTools.ListArticle_Ebpsearchresult;
+      listarticleEbpsearchresult = Srv_DbTools.ListArticle_Ebpsearchresult;
     }
 
-    int wLen = ListArticle_Ebpsearchresult.length;
-    if (ListArticle_Ebpsearchresult.length > 50) {
+    int wLen = listarticleEbpsearchresult.length;
+    if (listarticleEbpsearchresult.length > 50) {
       wLen = 52;
       bSup50 = true;
     }
 
     double wHeigth = wHeightDet2 - 78;
-    if (wBtnFam)
+    if (wBtnFam) {
       wHeigth = wHeigth - 250;
-    else if (wBtnSearch) wHeigth = wHeigth - 100;
+    } else if (wBtnSearch) wHeigth = wHeigth - 100;
 
     return Container(
       padding: EdgeInsets.fromLTRB(0, btnSel_Aff ? 00 : 0, 0, 0),
@@ -1206,7 +1205,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
       child: Container(
         color: gColors.greyDark,
         child: Container(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
           color: gColors.LinearGradient2,
           child: Scrollbar(
               child: ListView.separated(
@@ -1215,11 +1214,11 @@ class DCL_ArticlesState extends State<DCL_Articles> {
 //            itemCount: bSup50 ? 52 : Srv_DbTools.ListArticle_Ebpsearchresult.length,
             itemCount: wLen,
             itemBuilder: (context, index) {
-              Article_Ebp element = ListArticle_Ebpsearchresult[index];
+              Article_Ebp element = listarticleEbpsearchresult[index];
               Widget wRowSaisie = Container();
 
               if (bSup50 && index == 51) {
-                wRowSaisie = Container(
+                wRowSaisie = SizedBox(
                   width: 100,
                   height: 40,
                   child: Text(
@@ -1253,7 +1252,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
     gObj.pic = base64Decode(Srv_DbTools.gArticlesImg_Ebp.ArticlesImg_Image);
 
 
-    if (gObj.pic.length > 0) {
+    if (gObj.pic.isNotEmpty) {
       art.wImgeTrv = true;
       art.wImage = Image.memory(
         gObj.pic,
@@ -1270,31 +1269,30 @@ class DCL_ArticlesState extends State<DCL_Articles> {
       height: wIcoWidth,
       width: wIcoWidth,
     );
-    ;
     return art.wImage!;
   }
 
   Widget buildImage(BuildContext context, Article_Ebp art) {
-    return new FutureBuilder(
+    return FutureBuilder(
       future: GetImage(art, 80),
       builder: (BuildContext context, AsyncSnapshot<Image> image) {
         if (image.hasData) {
           return image.data!;
         } else {
-          return new Container(width: 30);
+          return Container(width: 30);
         }
       },
     );
   }
 
   Widget buildImageBig(BuildContext context, Article_Ebp art) {
-    return new FutureBuilder(
+    return FutureBuilder(
       future: GetImage(art, 100),
       builder: (BuildContext context, AsyncSnapshot<Image> image) {
         if (image.hasData) {
           return image.data!;
         } else {
-          return new Container(height: 100);
+          return Container(height: 100);
         }
       },
     );
@@ -1316,18 +1314,18 @@ class DCL_ArticlesState extends State<DCL_Articles> {
           Container(
             width: 100,
             height: 20,
-            padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+            padding: const EdgeInsets.fromLTRB(0, 2, 8, 0),
             child: Text(
-              "${art.Article_codeArticle}",
+              art.Article_codeArticle,
               style: gColors.bodyTitle1_N_Gr,
             ),
           ),
           Expanded(
             child: Container(
               height: 20,
-              padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+              padding: const EdgeInsets.fromLTRB(0, 2, 8, 0),
               child: Text(
-                "${art.Article_descriptionCommercialeEnClair}",
+                art.Article_descriptionCommercialeEnClair,
                 style: gColors.bodyTitle1_N_Gr,
               ),
             ),
@@ -1374,7 +1372,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
           Container(
             height: 100,
             color: gColors.white,
-            padding: EdgeInsets.fromLTRB(0, 8, 0, 8),
+            padding: const EdgeInsets.fromLTRB(0, 8, 0, 8),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -1393,9 +1391,9 @@ class DCL_ArticlesState extends State<DCL_Articles> {
                   children: [
                     Container(
                       height: 68,
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       child: Text(
-                        "${art.Article_descriptionCommercialeEnClair}",
+                        art.Article_descriptionCommercialeEnClair,
                         style: gColors.bodyTitle1_B_Gr,
                         maxLines: 3,
                       ),
@@ -1406,15 +1404,15 @@ class DCL_ArticlesState extends State<DCL_Articles> {
                       children: [
                         Container(
                           height: 16,
-                          padding: EdgeInsets.fromLTRB(0, 0, 8, 0),
+                          padding: const EdgeInsets.fromLTRB(0, 0, 8, 0),
                           child: Text(
-                            "${art.Article_codeArticle}",
+                            art.Article_codeArticle,
                             style: gColors.bodyTitle1_N_Gr,
                           ),
                         ),
                         Container(
                           height: 16,
-                          padding: EdgeInsets.fromLTRB(0, 0, 18, 0),
+                          padding: const EdgeInsets.fromLTRB(0, 0, 18, 0),
                           child: Text(
                             "PV HT ${formatter.format(art.Article_PVHT).replaceAll(',', ' ').replaceAll('.', ',')}€",
                             style: gColors.bodyTitle1_N_Gr,
@@ -1461,9 +1459,9 @@ class DCL_ArticlesState extends State<DCL_Articles> {
   @override
   Widget Entete_Btn_Search() {
     double wHeigth = 72;
-    if (wBtnFam)
+    if (wBtnFam) {
       wHeigth = 307;
-    else if (wBtnSearch) wHeigth = 147;
+    } else if (wBtnSearch) wHeigth = 147;
 
     print(" BUILD ListParam_FiltreGrp ${ListParam_FiltreGrp.length}");
     print(" BUILD ListParam_FiltreFam ${ListParam_FiltreFam.length}");
@@ -1473,7 +1471,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
         color: gColors.LinearGradient2,
         height: wHeigth,
         width: 560,
-        padding: EdgeInsets.only(top: 8),
+        padding: const EdgeInsets.only(top: 8),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -1481,7 +1479,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
             Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, crossAxisAlignment: CrossAxisAlignment.center, children: [
               InkWell(
                   child: Container(
-                    padding: EdgeInsets.fromLTRB(20, 0, 6, 0),
+                    padding: const EdgeInsets.fromLTRB(20, 0, 6, 0),
                     child: Stack(children: <Widget>[
                       Image.asset(
                         btnSel_Aff ? "assets/images/DCL_AffSel.png" : "assets/images/DCL_Aff.png",
@@ -1497,7 +1495,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
                   }),
               InkWell(
                   child: Container(
-                    padding: EdgeInsets.fromLTRB(6, 0, 6, 0),
+                    padding: const EdgeInsets.fromLTRB(6, 0, 6, 0),
                     child: SvgPicture.asset(
                       "assets/images/DCL_Rap.svg",
                       height: 40,
@@ -1543,7 +1541,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
               ),
               InkWell(
                   child: Container(
-                    padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                    padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
                     child: SvgPicture.asset(
                       "assets/images/DCL_Fav.svg",
                       height: 40,
@@ -1560,7 +1558,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
               ),
               InkWell(
                   child: Container(
-                    padding: EdgeInsets.fromLTRB(12, 4, 12, 0),
+                    padding: const EdgeInsets.fromLTRB(12, 4, 12, 0),
                     child: SvgPicture.asset(
                       "assets/images/DCL_Filtre.svg",
                       height: 40,
@@ -1578,7 +1576,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
               ),
               InkWell(
                   child: Container(
-                    padding: EdgeInsets.fromLTRB(12, 0, 12, 0),
+                    padding: const EdgeInsets.fromLTRB(12, 0, 12, 0),
                     child: SvgPicture.asset(
                       "assets/images/DCL_Rech.svg",
                       height: 40,
@@ -1593,7 +1591,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
                   }),
             ]),
             if (wBtnFam)
-              Container(
+              SizedBox(
                 width: 560,
                 height: 255,
                 child: Column(
@@ -1642,8 +1640,8 @@ class DCL_ArticlesState extends State<DCL_Articles> {
                     Container(
                       width: 560,
                       height: 45,
-                      margin: EdgeInsets.fromLTRB(30, 10, 30, 0),
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      margin: const EdgeInsets.fromLTRB(30, 10, 30, 0),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(8),
@@ -1657,8 +1655,8 @@ class DCL_ArticlesState extends State<DCL_Articles> {
                     Container(
                       width: 560,
                       height: 45,
-                      margin: EdgeInsets.fromLTRB(30, 20, 30, 0),
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      margin: const EdgeInsets.fromLTRB(30, 20, 30, 0),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(8),
@@ -1672,8 +1670,8 @@ class DCL_ArticlesState extends State<DCL_Articles> {
                     Container(
                       width: 560,
                       height: 45,
-                      margin: EdgeInsets.fromLTRB(30, 20, 30, 0),
-                      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                      margin: const EdgeInsets.fromLTRB(30, 20, 30, 0),
+                      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(8),
@@ -1691,8 +1689,8 @@ class DCL_ArticlesState extends State<DCL_Articles> {
               Container(
                 width: 560,
                 height: 45,
-                margin: EdgeInsets.fromLTRB(30, 20, 30, 0),
-                padding: EdgeInsets.fromLTRB(12, 0, 0, 0),
+                margin: const EdgeInsets.fromLTRB(30, 20, 30, 0),
+                padding: const EdgeInsets.fromLTRB(12, 0, 0, 0),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(8),
@@ -1741,7 +1739,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
     return !affEdtFilter
         ? InkWell(
             child: Padding(
-              padding: EdgeInsets.only(right: 8),
+              padding: const EdgeInsets.only(right: 8),
               child: Image.asset(
                 "assets/images/Btn_Loupe.png",
                 height: icoWidth,
@@ -1752,7 +1750,7 @@ class DCL_ArticlesState extends State<DCL_Articles> {
               affEdtFilter = !affEdtFilter;
               setState(() {});
             })
-        : Container(
+        : SizedBox(
             width: 320,
             child: Row(
               children: [

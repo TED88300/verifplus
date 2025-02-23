@@ -18,22 +18,22 @@ class Parc_Art {
   bool    Art_Sel       = false;
 
 
-  static Parc_ArtInit(int wParcsArt_ParcsId) {
-    String ParcsArt_Lib = "---";
-    int ParcsArt_Id = -1;
-    Parc_Art wParc_Art = new  Parc_Art();
-    wParc_Art.ParcsArtId = -1;
-    wParc_Art.ParcsArt_ParcsId = wParcsArt_ParcsId;
-    wParc_Art.ParcsArt_Type = "P";
-    wParc_Art.ParcsArt_lnk = "";
-    wParc_Art.ParcsArt_Fact = "Fact.";
-    wParc_Art.ParcsArt_Livr = "Livré";
-    wParc_Art.ParcsArt_Id = "${ParcsArt_Id}";
-    wParc_Art.ParcsArt_Lib = ParcsArt_Lib;
-    wParc_Art.ParcsArt_Qte = 0;
-    wParc_Art.Qte = 0;
-    wParc_Art.wImage = Image.asset("assets/images/Audit_det.png", height: 30, width: 30,);
-    return wParc_Art;
+  static Parc_ArtInit(int wparcsartParcsid) {
+    String parcsartLib = "---";
+    int parcsartId = -1;
+    Parc_Art wparcArt = Parc_Art();
+    wparcArt.ParcsArtId = -1;
+    wparcArt.ParcsArt_ParcsId = wparcsartParcsid;
+    wparcArt.ParcsArt_Type = "P";
+    wparcArt.ParcsArt_lnk = "";
+    wparcArt.ParcsArt_Fact = "Fact.";
+    wparcArt.ParcsArt_Livr = "Livré";
+    wparcArt.ParcsArt_Id = "$parcsartId";
+    wparcArt.ParcsArt_Lib = parcsartLib;
+    wparcArt.ParcsArt_Qte = 0;
+    wparcArt.Qte = 0;
+    wparcArt.wImage = Image.asset("assets/images/Audit_det.png", height: 30, width: 30,);
+    return wparcArt;
   }
 
 
@@ -51,27 +51,27 @@ class Parc_Art {
   });
 
 
-  static String getIndex(Parc_Art wParc_Art, int index) {
+  static String getIndex(Parc_Art wparcArt, int index) {
     int wQteLivr = 0;
     int wQteRel = 0;
 
-    String ParcsArt_Livr = wParc_Art.ParcsArt_Livr!.substring(0,1);
-    if (ParcsArt_Livr.compareTo("R") == 0)
+    String parcsartLivr = wparcArt.ParcsArt_Livr!.substring(0,1);
+    if (parcsartLivr.compareTo("R") == 0)
       {
-        wQteRel = wParc_Art.ParcsArt_Qte!;
+        wQteRel = wparcArt.ParcsArt_Qte!;
       }
       else
         {
-          wQteLivr = wParc_Art.ParcsArt_Qte!;
+          wQteLivr = wparcArt.ParcsArt_Qte!;
 
         }
 
 
     switch (index) {
       case 0:
-        return wParc_Art.ParcsArt_Id.toString();
+        return wparcArt.ParcsArt_Id.toString();
       case 1:
-        return wParc_Art.ParcsArt_Lib.toString();
+        return wparcArt.ParcsArt_Lib.toString();
       case 2:
         return wQteLivr.toStringAsFixed(2).toString();
       case 3:
@@ -84,7 +84,7 @@ class Parc_Art {
   }
 
 static  Parc_Art fromMap(Map<String, dynamic> map) {
-    return new Parc_Art(
+    return Parc_Art(
         ParcsArtId: map["ParcsArtId"],
         ParcsArt_ParcsId: map["ParcsArt_ParcsId"],
         ParcsArt_Fact: map["ParcsArt_Fact"],
@@ -100,7 +100,7 @@ static  Parc_Art fromMap(Map<String, dynamic> map) {
   }
 
   static  Parc_Art fromMapQte(Map<String, dynamic> map) {
-    return new Parc_Art(
+    return Parc_Art(
       ParcsArtId: map["ParcsArtId"],
       ParcsArt_ParcsId: map["ParcsArt_ParcsId"],
       ParcsArt_Type: map["ParcsArt_Type"],

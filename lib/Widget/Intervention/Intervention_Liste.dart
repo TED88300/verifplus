@@ -12,6 +12,8 @@ import 'package:verifplus/Widget/Planning/Client_Groupe_Inter_Det.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 
 class Interventions_Liste extends StatefulWidget {
+  const Interventions_Liste({super.key});
+
   @override
   Interventions_ListeState createState() => Interventions_ListeState();
 }
@@ -21,7 +23,7 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
   bool affAll = true;
   bool affEdtFilter = false;
 
-  TextEditingController ctrlFilter = new TextEditingController();
+  TextEditingController ctrlFilter = TextEditingController();
   String filterText = '';
   bool isAll = true;
   int PastilleType = 0;
@@ -39,13 +41,13 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
     List<String> lIntervention = [];
     for (int i = 0; i < Srv_DbTools.ListIntervention.length; i++) {
       Intervention wIntervention = Srv_DbTools.ListIntervention[i];
-      if (lIntervention.indexOf(wIntervention.Intervention_Parcs_Type!) == -1) {
-        lIntervention.add(wIntervention.Intervention_Parcs_Type!);
+      if (!lIntervention.contains(wIntervention.Intervention_Parcs_Type)) {
+        lIntervention.add(wIntervention.Intervention_Parcs_Type);
       }
     }
 
     PastilleType = lIntervention.length;
-    if (lIntervention.length == 0) {
+    if (lIntervention.isEmpty) {
       Srv_DbTools.gSelIntervention = Srv_DbTools.gSelInterventionBase;
     } else {
       int index = lIntervention.indexWhere((element) => element.compareTo(Srv_DbTools.gSelIntervention) == 0);
@@ -67,7 +69,7 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
     } else {
       isAll = false;
       Srv_DbTools.ListIntervention.forEach((element) async {
-        if (element.Intervention_Parcs_Type!.compareTo(Srv_DbTools.gSelIntervention) == 0) {
+        if (element.Intervention_Parcs_Type.compareTo(Srv_DbTools.gSelIntervention) == 0) {
           wListIntervention.add(element);
         }
       });
@@ -77,23 +79,24 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
 
     if (filterText.isEmpty) {
       Srv_DbTools.ListInterventionsearchresult.addAll(wListIntervention);
-    } else
+    } else {
       wListIntervention.forEach((element) async {
         {
-          String Intervention_Type = element.Intervention_Type == null ? "" : element.Intervention_Type!;
-          String Intervention_Parcs_Type = element.Intervention_Parcs_Type == null ? "" : element.Intervention_Parcs_Type!;
-          String Intervention_Status = element.Intervention_Status == null ? "" : element.Intervention_Status!;
+          String interventionType = element.Intervention_Type ?? "";
+          String interventionParcsType = element.Intervention_Parcs_Type ?? "";
+          String interventionStatus = element.Intervention_Status ?? "";
 
           String id = element.InterventionId.toString();
-          if (Intervention_Type.toUpperCase().contains(filterText.toUpperCase()))
+          if (interventionType.toUpperCase().contains(filterText.toUpperCase())) {
             Srv_DbTools.ListInterventionsearchresult.add(element);
-          else if (Intervention_Parcs_Type.toUpperCase().contains(filterText.toUpperCase()))
+          } else if (interventionParcsType.toUpperCase().contains(filterText.toUpperCase()))
             Srv_DbTools.ListInterventionsearchresult.add(element);
-          else if (Intervention_Status.toUpperCase().contains(filterText.toUpperCase()))
+          else if (interventionStatus.toUpperCase().contains(filterText.toUpperCase()))
             Srv_DbTools.ListInterventionsearchresult.add(element);
           else if (id.toUpperCase().contains(filterText.toUpperCase())) Srv_DbTools.ListInterventionsearchresult.add(element);
         }
       });
+    }
 
     print("Srv_DbTools.ListInterventionsearchresult ${Srv_DbTools.ListInterventionsearchresult.length}");
 
@@ -107,6 +110,7 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
     Reload();
   }
 
+  @override
   void initState() {
     initLib();
     super.initState();
@@ -124,14 +128,14 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
 
   @override
   Widget Entete_Btn_Search() {
-    return Container(
+    return SizedBox(
         height: 57,
         child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
           Container(
             width: 8,
           ),
           InkWell(
-              child: Container(
+              child: SizedBox(
                 width: icoWidth + 10,
                 child: Stack(children: <Widget>[
                   Image.asset(
@@ -150,8 +154,8 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
                       child: CircleAvatar(
                         radius: 10,
                         backgroundColor: gColors.tks,
-                        child: Text("${PastilleType}",
-                            style: TextStyle(
+                        child: Text("$PastilleType",
+                            style: const TextStyle(
                               color: Colors.white,
                               fontSize: 12,
                               fontWeight: FontWeight.normal,
@@ -169,7 +173,7 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
           Container(
             width: 8,
           ),
-          Spacer(),
+          const Spacer(),
           EdtFilterWidget(),
         ]));
   }
@@ -180,7 +184,7 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
     return !affEdtFilter
         ? InkWell(
         child: Padding(
-          padding: EdgeInsets.only(right: 8),
+          padding: const EdgeInsets.only(right: 8),
           child: Image.asset(
             "assets/images/Btn_Loupe.png",
             height: icoWidth,
@@ -191,7 +195,7 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
           affEdtFilter = !affEdtFilter;
           setState(() {});
         })
-        : Container(
+        : SizedBox(
         width: 320,
         child: Row(
           children: [
@@ -235,7 +239,7 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
   Widget build(BuildContext context) {
     double LargeurLabel = 140;
 
-    Param_Param wParam_Param = Srv_DbTools.getParam_Param_in_Mem("Type_Organe", Srv_DbTools.gSelIntervention);
+    Param_Param wparamParam = Srv_DbTools.getParam_Param_in_Mem("Type_Organe", Srv_DbTools.gSelIntervention);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -244,7 +248,7 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
       backgroundColor: Colors.white,
 
       body: Padding(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Column(
             children: [
 //              gObj.InterventionTitleWidgetCalc(context, "${Srv_DbTools.gClient.Client_Nom.toUpperCase()}", wTitre2: "${Srv_DbTools.gGroupe.Groupe_Nom}", wTitre3:"${Srv_DbTools.gSite.Site_Nom}", wTitre4:"${Srv_DbTools.gZone.Zone_Nom}"),
@@ -258,16 +262,16 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
           ? Container()
           :
       Container(
-        padding: EdgeInsets.fromLTRB(0, 0, 50, 60),
-        child: new FloatingActionButton(
+        padding: const EdgeInsets.fromLTRB(0, 0, 50, 60),
+        child: FloatingActionButton(
             elevation: 0.0,
-            child: new Icon(Icons.add),
             backgroundColor: gColors.secondary,
             onPressed: () async {
               await Select_Interventions_Add.Dialogs_Add(context, true);
               Reload();
 
-              }
+              },
+            child: const Icon(Icons.add)
             ),
       ),
     );
@@ -291,7 +295,7 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
               Expanded(
                   flex: 5,
                   child: Container(
-                      padding: EdgeInsets.only(left: 5),
+                      padding: const EdgeInsets.only(left: 5),
                       child: Text(
                         "ID",
                         textAlign: TextAlign.center,
@@ -336,10 +340,10 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
           ),
         ),
         gColors.wLigne(),
-        SizedBox(height: 5.0),
+        const SizedBox(height: 5.0),
         Expanded(
           child: ListView.builder(
-            padding: EdgeInsets.fromLTRB(0, 0, 5, 0),
+            padding: const EdgeInsets.fromLTRB(0, 0, 5, 0),
             itemCount: Srv_DbTools.ListInterventionsearchresult.length,
             itemBuilder: (BuildContext context, int index) {
               Intervention intervention = Srv_DbTools.ListInterventionsearchresult[index];
@@ -349,11 +353,12 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
               double rowh = 24;
 
               String wNom = "${intervention.Client_Nom}/${intervention.Site_Nom}/${intervention.Groupe_Nom}/${intervention.Zone_Nom}";
-              if (intervention.Client_Nom == intervention.Site_Nom && intervention.Client_Nom == intervention.Groupe_Nom && intervention.Client_Nom == intervention.Zone_Nom)
+              if (intervention.Client_Nom == intervention.Site_Nom && intervention.Client_Nom == intervention.Groupe_Nom && intervention.Client_Nom == intervention.Zone_Nom) {
                 wNom = "${intervention.Client_Nom}";
+              }
 
               return Column(children: [
-                new GestureDetector(
+                GestureDetector(
                     onTap: () async {
                       await HapticFeedback.vibrate();
                       Srv_DbTools.gIntervention = intervention;
@@ -361,7 +366,7 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
                       print("Selection");
 
                       await HapticFeedback.vibrate();
-                      await Navigator.push(context, MaterialPageRoute(builder: (context) => Client_Groupe_Inter_Det()));
+                      await Navigator.push(context, MaterialPageRoute(builder: (context) => const Client_Groupe_Inter_Det()));
                       Reload();
                     },
                     child: Container(
@@ -373,7 +378,7 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
                           Expanded(
                               flex: 10,
                               child:                           Container(
-                                padding: EdgeInsets.only(left: 25, bottom: 2),
+                                padding: const EdgeInsets.only(left: 25, bottom: 2),
                                 child: Text(
                                   "◉ --",
                                   maxLines: 1,
@@ -382,7 +387,7 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
                               ) ):
                           Expanded(
                               flex: 5,
-                              child: Container(
+                              child: SizedBox(
                                   height: rowh,
                                   child: Text(
                                     "${intervention.InterventionId}",
@@ -401,10 +406,10 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
                                   children: <Widget>[
                                     gColors.gCircle(wColor),
                                     Container(
-                                        padding: EdgeInsets.only(left : 5 , right: 5),
+                                        padding: const EdgeInsets.only(left : 5 , right: 5),
                                         height: rowh,
                                         child: Text(
-                                          "${intervention.Intervention_Status}",
+                                          intervention.Intervention_Status,
                                           textAlign: TextAlign.right,
                                           style: gColors.bodySaisie_B_B,
                                         ))
@@ -416,10 +421,10 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
 
                           Expanded(
                               flex: 30,
-                              child: Container(
+                              child: SizedBox(
                                 height: rowh,
                                 child: Text(
-                                  "${wNom}",
+                                  wNom,
                                   maxLines: 1,
                                   style: gColors.bodySaisie_B_B,
                                 ),
@@ -428,7 +433,7 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
 
                           Expanded(
                               flex: 8,
-                              child: Container(
+                              child: SizedBox(
                                 height: rowh,
                                 child: Text(
                                   "${intervention.Intervention_Type} / ${intervention.Intervention_Parcs_Type}",
@@ -439,10 +444,10 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
                           Expanded(
                               flex: 7,
                               child: Container(
-                                  padding: EdgeInsets.only(left: 5),
+                                  padding: const EdgeInsets.only(left: 5),
                                   height: rowh,
                                   child: Text(
-                                    "${intervention.Intervention_Date}",
+                                    intervention.Intervention_Date,
                                     maxLines: 1,
                                     textAlign: TextAlign.center,
                                     style: gColors.bodySaisie_B_B,
@@ -457,7 +462,7 @@ class Interventions_ListeState extends State<Interventions_Liste> with SingleTic
             },
           ),
         ),
-        SizedBox(height: 45.0),
+        const SizedBox(height: 45.0),
       ],
     );
 

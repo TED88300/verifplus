@@ -244,8 +244,8 @@ class Intervention {
 
     String wCnt = "0";
     if (json['Cnt'] != null) wCnt = json['Cnt'];
-    String wIntervention_Sat = "0";
-    if (json['Intervention_Sat'] != null) wIntervention_Sat = json['Intervention_Sat'];
+    String winterventionSat = "0";
+    if (json['Intervention_Sat'] != null) winterventionSat = json['Intervention_Sat'];
 
     Uint8List wUint8ListTech = Uint8List.fromList([]);
     if (json['Intervention_Signature_Tech'].toString().isNotEmpty) {

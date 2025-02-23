@@ -1,14 +1,11 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:async';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie_Param.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
-import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Art.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 
@@ -17,12 +14,12 @@ class Client_Groupe_Parc_Inter_Article_View_Dialog {
 
   static Future<void> Dialogs_Saisie(
     BuildContext context,
-    Parc_Art parc_Art,
+    Parc_Art parcArt,
   ) async {
     await showDialog(
       context: context,
       builder: (BuildContext context) => Client_Groupe_Parc_Inter_Article_ViewDialog(
-        parc_Art: parc_Art,
+        parc_Art: parcArt,
       ),
     );
   }
@@ -53,7 +50,7 @@ class Client_Groupe_Parc_Inter_Article_ViewDialogState extends State<Client_Grou
   final qteController = TextEditingController();
   Image? wImage;
 
-  Size size = Size(0, 0);
+  Size size = const Size(0, 0);
 
   List<Param_Saisie_Param> ListParam_Saisie_ParamFact = [];
   List<Param_Saisie_Param> ListParam_Saisie_ParamLivr = [];
@@ -66,15 +63,15 @@ class Client_Groupe_Parc_Inter_Article_ViewDialogState extends State<Client_Grou
 
   @override
   void initLib() async {
-    Uint8List blankBytes = Base64Codec().decode("R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
+    Uint8List blankBytes = const Base64Codec().decode("R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
     wImage = Image.memory(
       blankBytes,
       height: 1,
     );
     await Srv_DbTools.getArticlesImg_Ebp( widget.parc_Art.ParcsArt_Id!);
     gObj.pic = base64Decode(Srv_DbTools.gArticlesImg_Ebp.ArticlesImg_Image);
-    if (gObj.pic.length > 0) {
-      wImage = await Image.memory(
+    if (gObj.pic.isNotEmpty) {
+      wImage = Image.memory(
         gObj.pic,
       );
     }
@@ -103,15 +100,15 @@ class Client_Groupe_Parc_Inter_Article_ViewDialogState extends State<Client_Grou
     double wDialogHeight = 240;
 
 
-    print("wDialogHeight ${wDialogHeight}");
+    print("wDialogHeight $wDialogHeight");
 
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
       surfaceTintColor: Colors.white,
       backgroundColor: gColors.white,
       title: Container(
           color: gColors.white,
-          padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
+          padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
           child: Column(
             children: [
               Text(
@@ -122,10 +119,10 @@ class Client_Groupe_Parc_Inter_Article_ViewDialogState extends State<Client_Grou
               Container(
                 height: 8,
               ),
-              Container(
-                child: wImage!,
+              SizedBox(
                 height: IcoWidth,
                 width: IcoWidth,
+                child: wImage!,
               ),
               Container(
                 height: 8,
@@ -140,7 +137,7 @@ class Client_Groupe_Parc_Inter_Article_ViewDialogState extends State<Client_Grou
               ),
             ],
           )),
-      contentPadding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 25.0),
+      contentPadding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 25.0),
       content: Container(
           color: gColors.white,
           height: wDialogHeight,
@@ -164,19 +161,19 @@ class Client_Groupe_Parc_Inter_Article_ViewDialogState extends State<Client_Grou
                           textAlign: TextAlign.center,
                           style: gColors.bodyTitle1_B_Sr,
                         ),
-                        SizedBox(height: 12,),
+                        const SizedBox(height: 12,),
                         Text(
                           "Commandés ${widget.parc_Art.ParcsArt_Fact != 'Devis' ? widget.parc_Art.ParcsArt_Qte : 0}",
                           textAlign: TextAlign.center,
                           style: gColors.bodyTitle1_B_G_20,
                         ),
-                        SizedBox(height: 12,),
+                        const SizedBox(height: 12,),
                         Text(
                           "Livrés ${widget.parc_Art.ParcsArt_Livr == 'Livré' ? widget.parc_Art.ParcsArt_Qte : 0}",
                           textAlign: TextAlign.center,
                           style: gColors.bodyTitle1_B_G_20,
                         ),
-                        SizedBox(height: 12,),
+                        const SizedBox(height: 12,),
                         Text(
                           "Reliquats ${widget.parc_Art.ParcsArt_Livr == 'Reliquat' ? widget.parc_Art.ParcsArt_Qte : 0}",
                           textAlign: TextAlign.center,
@@ -211,7 +208,7 @@ class Client_Groupe_Parc_Inter_Article_ViewDialogState extends State<Client_Grou
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
 
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
 

@@ -94,8 +94,8 @@ class SvgImage extends Widget {
   void paint(Context context) {
     super.paint(context);
 
-    final _alignment = Alignment(alignment.x, -alignment.y);
-    final sourceRect = _alignment.inscribe(sizes.source!, _svgParser.viewBox);
+    final alignment = Alignment(this.alignment.x, -this.alignment.y);
+    final sourceRect = alignment.inscribe(sizes.source!, _svgParser.viewBox);
     final sx = sizes.destination!.x / sizes.source!.x;
     final sy = sizes.destination!.y / sizes.source!.y;
     final dx = sourceRect.x * sx;

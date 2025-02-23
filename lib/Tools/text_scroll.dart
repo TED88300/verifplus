@@ -3,7 +3,6 @@ library text_scroll;
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:verifplus/Tools/DbTools/DbTools.dart';
 
 /// TextScroll widget automatically scrolls provided [text] according
 /// to custom settings, in order to achieve 'marquee' text effect.
@@ -287,11 +286,9 @@ class _TextScrollState extends State<TextScroll> {
   void initState() {
     super.initState();
 
-    final WidgetsBinding? binding = WidgetsBinding.instance;
-    if (binding != null) {
-      binding.addPostFrameCallback(_initScroller);
+    final WidgetsBinding binding = WidgetsBinding.instance;
+    binding.addPostFrameCallback(_initScroller);
     }
-  }
 
   @override
   void didUpdateWidget(covariant TextScroll oldWidget) {
@@ -326,7 +323,7 @@ class _TextScrollState extends State<TextScroll> {
       textDirection: widget.textDirection,
       child: SingleChildScrollView(
           controller: _scrollController,
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           scrollDirection: Axis.horizontal,
           child: ConstrainedBox(
             constraints: BoxConstraints(

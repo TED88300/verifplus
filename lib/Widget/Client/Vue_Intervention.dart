@@ -24,16 +24,17 @@ class Intervention_VueState extends State<Intervention_Vue> {
   void initLib() async {
 
     for (int j = 0; j < Srv_DbTools.ListParam_Interv_Base.length; j++) {
-      Param_Saisie wParam_Saisie = Srv_DbTools.ListParam_Interv_Base[j];
+      Param_Saisie wparamSaisie = Srv_DbTools.ListParam_Interv_Base[j];
     }
 
     setState(() {});
   }
 
-  Future Reload(String Param_Saisie_ID) async {
+  Future Reload(String paramSaisieId) async {
     setState(() {});
   }
 
+  @override
   void initState() {
     initLib();
     super.initState();
@@ -100,12 +101,12 @@ class Intervention_VueState extends State<Intervention_Vue> {
       appBar: appBar(),
 
       body: Container(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              gObj.InterventionTitleWidgetCalc(context, "${Srv_DbTools.gClient.Client_Nom.toUpperCase()}", wTitre2: "${Srv_DbTools.gGroupe.Groupe_Nom}", wTitre3:"${Srv_DbTools.gSite.Site_Nom}", wTitre4:"${Srv_DbTools.gZone.Zone_Nom}"),
+              gObj.InterventionTitleWidgetCalc(context, Srv_DbTools.gClient.Client_Nom.toUpperCase(), wTitre2: Srv_DbTools.gGroupe.Groupe_Nom, wTitre3:Srv_DbTools.gSite.Site_Nom, wTitre4:Srv_DbTools.gZone.Zone_Nom),
               Container(
                 height: 1,
                 color: gColors.greyDark,
@@ -131,20 +132,21 @@ class Intervention_VueState extends State<Intervention_Vue> {
     Srv_DbTools.ListParam_Interv_Base.sort(Srv_DbTools.affSortComparison);
     for (int i = 0; i < Srv_DbTools.ListParam_Interv_Base.length; i++) {
       Param_Saisie element = Srv_DbTools.ListParam_Interv_Base[i];
-      if (element.Param_Saisie_Affichage.compareTo("COL") == 0)
+      if (element.Param_Saisie_Affichage.compareTo("COL") == 0) {
         RowSaisies.add(RowSaisie(element, LargeurCol, LargeurCol2, H2));
+      }
     }
 
     return
       //Expanded(child:
-      Container(
+      SizedBox(
           width: gColors.MediaQuerysizewidth,
 //          height: 400,
           child: Container(
-              padding: EdgeInsets.fromLTRB(0, 1, 0, 0),
+              padding: const EdgeInsets.fromLTRB(0, 1, 0, 0),
               color: gColors.greyDark,
               child: Container(
-                padding: EdgeInsets.fromLTRB(0, 10, 0, 10),
+                padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
                 color: gColors.white,
                 child: ListView.separated(
                   shrinkWrap: true,
@@ -161,43 +163,43 @@ class Intervention_VueState extends State<Intervention_Vue> {
       );
   }
 
-  Widget RowSaisie(Param_Saisie param_Saisie, double LargeurCol, double LargeurCol2, double H2) {
+  Widget RowSaisie(Param_Saisie paramSaisie, double LargeurCol, double LargeurCol2, double H2) {
 
     double IcoWidth = 30;
 
     String wStr = "";
-    print("param_Saisie.Param_Saisie_ID ${param_Saisie.Param_Saisie_ID}");
+    print("param_Saisie.Param_Saisie_ID ${paramSaisie.Param_Saisie_ID}");
 
 //    if (wParc_Desc.ParcsDesc_Lib!.compareTo("---") == 0)
         {
-      switch (param_Saisie.Param_Saisie_ID) {
+      switch (paramSaisie.Param_Saisie_ID) {
         case "Contrat":
-          wStr = Srv_DbTools.gIntervention.Intervention_Contrat!;
+          wStr = Srv_DbTools.gIntervention.Intervention_Contrat;
           break;
         case "TypeContrat":
-          wStr = Srv_DbTools.gIntervention.Intervention_TypeContrat!;
+          wStr = Srv_DbTools.gIntervention.Intervention_TypeContrat;
           break;
         case "Duree":
-          wStr = Srv_DbTools.gIntervention.Intervention_Duree!;
+          wStr = Srv_DbTools.gIntervention.Intervention_Duree;
           break;
         case "Organes":
-          wStr = Srv_DbTools.gIntervention.Intervention_Organes!;
+          wStr = Srv_DbTools.gIntervention.Intervention_Organes;
           break;
         case "RT":
-          wStr = Srv_DbTools.gIntervention.Intervention_RT!;
+          wStr = Srv_DbTools.gIntervention.Intervention_RT;
           break;
         case "APSAD":
-          wStr = Srv_DbTools.gIntervention.Intervention_APSAD!;
+          wStr = Srv_DbTools.gIntervention.Intervention_APSAD;
           break;
       }
     }
 
-    if (param_Saisie.Param_Saisie_Icon.compareTo("") == 0) LargeurCol += 40;
+    if (paramSaisie.Param_Saisie_Icon.compareTo("") == 0) LargeurCol += 40;
     return InkWell(
       onTap: () async {
         await HapticFeedback.vibrate();
-            param_Saisie.Param_Saisie_Value = wStr;
-            await Vue_Intervention_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, param_Saisie);
+            paramSaisie.Param_Saisie_Value = wStr;
+            await Vue_Intervention_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, paramSaisie);
           // await UpdateChaine();
         setState(() {});
       },
@@ -206,16 +208,16 @@ class Intervention_VueState extends State<Intervention_Vue> {
           Container(
             width: 10,
           ),
-          param_Saisie.Param_Saisie_Icon.compareTo("") == 0
+          paramSaisie.Param_Saisie_Icon.compareTo("") == 0
               ? Container(
             width: 0,
           )
               : Image.asset(
-            "assets/images/${param_Saisie.Param_Saisie_Icon}.png",
+            "assets/images/${paramSaisie.Param_Saisie_Icon}.png",
             height: IcoWidth,
             width: IcoWidth,
           ),
-          param_Saisie.Param_Saisie_Icon.compareTo("") == 0
+          paramSaisie.Param_Saisie_Icon.compareTo("") == 0
               ? Container()
               : Container(
             width: 10,
@@ -223,21 +225,21 @@ class Intervention_VueState extends State<Intervention_Vue> {
           Container(
             width: LargeurCol,
             height: 20,
-            padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+            padding: const EdgeInsets.fromLTRB(0, 2, 8, 0),
             child: Text(
-              "${param_Saisie.Param_Saisie_Label}",
+              paramSaisie.Param_Saisie_Label,
               style: gColors.bodySaisie_B_B,
             ),
           ),
-          BtnCard("${wStr}", LargeurCol2),
+          BtnCard(wStr, LargeurCol2),
         ],
       ),
     );
   }
 
   Widget BtnCard(String? wText, double LargeurCol2) {
-    return new Container(
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+    return Container(
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       width: LargeurCol2,
       height: 31,
       child: Card(

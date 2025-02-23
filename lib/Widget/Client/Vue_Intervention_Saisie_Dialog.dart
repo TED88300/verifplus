@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:barcode_scan2/barcode_scan2.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -16,14 +15,14 @@ class Vue_Intervention_Saisie_Dialog {
   static Future<void> Dialogs_Saisie(
     BuildContext context,
     VoidCallback onSaisie,
-    Param_Saisie param_Saisie,
+    Param_Saisie paramSaisie,
 
   ) async {
     await showDialog(
       context: context,
       builder: (BuildContext context) => Vue_Intervention_SaisieDialog(
         onSaisie: onSaisie,
-        param_Saisie: param_Saisie,
+        param_Saisie: paramSaisie,
 
       ),
     );
@@ -157,21 +156,21 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
     }
 
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
       surfaceTintColor: Colors.white,
       backgroundColor: gColors.white,
       title: Container(
           color: gColors.white,
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
           child: Column(
             children: [
               Text(
-                "${widget.param_Saisie.Param_Saisie_Label}",
+                widget.param_Saisie.Param_Saisie_Label,
                 textAlign: TextAlign.center,
                 style: gColors.bodyTitle1_B_G_20,
               ),
               Text(
-                "${widget.param_Saisie.Param_Saisie_Aide}",
+                widget.param_Saisie.Param_Saisie_Aide,
                 textAlign: TextAlign.center,
                 style: gColors.bodyTitle1_N_Gr,
               ),
@@ -182,7 +181,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
               
             ],
           )),
-     contentPadding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 25.0),
+     contentPadding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 25.0),
 
       content: SingleChildScrollView(
         child: Container(
@@ -233,7 +232,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
           widget.param_Saisie.Param_Saisie_ID.compareTo("DESC") != 0
               ? Container()
               : Container(
-                  padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
                   child: ElevatedButton(
                     onPressed: () async {
                       await HapticFeedback.vibrate();
@@ -244,13 +243,13 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
                     child: Text('Articles', style: gColors.bodyTitle1_N_W),
                   ),
                 ),
-          Spacer(),
+          const Spacer(),
           Text(widget.param_Saisie.Param_Saisie_Controle),
           Container(
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
               widget.param_Saisie.Param_Saisie_Value = initValue;
@@ -268,7 +267,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
 
@@ -299,7 +298,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
     List<Widget> BtnCards = [];
     int nbBtn = 0;
     wAide = "Aide : ";
-    Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
+    for (var element in Srv_DbTools.ListParam_Saisie_Param) {
       if (widget.param_Saisie.Param_Saisie_Value.compareTo("---") == 0) {
         if (element.Param_Saisie_Param_Default) {
           print(" C Param_Saisie_Param_Default");
@@ -323,7 +322,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
         Rows.add(wRow);
         BtnCards = [];
       }
-    });
+    }
 
     if (nbBtn > 0) {
       nbBtn = 0;
@@ -368,7 +367,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
     ]));
   }
 
-  Widget BtnCard(String wText, String wId, bool wSel, int Param_Saisie_ParamId) {
+  Widget BtnCard(String wText, String wId, bool wSel, int paramSaisieParamid) {
     Color BgColor = gColors.white;
     Color TxtColor = gColors.black;
 
@@ -377,13 +376,13 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
       TxtColor = gColors.white;
     }
 
-    return new Container(
+    return SizedBox(
       width: 160,
       height: 60,
       child: Card(
         color: BgColor,
         elevation: 0.2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0), side: BorderSide(width: 1, color: Colors.grey)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0), side: const BorderSide(width: 1, color: Colors.grey)),
         child: InkWell(
           onTap: () async {
             await HapticFeedback.vibrate();
@@ -429,7 +428,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
     wAide = "Aide : ";
     wIco = Container();
 
-    Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
+    for (var element in Srv_DbTools.ListParam_Saisie_Param) {
       if (widget.param_Saisie.Param_Saisie_Value.compareTo("---") == 0) {
         if (element.Param_Saisie_Param_Default) {
           print(" D Param_Saisie_Param_Default");
@@ -470,7 +469,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
         Rows.add(wRow);
         BtnCards = [];
       }
-    });
+    }
 
     if (nbBtn > 0) {
       nbBtn = 0;
@@ -526,13 +525,13 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
       BgColor = gColors.primaryGreen;
       TxtColor = gColors.white;
     }
-    return new Container(
+    return SizedBox(
       width: 160,
       height: 60,
       child: Card(
         color: BgColor,
         elevation: 0.2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0), side: BorderSide(width: 1, color: Colors.grey)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0), side: const BorderSide(width: 1, color: Colors.grey)),
         child: InkWell(
           onTap: () async {
             await HapticFeedback.vibrate();
@@ -572,7 +571,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
     List<Widget> BtnCards = [];
     int nbBtn = 0;
     wAide = "Aide : ";
-    Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
+    for (var element in Srv_DbTools.ListParam_Saisie_Param) {
 //      print("element.Param_Saisie_Param_Label A ${element.Param_Saisie_Param_Label} ${widget.param_Saisie.Param_Saisie_Value}");
 
       if (widget.param_Saisie.Param_Saisie_Value.compareTo("---") == 0) {
@@ -597,7 +596,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
         Rows.add(wRow);
         BtnCards = [];
       }
-    });
+    }
 
     if (nbBtn > 0) {
       nbBtn = 0;
@@ -644,16 +643,16 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
             ),
           ),
         ),
-        Container(
+        SizedBox(
           height: 50,
           width: 450,
           child: Padding(
-              padding: EdgeInsets.fromLTRB(5.0, 10.0, 0.0, 10.0),
+              padding: const EdgeInsets.fromLTRB(5.0, 10.0, 0.0, 10.0),
               child: Focus(
                 child: TextFormField(
                   onChanged: (value) async {
                     await HapticFeedback.vibrate();
-                    widget.param_Saisie.Param_Saisie_Value = "${value}";
+                    widget.param_Saisie.Param_Saisie_Value = value;
                   },
                   controller: tec_Saisie,
                   decoration: InputDecoration(
@@ -690,13 +689,13 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
     List<String> ListMonth = DateFormat.EEEE('fr').dateSymbols.MONTHS;
     print(ListMonth);
 
-    int _selectedMonth = 0;
+    int selectedMonth = 0;
 
     int currentYear = DateTime.now().year;
     int startingYear = 1990;
     List ListYear = List.generate((currentYear - startingYear) + 1, (index) => startingYear + index);
 
-    int _selectedYear = 0;
+    int selectedYear = 0;
 
     int wM = 0;
     int wY = ListYear.length - 1;
@@ -713,18 +712,18 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
         }
       } else {
         wY = DateTime.now().year;
-        widget.param_Saisie.Param_Saisie_Value = "1-${wY}";
+        widget.param_Saisie.Param_Saisie_Value = "1-$wY";
       }
     }
 
     wYi = wY - 1990;
 
-    print("wY ${wM} ${wY}");
+    print("wY $wM $wY");
 
-    _selectedMonth = wM + 1;
-    _selectedYear = wY;
+    selectedMonth = wM + 1;
+    selectedYear = wY;
 
-    return Container(
+    return SizedBox(
         height: 300,
         width: 450,
         child: Column(
@@ -732,7 +731,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
+                SizedBox(
                   height: 210,
                   width: 160,
                   child: CupertinoPicker(
@@ -743,9 +742,9 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
                     itemExtent: 32,
                     onSelectedItemChanged: (int selectedItem) async {
                       await HapticFeedback.vibrate();
-                      _selectedMonth = selectedItem + 1;
-                      print("_selectedMonth ${_selectedMonth}");
-                      widget.param_Saisie.Param_Saisie_Value = "${_selectedMonth}-${_selectedYear}";
+                      selectedMonth = selectedItem + 1;
+                      print("_selectedMonth $selectedMonth");
+                      widget.param_Saisie.Param_Saisie_Value = "$selectedMonth-$selectedYear";
                       setState(() {});
                     },
                     children: List<Widget>.generate(ListMonth.length, (int index) {
@@ -758,7 +757,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
                     }),
                   ),
                 ),
-                Container(
+                SizedBox(
                   height: 210,
                   width: 160,
                   child: CupertinoPicker(
@@ -770,9 +769,9 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
                     onSelectedItemChanged: (int selectedItem) async {
                       await HapticFeedback.vibrate();
 
-                      _selectedYear = selectedItem + 1990;
-                      print("_selectedYear ${_selectedYear}");
-                      widget.param_Saisie.Param_Saisie_Value = "${_selectedMonth}-${_selectedYear}";
+                      selectedYear = selectedItem + 1990;
+                      print("_selectedYear $selectedYear");
+                      widget.param_Saisie.Param_Saisie_Value = "$selectedMonth-$selectedYear";
                       setState(() {});
                     },
                     children: List<Widget>.generate(ListYear.length, (int index) {
@@ -804,10 +803,10 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
       double ii = 27.0 * (index);
 
       scrollController.animateTo(ii, //scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           curve: Curves.elasticOut);
     } else {
-      Timer(Duration(milliseconds: 400), () => _scrollToBottom(index));
+      Timer(const Duration(milliseconds: 400), () => _scrollToBottom(index));
     }
   }
 
@@ -816,19 +815,20 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
     print("tec_Saisie.text ${tec_Saisie.text}");
 
     Srv_DbTools.ListParam_Saisie_Paramsearchresult.clear();
-    if (tec_Search.text.isEmpty)
+    if (tec_Search.text.isEmpty) {
       Srv_DbTools.ListParam_Saisie_Paramsearchresult.addAll(Srv_DbTools.ListParam_Saisie_Param);
-    else
-      Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
+    } else {
+      for (var element in Srv_DbTools.ListParam_Saisie_Param) {
         if (element.Param_Saisie_Param_Label.toLowerCase().contains(tec_Search.text.toLowerCase())) {
           Srv_DbTools.ListParam_Saisie_Paramsearchresult.add(element);
         }
-      });
+      }
+    }
 
     double index = 0;
     for (int i = 0; i < Srv_DbTools.ListParam_Saisie_Paramsearchresult.length; i++) {
       if (Srv_DbTools.ListParam_Saisie_Paramsearchresult[i].Param_Saisie_Param_Label.compareTo(widget.param_Saisie.Param_Saisie_Value) == 0) {
-        index = double.parse("${i}");
+        index = double.parse("$i");
         break;
       }
     }
@@ -845,7 +845,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
             border: Border.all(
               color: Colors.grey,
             ),
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(12.0),
             ),
           ),
@@ -873,12 +873,12 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
                               border: Border.all(
                                 color: (item.Param_Saisie_Param_Label.compareTo(widget.param_Saisie.Param_Saisie_Value) == 0) ? gColors.primaryGreen : Colors.transparent,
                               ),
-                              borderRadius: BorderRadius.all(
+                              borderRadius: const BorderRadius.all(
                                 Radius.circular(12.0),
                               ),
                             ),
 //              margin: EdgeInsets.fromLTRB(0, 2, 0, 2),
-                            padding: EdgeInsets.fromLTRB(10, 15, 10, 5), // TED
+                            padding: const EdgeInsets.fromLTRB(10, 15, 10, 5), // TED
                             height: 45,
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.start,
@@ -899,7 +899,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
             ],
           ),
         ),
-        Container(
+        SizedBox(
           height: 40,
           width: 450,
           child: Padding(
@@ -913,7 +913,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
               child: TextFormField(
                 onChanged: (value) {
                   setState(() {
-                    print("value ${value}");
+                    print("value $value");
                   });
                 },
                 controller: tec_Search,
@@ -957,19 +957,20 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
 
     Srv_DbTools.ListParam_Saisie_Paramsearchresult.clear();
 
-    if (tec_Search.text.isEmpty)
+    if (tec_Search.text.isEmpty) {
       Srv_DbTools.ListParam_Saisie_Paramsearchresult.addAll(Srv_DbTools.ListParam_Saisie_Param);
-    else
-      Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
+    } else {
+      for (var element in Srv_DbTools.ListParam_Saisie_Param) {
         if (element.Param_Saisie_Param_Label.toLowerCase().contains(tec_Search.text.toLowerCase())) {
           Srv_DbTools.ListParam_Saisie_Paramsearchresult.add(element);
         }
-      });
+      }
+    }
 
     double index = 0;
     for (int i = 0; i < Srv_DbTools.ListParam_Saisie_Paramsearchresult.length; i++) {
       if (Srv_DbTools.ListParam_Saisie_Paramsearchresult[i].Param_Saisie_Param_Label.compareTo(widget.param_Saisie.Param_Saisie_Value) == 0) {
-        index = double.parse("${i}");
+        index = double.parse("$i");
         break;
       }
     }
@@ -981,7 +982,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
 
     return Column(
       children: [
-        Container(
+        SizedBox(
           height: 40,
           width: 450,
           child: Padding(
@@ -994,7 +995,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
             child: TextFormField(
               onChanged: (value) {
                 setState(() {
-                  print("value ${value}");
+                  print("value $value");
                 });
               },
               controller: tec_Search,
@@ -1023,7 +1024,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
             border: Border.all(
               color: Colors.grey,
             ),
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(12.0),
             ),
           ),
@@ -1044,7 +1045,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
                   },
                   child: Container(
 //              margin: EdgeInsets.fromLTRB(0, 2, 0, 2),
-                      padding: EdgeInsets.fromLTRB(10, 5, 10, 5), // TED
+                      padding: const EdgeInsets.fromLTRB(10, 5, 10, 5), // TED
                       color: (item.Param_Saisie_Param_Label.compareTo(widget.param_Saisie.Param_Saisie_Value) == 0) ? gColors.primaryGreen : Colors.transparent,
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
@@ -1060,7 +1061,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
             },
           ),
         ),
-        Container(
+        SizedBox(
           height: 50,
           width: 450,
           child: Padding(
@@ -1074,7 +1075,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
                 child: TextFormField(
                   onChanged: (value) async {
                     await HapticFeedback.vibrate();
-                    widget.param_Saisie.Param_Saisie_Value = "${value}";
+                    widget.param_Saisie.Param_Saisie_Value = value;
                   },
                   controller: tec_Saisie,
                   decoration: InputDecoration(
@@ -1120,7 +1121,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
             border: Border.all(
               color: Colors.grey,
             ),
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(12.0),
             ),
           ),
@@ -1129,8 +1130,8 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
             controller: txtController,
             autofocus: false,
             decoration: InputDecoration(
-              hintText: '${widget.param_Saisie.Param_Saisie_Label}',
-              contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+              hintText: widget.param_Saisie.Param_Saisie_Label,
+              contentPadding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
             ),
             onChanged: (value) async {
               await HapticFeedback.vibrate();
@@ -1154,7 +1155,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
             border: Border.all(
               color: Colors.grey,
             ),
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(12.0),
             ),
           ),
@@ -1163,8 +1164,8 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
             controller: txtController,
             autofocus: false,
             decoration: InputDecoration(
-              hintText: '${widget.param_Saisie.Param_Saisie_Label}',
-              contentPadding: EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
+              hintText: widget.param_Saisie.Param_Saisie_Label,
+              contentPadding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 10.0),
             ),
             onChanged: (value) async {
               await HapticFeedback.vibrate();
@@ -1173,7 +1174,7 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
           ),
         ),
         Container(
-          padding: EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
+          padding: const EdgeInsets.fromLTRB(0.0, 10.0, 0.0, 10.0),
           height: 50,
           width: 450,
           child: ElevatedButton(
@@ -1203,6 +1204,6 @@ class Vue_Intervention_SaisieDialogState extends State<Vue_Intervention_SaisieDi
 
   
   Widget Txt(BuildContext context) {
-    return Text("Txt");
+    return const Text("Txt");
   }
 }

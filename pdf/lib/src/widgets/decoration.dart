@@ -47,10 +47,10 @@ class DecorationImage extends DecorationGraphic {
 
   @override
   void paint(Context context, PdfRect box) {
-    final _image = image.resolve(context, box.size, dpi: dpi);
+    final image = this.image.resolve(context, box.size, dpi: dpi);
 
     final imageSize =
-        PdfPoint(_image.width.toDouble(), _image.height.toDouble());
+        PdfPoint(image.width.toDouble(), image.height.toDouble());
     final sizes = applyBoxFit(fit, imageSize, box.size);
     final scaleX = sizes.destination!.x / sizes.source!.x;
     final scaleY = sizes.destination!.y / sizes.source!.y;
@@ -67,7 +67,7 @@ class DecorationImage extends DecorationGraphic {
       ..drawBox(box)
       ..clipPath()
       ..setTransform(mat)
-      ..drawImage(_image, 0, 0, imageSize.x, imageSize.y)
+      ..drawImage(image, 0, 0, imageSize.x, imageSize.y)
       ..restoreContext();
   }
 }
@@ -204,9 +204,9 @@ class RadialGradient extends Gradient {
 
     assert(stops == null || stops!.length == colors.length);
 
-    final _focal = focal ?? center;
+    final focal = this.focal ?? center;
 
-    final _radius = math.min(box.width, box.height);
+    final radius = math.min(box.width, box.height);
     final textDirection = Directionality.of(context);
     context.canvas
       ..saveContext()
@@ -221,10 +221,10 @@ class RadialGradient extends Gradient {
             colors,
             stops,
           ),
-          start: _focal.resolve(textDirection).withinRect(box),
+          start: focal.resolve(textDirection).withinRect(box),
           end: center.resolve(textDirection).withinRect(box),
-          radius0: focalRadius * _radius,
-          radius1: radius * _radius,
+          radius0: focalRadius * radius,
+          radius1: radius * radius,
           extendStart: true,
           extendEnd: true,
         ),

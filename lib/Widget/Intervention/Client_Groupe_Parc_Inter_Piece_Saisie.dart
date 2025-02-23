@@ -1,7 +1,5 @@
 import 'dart:async';
 import 'dart:convert';
-import 'dart:async';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
@@ -19,14 +17,14 @@ class Client_Groupe_Parc_Inter_Piece_Saisie_Dialog {
     BuildContext context,
     VoidCallback onSaisie,
       VoidCallback onDelete,
-    Parc_Art parc_Art,
+    Parc_Art parcArt,
   ) async {
     await showDialog(
       context: context,
       builder: (BuildContext context) => Client_Groupe_Parc_Inter_Piece_SaisieDialog(
         onSaisie: onSaisie,
         onDelete: onDelete,
-        parc_Art: parc_Art,
+        parc_Art: parcArt,
       ),
     );
   }
@@ -59,7 +57,7 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
   final qteController = TextEditingController();
   Image? wImage;
 
-  Size size = Size(0, 0);
+  Size size = const Size(0, 0);
 
   List<Param_Saisie_Param> ListParam_Saisie_ParamFact = [];
   List<Param_Saisie_Param> ListParam_Saisie_ParamLivr = [];
@@ -74,15 +72,15 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
 
   @override
   void initLib() async {
-    Uint8List blankBytes = Base64Codec().decode("R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
+    Uint8List blankBytes = const Base64Codec().decode("R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7");
     wImage = Image.memory(
       blankBytes,
       height: 1,
     );
     String wImgPath = "${Srv_DbTools.SrvImg}ArticlesImg_Ebp_${widget.parc_Art.ParcsArt_Id}.jpg";
     gObj.pic = await gObj.networkImageToByte(wImgPath);
-    if (gObj.pic.length > 0) {
-      wImage = await Image.memory(
+    if (gObj.pic.isNotEmpty) {
+      wImage = Image.memory(
         gObj.pic,
       );
     }
@@ -136,12 +134,12 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
     wDialogHeight = wDialogBase + nbL * wLigneHeight + 85;
 
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
       surfaceTintColor: Colors.white,
       backgroundColor: gColors.white,
       title: Container(
           color: gColors.white,
-          padding: EdgeInsets.fromLTRB(0, 0, 15, 0),
+          padding: const EdgeInsets.fromLTRB(0, 0, 15, 0),
           child: Column(
             children: [
               Text(
@@ -152,10 +150,10 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
               Container(
                 height: 8,
               ),
-              Container(
-                child: wImage!,
+              SizedBox(
                 height: IcoWidth,
                 width: IcoWidth,
+                child: wImage!,
               ),
               Container(
                 height: 8,
@@ -170,7 +168,7 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
               ),
             ],
           )),
-      contentPadding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0,25.0),
+      contentPadding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0,25.0),
       content: Container(
           color: gColors.white,
           height: wDialogHeight,
@@ -191,7 +189,7 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
                 padding: const EdgeInsets.fromLTRB(2, 20, 0, 0),
                 child: CtrlLivr,
               ),
-              Spacer(),
+              const Spacer(),
               Container(
                 color: gColors.black,
                 height: 1,
@@ -222,7 +220,7 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
 
@@ -237,7 +235,7 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
               widget.parc_Art.ParcsArt_Qte = initParcsArt_Qte;
@@ -277,7 +275,7 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
     List<Widget> BtnCardFacts = [];
     int nbBtn = 0;
     wAide = "Aide : ";
-    ListParam_Saisie_ParamFact.forEach((element) {
+    for (var element in ListParam_Saisie_ParamFact) {
       if (widget.parc_Art.ParcsArt_Lib!.compareTo("---") == 0) {
         if (element.Param_Saisie_Param_Default) {
           print(" J Param_Saisie_Param_Default");
@@ -302,7 +300,7 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
         Rows.add(wRow);
         BtnCardFacts = [];
       }
-    });
+    }
 
     if (nbBtn > 0) {
       nbBtn = 0;
@@ -331,7 +329,7 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
     ]));
   }
 
-  Widget BtnCardFact(String wText, String wId, bool wSel, int Param_Saisie_ParamId, String color) {
+  Widget BtnCardFact(String wText, String wId, bool wSel, int paramSaisieParamid, String color) {
     Color BgColor = gColors.white;
     Color TxtColor = gColors.black;
 
@@ -346,7 +344,7 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
               await HapticFeedback.vibrate();
               initParcsArt_Fact = wText;
               if (wText == "Devis") initParcsArt_Livr = "Reliquat";
-              print(" FlipFlopFact ${widget.parc_Art.ParcsArt_Id} ${widget.parc_Art.ParcsArt_Lib} ${initParcsArt_Fact} ${initParcsArt_Livr}");
+              print(" FlipFlopFact ${widget.parc_Art.ParcsArt_Id} ${widget.parc_Art.ParcsArt_Lib} $initParcsArt_Fact $initParcsArt_Livr");
 
 
               await Reload();
@@ -358,19 +356,19 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
                   width: 50,
                   height: 50,
                 )))
-        : Container(
+        : SizedBox(
             width: 172,
             height: 60,
             child: Card(
               color: BgColor,
               elevation: 0.2,
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0), side: BorderSide(width: 1, color: Colors.grey)),
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0), side: const BorderSide(width: 1, color: Colors.grey)),
               child: InkWell(
                 onTap: () async {
                   await HapticFeedback.vibrate();
                   initParcsArt_Fact = wText;
                   if (wText == "Devis") initParcsArt_Livr = "Reliquat";
-                  print(" FlipFlopFact ${widget.parc_Art.ParcsArt_Id} ${widget.parc_Art.ParcsArt_Lib} ${initParcsArt_Fact} ${initParcsArt_Livr}");
+                  print(" FlipFlopFact ${widget.parc_Art.ParcsArt_Id} ${widget.parc_Art.ParcsArt_Lib} $initParcsArt_Fact $initParcsArt_Livr");
 
                   await Reload();
                 },
@@ -406,7 +404,7 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
     List<Widget> BtnCardLivrs = [];
     int nbBtn = 0;
     wAide = "Aide : ";
-    ListParam_Saisie_ParamLivr.forEach((element) {
+    for (var element in ListParam_Saisie_ParamLivr) {
       if (widget.parc_Art.ParcsArt_Lib!.compareTo("---") == 0) {
         if (element.Param_Saisie_Param_Default) {
           print(" K Param_Saisie_Param_Default");
@@ -414,7 +412,7 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
         }
       }
 
-      print("BtnCardLivrs.add element ${element.Param_Saisie_ParamId} element.Param_Saisie_Param_Label ${element.Param_Saisie_Param_Label} initParcsArt_Livr ${initParcsArt_Livr} ${element.Param_Saisie_Param_Label.compareTo(initParcsArt_Livr)}");
+      print("BtnCardLivrs.add element ${element.Param_Saisie_ParamId} element.Param_Saisie_Param_Label ${element.Param_Saisie_Param_Label} initParcsArt_Livr $initParcsArt_Livr ${element.Param_Saisie_Param_Label.compareTo(initParcsArt_Livr)}");
       BtnCardLivrs.add(BtnCardLivr(element.Param_Saisie_Param_Label, element.Param_Saisie_Param_Id, element.Param_Saisie_Param_Label.compareTo(initParcsArt_Livr) == 0, element.Param_Saisie_ParamId, element.Param_Saisie_Param_Color));
 
       if (element.Param_Saisie_Param_Label.compareTo(widget.parc_Art.ParcsArt_Lib!) == 0) wAide += element.Param_Saisie_Param_Aide;
@@ -430,7 +428,7 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
         Rows.add(wRow);
         BtnCardLivrs = [];
       }
-    });
+    }
 
     if (nbBtn > 0) {
       nbBtn = 0;
@@ -450,7 +448,7 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
         border: Border.all(
           color: gColors.greyDark,
         ),
-        borderRadius: BorderRadius.all(
+        borderRadius: const BorderRadius.all(
           Radius.circular(8),
         ),
         color: gColors.white,
@@ -459,18 +457,18 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Container(
+          SizedBox(
               width: 60,
               height: 60,
               child: InkWell(
                 child: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(
                       Radius.circular(8),
                     ),
                     color: gColors.primaryRed,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.delete,
                     color: gColors.white,
                     size: 46,
@@ -487,8 +485,8 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
 
 
 
-                  List<Parc_Art> wlParcs_ArtDevis = await DbTools.getParcs_ArtSoDevis(Srv_DbTools.gIntervention.InterventionId!);
-                  print("deleteParc_Art wlParcs_ArtDevis Av ${wlParcs_ArtDevis.length}");
+                  List<Parc_Art> wlparcsArtdevis = await DbTools.getParcs_ArtSoDevis(Srv_DbTools.gIntervention.InterventionId);
+                  print("deleteParc_Art wlParcs_ArtDevis Av ${wlparcsArtdevis.length}");
 
                   print("deleteParc_Art widget.parc_Art.ParcsArtId ${widget.parc_Art.ParcsArtId}");
 
@@ -500,8 +498,8 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
                   lParcs_Art.addAll(wlParcs_Art);
                   print("deleteParc_Art lParcs_Art ${lParcs_Art.length}");
 */
-                  wlParcs_ArtDevis = await DbTools.getParcs_ArtSoDevis(Srv_DbTools.gIntervention.InterventionId!);
-                  print("deleteParc_Art wlParcs_ArtDevis Ap ${wlParcs_ArtDevis.length}");
+                  wlparcsArtdevis = await DbTools.getParcs_ArtSoDevis(Srv_DbTools.gIntervention.InterventionId);
+                  print("deleteParc_Art wlParcs_ArtDevis Ap ${wlparcsArtdevis.length}");
 
 
                   widget.onDelete();
@@ -511,18 +509,18 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
           Container(
             width: 40,
           ),
-          Container(
+          SizedBox(
               width: 60,
               height: 60,
               child: GestureDetector(
                 child: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(
                       Radius.circular(60),
                     ),
                     color: gColors.black,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.remove,
                     color: gColors.white,
                     size: 46,
@@ -536,26 +534,26 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
           Container(
             width: 60,
             height: 60,
-            padding: EdgeInsets.fromLTRB(10, 18, 10, 0),
+            padding: const EdgeInsets.fromLTRB(10, 18, 10, 0),
             child: Text(
-              "${initParcsArt_Qte}",
+              "$initParcsArt_Qte",
               style: gColors.bodyTitle1_B_G,
               textAlign: TextAlign.center,
             ),
           ),
-          Container(
+          SizedBox(
               width: 60,
               height: 60,
               child:
               GestureDetector(
                 child: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     borderRadius: BorderRadius.all(
                       Radius.circular(60),
                     ),
                     color: gColors.black,
                   ),
-                  child: Icon(
+                  child: const Icon(
                     Icons.add,
                     color: gColors.white,
                     size: 46,
@@ -566,6 +564,9 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
                   setState(() {});
                 },
               )
+
+
+
           ),
           Container(
             width: 100,
@@ -589,7 +590,7 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
         ]));
   }
 
-  Widget BtnCardLivr(String wText, String wId, bool wSel, int Param_Saisie_ParamId, String color) {
+  Widget BtnCardLivr(String wText, String wId, bool wSel, int paramSaisieParamid, String color) {
     Color BgColor = gColors.white;
     Color TxtColor = gColors.black;
 
@@ -613,18 +614,18 @@ class Client_Groupe_Parc_Inter_Piece_SaisieDialogState extends State<Client_Grou
               width: 50,
               height: 50,
             )))
-        : Container(
+        : SizedBox(
       width: 172,
       height: 60,
       child: Card(
         color: BgColor,
         elevation: 0.2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0), side: BorderSide(width: 1, color: Colors.grey)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0), side: const BorderSide(width: 1, color: Colors.grey)),
         child: InkWell(
           onTap: () async {
             await HapticFeedback.vibrate();
             initParcsArt_Livr = wText;
-            print(" FlipFlopLivr ${widget.parc_Art.ParcsArt_Id} ${widget.parc_Art.ParcsArt_Lib} ${initParcsArt_Fact} ${initParcsArt_Livr}");
+            print(" FlipFlopLivr ${widget.parc_Art.ParcsArt_Id} ${widget.parc_Art.ParcsArt_Lib} $initParcsArt_Fact $initParcsArt_Livr");
 
             await Reload();
           },

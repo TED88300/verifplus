@@ -4,7 +4,6 @@ import 'dart:typed_data';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:pdf/pdf.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
-import 'package:verifplus/Tools/DbTools/DbTools.dart';
 
 class PdfTools {
   static PdfColor baseColor = PdfColors.teal;
@@ -64,7 +63,7 @@ class PdfTools {
               ),
               color: wBackGroundPdfColor,
             ),
-            padding: pw.EdgeInsets.only(left: 10, top: 1, bottom: 0, right: 20),
+            padding: const pw.EdgeInsets.only(left: 10, top: 1, bottom: 0, right: 20),
             alignment: pw.Alignment.centerLeft,
             height: (25.0 + (wMaxLines) * 5.2),
             child: pw.Row(children: [
@@ -539,12 +538,12 @@ class PdfTools {
                   ),
                 ]),
               ]),
-              Srv_DbTools.gIntervention.Intervention_Signature_Tech.length == 0
+              Srv_DbTools.gIntervention.Intervention_Signature_Tech.isEmpty
                   ? pw.Container()
                   : pw.Container(
                       width: 160,
                       padding: const pw.EdgeInsets.only(left: 10, top: 1, bottom: 1),
-                      child: pw.Image(pw.MemoryImage(Srv_DbTools.gIntervention.Intervention_Signature_Tech!)),
+                      child: pw.Image(pw.MemoryImage(Srv_DbTools.gIntervention.Intervention_Signature_Tech)),
                     ),
             ]),
           ),
@@ -627,12 +626,12 @@ class PdfTools {
                   ),
                 ]),
               ]),
-              Srv_DbTools.gIntervention.Intervention_Signature_Client.length == 0
+              Srv_DbTools.gIntervention.Intervention_Signature_Client.isEmpty
                   ? pw.Container()
                   : pw.Container(
                       width: 160,
                       padding: const pw.EdgeInsets.only(left: 10, top: 1, bottom: 1),
-                      child: pw.Image(pw.MemoryImage(Srv_DbTools.gIntervention.Intervention_Signature_Client!)),
+                      child: pw.Image(pw.MemoryImage(Srv_DbTools.gIntervention.Intervention_Signature_Client)),
                     ),
 
 /*

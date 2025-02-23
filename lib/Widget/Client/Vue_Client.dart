@@ -6,7 +6,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Adresses.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Contacts.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Groupes.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/Client/Vue_Client_Popup.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
@@ -16,6 +15,8 @@ import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 //**********************************
 
 class Client_Vue extends StatefulWidget {
+  const Client_Vue({super.key});
+
   @override
   _Client_VueState createState() => _Client_VueState();
 }
@@ -80,7 +81,7 @@ class _Client_VueState extends State<Client_Vue> {
             children: [
               Srv_DbTools.gClient.Client_isUpdate ? Container() :
               Container(
-                padding: EdgeInsets.only(right: 5, bottom: 6),
+                padding: const EdgeInsets.only(right: 5, bottom: 6),
                 child: Text(
                    "◉",
                   maxLines: 1,
@@ -129,9 +130,9 @@ class _Client_VueState extends State<Client_Vue> {
                   child: Container(
                     color: gColors.white,
                     height: 57,
-                    padding: EdgeInsets.fromLTRB(10, 12, 10, 10),
+                    padding: const EdgeInsets.fromLTRB(10, 12, 10, 10),
                     child: Row(mainAxisAlignment: MainAxisAlignment.spaceEvenly, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                      new InkWell(
+                      InkWell(
                         onTap: () async {
                           await HapticFeedback.vibrate();
                           bFact = true;
@@ -147,7 +148,7 @@ class _Client_VueState extends State<Client_Vue> {
                           ),
                         ),
                       ),
-                      new InkWell(
+                      InkWell(
                         onTap: () async {
                           await HapticFeedback.vibrate();
                           bFact = false;
@@ -237,35 +238,35 @@ class _Client_VueState extends State<Client_Vue> {
     if (Srv_DbTools.gAdresse.Adresse_CP.length >= 2) Dep = Srv_DbTools.gAdresse.Adresse_CP.substring(0, 2);
 
     String wAdr = "${Srv_DbTools.gAdresse.Adresse_Adr1} ";
-    if (Srv_DbTools.gAdresse.Adresse_Adr2.isNotEmpty) wAdr = wAdr + "${Srv_DbTools.gAdresse.Adresse_Adr2} ";
-    if (Srv_DbTools.gAdresse.Adresse_Adr3.isNotEmpty) wAdr = wAdr + "${Srv_DbTools.gAdresse.Adresse_Adr3} ";
-    if (Srv_DbTools.gAdresse.Adresse_Adr4.isNotEmpty) wAdr = wAdr + "${Srv_DbTools.gAdresse.Adresse_Adr4} ";
-    if (Srv_DbTools.gAdresse.Adresse_CP.isNotEmpty) wAdr = wAdr + "${Srv_DbTools.gAdresse.Adresse_CP} ";
-    if (Srv_DbTools.gAdresse.Adresse_Ville.isNotEmpty) wAdr = wAdr + "${Srv_DbTools.gAdresse.Adresse_Ville} ";
-    if (Srv_DbTools.gAdresse.Adresse_Pays.isNotEmpty) wAdr = wAdr + "${Srv_DbTools.gAdresse.Adresse_Pays} ";
+    if (Srv_DbTools.gAdresse.Adresse_Adr2.isNotEmpty) wAdr = "$wAdr${Srv_DbTools.gAdresse.Adresse_Adr2} ";
+    if (Srv_DbTools.gAdresse.Adresse_Adr3.isNotEmpty) wAdr = "$wAdr${Srv_DbTools.gAdresse.Adresse_Adr3} ";
+    if (Srv_DbTools.gAdresse.Adresse_Adr4.isNotEmpty) wAdr = "$wAdr${Srv_DbTools.gAdresse.Adresse_Adr4} ";
+    if (Srv_DbTools.gAdresse.Adresse_CP.isNotEmpty) wAdr = "$wAdr${Srv_DbTools.gAdresse.Adresse_CP} ";
+    if (Srv_DbTools.gAdresse.Adresse_Ville.isNotEmpty) wAdr = "$wAdr${Srv_DbTools.gAdresse.Adresse_Ville} ";
+    if (Srv_DbTools.gAdresse.Adresse_Pays.isNotEmpty) wAdr = "$wAdr${Srv_DbTools.gAdresse.Adresse_Pays} ";
 
     print("Srv_DbTools.gContact.Contact_Nom ${Srv_DbTools.gContact.Contact_Nom}");
     return ListView(
       children: [
-        AffLigne("Client", "${Srv_DbTools.gClient.Client_CL_Pr ? "Prospect " : "Client "}", gColors.greyLight, "Icon_Clientb", "", "", "", ""),
-        AffBtn("Client_Nom", "Nom", "${Srv_DbTools.gClient.Client_Nom}"),
-        AffBtn("Client_Siret", "Siret", "${Srv_DbTools.gClient.Client_Siret}"),
+        AffLigne("Client", Srv_DbTools.gClient.Client_CL_Pr ? "Prospect " : "Client ", gColors.greyLight, "Icon_Clientb", "", "", "", ""),
+        AffBtn("Client_Nom", "Nom", Srv_DbTools.gClient.Client_Nom),
+        AffBtn("Client_Siret", "Siret", Srv_DbTools.gClient.Client_Siret),
         AffLigne("Commercial", "", gColors.greyLight, "Icon_Comm", "", "", "", ""),
-        AffBtn("Client_Commercial", "Commercial", "${Srv_DbTools.gClient.Client_Commercial}"),
+        AffBtn("Client_Commercial", "Commercial", Srv_DbTools.gClient.Client_Commercial),
         AffLigne("Adresse de Facturation", "", gColors.greyLight, "Icon_Adr", !affAdresseAll ? "Icon_circle_down" : "Icon_circle_up", "", "", ""),
-        AffBtn("Adresse", "Adresse", "${Srv_DbTools.gAdresse.Adresse_Adr1}"),
-        !affAdresseAll ? Container() : AffBtn("Adresse", "Adresse (Suite)", "${Srv_DbTools.gAdresse.Adresse_Adr2}"),
-        !affAdresseAll ? Container() : AffBtn("Adresse", "Adresse (Suite)", "${Srv_DbTools.gAdresse.Adresse_Adr3}"),
-        !affAdresseAll ? Container() : AffBtn("Adresse", "Adresse (Fin)", "${Srv_DbTools.gAdresse.Adresse_Adr4}"),
-        AffBtn("Adresse", "CP", "${Srv_DbTools.gAdresse.Adresse_CP}"),
-        AffBtn("Adresse", "Villle", "${Srv_DbTools.gAdresse.Adresse_Ville}"),
-        !affAdresseAll ? Container() : AffLigne("Département", "${Dep}", gColors.white, "", "", "", "", ""),
+        AffBtn("Adresse", "Adresse", Srv_DbTools.gAdresse.Adresse_Adr1),
+        !affAdresseAll ? Container() : AffBtn("Adresse", "Adresse (Suite)", Srv_DbTools.gAdresse.Adresse_Adr2),
+        !affAdresseAll ? Container() : AffBtn("Adresse", "Adresse (Suite)", Srv_DbTools.gAdresse.Adresse_Adr3),
+        !affAdresseAll ? Container() : AffBtn("Adresse", "Adresse (Fin)", Srv_DbTools.gAdresse.Adresse_Adr4),
+        AffBtn("Adresse", "CP", Srv_DbTools.gAdresse.Adresse_CP),
+        AffBtn("Adresse", "Villle", Srv_DbTools.gAdresse.Adresse_Ville),
+        !affAdresseAll ? Container() : AffLigne("Département", Dep, gColors.white, "", "", "", "", ""),
         !affAdresseAll ? Container() : AffBtn("Adresse", "Pays", "${Srv_DbTools.gAdresse.Adresse_Pays} "),
         AffLigne("", "", gColors.white, "", "", "", "", wAdr),
         AffLigne("Contact de Facturation", "", gColors.greyLight, "Icon_Cont", "", !affContactAll ? "Icon_circle_down" : "Icon_circle_up", "", ""),
-        !affContactAll ? AffBtn("Contact", "Nom", "${Srv_DbTools.gContact.Contact_Civilite} ${Srv_DbTools.gContact.Contact_Prenom} ${Srv_DbTools.gContact.Contact_Nom} ") : AffBtn("Contact", "Civilité", "${Srv_DbTools.gContact.Contact_Civilite}"),
+        !affContactAll ? AffBtn("Contact", "Nom", "${Srv_DbTools.gContact.Contact_Civilite} ${Srv_DbTools.gContact.Contact_Prenom} ${Srv_DbTools.gContact.Contact_Nom} ") : AffBtn("Contact", "Civilité", Srv_DbTools.gContact.Contact_Civilite),
         !affContactAll ? Container() : AffBtn("Contact", "Prénom", "${Srv_DbTools.gContact.Contact_Prenom} "),
-        !affContactAll ? Container() : AffBtn("Contact", "Nom", "${Srv_DbTools.gContact.Contact_Nom}"),
+        !affContactAll ? Container() : AffBtn("Contact", "Nom", Srv_DbTools.gContact.Contact_Nom),
         !affContactAll
             ? Container()
             : AffBtn(
@@ -273,9 +274,9 @@ class _Client_VueState extends State<Client_Vue> {
                 "Fonction / Service",
                 "${Srv_DbTools.gContact.Contact_Fonction} ${Srv_DbTools.gContact.Contact_Service}",
               ),
-        !affContactAll ? Container() : AffBtn("Contact", "Tel Fixe", "${Srv_DbTools.gContact.Contact_Tel1}"),
-        AffBtn("Contact", "Portable", "${Srv_DbTools.gContact.Contact_Tel2}"),
-        AffLigne("Email", "", gColors.white, "", "", "", "${Srv_DbTools.gContact.Contact_eMail}", ""),
+        !affContactAll ? Container() : AffBtn("Contact", "Tel Fixe", Srv_DbTools.gContact.Contact_Tel1),
+        AffBtn("Contact", "Portable", Srv_DbTools.gContact.Contact_Tel2),
+        AffLigne("Email", "", gColors.white, "", "", "", Srv_DbTools.gContact.Contact_eMail, ""),
       ],
     );
   }
@@ -286,12 +287,12 @@ class _Client_VueState extends State<Client_Vue> {
     if (Srv_DbTools.gAdresseLivr.Adresse_CP.length >= 2) Dep = Srv_DbTools.gAdresseLivr.Adresse_CP.substring(0, 2);
 
     String wAdr = "${Srv_DbTools.gAdresseLivr.Adresse_Adr1} ";
-    if (Srv_DbTools.gAdresseLivr.Adresse_Adr2.isNotEmpty) wAdr = wAdr + "${Srv_DbTools.gAdresseLivr.Adresse_Adr2} ";
-    if (Srv_DbTools.gAdresseLivr.Adresse_Adr3.isNotEmpty) wAdr = wAdr + "${Srv_DbTools.gAdresseLivr.Adresse_Adr3} ";
-    if (Srv_DbTools.gAdresseLivr.Adresse_Adr4.isNotEmpty) wAdr = wAdr + "${Srv_DbTools.gAdresseLivr.Adresse_Adr4} ";
-    if (Srv_DbTools.gAdresseLivr.Adresse_CP.isNotEmpty) wAdr = wAdr + "${Srv_DbTools.gAdresseLivr.Adresse_CP} ";
-    if (Srv_DbTools.gAdresseLivr.Adresse_Ville.isNotEmpty) wAdr = wAdr + "${Srv_DbTools.gAdresseLivr.Adresse_Ville} ";
-    if (Srv_DbTools.gAdresseLivr.Adresse_Pays.isNotEmpty) wAdr = wAdr + "${Srv_DbTools.gAdresseLivr.Adresse_Pays} ";
+    if (Srv_DbTools.gAdresseLivr.Adresse_Adr2.isNotEmpty) wAdr = "$wAdr${Srv_DbTools.gAdresseLivr.Adresse_Adr2} ";
+    if (Srv_DbTools.gAdresseLivr.Adresse_Adr3.isNotEmpty) wAdr = "$wAdr${Srv_DbTools.gAdresseLivr.Adresse_Adr3} ";
+    if (Srv_DbTools.gAdresseLivr.Adresse_Adr4.isNotEmpty) wAdr = "$wAdr${Srv_DbTools.gAdresseLivr.Adresse_Adr4} ";
+    if (Srv_DbTools.gAdresseLivr.Adresse_CP.isNotEmpty) wAdr = "$wAdr${Srv_DbTools.gAdresseLivr.Adresse_CP} ";
+    if (Srv_DbTools.gAdresseLivr.Adresse_Ville.isNotEmpty) wAdr = "$wAdr${Srv_DbTools.gAdresseLivr.Adresse_Ville} ";
+    if (Srv_DbTools.gAdresseLivr.Adresse_Pays.isNotEmpty) wAdr = "$wAdr${Srv_DbTools.gAdresseLivr.Adresse_Pays} ";
 
     print("Srv_DbTools.gContactLivr.Contact_Nom ${Srv_DbTools.gContactLivr.Contact_Nom}");
     return ListView(
@@ -308,13 +309,13 @@ class _Client_VueState extends State<Client_Vue> {
         !affAdresseAll ? Container() : AffLigne("Pays", "${Srv_DbTools.gAdresseLivr.Adresse_Pays} ", gColors.white, "", "", "", "", ""),
 */
 
-        AffBtn("AdresseLivr", "Adresse", "${Srv_DbTools.gAdresseLivr.Adresse_Adr1}"),
-        !affAdresseAll ? Container() : AffBtn("AdresseLivr", "Adresse (Suite)", "${Srv_DbTools.gAdresseLivr.Adresse_Adr2}"),
-        !affAdresseAll ? Container() : AffBtn("AdresseLivr", "Adresse (Suite)", "${Srv_DbTools.gAdresseLivr.Adresse_Adr3}"),
-        !affAdresseAll ? Container() : AffBtn("AdresseLivr", "Adresse (Fin)", "${Srv_DbTools.gAdresseLivr.Adresse_Adr4}"),
-        AffBtn("AdresseLivr", "CP", "${Srv_DbTools.gAdresseLivr.Adresse_CP}"),
-        AffBtn("AdresseLivr", "Villle", "${Srv_DbTools.gAdresseLivr.Adresse_Ville}"),
-        !affAdresseAll ? Container() : AffLigne("Département", "${Dep}", gColors.white, "", "", "", "", ""),
+        AffBtn("AdresseLivr", "Adresse", Srv_DbTools.gAdresseLivr.Adresse_Adr1),
+        !affAdresseAll ? Container() : AffBtn("AdresseLivr", "Adresse (Suite)", Srv_DbTools.gAdresseLivr.Adresse_Adr2),
+        !affAdresseAll ? Container() : AffBtn("AdresseLivr", "Adresse (Suite)", Srv_DbTools.gAdresseLivr.Adresse_Adr3),
+        !affAdresseAll ? Container() : AffBtn("AdresseLivr", "Adresse (Fin)", Srv_DbTools.gAdresseLivr.Adresse_Adr4),
+        AffBtn("AdresseLivr", "CP", Srv_DbTools.gAdresseLivr.Adresse_CP),
+        AffBtn("AdresseLivr", "Villle", Srv_DbTools.gAdresseLivr.Adresse_Ville),
+        !affAdresseAll ? Container() : AffLigne("Département", Dep, gColors.white, "", "", "", "", ""),
         !affAdresseAll ? Container() : AffBtn("AdresseLivr", "Pays", "${Srv_DbTools.gAdresseLivr.Adresse_Pays} "),
         AffLigne("", "", gColors.white, "", "", "", "", wAdr),
 
@@ -332,9 +333,9 @@ class _Client_VueState extends State<Client_Vue> {
 */
 
         AffLigne("Contact de Livraison", "", gColors.greyLight, "Icon_Cont", "", !affContactAll ? "Icon_circle_down" : "Icon_circle_up", "", ""),
-        !affContactAll ? AffBtn("ContactLivr", "Nom", "${Srv_DbTools.gContactLivr.Contact_Civilite} ${Srv_DbTools.gContactLivr.Contact_Prenom} ${Srv_DbTools.gContactLivr.Contact_Nom} ") : AffBtn("Contact", "Civilité", "${Srv_DbTools.gContactLivr.Contact_Civilite}"),
+        !affContactAll ? AffBtn("ContactLivr", "Nom", "${Srv_DbTools.gContactLivr.Contact_Civilite} ${Srv_DbTools.gContactLivr.Contact_Prenom} ${Srv_DbTools.gContactLivr.Contact_Nom} ") : AffBtn("Contact", "Civilité", Srv_DbTools.gContactLivr.Contact_Civilite),
         !affContactAll ? Container() : AffBtn("ContactLivr", "Prénom", "${Srv_DbTools.gContactLivr.Contact_Prenom} "),
-        !affContactAll ? Container() : AffBtn("ContactLivr", "Nom", "${Srv_DbTools.gContactLivr.Contact_Nom}"),
+        !affContactAll ? Container() : AffBtn("ContactLivr", "Nom", Srv_DbTools.gContactLivr.Contact_Nom),
         !affContactAll
             ? Container()
             : AffBtn(
@@ -342,9 +343,9 @@ class _Client_VueState extends State<Client_Vue> {
                 "Fonction / Service",
                 "${Srv_DbTools.gContactLivr.Contact_Fonction} ${Srv_DbTools.gContactLivr.Contact_Service}",
               ),
-        !affContactAll ? Container() : AffBtn("ContactLivr", "Tel Fixe", "${Srv_DbTools.gContactLivr.Contact_Tel1}"),
-        AffBtn("ContactLivr", "Portable", "${Srv_DbTools.gContactLivr.Contact_Tel2}"),
-        AffLigne("Email", "", gColors.white, "", "", "", "${Srv_DbTools.gContactLivr.Contact_eMail}", ""),
+        !affContactAll ? Container() : AffBtn("ContactLivr", "Tel Fixe", Srv_DbTools.gContactLivr.Contact_Tel1),
+        AffBtn("ContactLivr", "Portable", Srv_DbTools.gContactLivr.Contact_Tel2),
+        AffLigne("Email", "", gColors.white, "", "", "", Srv_DbTools.gContactLivr.Contact_eMail, ""),
       ],
     );
   }
@@ -355,7 +356,7 @@ class _Client_VueState extends State<Client_Vue> {
     double icoWidth = 32;
 
     return Container(
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
         color: BckGrd,
         child: Column(
           children: [
@@ -364,9 +365,9 @@ class _Client_VueState extends State<Client_Vue> {
                 ImgL.isEmpty
                     ? Container()
                     : Container(
-                        padding: EdgeInsets.only(left: 10),
+                        padding: const EdgeInsets.only(left: 10),
                         child: Image.asset(
-                          "assets/images/${ImgL}.png",
+                          "assets/images/$ImgL.png",
                           height: icoWidth,
                           width: icoWidth,
                         ),
@@ -375,7 +376,7 @@ class _Client_VueState extends State<Client_Vue> {
                     padding: EdgeInsets.only(left: 10, top: mTop),
                     height: wHeight,
                     child: Text(
-                      "${wTextL}",
+                      wTextL,
                       textAlign: TextAlign.start,
                       maxLines: 1,
                       style: gColors.bodySaisie_B_B,
@@ -385,7 +386,7 @@ class _Client_VueState extends State<Client_Vue> {
                         padding: EdgeInsets.only(right: 10, top: mTop),
                         height: wHeight,
                         child: Text(
-                          "${wTextR}",
+                          wTextR,
                           textAlign: TextAlign.end,
                           maxLines: 1,
                           style: gColors.bodySaisie_B_B.copyWith(color: textBlackColor ? Colors.black : gColors.primaryGreen),
@@ -394,9 +395,9 @@ class _Client_VueState extends State<Client_Vue> {
                     ? Container()
                     : IconButton(
                         icon: Container(
-                          padding: EdgeInsets.only(right: 10),
+                          padding: const EdgeInsets.only(right: 10),
                           child: Image.asset(
-                            "assets/images/${ImgR}.png",
+                            "assets/images/$ImgR.png",
                             height: icoWidth,
                             width: icoWidth,
                           ),
@@ -411,9 +412,9 @@ class _Client_VueState extends State<Client_Vue> {
                     ? Container()
                     : IconButton(
                         icon: Container(
-                          padding: EdgeInsets.only(right: 10),
+                          padding: const EdgeInsets.only(right: 10),
                           child: Image.asset(
-                            "assets/images/${ImgR2}.png",
+                            "assets/images/$ImgR2.png",
                             height: icoWidth,
                             width: icoWidth,
                           ),
@@ -440,7 +441,7 @@ class _Client_VueState extends State<Client_Vue> {
                             padding: EdgeInsets.only(right: 10, top: mTop),
                             height: wHeight,
                             child: Text(
-                              "${eMail}",
+                              eMail,
                               textAlign: TextAlign.end,
                               maxLines: 1,
                               style: gColors.bodySaisie_B_B.copyWith(
@@ -453,7 +454,7 @@ class _Client_VueState extends State<Client_Vue> {
                     : InkWell(
                         onTap: () async {
                           await HapticFeedback.vibrate();
-                          MapsLauncher.launchQuery("${Map}");
+                          MapsLauncher.launchQuery(Map);
                         },
                         child: Container(
                             padding: EdgeInsets.only(right: 10, top: mTop),
@@ -484,7 +485,7 @@ class _Client_VueState extends State<Client_Vue> {
           await showDialog(
               context: context,
               builder: (BuildContext context) {
-                return Container(padding: EdgeInsets.fromLTRB(30, 0, 30, 30), child: Client_Vue_Popup(bFact: true, wChamps: wChamps));
+                return Container(padding: const EdgeInsets.fromLTRB(30, 0, 30, 30), child: Client_Vue_Popup(bFact: true, wChamps: wChamps));
               });
           setState(() {});
         },

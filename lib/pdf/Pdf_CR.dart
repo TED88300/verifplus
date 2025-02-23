@@ -55,17 +55,17 @@ class Pdf_CR {
     pic = await gColors.getImage(wUserImg);
     print("pic $wUserImg ${pic.length}");
 
-    if (pic.length == 0)
+    if (pic.isEmpty)
     {
-      ByteData _logo_a = await rootBundle.load('assets/images/Blank.png');
-      pic = (_logo_a)!.buffer.asUint8List();
+      ByteData logoA = await rootBundle.load('assets/images/Blank.png');
+      pic = (logoA).buffer.asUint8List();
     }
 
     pw.MemoryImage wMemoryImage =    pw.MemoryImage(
       pic,
     );
 
-    wImage = await pw.Image(
+    wImage = pw.Image(
       fit : BoxFit.cover,
       wMemoryImage,
     );
@@ -74,8 +74,8 @@ class Pdf_CR {
     wImage_W = wMemoryImage.width!;
     wImage_H = wMemoryImage.height!;
 
-    if (pic.length > 0) {
-      wImage = await pw.Image(
+    if (pic.isNotEmpty) {
+      wImage = pw.Image(
         fit : BoxFit.cover,
 //width : double.parse(wImage_W.toString()),
 //        height : double.parse(wImage_H.toString()),
@@ -104,14 +104,14 @@ class Pdf_CR {
     final doc = pw.Document(
       theme: fontTheme,
     );
-    ByteData _logo_1 = await rootBundle.load('assets/Logo_1.jpg');
-    imageData_1 = (_logo_1)!.buffer.asUint8List();
+    ByteData logo_1 = await rootBundle.load('assets/Logo_1.jpg');
+    imageData_1 = (logo_1).buffer.asUint8List();
 
-    ByteData _logo_Logo_Pied = await rootBundle.load('assets/Logo_Pied.png');
-    imageData_Logo_Pied = (_logo_Logo_Pied)!.buffer.asUint8List();
+    ByteData logoLogoPied = await rootBundle.load('assets/Logo_Pied.png');
+    imageData_Logo_Pied = (logoLogoPied).buffer.asUint8List();
 
-    _logo_1 = await rootBundle.load('assets/Cachet.png');
-    imageData_Cachet = (_logo_1)!.buffer.asUint8List();
+    logo_1 = await rootBundle.load('assets/Cachet.png');
+    imageData_Cachet = (logo_1).buffer.asUint8List();
 
     for (int i = 0; i < Srv_DbTools.ListUserH.length; i++) {
       var element = Srv_DbTools.ListUserH[i];
@@ -124,14 +124,14 @@ class Pdf_CR {
     await DbTools.getAdresseClientType(Srv_DbTools.gClient.ClientId, "LIVR");
     await Srv_DbTools.getContactClientAdrType(Srv_DbTools.gClient.ClientId, Srv_DbTools.gSite.SiteId, "SITE");
 
-     List<Parc_Ent> wlParcs_Ent = [];
-    wlParcs_Ent = await DbTools.getParcs_Ent(Srv_DbTools.gIntervention.InterventionId!);
+     List<Parc_Ent> wlparcsEnt = [];
+    wlparcsEnt = await DbTools.getParcs_Ent(Srv_DbTools.gIntervention.InterventionId);
 
-    print("♠︎♠︎♠︎♠︎ wlParcs_Ent <<< ${wlParcs_Ent}");
+    print("♠︎♠︎♠︎♠︎ wlParcs_Ent <<< $wlparcsEnt");
 
 
-    for (int i = 0; i < wlParcs_Ent.length; i++) {
-      var wParcs_Ent = wlParcs_Ent[i];
+    for (int i = 0; i < wlparcsEnt.length; i++) {
+      var wparcsEnt = wlparcsEnt[i];
 
 
 
@@ -144,66 +144,66 @@ class Pdf_CR {
       String wPOIDS = "";
 
       for (int j = 0; j < DbTools.glfParcs_Desc.length; j++) {
-        Parc_Desc wParc_Desc = DbTools.glfParcs_Desc[j];
-        if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "DESC") {
-          wDESC = gColors.AbrevTxt_Param_Param(wParc_Desc.ParcsDesc_Lib!, wParc_Desc.ParcsDesc_Type!);
+        Parc_Desc wparcDesc = DbTools.glfParcs_Desc[j];
+        if (wparcsEnt.ParcsId == wparcDesc.ParcsDesc_ParcsId && wparcDesc.ParcsDesc_Type == "DESC") {
+          wDESC = gColors.AbrevTxt_Param_Param(wparcDesc.ParcsDesc_Lib!, wparcDesc.ParcsDesc_Type!);
           if (wDESC != "---" && !wType.contains(wDESC)) {
-            if (wType.length > 0) wType = wType + ",";
-            wType = wType + " ${wDESC}";
+            if (wType.isNotEmpty) wType = "$wType,";
+            wType = "$wType $wDESC";
           }
         }
-        if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "FAB")
+        if (wparcsEnt.ParcsId == wparcDesc.ParcsDesc_ParcsId && wparcDesc.ParcsDesc_Type == "FAB")
           {
-            wFAB = gColors.AbrevTxt_Param_Param(wParc_Desc.ParcsDesc_Lib!, wParc_Desc.ParcsDesc_Type!);
-            print("♠︎♠︎♠︎♠︎ wFAB $wFAB  ${wParc_Desc.ParcsDesc_Lib!}");
+            wFAB = gColors.AbrevTxt_Param_Param(wparcDesc.ParcsDesc_Lib!, wparcDesc.ParcsDesc_Type!);
+            print("♠︎♠︎♠︎♠︎ wFAB $wFAB  ${wparcDesc.ParcsDesc_Lib!}");
           }
 
 
-        if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "PRS") wPRS = gColors.AbrevTxt(wParc_Desc.ParcsDesc_Lib!);
-        if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "CLF") wCLF = gColors.AbrevTxt(wParc_Desc.ParcsDesc_Lib!);
-        if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "PDT") wPDT = gColors.AbrevTxt(wParc_Desc.ParcsDesc_Lib!);
-        if (wParcs_Ent.ParcsId == wParc_Desc.ParcsDesc_ParcsId && wParc_Desc.ParcsDesc_Type == "POIDS") wPOIDS = gColors.AbrevTxt(wParc_Desc.ParcsDesc_Lib!);
+        if (wparcsEnt.ParcsId == wparcDesc.ParcsDesc_ParcsId && wparcDesc.ParcsDesc_Type == "PRS") wPRS = gColors.AbrevTxt(wparcDesc.ParcsDesc_Lib!);
+        if (wparcsEnt.ParcsId == wparcDesc.ParcsDesc_ParcsId && wparcDesc.ParcsDesc_Type == "CLF") wCLF = gColors.AbrevTxt(wparcDesc.ParcsDesc_Lib!);
+        if (wparcsEnt.ParcsId == wparcDesc.ParcsDesc_ParcsId && wparcDesc.ParcsDesc_Type == "PDT") wPDT = gColors.AbrevTxt(wparcDesc.ParcsDesc_Lib!);
+        if (wparcsEnt.ParcsId == wparcDesc.ParcsDesc_ParcsId && wparcDesc.ParcsDesc_Type == "POIDS") wPOIDS = gColors.AbrevTxt(wparcDesc.ParcsDesc_Lib!);
       }
 
-      DateTime Parcs_Date_Rev = DateTime.now();
+      DateTime parcsDateRev = DateTime.now();
 
       try {
-        Parcs_Date_Rev = DateTime.parse(wParcs_Ent.Parcs_Date_Rev!);
+        parcsDateRev = DateTime.parse(wparcsEnt.Parcs_Date_Rev!);
       } catch (e) {}
 
-      if (Parcs_Date_Rev.isBefore(Parcs_Date_Rev_Min)) Parcs_Date_Rev_Min = Parcs_Date_Rev;
-      if (Parcs_Date_Rev.isAfter(Parcs_Date_Rev_Max)) Parcs_Date_Rev_Max = Parcs_Date_Rev;
+      if (parcsDateRev.isBefore(Parcs_Date_Rev_Min)) Parcs_Date_Rev_Min = parcsDateRev;
+      if (parcsDateRev.isAfter(Parcs_Date_Rev_Max)) Parcs_Date_Rev_Max = parcsDateRev;
 
-      String wParcs_Date_Rev = "";
+      String wparcsDateRev = "";
       try {
-        wParcs_Date_Rev = DateFormat('dd/MM/yy').format(DateTime.parse(wParcs_Ent.Parcs_Date_Rev!));
+        wparcsDateRev = DateFormat('dd/MM/yy').format(DateTime.parse(wparcsEnt.Parcs_Date_Rev!));
       } catch (e) {}
 
-      print("${wParcs_Ent.Parcs_Intervention_Timer}");
-      if (wParcs_Ent.Parcs_Intervention_Timer != null) wParcs_Intervention_Timer += wParcs_Ent.Parcs_Intervention_Timer!;
+      print("${wparcsEnt.Parcs_Intervention_Timer}");
+      if (wparcsEnt.Parcs_Intervention_Timer != null) wParcs_Intervention_Timer += wparcsEnt.Parcs_Intervention_Timer!;
 
-      String Action = wParcs_Ent.Action!;
-      if (wParcs_Ent.Parcs_UUID_Parent!.isNotEmpty)
+      String Action = wparcsEnt.Action!;
+      if (wparcsEnt.Parcs_UUID_Parent!.isNotEmpty)
       {
-        DbTools.lParcs_Art = await DbTools.getParcs_Art(wParcs_Ent.ParcsId!, "MS");
+        DbTools.lParcs_Art = await DbTools.getParcs_Art(wparcsEnt.ParcsId!, "MS");
         print(" DbTools.lParcs_Art  B ${DbTools.lParcs_Art.length}");
-        if (DbTools.lParcs_Art.length > 0) {
-          Parc_Art wParc_Art = DbTools.lParcs_Art[0];
-          print(" wParc_Art  B ${wParc_Art.toMap()}");
-          if (wParc_Art.ParcsArt_Fact == "Devis")
+        if (DbTools.lParcs_Art.isNotEmpty) {
+          Parc_Art wparcArt = DbTools.lParcs_Art[0];
+          print(" wParc_Art  B ${wparcArt.toMap()}");
+          if (wparcArt.ParcsArt_Fact == "Devis")
           {
-            Action = "Devis/${wParcs_Ent.Action!}" ;
+            Action = "Devis/${wparcsEnt.Action!}" ;
           }
           else
           {
-            Action = "Neuf/${wParcs_Ent.Action!}" ;
+            Action = "Neuf/${wparcsEnt.Action!}" ;
           }
 
         }
       }
 
 
-      Organe wOrgane = Organe("${wParcs_Ent.Parcs_order}", "${wDESC}", "$wFAB", "$wPRS", "$wCLF", "$wPDT", "$wPOIDS", "${wParcs_Ent.Parcs_FAB_Label}", "${wParcs_Ent.Parcs_NIV_Label}", "${wParcs_Ent.Parcs_ZNE_Label} / ${wParcs_Ent.Parcs_EMP_Label}${wParcs_Ent.Parcs_NoSpec!.isEmpty ? '': ' / ${wParcs_Ent.Parcs_NoSpec}'}", "${wParcs_Date_Rev}", "${Action}", wParcs_Ent.Parcs_UUID_Parent!.isNotEmpty);
+      Organe wOrgane = Organe("${wparcsEnt.Parcs_order}", wDESC, wFAB, wPRS, wCLF, wPDT, wPOIDS, "${wparcsEnt.Parcs_FAB_Label}", "${wparcsEnt.Parcs_NIV_Label}", "${wparcsEnt.Parcs_ZNE_Label} / ${wparcsEnt.Parcs_EMP_Label}${wparcsEnt.Parcs_NoSpec!.isEmpty ? '': ' / ${wparcsEnt.Parcs_NoSpec}'}", wparcsDateRev, Action, wparcsEnt.Parcs_UUID_Parent!.isNotEmpty);
       organes.add(wOrgane);
     }
 
@@ -274,9 +274,9 @@ class Pdf_CR {
   }
 
   pw.Widget _buildHeader(pw.Context context) {
-    String wParcs_Date_Rev_Max = "";
+    String wparcsDateRevMax = "";
     try {
-      wParcs_Date_Rev_Max = DateFormat('dd/MM/yy').format(Parcs_Date_Rev_Max);
+      wparcsDateRevMax = DateFormat('dd/MM/yy').format(Parcs_Date_Rev_Max);
     } catch (e) {}
 
     return pw.Column(
@@ -317,7 +317,7 @@ class Pdf_CR {
                     crossAxisCount: 1,
                     children: [
                       pw.Text(
-                        "COMPTE-RENDU N° ${Srv_DbTools.gIntervention.InterventionId} DU ${wParcs_Date_Rev_Max}",
+                        "COMPTE-RENDU N° ${Srv_DbTools.gIntervention.InterventionId} DU $wparcsDateRevMax",
                         textAlign: pw.TextAlign.center,
                       ),
                       pw.Text(
@@ -400,7 +400,7 @@ class Pdf_CR {
                 borderRadius: const pw.BorderRadius.all(
                   pw.Radius.circular(1),
                 ),
-                color: PdfColor(54 / 255, 96 / 255, 146 / 255),
+                color: const PdfColor(54 / 255, 96 / 255, 146 / 255),
               ),
               padding: const pw.EdgeInsets.only(left: 40, top: 0, bottom: 0, right: 20),
               alignment: pw.Alignment.center,
@@ -444,9 +444,9 @@ class Pdf_CR {
                     ),
                   ),
                   pw.Text(
-                    "${Srv_DbTools.gSite.Site_Nom}",
+                    Srv_DbTools.gSite.Site_Nom,
                     textAlign: pw.TextAlign.left,
-                    style: pw.TextStyle(
+                    style: const pw.TextStyle(
                       color: PdfColors.black,
                       fontSize: 11,
                     ),
@@ -456,7 +456,7 @@ class Pdf_CR {
                   pw.Text(
                     "${Srv_DbTools.gSite.Site_Adr1} ${Srv_DbTools.gSite.Site_Adr2} ${Srv_DbTools.gSite.Site_CP} ${Srv_DbTools.gSite.Site_Ville}",
                     textAlign: pw.TextAlign.left,
-                    style: pw.TextStyle(
+                    style: const pw.TextStyle(
                       color: PdfColors.black,
                       fontSize: 11,
                     ),
@@ -494,10 +494,10 @@ class Pdf_CR {
                     ),
                     pw.Expanded(
                       child: pw.Text(
-                        "${Srv_DbTools.gGroupe.Groupe_Nom}",
+                        Srv_DbTools.gGroupe.Groupe_Nom,
                         textAlign: pw.TextAlign.left,
                         maxLines: 1,
-                        style: pw.TextStyle(
+                        style: const pw.TextStyle(
                           color: PdfColors.black,
                           fontSize: 11,
                         ),
@@ -531,10 +531,10 @@ class Pdf_CR {
                     ),
                     pw.Expanded(
                       child: pw.Text(
-                        "${Srv_DbTools.gZone.Zone_Nom}",
+                        Srv_DbTools.gZone.Zone_Nom,
                         textAlign: pw.TextAlign.left,
                         maxLines: 1,
-                        style: pw.TextStyle(
+                        style: const pw.TextStyle(
                           color: PdfColors.black,
                           fontSize: 11,
                         ),
@@ -559,7 +559,7 @@ class Pdf_CR {
                 borderRadius: const pw.BorderRadius.all(
                   pw.Radius.circular(1),
                 ),
-                color: PdfColor(146 / 255, 208 / 255, 80 / 255),
+                color: const PdfColor(146 / 255, 208 / 255, 80 / 255),
               ),
               padding: const pw.EdgeInsets.only(left: 40, top: 0, bottom: 0, right: 20),
               alignment: pw.Alignment.center,
@@ -603,9 +603,9 @@ class Pdf_CR {
                     ),
                   ),
                   pw.Text(
-                    "${wIntervenants}",
+                    wIntervenants,
                     textAlign: pw.TextAlign.left,
-                    style: pw.TextStyle(
+                    style: const pw.TextStyle(
                       color: PdfColors.black,
                       fontSize: 11,
                     ),
@@ -740,26 +740,26 @@ class Pdf_CR {
     Duration duration = Duration(seconds: wParcs_Intervention_Timer);
     String sduration = _printDuration(duration);
 
-    String wParcs_Date_Rev_Min = "";
+    String wparcsDateRevMin = "";
     try {
-      wParcs_Date_Rev_Min = DateFormat('dd/MM/yy à HH:mm').format(Parcs_Date_Rev_Min);
+      wparcsDateRevMin = DateFormat('dd/MM/yy à HH:mm').format(Parcs_Date_Rev_Min);
     } catch (e) {}
 
-    String wParcs_Date_Rev_Max = "";
+    String wparcsDateRevMax = "";
     try {
-      wParcs_Date_Rev_Max = DateFormat('dd/MM/yy à HH:mm').format(Parcs_Date_Rev_Max);
+      wparcsDateRevMax = DateFormat('dd/MM/yy à HH:mm').format(Parcs_Date_Rev_Max);
     } catch (e) {}
 
     return pw.Column(children: [
 // SITE
 
-    PdfTools.Titre(context, "", "SITE D'INTERVENTION", pw.TextAlign.center, PdfColor(54 / 255, 96 / 255, 146 / 255), PdfColors.white),
+    PdfTools.Titre(context, "", "SITE D'INTERVENTION", pw.TextAlign.center, const PdfColor(54 / 255, 96 / 255, 146 / 255), PdfColors.white),
       pw.Row(crossAxisAlignment: pw.CrossAxisAlignment.start, children: [
         Container(
           width : 500,
           child: pw.Column(children: [
-            PdfTools.C1_L2(context, "Site : ", "${Srv_DbTools.gSite.Site_Nom}", "${Srv_DbTools.gSite.Site_Adr1} ${Srv_DbTools.gSite.Site_Adr2} ${Srv_DbTools.gSite.Site_CP} ${Srv_DbTools.gSite.Site_Ville}", pw.TextAlign.left, PdfColors.white, PdfColors.black),
-            PdfTools.C2_L1(context, "Client : ", "${Srv_DbTools.gClient.Client_Nom}", 7, "Compte : ", "${Srv_DbTools.gClient.Client_CodeGC}", 3, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+            PdfTools.C1_L2(context, "Site : ", Srv_DbTools.gSite.Site_Nom, "${Srv_DbTools.gSite.Site_Adr1} ${Srv_DbTools.gSite.Site_Adr2} ${Srv_DbTools.gSite.Site_CP} ${Srv_DbTools.gSite.Site_Ville}", pw.TextAlign.left, PdfColors.white, PdfColors.black),
+            PdfTools.C2_L1(context, "Client : ", Srv_DbTools.gClient.Client_Nom, 7, "Compte : ", Srv_DbTools.gClient.Client_CodeGC, 3, pw.TextAlign.left, PdfColors.white, PdfColors.black),
           ]),
         ),
 
@@ -781,26 +781,26 @@ class Pdf_CR {
         )
       ]),
 
-      PdfTools.C2_L1(context, "Groupe : ", "${Srv_DbTools.gGroupe.Groupe_Nom}", 5, "Zone : ", "${Srv_DbTools.gZone.Zone_Nom}", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C2_L1(context, "Groupe : ", Srv_DbTools.gGroupe.Groupe_Nom, 5, "Zone : ", Srv_DbTools.gZone.Zone_Nom, 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
       PdfTools.C1_L1(context, "Règlementation technique applicable au site : ", "Code du travail, APSAD R4", pw.TextAlign.left, PdfColors.white, PdfColors.black),
-      PdfTools.C2_L1(context, "Contact Site : ", "${Srv_DbTools.gContact.Contact_Civilite} ${Srv_DbTools.gContact.Contact_Prenom} ${Srv_DbTools.gContact.Contact_Nom}", 5, "Port (Contact Site) : ", "${Srv_DbTools.gContact.Contact_Tel2}", 5, pw.TextAlign.left, PdfColors.grey200, PdfColors.black),
-      PdfTools.C2_L1(context, "Tél : ", "${Srv_DbTools.gContact.Contact_Tel1}", 5, "Mail : ", "${Srv_DbTools.gContact.Contact_eMail}", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C2_L1(context, "Contact Site : ", "${Srv_DbTools.gContact.Contact_Civilite} ${Srv_DbTools.gContact.Contact_Prenom} ${Srv_DbTools.gContact.Contact_Nom}", 5, "Port (Contact Site) : ", Srv_DbTools.gContact.Contact_Tel2, 5, pw.TextAlign.left, PdfColors.grey200, PdfColors.black),
+      PdfTools.C2_L1(context, "Tél : ", Srv_DbTools.gContact.Contact_Tel1, 5, "Mail : ", Srv_DbTools.gContact.Contact_eMail, 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
 
       pw.SizedBox(height: 10),
 
-      PdfTools.Titre(context, "", "INTERVENTION", pw.TextAlign.center, PdfColor(146 / 255, 208 / 255, 80 / 255), PdfColors.white),
-      PdfTools.C1_L1(context, "Type d'intervention : ", "${Srv_DbTools.gIntervention.Intervention_Type}", pw.TextAlign.left, PdfColors.white, PdfColors.black),
-      PdfTools.C2_L1(context, "Début de l'intervention : ", "${wParcs_Date_Rev_Min}", 5, "Fin de l'intervention : ", "${wParcs_Date_Rev_Max}", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-      PdfTools.C2_L1(context, "Nombre d'organes visités : ", "${Srv_DbTools.ListParc_Desc.length}", 5, "Temps d'intervention : ", "${sduration}", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
-      PdfTools.C1_L1(context, "Agence de gestion : ", "${Srv_DbTools.gClient.Client_Depot}", pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.Titre(context, "", "INTERVENTION", pw.TextAlign.center, const PdfColor(146 / 255, 208 / 255, 80 / 255), PdfColors.white),
+      PdfTools.C1_L1(context, "Type d'intervention : ", Srv_DbTools.gIntervention.Intervention_Type, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C2_L1(context, "Début de l'intervention : ", wparcsDateRevMin, 5, "Fin de l'intervention : ", wparcsDateRevMax, 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C2_L1(context, "Nombre d'organes visités : ", "${Srv_DbTools.ListParc_Desc.length}", 5, "Temps d'intervention : ", sduration, 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C1_L1(context, "Agence de gestion : ", Srv_DbTools.gClient.Client_Depot, pw.TextAlign.left, PdfColors.white, PdfColors.black),
       PdfTools.C1_L1(context, "Responsable d'intervention : ", "016-Anthony FUNDONI - Port : 06 25 47 56 12 - Mail : a.fundoni@mondialfeu.fr", pw.TextAlign.left, PdfColors.white, PdfColors.black),
-      PdfTools.C1_L1(context, "Technicien : ", "${wIntervenants}", pw.TextAlign.left, PdfColors.white, PdfColors.black),
+      PdfTools.C1_L1(context, "Technicien : ", wIntervenants, pw.TextAlign.left, PdfColors.white, PdfColors.black),
       PdfTools.C1_L1(context, "Recommandations et Observations Post-Intervention :", "", pw.TextAlign.left, PdfColors.grey200, PdfColors.black),
-      PdfTools.C1_L1(context, "", "${Srv_DbTools.gIntervention.Intervention_Remarque}", pw.TextAlign.left, PdfColors.white, PdfColors.black, wMaxLines: 13),
+      PdfTools.C1_L1(context, "", Srv_DbTools.gIntervention.Intervention_Remarque, pw.TextAlign.left, PdfColors.white, PdfColors.black, wMaxLines: 13),
       PdfTools.C2_L1(context, "Devis lié à l'intervention : ", "Oui, voir Devis", 5, "Reliquat lié à l'intervention : ", "Oui, voir Bon de Livraison", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black),
       PdfTools.C1_L1(context, "Plus de détail sur votre intervention : ", "https://verifplus.com", pw.TextAlign.left, PdfColors.white, PdfColors.black),
       PdfTools.C2_L1(context, "Prestations et visite effectuées par (Technicien)", "", 5, "Prestations et visite constatées par (Client)", "", 5, pw.TextAlign.left, PdfColors.grey200, PdfColors.black),
-      PdfTools.C2_L3(context, "Nom : ", "${Srv_DbTools.gIntervention.Intervention_Signataire_Tech}", "Date : ", "${Srv_DbTools.gIntervention.Intervention_Signataire_Date}", "Signature :", "", 5, "Nom :", "${Srv_DbTools.gIntervention.Intervention_Signataire_Client}", "Date : ", "${Srv_DbTools.gIntervention.Intervention_Signataire_Date_Client}", "Signature : ", "(Absent sur site)", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black, imageData_Cachet: imageData_Cachet),
+      PdfTools.C2_L3(context, "Nom : ", Srv_DbTools.gIntervention.Intervention_Signataire_Tech, "Date : ", Srv_DbTools.gIntervention.Intervention_Signataire_Date, "Signature :", "", 5, "Nom :", Srv_DbTools.gIntervention.Intervention_Signataire_Client, "Date : ", Srv_DbTools.gIntervention.Intervention_Signataire_Date_Client, "Signature : ", "(Absent sur site)", 5, pw.TextAlign.left, PdfColors.white, PdfColors.black, imageData_Cachet: imageData_Cachet),
     ]);
   }
 
@@ -848,7 +848,7 @@ class Pdf_CR {
       border: TableBorder.all(),
       headerAlignment: pw.Alignment.center,
       cellAlignment: pw.Alignment.centerLeft,
-      headerDecoration: pw.BoxDecoration(
+      headerDecoration: const pw.BoxDecoration(
         color: PdfColors.grey200,
       ),
       headerHeight: 55,
@@ -904,7 +904,7 @@ class Pdf_CR {
         color: PdfColors.black,
         fontSize: 9,
       ),
-      rowDecoration: pw.BoxDecoration(
+      rowDecoration: const pw.BoxDecoration(
         border: pw.Border(
           bottom: pw.BorderSide(
             color: PdfColors.white,
@@ -962,8 +962,9 @@ class Organe {
     switch (index) {
       case 0:
         String wno = no;
-        if (LNK)
+        if (LNK) {
           wno = "  └►";
+        }
         return wno;
       case 1:
         return DESC;

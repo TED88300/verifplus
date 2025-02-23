@@ -27,18 +27,18 @@ class PieGrid extends ChartGrid {
     final datasets = Chart.of(context).datasets;
     final size = constraints.biggest;
 
-    final _gridBox = PdfRect(0, 0, size.x, size.y);
+    final gridBox = PdfRect(0, 0, size.x, size.y);
 
-    var _total = 0.0;
+    var total = 0.0;
 
     for (final dataset in datasets) {
       assert(dataset is PieDataSet, 'Use only PieDataset with a PieGrid');
       if (dataset is PieDataSet) {
-        _total += dataset.value;
+        total += dataset.value;
       }
     }
 
-    final unit = pi / _total * 2;
+    final unit = pi / total * 2;
     var angle = startAngle;
 
     for (final dataset in datasets) {
@@ -49,18 +49,18 @@ class PieGrid extends ChartGrid {
       }
     }
 
-    _radius = min(_gridBox.width / 2, _gridBox.height / 2);
+    _radius = min(gridBox.width / 2, gridBox.height / 2);
     var reduce = false;
 
     do {
       reduce = false;
       for (final dataset in datasets) {
         if (dataset is PieDataSet) {
-          dataset.layout(context, BoxConstraints.tight(_gridBox.size));
+          dataset.layout(context, BoxConstraints.tight(gridBox.size));
           assert(dataset.box != null);
           if (_radius > 20 &&
-              (dataset.box!.width > _gridBox.width ||
-                  dataset.box!.height > _gridBox.height)) {
+              (dataset.box!.width > gridBox.width ||
+                  dataset.box!.height > gridBox.height)) {
             _radius -= 10;
             reduce = true;
             break;
@@ -184,10 +184,10 @@ class PieDataSet extends Dataset {
   @override
   void layout(Context context, BoxConstraints constraints,
       {bool parentUsesSize = false}) {
-    final _offset = _isFullCircle ? 0 : offset;
+    final offset = _isFullCircle ? 0 : this.offset;
 
     final grid = Chart.of(context).grid as PieGrid;
-    final len = grid.radius + _offset;
+    final len = grid.radius + offset;
     var x = -len;
     var y = -len;
     var w = len * 2;
@@ -202,7 +202,7 @@ class PieDataSet extends Dataset {
     // Find the legend position
     final bisect = _isFullCircle ? 1 / 4 * pi : (angleStart + angleEnd) / 2;
 
-    final _legendAlign = legendAlign ??
+    final legendAlign = this.legendAlign ??
         (lp == PieLegendPosition.inside
             ? TextAlign.center
             : (bisect > pi ? TextAlign.right : TextAlign.left));
@@ -219,7 +219,7 @@ class PieDataSet extends Dataset {
                           : PdfColors.black
                       : null),
             ),
-            textAlign: _legendAlign,
+            textAlign: legendAlign,
           );
 
     if (_legendWidget != null) {
@@ -234,12 +234,12 @@ class PieDataSet extends Dataset {
       switch (lp) {
         case PieLegendPosition.outside:
           final o = grid.radius + legendOffset;
-          final cx = sin(bisect) * (_offset + o);
-          final cy = cos(bisect) * (_offset + o);
+          final cx = sin(bisect) * (offset + o);
+          final cy = cos(bisect) * (offset + o);
 
           _legendStart = PdfPoint(
-            sin(bisect) * (_offset + grid.radius + legendOffset * 0.1),
-            cos(bisect) * (_offset + grid.radius + legendOffset * 0.1),
+            sin(bisect) * (offset + grid.radius + legendOffset * 0.1),
+            cos(bisect) * (offset + grid.radius + legendOffset * 0.1),
           );
 
           _legendPivot = PdfPoint(cx, cy);
@@ -281,16 +281,16 @@ class PieDataSet extends Dataset {
           final double cy;
           if (innerRadius == 0) {
             o = _isFullCircle ? 0 : grid.radius * 2 / 3;
-            cx = sin(bisect) * (_offset + o);
-            cy = cos(bisect) * (_offset + o);
+            cx = sin(bisect) * (offset + o);
+            cy = cos(bisect) * (offset + o);
           } else {
             o = (grid.radius + innerRadius) / 2;
             if (_isFullCircle) {
               cx = 0;
               cy = o;
             } else {
-              cx = sin(bisect) * (_offset + o);
-              cy = cos(bisect) * (_offset + o);
+              cx = sin(bisect) * (offset + o);
+              cy = cos(bisect) * (offset + o);
             }
           }
           _legendWidget!.box = PdfRect.fromPoints(

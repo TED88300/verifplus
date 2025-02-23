@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Desc.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Entete_DialogNo.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
@@ -73,76 +72,76 @@ class _Client_Groupe_Parc_Inter_EnteteDialogState extends State<Client_Groupe_Pa
 
 
 
-    DbTools.glfParcs_Desc.forEach((param_Saisie) async {
-      switch (param_Saisie.ParcsDesc_Type) {
+    DbTools.glfParcs_Desc.forEach((paramSaisie) async {
+      switch (paramSaisie.ParcsDesc_Type) {
         case "DESC":
         case "DESC2":
-          Srv_DbTools.DESC_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.DESC_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
         case "FAB":
         case "FAB2":
-          Srv_DbTools.FAB_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.FAB_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
         case "TYPE":
         case "TYPE2":
-          Srv_DbTools.TYPE_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.TYPE_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
         case "PRS":
-          Srv_DbTools.PRS_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.PRS_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
         case "CLF":
-          Srv_DbTools.CLF_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.CLF_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
         case "MOB":
-          Srv_DbTools.MOB_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.MOB_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
         case "PDT":
-          Srv_DbTools.PDT_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.PDT_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
         case "POIDS":
-          Srv_DbTools.POIDS_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.POIDS_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
         case "GAM":
-          Srv_DbTools.GAM_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.GAM_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
       }
     });
 
     print("RETOUR ${Srv_DbTools.FAB_Lib} ${Srv_DbTools.PRS_Lib} ${Srv_DbTools.CLF_Lib} ${Srv_DbTools.PDT_Lib} ${Srv_DbTools.POIDS_Lib} ${Srv_DbTools.GAM_Lib} ");
 
-    List<Param_Saisie> ListParam_Saisie_Tmp = [];
-    ListParam_Saisie_Tmp.addAll(Srv_DbTools.ListParam_Saisie);
-    ListParam_Saisie_Tmp.addAll(Srv_DbTools.ListParam_Saisie_Base);
+    List<Param_Saisie> listparamSaisieTmp = [];
+    listparamSaisieTmp.addAll(Srv_DbTools.ListParam_Saisie);
+    listparamSaisieTmp.addAll(Srv_DbTools.ListParam_Saisie_Base);
 
     DescAff = "N°${DbTools.gParc_Ent.Parcs_order} ${DbTools.gParc_Ent.Parcs_NoSpec!.isEmpty ? '': DbTools.gParc_Ent.Parcs_NoSpec}";
 
 //    PDT POIDS PRS MOB ANN FAB
 
-    ListParam_Saisie_Tmp.sort(Srv_DbTools.affL1SortComparison);
-    ListParam_Saisie_Tmp.forEach((element) async {
+    listparamSaisieTmp.sort(Srv_DbTools.affL1SortComparison);
+    listparamSaisieTmp.forEach((element) async {
       if (element.Param_Saisie_Affichage_L1) {
         if (element.Param_Saisie_ID.compareTo("FREQ") == 0) {
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FREQ_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FREQ_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("ANN") == 0) {
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ANN_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ANN_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("AFAB") == 0) {
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FAB_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FAB_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("NIV") == 0) {
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_NIV_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_NIV_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("ZNE") == 0) {
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ZNE_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ZNE_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("EMP") == 0) {
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_EMP_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_EMP_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("LOT") == 0) {
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_LOT_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_LOT_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("SERIE") == 0) {
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_SERIE_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_SERIE_Label!, element.Param_Saisie_ID)}";
         } else {
 
 
           DbTools.glfParcs_Desc.forEach((element2) async {
             if (element.Param_Saisie_ID == element2.ParcsDesc_Type) {
-              DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, element.Param_Saisie_ID)}";
+              DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, element.Param_Saisie_ID)}";
               print(" ELSE ${element.Param_Saisie_ID } ${element2.ParcsDesc_Lib} ${element2.toMap()}");
             }
           });
@@ -150,33 +149,33 @@ class _Client_Groupe_Parc_Inter_EnteteDialogState extends State<Client_Groupe_Pa
       }
     });
 
-    print(" AffDesc()  ${DescAff}");
+    print(" AffDesc()  $DescAff");
 
 
     DescAff2 = "";
-    ListParam_Saisie_Tmp.sort(Srv_DbTools.affL2SortComparison);
-    ListParam_Saisie_Tmp.forEach((element) async {
+    listparamSaisieTmp.sort(Srv_DbTools.affL2SortComparison);
+    listparamSaisieTmp.forEach((element) async {
       if (element.Param_Saisie_Affichage_L2) {
         if (element.Param_Saisie_ID.compareTo("FREQ") == 0) {
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FREQ_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FREQ_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("ANN") == 0) {
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ANN_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ANN_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("AFAB") == 0) {
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FAB_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FAB_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("NIV") == 0) {
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_NIV_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_NIV_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("ZNE") == 0) {
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ZNE_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ZNE_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("EMP") == 0) {
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_EMP_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_EMP_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("LOT") == 0) {
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_LOT_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_LOT_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("SERIE") == 0) {
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_SERIE_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_SERIE_Label!, element.Param_Saisie_ID)}";
         } else {
           DbTools.glfParcs_Desc.forEach((element2) async {
             if (element.Param_Saisie_ID == element2.ParcsDesc_Type) {
-              DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, element.Param_Saisie_ID)}";
+              DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, element.Param_Saisie_ID)}";
             }
           });
         }
@@ -212,7 +211,7 @@ class _Client_Groupe_Parc_Inter_EnteteDialogState extends State<Client_Groupe_Pa
             Container(
               height: 5,
             ),
-            Container(
+            SizedBox(
               width: 500,
               child: Text(
                 DescAff,
@@ -223,7 +222,7 @@ class _Client_Groupe_Parc_Inter_EnteteDialogState extends State<Client_Groupe_Pa
             Container(
               height: 10,
             ),
-            Container(
+            SizedBox(
               width: 500,
               child: Text(
                 DescAff2,
@@ -231,7 +230,7 @@ class _Client_Groupe_Parc_Inter_EnteteDialogState extends State<Client_Groupe_Pa
                 textAlign: TextAlign.center,
               ),
             ),
-            Container(
+            SizedBox(
               width: 500,
               child: Text(
                 DescAff3,
@@ -304,7 +303,7 @@ class _Client_Groupe_Parc_Inter_EnteteDialogState extends State<Client_Groupe_Pa
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
 
@@ -319,7 +318,7 @@ class _Client_Groupe_Parc_Inter_EnteteDialogState extends State<Client_Groupe_Pa
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -351,10 +350,10 @@ class _Client_Groupe_Parc_Inter_EnteteDialogState extends State<Client_Groupe_Pa
     String ListChamps = "";
     Srv_DbTools.getParam_ParamMemDet("Param_Div", widget.param_Saisie.Param_Saisie_ID);
 
-    if (Srv_DbTools.ListParam_Param.length > 0)
+    if (Srv_DbTools.ListParam_Param.isNotEmpty)
     {
        ListChamps = Srv_DbTools.ListParam_Param[0].Param_Param_Text;
-      print("ListChamps ${ListChamps}");
+      print("ListChamps $ListChamps");
     }
     else
     {
@@ -374,11 +373,11 @@ class _Client_Groupe_Parc_Inter_EnteteDialogState extends State<Client_Groupe_Pa
       }
     });
 
-    return Container(
+    return SizedBox(
       width: 560,
       height: 310,
       child: Container(
-        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
         color: gColors.greyLight,
         child: ListView.separated(
           shrinkWrap: true,
@@ -394,126 +393,126 @@ class _Client_Groupe_Parc_Inter_EnteteDialogState extends State<Client_Groupe_Pa
     );
   }
 
-  Widget RowSaisie(Param_Saisie param_Saisie, double LargeurCol,
+  Widget RowSaisie(Param_Saisie paramSaisie, double LargeurCol,
       double LargeurCol2, double H2) {
 //    print("RowSaisie A DbTools.gParc_Ent ${DbTools.gParc_Ent.toString()}");
 //    print("RowSaisie A param_Saisie ${param_Saisie.toString()}");
 
-    Parc_Desc wParc_Desc = DbTools.getParcs_Desc_Id_Type(
-        DbTools.gParc_Ent.ParcsId!, param_Saisie.Param_Saisie_ID);
+    Parc_Desc wparcDesc = DbTools.getParcs_Desc_Id_Type(
+        DbTools.gParc_Ent.ParcsId!, paramSaisie.Param_Saisie_ID);
 
 
 //    print("RowSaisie Base 1 ${wParc_Desc.toString()}");
-    if (wParc_Desc.ParcsDesc_Type!.compareTo("FREQ") == 0) {
-      wParc_Desc.ParcsDesc_Id = DbTools.gParc_Ent.Parcs_FREQ_Id;
-      wParc_Desc.ParcsDesc_Lib = DbTools.gParc_Ent.Parcs_FREQ_Label;
-      if (wParc_Desc.ParcsDesc_Lib!.isEmpty) {
+    if (wparcDesc.ParcsDesc_Type!.compareTo("FREQ") == 0) {
+      wparcDesc.ParcsDesc_Id = DbTools.gParc_Ent.Parcs_FREQ_Id;
+      wparcDesc.ParcsDesc_Lib = DbTools.gParc_Ent.Parcs_FREQ_Label;
+      if (wparcDesc.ParcsDesc_Lib!.isEmpty) {
         Srv_DbTools.getParam_Saisie_ParamMem("FREQ");
-        Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
+        for (var element in Srv_DbTools.ListParam_Saisie_Param) {
           if (element.Param_Saisie_Param_Init) {
-            wParc_Desc.ParcsDesc_Lib = element.Param_Saisie_Param_Label;
+            wparcDesc.ParcsDesc_Lib = element.Param_Saisie_Param_Label;
           }
-        });
+        }
       }
     }
 
-    if (wParc_Desc.ParcsDesc_Type!.compareTo("ANN") == 0) {
-      wParc_Desc.ParcsDesc_Id = DbTools.gParc_Ent.Parcs_ANN_Id;
-      wParc_Desc.ParcsDesc_Lib = DbTools.gParc_Ent.Parcs_ANN_Label;
-      if (wParc_Desc.ParcsDesc_Lib!.isEmpty) {
+    if (wparcDesc.ParcsDesc_Type!.compareTo("ANN") == 0) {
+      wparcDesc.ParcsDesc_Id = DbTools.gParc_Ent.Parcs_ANN_Id;
+      wparcDesc.ParcsDesc_Lib = DbTools.gParc_Ent.Parcs_ANN_Label;
+      if (wparcDesc.ParcsDesc_Lib!.isEmpty) {
         Srv_DbTools.getParam_Saisie_ParamMem("ANN");
-        Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
+        for (var element in Srv_DbTools.ListParam_Saisie_Param) {
           if (element.Param_Saisie_Param_Init) {
-            wParc_Desc.ParcsDesc_Lib = element.Param_Saisie_Param_Label;
+            wparcDesc.ParcsDesc_Lib = element.Param_Saisie_Param_Label;
           }
-        });
+        }
       }
     }
 
-    if (wParc_Desc.ParcsDesc_Type!.compareTo("AFAB") == 0) {
-      wParc_Desc.ParcsDesc_Id = DbTools.gParc_Ent.Parcs_FAB_Id;
-      wParc_Desc.ParcsDesc_Lib = DbTools.gParc_Ent.Parcs_FAB_Label;
-      if (wParc_Desc.ParcsDesc_Lib!.isEmpty) {
+    if (wparcDesc.ParcsDesc_Type!.compareTo("AFAB") == 0) {
+      wparcDesc.ParcsDesc_Id = DbTools.gParc_Ent.Parcs_FAB_Id;
+      wparcDesc.ParcsDesc_Lib = DbTools.gParc_Ent.Parcs_FAB_Label;
+      if (wparcDesc.ParcsDesc_Lib!.isEmpty) {
         Srv_DbTools.getParam_Saisie_ParamMem("AFAB");
-        Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
+        for (var element in Srv_DbTools.ListParam_Saisie_Param) {
           if (element.Param_Saisie_Param_Init) {
-            wParc_Desc.ParcsDesc_Lib = element.Param_Saisie_Param_Label;
+            wparcDesc.ParcsDesc_Lib = element.Param_Saisie_Param_Label;
           }
-        });
+        }
       }
     }
     
     
-    if (wParc_Desc.ParcsDesc_Type!.compareTo("NIV") == 0) {
-      wParc_Desc.ParcsDesc_Id = DbTools.gParc_Ent.Parcs_NIV_Id;
-      wParc_Desc.ParcsDesc_Lib = DbTools.gParc_Ent.Parcs_NIV_Label;
-      if (wParc_Desc.ParcsDesc_Lib!.isEmpty) {
+    if (wparcDesc.ParcsDesc_Type!.compareTo("NIV") == 0) {
+      wparcDesc.ParcsDesc_Id = DbTools.gParc_Ent.Parcs_NIV_Id;
+      wparcDesc.ParcsDesc_Lib = DbTools.gParc_Ent.Parcs_NIV_Label;
+      if (wparcDesc.ParcsDesc_Lib!.isEmpty) {
         Srv_DbTools.getParam_Saisie_ParamMem("NIV");
-        Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
+        for (var element in Srv_DbTools.ListParam_Saisie_Param) {
           if (element.Param_Saisie_Param_Init) {
-            wParc_Desc.ParcsDesc_Lib = element.Param_Saisie_Param_Label;
+            wparcDesc.ParcsDesc_Lib = element.Param_Saisie_Param_Label;
           }
-        });
+        }
       }
     }
-    if (wParc_Desc.ParcsDesc_Type!.compareTo("ZNE") == 0) {
-      wParc_Desc.ParcsDesc_Id = DbTools.gParc_Ent.Parcs_ZNE_Id;
-      wParc_Desc.ParcsDesc_Lib = DbTools.gParc_Ent.Parcs_ZNE_Label;
-      if (wParc_Desc.ParcsDesc_Lib!.isEmpty) {
+    if (wparcDesc.ParcsDesc_Type!.compareTo("ZNE") == 0) {
+      wparcDesc.ParcsDesc_Id = DbTools.gParc_Ent.Parcs_ZNE_Id;
+      wparcDesc.ParcsDesc_Lib = DbTools.gParc_Ent.Parcs_ZNE_Label;
+      if (wparcDesc.ParcsDesc_Lib!.isEmpty) {
         Srv_DbTools.getParam_Saisie_ParamMem("ZNE");
-        Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
+        for (var element in Srv_DbTools.ListParam_Saisie_Param) {
           if (element.Param_Saisie_Param_Init) {
-            wParc_Desc.ParcsDesc_Lib = element.Param_Saisie_Param_Label;
+            wparcDesc.ParcsDesc_Lib = element.Param_Saisie_Param_Label;
           }
-        });
+        }
       }
     }
-    if (wParc_Desc.ParcsDesc_Type!.compareTo("EMP") == 0) {
-      wParc_Desc.ParcsDesc_Id = DbTools.gParc_Ent.Parcs_EMP_Id;
-      wParc_Desc.ParcsDesc_Lib = DbTools.gParc_Ent.Parcs_EMP_Label;
-      if (wParc_Desc.ParcsDesc_Lib!.isEmpty) {
+    if (wparcDesc.ParcsDesc_Type!.compareTo("EMP") == 0) {
+      wparcDesc.ParcsDesc_Id = DbTools.gParc_Ent.Parcs_EMP_Id;
+      wparcDesc.ParcsDesc_Lib = DbTools.gParc_Ent.Parcs_EMP_Label;
+      if (wparcDesc.ParcsDesc_Lib!.isEmpty) {
         Srv_DbTools.getParam_Saisie_ParamMem("EMP");
-        Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
+        for (var element in Srv_DbTools.ListParam_Saisie_Param) {
           if (element.Param_Saisie_Param_Init) {
-            wParc_Desc.ParcsDesc_Lib = element.Param_Saisie_Param_Label;
+            wparcDesc.ParcsDesc_Lib = element.Param_Saisie_Param_Label;
           }
-        });
+        }
       }
     }
-    if (wParc_Desc.ParcsDesc_Type!.compareTo("LOT") == 0) {
-      wParc_Desc.ParcsDesc_Id = DbTools.gParc_Ent.Parcs_LOT_Id;
-      wParc_Desc.ParcsDesc_Lib = DbTools.gParc_Ent.Parcs_LOT_Label;
-      if (wParc_Desc.ParcsDesc_Lib!.isEmpty) {
+    if (wparcDesc.ParcsDesc_Type!.compareTo("LOT") == 0) {
+      wparcDesc.ParcsDesc_Id = DbTools.gParc_Ent.Parcs_LOT_Id;
+      wparcDesc.ParcsDesc_Lib = DbTools.gParc_Ent.Parcs_LOT_Label;
+      if (wparcDesc.ParcsDesc_Lib!.isEmpty) {
         Srv_DbTools.getParam_Saisie_ParamMem("LOT");
-        Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
+        for (var element in Srv_DbTools.ListParam_Saisie_Param) {
           if (element.Param_Saisie_Param_Init) {
-            wParc_Desc.ParcsDesc_Lib = element.Param_Saisie_Param_Label;
+            wparcDesc.ParcsDesc_Lib = element.Param_Saisie_Param_Label;
           }
-        });
+        }
       }
     }
 
-    if (wParc_Desc.ParcsDesc_Type!.compareTo("SERIE") == 0) {
-      wParc_Desc.ParcsDesc_Id = DbTools.gParc_Ent.Parcs_SERIE_Id;
-      wParc_Desc.ParcsDesc_Lib = DbTools.gParc_Ent.Parcs_SERIE_Label;
-      if (wParc_Desc.ParcsDesc_Lib!.isEmpty) {
+    if (wparcDesc.ParcsDesc_Type!.compareTo("SERIE") == 0) {
+      wparcDesc.ParcsDesc_Id = DbTools.gParc_Ent.Parcs_SERIE_Id;
+      wparcDesc.ParcsDesc_Lib = DbTools.gParc_Ent.Parcs_SERIE_Label;
+      if (wparcDesc.ParcsDesc_Lib!.isEmpty) {
         Srv_DbTools.getParam_Saisie_ParamMem("SERIE");
-        Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
+        for (var element in Srv_DbTools.ListParam_Saisie_Param) {
           if (element.Param_Saisie_Param_Init) {
-            wParc_Desc.ParcsDesc_Lib = element.Param_Saisie_Param_Label;
+            wparcDesc.ParcsDesc_Lib = element.Param_Saisie_Param_Label;
           }
-        });
+        }
       }
     }
 
 
-    if (wParc_Desc.ParcsDesc_Type!.compareTo("SPEC") == 0) {
-      wParc_Desc.ParcsDesc_Id = "";
-      wParc_Desc.ParcsDesc_Lib = "${DbTools.gParc_Ent.Parcs_NoSpec!}";
+    if (wparcDesc.ParcsDesc_Type!.compareTo("SPEC") == 0) {
+      wparcDesc.ParcsDesc_Id = "";
+      wparcDesc.ParcsDesc_Lib = DbTools.gParc_Ent.Parcs_NoSpec!;
     }
 
 
-    if (wParc_Desc.ParcsDesc_Lib!.isEmpty) wParc_Desc.ParcsDesc_Lib = "---";
+    if (wparcDesc.ParcsDesc_Lib!.isEmpty) wparcDesc.ParcsDesc_Lib = "---";
 
 
 //       print("RowSaisie Base 2 ${wParc_Desc.toString()}");
@@ -521,52 +520,53 @@ class _Client_Groupe_Parc_Inter_EnteteDialogState extends State<Client_Groupe_Pa
     return InkWell(
       onTap: () async {
         await HapticFeedback.vibrate();
-        print("onTap >>>>>>>>>>>>> BBBBB ${wParc_Desc.toString()} ${wParc_Desc.ParcsDesc_Lib}");
+        print("onTap >>>>>>>>>>>>> BBBBB ${wparcDesc.toString()} ${wparcDesc.ParcsDesc_Lib}");
 
-        if(wParc_Desc.ParcsDesc_Type == "SPEC")
+        if(wparcDesc.ParcsDesc_Type == "SPEC") {
           await Client_Groupe_Parc_Inter_Entete_DialogNo.Dialogs_Entete(context, onMaj);
-        else
-          await Client_Groupe_Parc_Inter_Equip_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, param_Saisie, wParc_Desc);
-
-        if (wParc_Desc.ParcsDesc_Type!.compareTo("FREQ") == 0) {
-          DbTools.gParc_Ent.Parcs_FREQ_Id = wParc_Desc.ParcsDesc_Id;
-          DbTools.gParc_Ent.Parcs_FREQ_Label = wParc_Desc.ParcsDesc_Lib;
+        } else {
+          await Client_Groupe_Parc_Inter_Equip_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, paramSaisie, wparcDesc);
         }
 
-        if (wParc_Desc.ParcsDesc_Type!.compareTo("ANN") == 0) {
-          DbTools.gParc_Ent.Parcs_ANN_Id = wParc_Desc.ParcsDesc_Id;
-          DbTools.gParc_Ent.Parcs_ANN_Label = wParc_Desc.ParcsDesc_Lib;
+        if (wparcDesc.ParcsDesc_Type!.compareTo("FREQ") == 0) {
+          DbTools.gParc_Ent.Parcs_FREQ_Id = wparcDesc.ParcsDesc_Id;
+          DbTools.gParc_Ent.Parcs_FREQ_Label = wparcDesc.ParcsDesc_Lib;
         }
 
-        if (wParc_Desc.ParcsDesc_Type!.compareTo("AFAB") == 0) {
-          DbTools.gParc_Ent.Parcs_FAB_Id = wParc_Desc.ParcsDesc_Id;
-          DbTools.gParc_Ent.Parcs_FAB_Label = wParc_Desc.ParcsDesc_Lib;
+        if (wparcDesc.ParcsDesc_Type!.compareTo("ANN") == 0) {
+          DbTools.gParc_Ent.Parcs_ANN_Id = wparcDesc.ParcsDesc_Id;
+          DbTools.gParc_Ent.Parcs_ANN_Label = wparcDesc.ParcsDesc_Lib;
         }
 
-        if (wParc_Desc.ParcsDesc_Type!.compareTo("NIV") == 0) {
-          DbTools.gParc_Ent.Parcs_NIV_Id = wParc_Desc.ParcsDesc_Id;
-          DbTools.gParc_Ent.Parcs_NIV_Label = wParc_Desc.ParcsDesc_Lib;
+        if (wparcDesc.ParcsDesc_Type!.compareTo("AFAB") == 0) {
+          DbTools.gParc_Ent.Parcs_FAB_Id = wparcDesc.ParcsDesc_Id;
+          DbTools.gParc_Ent.Parcs_FAB_Label = wparcDesc.ParcsDesc_Lib;
         }
 
-        if (wParc_Desc.ParcsDesc_Type!.compareTo("ZNE") == 0) {
-          DbTools.gParc_Ent.Parcs_ZNE_Id = wParc_Desc.ParcsDesc_Id;
-          DbTools.gParc_Ent.Parcs_ZNE_Label = wParc_Desc.ParcsDesc_Lib;
+        if (wparcDesc.ParcsDesc_Type!.compareTo("NIV") == 0) {
+          DbTools.gParc_Ent.Parcs_NIV_Id = wparcDesc.ParcsDesc_Id;
+          DbTools.gParc_Ent.Parcs_NIV_Label = wparcDesc.ParcsDesc_Lib;
         }
 
-        if (wParc_Desc.ParcsDesc_Type!.compareTo("EMP") == 0) {
-          DbTools.gParc_Ent.Parcs_EMP_Id = wParc_Desc.ParcsDesc_Id;
-          DbTools.gParc_Ent.Parcs_EMP_Label = wParc_Desc.ParcsDesc_Lib;
-        }
-        if (wParc_Desc.ParcsDesc_Type!.compareTo("LOT") == 0) {
-          DbTools.gParc_Ent.Parcs_LOT_Id = wParc_Desc.ParcsDesc_Id;
-          DbTools.gParc_Ent.Parcs_LOT_Label = wParc_Desc.ParcsDesc_Lib;
-        }
-        if (wParc_Desc.ParcsDesc_Type!.compareTo("SERIE") == 0) {
-          DbTools.gParc_Ent.Parcs_SERIE_Id = wParc_Desc.ParcsDesc_Id;
-          DbTools.gParc_Ent.Parcs_SERIE_Label = wParc_Desc.ParcsDesc_Lib;
+        if (wparcDesc.ParcsDesc_Type!.compareTo("ZNE") == 0) {
+          DbTools.gParc_Ent.Parcs_ZNE_Id = wparcDesc.ParcsDesc_Id;
+          DbTools.gParc_Ent.Parcs_ZNE_Label = wparcDesc.ParcsDesc_Lib;
         }
 
-        print("RowSaisie Retour ${wParc_Desc.toString()}");
+        if (wparcDesc.ParcsDesc_Type!.compareTo("EMP") == 0) {
+          DbTools.gParc_Ent.Parcs_EMP_Id = wparcDesc.ParcsDesc_Id;
+          DbTools.gParc_Ent.Parcs_EMP_Label = wparcDesc.ParcsDesc_Lib;
+        }
+        if (wparcDesc.ParcsDesc_Type!.compareTo("LOT") == 0) {
+          DbTools.gParc_Ent.Parcs_LOT_Id = wparcDesc.ParcsDesc_Id;
+          DbTools.gParc_Ent.Parcs_LOT_Label = wparcDesc.ParcsDesc_Lib;
+        }
+        if (wparcDesc.ParcsDesc_Type!.compareTo("SERIE") == 0) {
+          DbTools.gParc_Ent.Parcs_SERIE_Id = wparcDesc.ParcsDesc_Id;
+          DbTools.gParc_Ent.Parcs_SERIE_Label = wparcDesc.ParcsDesc_Lib;
+        }
+
+        print("RowSaisie Retour ${wparcDesc.toString()}");
         print("RowSaisie Retour DbTools.gParc_Ent ${DbTools.gParc_Ent.toString()}");
 
         print(" updateParc_Ent A");
@@ -581,23 +581,23 @@ class _Client_Groupe_Parc_Inter_EnteteDialogState extends State<Client_Groupe_Pa
           Container(
             width: LargeurCol,
             height: 20,
-            padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+            padding: const EdgeInsets.fromLTRB(0, 2, 8, 0),
             child: Text(
-              "    ${param_Saisie.Param_Saisie_Label}",
+              "    ${paramSaisie.Param_Saisie_Label}",
               style: gColors.bodyTitle1_B_Gr,
             ),
           ),
-          BtnCard("${wParc_Desc.ParcsDesc_Lib} >", param_Saisie, wParc_Desc,
+          BtnCard("${wparcDesc.ParcsDesc_Lib} >", paramSaisie, wparcDesc,
               LargeurCol2),
         ],
       ),
     );
   }
 
-  Widget BtnCard(String? wText, Param_Saisie param_Saisie, Parc_Desc wParc_Desc,
+  Widget BtnCard(String? wText, Param_Saisie paramSaisie, Parc_Desc wparcDesc,
       double LargeurCol2) {
-    return new Container(
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+    return Container(
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       width: LargeurCol2,
       height: 31,
       child: Card(

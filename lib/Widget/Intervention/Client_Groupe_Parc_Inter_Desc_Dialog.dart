@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Desc.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/Widget/Intervention/Client_Groupe_Parc_Inter_Equip_Saisie.dart';
@@ -18,10 +17,10 @@ class Client_Groupe_Parc_Inter_Desc_Dialog {
   static Param_Saisie param_Saisie= Param_Saisie.Param_SaisieInit();
   Client_Groupe_Parc_Inter_Desc_Dialog();
   static Future<void> Dialogs_Desc(
-      BuildContext context, VoidCallback onMaj, Param_Saisie param_Saisie) async {
+      BuildContext context, VoidCallback onMaj, Param_Saisie paramSaisie) async {
     await showDialog(
       context: context,
-      builder: (BuildContext context) => Client_Groupe_Parc_Inter_DescDialog(onMaj: onMaj, param_Saisie : param_Saisie),
+      builder: (BuildContext context) => Client_Groupe_Parc_Inter_DescDialog(onMaj: onMaj, param_Saisie : paramSaisie),
     );
   }
 }
@@ -64,103 +63,103 @@ class _Client_Groupe_Parc_Inter_DescDialogState extends State<Client_Groupe_Parc
 
 
   void AffDesc() {
-    DbTools.glfParcs_Desc.forEach((param_Saisie) async {
-      switch (param_Saisie.ParcsDesc_Type) {
+    DbTools.glfParcs_Desc.forEach((paramSaisie) async {
+      switch (paramSaisie.ParcsDesc_Type) {
         case "DESC":
         case "DESC2":
-          Srv_DbTools.DESC_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.DESC_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
         case "FAB":
         case "FAB2":
-          Srv_DbTools.FAB_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.FAB_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
         case "TYPE":
         case "TYPE2":
-          Srv_DbTools.TYPE_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.TYPE_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
 
 
         case "ARM":
-          Srv_DbTools.ARM_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.ARM_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
         case "INOX":
-          Srv_DbTools.INOX_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.INOX_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
 
         case "DIAM":
-          Srv_DbTools.DIAM_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.DIAM_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
         case "LONG":
-          Srv_DbTools.LONG_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.LONG_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
         case "DIF":
-          Srv_DbTools.DIF_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.DIF_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
         case "DISP":
-          Srv_DbTools.DISP_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.DISP_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
         case "PREM":
-          Srv_DbTools.PREM_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.PREM_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
 
 
 
         case "PRS":
-          Srv_DbTools.PRS_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.PRS_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
         case "CLF":
-          Srv_DbTools.CLF_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.CLF_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
         case "MOB":
-          Srv_DbTools.MOB_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.MOB_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
         case "PDT":
-          Srv_DbTools.PDT_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.PDT_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
         case "POIDS":
-          Srv_DbTools.POIDS_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.POIDS_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
         case "GAM":
-          Srv_DbTools.GAM_Lib = param_Saisie.ParcsDesc_Lib.toString();
+          Srv_DbTools.GAM_Lib = paramSaisie.ParcsDesc_Lib.toString();
           break;
       }
     });
 
     print("RETOUR ");
 
-    List<Param_Saisie> ListParam_Saisie_Tmp = [];
-    ListParam_Saisie_Tmp.addAll(Srv_DbTools.ListParam_Saisie);
-    ListParam_Saisie_Tmp.addAll(Srv_DbTools.ListParam_Saisie_Base);
+    List<Param_Saisie> listparamSaisieTmp = [];
+    listparamSaisieTmp.addAll(Srv_DbTools.ListParam_Saisie);
+    listparamSaisieTmp.addAll(Srv_DbTools.ListParam_Saisie_Base);
 
     DescAff = "N°${DbTools.gParc_Ent.Parcs_order} ${DbTools.gParc_Ent.Parcs_NoSpec!.isEmpty ? '': DbTools.gParc_Ent.Parcs_NoSpec}";
 
 //    PDT POIDS PRS MOB ANN FAB
 
-    ListParam_Saisie_Tmp.sort(Srv_DbTools.affL1SortComparison);
-    ListParam_Saisie_Tmp.forEach((element) async {
+    listparamSaisieTmp.sort(Srv_DbTools.affL1SortComparison);
+    listparamSaisieTmp.forEach((element) async {
       if (element.Param_Saisie_Affichage_L1) {
         if (element.Param_Saisie_ID.compareTo("FREQ") == 0) {
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FREQ_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FREQ_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("ANN") == 0) {
           DbTools.gDateMS = DbTools.gParc_Ent.Parcs_ANN_Label!;
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ANN_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ANN_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("AFAB") == 0) {
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FAB_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FAB_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("NIV") == 0) {
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_NIV_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_NIV_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("ZNE") == 0) {
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ZNE_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ZNE_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("EMP") == 0) {
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_EMP_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_EMP_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("LOT") == 0) {
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_LOT_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_LOT_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("SERIE") == 0) {
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_SERIE_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_SERIE_Label!, element.Param_Saisie_ID)}";
         } else {
           DbTools.glfParcs_Desc.forEach((element2) async {
             if (element.Param_Saisie_ID == element2.ParcsDesc_Type) {
 //              print("AffDesc() ParcsDesc_Type ${element2.ParcsDesc_Type}");
-              DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, element.Param_Saisie_ID)}";
+              DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, element.Param_Saisie_ID)}";
             }
           });
         }
@@ -168,31 +167,31 @@ class _Client_Groupe_Parc_Inter_DescDialogState extends State<Client_Groupe_Parc
     });
 
     DescAff2 = "";
-    ListParam_Saisie_Tmp.sort(Srv_DbTools.affL2SortComparison);
-    ListParam_Saisie_Tmp.forEach((element) async {
+    listparamSaisieTmp.sort(Srv_DbTools.affL2SortComparison);
+    listparamSaisieTmp.forEach((element) async {
       if (element.Param_Saisie_Affichage_L2) {
         if (element.Param_Saisie_ID.compareTo("FREQ") == 0) {
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FREQ_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FREQ_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("ANN") == 0) {
           DbTools.gDateMS = DbTools.gParc_Ent.Parcs_ANN_Label!;
 
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ANN_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ANN_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("AFAB") == 0) {
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FAB_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FAB_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("NIV") == 0) {
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_NIV_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_NIV_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("ZNE") == 0) {
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ZNE_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ZNE_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("EMP") == 0) {
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_EMP_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_EMP_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("LOT") == 0) {
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_LOT_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_LOT_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("SERIE") == 0) {
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_SERIE_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_SERIE_Label!, element.Param_Saisie_ID)}";
         } else {
           DbTools.glfParcs_Desc.forEach((element2) async {
             if (element.Param_Saisie_ID == element2.ParcsDesc_Type) {
-              DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, element.Param_Saisie_ID)}";
+              DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, element.Param_Saisie_ID)}";
             }
           });
         }
@@ -228,7 +227,7 @@ class _Client_Groupe_Parc_Inter_DescDialogState extends State<Client_Groupe_Parc
             Container(
               height: 5,
             ),
-            Container(
+            SizedBox(
               width: 500,
               child: Text(
                 DescAff,
@@ -239,7 +238,7 @@ class _Client_Groupe_Parc_Inter_DescDialogState extends State<Client_Groupe_Parc
             Container(
               height: 10,
             ),
-            Container(
+            SizedBox(
               width: 500,
               child: Text(
                 DescAff2,
@@ -247,7 +246,7 @@ class _Client_Groupe_Parc_Inter_DescDialogState extends State<Client_Groupe_Parc
                 textAlign: TextAlign.center,
               ),
             ),
-            Container(
+            SizedBox(
               width: 500,
               child: Text(
                 DescAff3,
@@ -320,7 +319,7 @@ class _Client_Groupe_Parc_Inter_DescDialogState extends State<Client_Groupe_Parc
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
 
@@ -335,7 +334,7 @@ class _Client_Groupe_Parc_Inter_DescDialogState extends State<Client_Groupe_Parc
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -367,10 +366,10 @@ class _Client_Groupe_Parc_Inter_DescDialogState extends State<Client_Groupe_Parc
     String ListChamps = "";
     Srv_DbTools.getParam_ParamMemDet("Param_Div", widget.param_Saisie.Param_Saisie_ID);
 
-    if (Srv_DbTools.ListParam_Param.length > 0)
+    if (Srv_DbTools.ListParam_Param.isNotEmpty)
     {
        ListChamps = Srv_DbTools.ListParam_Param[0].Param_Param_Text;
-      print("ListChamps ${ListChamps}");
+      print("ListChamps $ListChamps");
     }
     else
     {
@@ -392,13 +391,13 @@ class _Client_Groupe_Parc_Inter_DescDialogState extends State<Client_Groupe_Parc
           RowSaisies.add(RowSaisie(element, LargeurCol, LargeurCol2, H2));
         }
       }
-    };
+    }
 
-    return Container(
+    return SizedBox(
       width: 560,
       height: 310,
       child: Container(
-        padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+        padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
         color: gColors.greyLight,
         child: ListView.separated(
           shrinkWrap: true,
@@ -414,21 +413,21 @@ class _Client_Groupe_Parc_Inter_DescDialogState extends State<Client_Groupe_Parc
     );
   }
 
-  Widget RowSaisie(Param_Saisie param_Saisie, double LargeurCol, double LargeurCol2, double H2) {
-    Parc_Desc wParc_Desc = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, param_Saisie.Param_Saisie_ID);
-    print(" RowSaisie A DbTools.gParc_Ent ${DbTools.gParc_Ent.toString()} ${wParc_Desc.ParcsDesc_Lib}");
-    print(" RowSaisie A wParc_Desc ${wParc_Desc.toString()}");
+  Widget RowSaisie(Param_Saisie paramSaisie, double LargeurCol, double LargeurCol2, double H2) {
+    Parc_Desc wparcDesc = DbTools.getParcs_Desc_Id_Type(DbTools.gParc_Ent.ParcsId!, paramSaisie.Param_Saisie_ID);
+    print(" RowSaisie A DbTools.gParc_Ent ${DbTools.gParc_Ent.toString()} ${wparcDesc.ParcsDesc_Lib}");
+    print(" RowSaisie A wParc_Desc ${wparcDesc.toString()}");
 
 
-    if (wParc_Desc.ParcsDesc_Lib!.isEmpty) wParc_Desc.ParcsDesc_Lib = "---";
+    if (wparcDesc.ParcsDesc_Lib!.isEmpty) wparcDesc.ParcsDesc_Lib = "---";
     //   print("RowSaisie Base 2 ${wParc_Desc.toString()}");
 
     return InkWell(
       onTap: () async {
         await HapticFeedback.vibrate();
-        print("••••••• RowSaisie Group > ${wParc_Desc.toString()} ");
-        await Client_Groupe_Parc_Inter_Equip_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, param_Saisie, wParc_Desc);
-        print("••••••• RowSaisie Group < ${wParc_Desc.toString()} ${wParc_Desc.ParcsDesc_Lib}");
+        print("••••••• RowSaisie Group > ${wparcDesc.toString()} ");
+        await Client_Groupe_Parc_Inter_Equip_Saisie_Dialog.Dialogs_Saisie(context, onSaisie, paramSaisie, wparcDesc);
+        print("••••••• RowSaisie Group < ${wparcDesc.toString()} ${wparcDesc.ParcsDesc_Lib}");
 
 
          AffDesc();
@@ -441,23 +440,23 @@ class _Client_Groupe_Parc_Inter_DescDialogState extends State<Client_Groupe_Parc
           Container(
             width: LargeurCol,
             height: 20,
-            padding: EdgeInsets.fromLTRB(0, 2, 8, 0),
+            padding: const EdgeInsets.fromLTRB(0, 2, 8, 0),
             child: Text(
-              "    ${param_Saisie.Param_Saisie_Label}",
+              "    ${paramSaisie.Param_Saisie_Label}",
               style: gColors.bodyTitle1_B_Gr,
             ),
           ),
-          BtnCard("${wParc_Desc.ParcsDesc_Lib} >", param_Saisie, wParc_Desc,
+          BtnCard("${wparcDesc.ParcsDesc_Lib} >", paramSaisie, wparcDesc,
               LargeurCol2),
         ],
       ),
     );
   }
 
-  Widget BtnCard(String? wText, Param_Saisie param_Saisie, Parc_Desc wParc_Desc,
+  Widget BtnCard(String? wText, Param_Saisie paramSaisie, Parc_Desc wparcDesc,
       double LargeurCol2) {
-    return new Container(
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+    return Container(
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       width: LargeurCol2,
       height: 31,
       child: Card(

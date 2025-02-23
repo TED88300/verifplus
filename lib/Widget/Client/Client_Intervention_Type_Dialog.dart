@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Interventions.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Sites.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
-import 'package:verifplus/Tools/DbTools/Db_Parcs_Ent.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'dart:async';
 
@@ -13,7 +11,7 @@ class Client_Intervention_Type_Dialog {
   static Future<void> Dialogs_Intervention_Type(BuildContext context) async {
     await showDialog(
       context: context,
-      builder: (BuildContext context) => Client_InterventionTypeDialog(),
+      builder: (BuildContext context) => const Client_InterventionTypeDialog(),
     );
   }
 }
@@ -67,7 +65,7 @@ class _Client_InterventionTypeDialogState extends State<Client_InterventionTypeD
             Container(
               height: 5,
             ),
-            Container(
+            SizedBox(
               width: 500,
               child: Text(
                 "Selection d'un type d'organe",
@@ -134,10 +132,10 @@ class _Client_InterventionTypeDialogState extends State<Client_InterventionTypeD
       double ii = 27.0 * (index);
 
       scrollController.animateTo(ii, //scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 1300),
+          duration: const Duration(milliseconds: 1300),
           curve: Curves.elasticOut);
     } else {
-      Timer(Duration(milliseconds: 1400), () => _scrollToBottom(index));
+      Timer(const Duration(milliseconds: 1400), () => _scrollToBottom(index));
     }
   }
 
@@ -151,8 +149,8 @@ class _Client_InterventionTypeDialogState extends State<Client_InterventionTypeD
     for (int i = 0; i < Srv_DbTools.ListIntervention.length; i++) {
       Intervention wIntervention = Srv_DbTools.ListIntervention[i];
 
-      if (lIntervention.indexOf(wIntervention.Intervention_Parcs_Type!) == -1) {
-        lIntervention.add(wIntervention.Intervention_Parcs_Type!);
+      if (!lIntervention.contains(wIntervention.Intervention_Parcs_Type)) {
+        lIntervention.add(wIntervention.Intervention_Parcs_Type);
       }
     }
 
@@ -168,7 +166,7 @@ class _Client_InterventionTypeDialogState extends State<Client_InterventionTypeD
             border: Border.all(
               color: Colors.grey,
             ),
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(12.0),
             ),
           ),
@@ -197,12 +195,12 @@ class _Client_InterventionTypeDialogState extends State<Client_InterventionTypeD
                                     border: Border.all(
                                       color: (item.compareTo(Srv_DbTools.gSelIntervention) == 0) ? gColors.primaryGreen : Colors.transparent,
                                     ),
-                                    borderRadius: BorderRadius.all(
+                                    borderRadius: const BorderRadius.all(
                                       Radius.circular(12.0),
                                     ),
                                   ),
 
-                                  padding: EdgeInsets.fromLTRB(10, 15, 10, 5), // TED
+                                  padding: const EdgeInsets.fromLTRB(10, 15, 10, 5), // TED
                                   height: 45,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.start,

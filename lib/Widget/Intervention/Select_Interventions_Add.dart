@@ -190,37 +190,37 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
     await DbTools.getParam_Param();
 
     ListParam_Type.clear();
-    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+    for (var element in Srv_DbTools.ListParam_ParamAll) {
       if (element.Param_Param_Type.compareTo("Type_Interv") == 0) {
         ListParam_Type.add(element.Param_Param_Text);
       }
-    });
+    }
     wType = ListParam_Type[0];
-    print("ListParam_Type  ${wType}");
+    print("ListParam_Type  $wType");
 
     ListParam_Org.clear();
-    Srv_DbTools.ListParam_ParamAll.forEach((element) {
+    for (var element in Srv_DbTools.ListParam_ParamAll) {
       if (element.Param_Param_Type.compareTo("Type_Organe") == 0) {
         if (element.Param_Param_ID.compareTo("Base") != 0) {
           ListParam_Org.add(element.Param_Param_Text);
           ListParam_OrgID.add(element.Param_Param_ID);
         }
       }
-    });
+    }
     wOrg = ListParam_Org[0];
     wOrgID = ListParam_OrgID[0];
 
-    print("Type_Organe isNew ${widget.isNew} ${wOrg}");
+    print("Type_Organe isNew ${widget.isNew} $wOrg");
 
     await DbTools.getAdresseType("AGENCE");
     int i = 0;
     ListDepot.clear();
-    Srv_DbTools.ListAdressesearchresult.forEach((wAdresse) {
+    for (var wAdresse in Srv_DbTools.ListAdressesearchresult) {
       ListDepot.add(wAdresse.Adresse_Nom);
-      if (wAdresse.Adresse_Nom.compareTo("${Srv_DbTools.gUserLogin.User_Depot}") == 0) {
+      if (wAdresse.Adresse_Nom.compareTo(Srv_DbTools.gUserLogin.User_Depot) == 0) {
         selDepot = wAdresse.Adresse_Nom;
       }
-    });
+    }
     await Reload();
   }
 
@@ -264,7 +264,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                 width: 200,
                 height: 40,
                 child: Text(
@@ -275,7 +275,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
               ),
             ],
           ),
-          ListParam_Type.length == 0
+          ListParam_Type.isEmpty
               ? Container()
               : Container(
 
@@ -301,11 +301,11 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
                                 border: Border.all(
                                   color: (item.compareTo(selDepot) == 0) ? gColors.primaryGreen : Colors.transparent,
                                 ),
-                                borderRadius: BorderRadius.all(
+                                borderRadius: const BorderRadius.all(
                                   Radius.circular(12.0),
                                 ),
                               ),
-                              padding: EdgeInsets.fromLTRB(10, 12, 10, 5), // TED
+                              padding: const EdgeInsets.fromLTRB(10, 12, 10, 5), // TED
                               height: 45,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -338,7 +338,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                 width: 600,
                 height: 30,
                 child: Text(
@@ -353,7 +353,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                   width: 550.0,
                   height: 30,
                   child: TextField(
@@ -380,12 +380,12 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
                   )),
             ],
           ),
-          ListParam_Type.length == 0
+          ListParam_Type.isEmpty
               ? Container()
               : Container(
 
                   width: 550.0,
-                  height: SelHeight - ((selClient.Client_Nom.length == 0 ) ? 17 : 47),
+                  height: SelHeight - ((selClient.Client_Nom.isEmpty ) ? 17 : 47),
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                   child: ListView.builder(
                     shrinkWrap: true,
@@ -405,11 +405,11 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
                                 border: Border.all(
                                   color: (item.Client_Nom.compareTo(selClient.Client_Nom) == 0) ? gColors.primaryGreen : Colors.transparent,
                                 ),
-                                borderRadius: BorderRadius.all(
+                                borderRadius: const BorderRadius.all(
                                   Radius.circular(12.0),
                                 ),
                               ),
-                              padding: EdgeInsets.fromLTRB(10, 12, 10, 5), // TED
+                              padding: const EdgeInsets.fromLTRB(10, 12, 10, 5), // TED
                               height: 45,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -442,7 +442,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                 width: 200,
                 height: 30,
                 child: Text(
@@ -457,7 +457,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                   width: 550.0,
                   height: 30,
                   child: TextField(
@@ -484,11 +484,11 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
                   )),
             ],
           ),
-          ListParam_Type.length == 0
+          ListParam_Type.isEmpty
               ? Container()
               : Container(
             width: 550.0,
-                  height: SelHeight - ((selSite.Site_Nom.length == 0 ) ? 47 : 77),
+                  height: SelHeight - ((selSite.Site_Nom.isEmpty ) ? 47 : 77),
                   padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                   child: ListView.builder(
                     shrinkWrap: true,
@@ -508,11 +508,11 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
                                 border: Border.all(
                                   color: (item.Site_Nom.compareTo(selSite.Site_Nom) == 0) ? gColors.primaryGreen : Colors.transparent,
                                 ),
-                                borderRadius: BorderRadius.all(
+                                borderRadius: const BorderRadius.all(
                                   Radius.circular(12.0),
                                 ),
                               ),
-                              padding: EdgeInsets.fromLTRB(10, 12, 10, 5), // TED
+                              padding: const EdgeInsets.fromLTRB(10, 12, 10, 5), // TED
                               height: 45,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -545,7 +545,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                 width: 200,
                 height: 50,
                 child: Text(
@@ -556,11 +556,11 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
               ),
             ],
           ),
-          ListParam_Type.length == 0
+          ListParam_Type.isEmpty
               ? Container()
               : Container(
             width: 550.0,
-            height: SelHeight - ((selZone.Zone_Nom.length == 0 ) ? 77 : 107),
+            height: SelHeight - ((selZone.Zone_Nom.isEmpty ) ? 77 : 107),
                   padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
                   child: ListView.builder(
                     shrinkWrap: true,
@@ -580,11 +580,11 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
                                 border: Border.all(
                                   color: (item.Zone_Nom.compareTo(selZone.Zone_Nom) == 0) ? gColors.primaryGreen : Colors.transparent,
                                 ),
-                                borderRadius: BorderRadius.all(
+                                borderRadius: const BorderRadius.all(
                                   Radius.circular(12.0),
                                 ),
                               ),
-                              padding: EdgeInsets.fromLTRB(10, 12, 10, 5), // TED
+                              padding: const EdgeInsets.fromLTRB(10, 12, 10, 5), // TED
                               height: 45,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -619,7 +619,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                 width: 250,
                 height: 30,
                 child: Text(
@@ -630,7 +630,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
               ),
             ],
           ),
-          ListParam_Type.length == 0
+          ListParam_Type.isEmpty
               ? Container()
               : Container(
             width: 250.0, // Change as per your requirement
@@ -655,11 +655,11 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
                                 border: Border.all(
                                   color: (item.compareTo(wType) == 0) ? gColors.primaryGreen : Colors.transparent,
                                 ),
-                                borderRadius: BorderRadius.all(
+                                borderRadius: const BorderRadius.all(
                                   Radius.circular(12.0),
                                 ),
                               ),
-                              padding: EdgeInsets.fromLTRB(10, 12, 10, 5), // TED
+                              padding: const EdgeInsets.fromLTRB(10, 12, 10, 5), // TED
                               height: 45,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -692,7 +692,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                 width: 250,
                 height: 30,
                 child: Text(
@@ -703,7 +703,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
               ),
             ],
           ),
-          ListParam_Org.length == 0
+          ListParam_Org.isEmpty
               ? Container()
               : Container(
                   width: 250.0,
@@ -729,11 +729,11 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
                                 border: Border.all(
                                   color: (item.compareTo(wOrg) == 0) ? gColors.primaryGreen : Colors.transparent,
                                 ),
-                                borderRadius: BorderRadius.all(
+                                borderRadius: const BorderRadius.all(
                                   Radius.circular(12.0),
                                 ),
                               ),
-                              padding: EdgeInsets.fromLTRB(10, 12, 10, 5), // TED
+                              padding: const EdgeInsets.fromLTRB(10, 12, 10, 5), // TED
                               height: 45,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -771,7 +771,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
             Container(
               height: 5,
             ),
-            Container(
+            SizedBox(
               width: 600,
               child: Text(
                 "Intervention : Création $iListe",
@@ -800,48 +800,48 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
               children: [
                 Column(
                   children: [
-                    (selDepot.length == 0) ? Container() :
+                    (selDepot.isEmpty) ? Container() :
                     Container(
                       padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
                       width: 600,
                       height: 32,
                       child: Text(
-                        "${selDepot}",
+                        selDepot,
                         style: gColors.bodyTitle1_N_G,
                         textAlign: TextAlign.center,
                       ),
                     ),
 
-                    (selClient.Client_Nom.length == 0) ? Container() :
+                    (selClient.Client_Nom.isEmpty) ? Container() :
                     Container(
                       padding: const EdgeInsets.fromLTRB(0, 5, 0, 0),
                       width: 600,
                       height: 30,
                       child: Text(
-                        "${selClient.Client_Nom}",
+                        selClient.Client_Nom,
                         style: gColors.bodyTitle1_N_G,
                         textAlign: TextAlign.center,
                       ),
                     ),
 
-                    (selSite.Site_Nom.length == 0) ? Container() :
+                    (selSite.Site_Nom.isEmpty) ? Container() :
                     Container(
                       padding: const EdgeInsets.fromLTRB(0, 2, 0, 2),
                       width: 600,
                       height: 30,
                       child: Text(
-                        "${selSite.Site_Nom}",
+                        selSite.Site_Nom,
                         style: gColors.bodyTitle1_B_G,
                         textAlign: TextAlign.center,
                       ),
                     ),
-                    (selZone.Zone_Nom.length == 0 || selSite.Site_Nom == selZone.Zone_Nom) ? Container() :
+                    (selZone.Zone_Nom.isEmpty || selSite.Site_Nom == selZone.Zone_Nom) ? Container() :
                     Container(
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
                       width: 600,
                       height: 30,
                       child: Text(
-                        "${selZone.Zone_Nom}",
+                        selZone.Zone_Nom,
                         style: gColors.bodyTitle1_B_G,
                         textAlign: TextAlign.center,
                       ),
@@ -860,18 +860,18 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
             ),
             Row(
               children: [
-                Spacer(),
+                const Spacer(),
                 (iListe == 0) ? ListeAgences(context) : Container(),
                 (iListe == 1) ? ListeClients(context) : Container(),
                 (iListe == 2) ? ListeSites(context) : Container(),
                 (iListe == 3) ? ListeZones(context) : Container(),
                 (iListe == 4) ? ListeType(context) : Container(),
-                (iListe == 4) ? Spacer() : Container(),
+                (iListe == 4) ? const Spacer() : Container(),
                 (iListe == 4 && widget.isNew) ? ListeOrg(context) : Container(),
-                Spacer(),
+                const Spacer(),
               ],
             ),
-            Spacer(),
+            const Spacer(),
             iListe == 4 ? Valider(context) : Suite(context),
             Container(
               color: gColors.black,
@@ -893,7 +893,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
   //**********************************
 
   Widget Suite(BuildContext context) {
-    print("(iListe ${selClient} && selClient.ClientId ${selClient.ClientId}) ");
+    print("(iListe $selClient && selClient.ClientId ${selClient.ClientId}) ");
 
     return Container(
       width: 440,
@@ -908,7 +908,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
               Navigator.of(context).pop();
@@ -922,12 +922,12 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
-              if (iListe > 0)
+              if (iListe > 0) {
                 iListe--;
-              else
+              } else
                 {
                   Navigator.of(context).pop();
 
@@ -965,7 +965,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
             width: 8,
           ),
           ((iListe == 1 && selClient.ClientId == 0) || (iListe == 2 && selSite.SiteId == 0) || (iListe == 3 && selZone.ZoneId == 0))
-              ? new ElevatedButton(
+              ? ElevatedButton(
                   onPressed: () async {},
                   style: ElevatedButton.styleFrom(
                       backgroundColor: gColors.LinearGradient1,
@@ -975,7 +975,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
                       )),
                   child: Text('Suivant', style: gColors.bodyTitle1_B_W),
                 )
-              : new ElevatedButton(
+              : ElevatedButton(
                   onPressed: () async {
                     await HapticFeedback.vibrate();
                     iListe++;
@@ -1022,7 +1022,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
               Navigator.of(context).pop();
@@ -1036,7 +1036,7 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
               if (iListe > 0) iListe--;
@@ -1053,20 +1053,20 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
 
-              var now = new DateTime.now();
-              var formatter = new DateFormat('dd/MM/yyyy');
+              var now = DateTime.now();
+              var formatter = DateFormat('dd/MM/yyyy');
               String formattedDate = formatter.format(now);
 
               Srv_DbTools.gIntervention = Intervention.InterventionInit();
               bool wRet = await Srv_DbTools.addIntervention(Srv_DbTools.gSite.SiteId);
               Srv_DbTools.gIntervention.Intervention_isUpdate = wRet;
-              if (!wRet) Srv_DbTools.gLastID = new DateTime.now().millisecondsSinceEpoch * -1;
+              if (!wRet) Srv_DbTools.gLastID = DateTime.now().millisecondsSinceEpoch * -1;
               print("ADD Srv_DbTools.gLastID ${Srv_DbTools.gLastID}");
-              print("ADD wRet ${wRet}");
+              print("ADD wRet $wRet");
 
               Srv_DbTools.gIntervention.InterventionId = Srv_DbTools.gLastID;
               Srv_DbTools.gIntervention.Intervention_ZoneId = selZone.ZoneId;
@@ -1080,9 +1080,9 @@ class _Select_InterventionsAddState extends State<Select_InterventionsAdd> {
               if (wRet) await Srv_DbTools.setIntervention(Srv_DbTools.gIntervention);
 
               if (widget.isNew) {
-                Parc_Ent wParc_Ent = Parc_Ent.Parc_EntInit(Srv_DbTools.gIntervention.InterventionId!, wOrgID, 1);
-                wParc_Ent.Parcs_Update = 1;
-                await DbTools.insertParc_Ent(wParc_Ent);
+                Parc_Ent wparcEnt = Parc_Ent.Parc_EntInit(Srv_DbTools.gIntervention.InterventionId, wOrgID, 1);
+                wparcEnt.Parcs_Update = 1;
+                await DbTools.insertParc_Ent(wparcEnt);
 //                await Srv_DbTools.InsertUpdateParc_Ent_Srv(wParc_Ent);
               }
 

@@ -2,11 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_ImportExport.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Interventions.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Param.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Sites.dart';
-import 'package:verifplus/Tools/DbTools/DbTools.dart';
-import 'package:verifplus/Tools/DbTools/Db_Parcs_Ent.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'dart:async';
 
@@ -15,7 +11,7 @@ class Client_Intervention_Status_Dialog {
   static Future<void> Dialogs_Intervention_Status(BuildContext context) async {
     await showDialog(
       context: context,
-      builder: (BuildContext context) => Client_InterventionStatusDialog(),
+      builder: (BuildContext context) => const Client_InterventionStatusDialog(),
     );
   }
 }
@@ -54,7 +50,6 @@ class _Client_InterventionStatusDialogState extends State<Client_InterventionSta
         }
       }
     }
-    ;
     wStatus = ListParam_Status[0];
     wStatusID = ListParam_StatusID[0];
 
@@ -70,7 +65,6 @@ class _Client_InterventionStatusDialogState extends State<Client_InterventionSta
         break;
       }
     }
-    ;
 
     Reload();
   }
@@ -92,7 +86,7 @@ class _Client_InterventionStatusDialogState extends State<Client_InterventionSta
         padding: const EdgeInsets.fromLTRB(0, 0, 0, 5),
         child: Column(
           children: [
-            Container(
+            SizedBox(
               width: 500,
               child: Text(
                 "Changement de statut",
@@ -111,7 +105,7 @@ class _Client_InterventionStatusDialogState extends State<Client_InterventionSta
         ),
       ),
       contentPadding: EdgeInsets.zero,
-      content: ListParam_Status.length == 0
+      content: ListParam_Status.isEmpty
           ? Container()
           : Container(
               width: 50.0,
@@ -138,11 +132,11 @@ class _Client_InterventionStatusDialogState extends State<Client_InterventionSta
                                 border: Border.all(
                                   color: (item.compareTo(wStatus) == 0) ? gColors.primaryGreen : Colors.transparent,
                                 ),
-                                borderRadius: BorderRadius.all(
+                                borderRadius: const BorderRadius.all(
                                   Radius.circular(12.0),
                                 ),
                               ),
-                              padding: EdgeInsets.fromLTRB(10, 15, 10, 5), // TED
+                              padding: const EdgeInsets.fromLTRB(10, 15, 10, 5), // TED
                               height: 45,
                               child: Column(
                                 mainAxisAlignment: MainAxisAlignment.start,
@@ -173,7 +167,7 @@ class _Client_InterventionStatusDialogState extends State<Client_InterventionSta
           style: ElevatedButton.styleFrom(
             backgroundColor: gColors.primaryRed,
           ),
-          child: Text(
+          child: const Text(
             "Annuler",
             style: TextStyle(
               fontSize: 22,
@@ -190,7 +184,7 @@ class _Client_InterventionStatusDialogState extends State<Client_InterventionSta
                 width: 1.0,
                 color: gColors.primaryGreen,
               )),
-          child: Text(
+          child: const Text(
             "Valider",
             style: TextStyle(
               fontSize: 22,
@@ -218,10 +212,10 @@ class _Client_InterventionStatusDialogState extends State<Client_InterventionSta
       double ii = 27.0 * (index);
 
       scrollController.animateTo(ii, //scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 1300),
+          duration: const Duration(milliseconds: 1300),
           curve: Curves.elasticOut);
     } else {
-      Timer(Duration(milliseconds: 1400), () => _scrollToBottom(index));
+      Timer(const Duration(milliseconds: 1400), () => _scrollToBottom(index));
     }
   }
 

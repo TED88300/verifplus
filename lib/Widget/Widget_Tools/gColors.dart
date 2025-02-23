@@ -1,6 +1,5 @@
 import 'dart:math';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
@@ -28,10 +27,10 @@ class gColors {
   static const Color primaryBlue2 = Color(0xFF0070C0);
 
 
-  static const Color TypeCDE_DEV  = Color(0xFFC00000);
-  static const Color TypeCDE_BDC  = Color(0xFF3997ED);
-  static const Color TypeCDE_BDL  = Color(0xFF00B050);
-  static const Color TypeCDE_BDR  = Color(0xFFFF9900);
+  static const Color TypeCDE_DEV  = Color(0x55FF0000);
+  static const Color TypeCDE_BDC  = Color(0x553997ED);
+  static const Color TypeCDE_BDL  = Color(0x5500B050);
+  static const Color TypeCDE_BDR  = Color(0x55FF9900);
 
 
 
@@ -39,7 +38,7 @@ class gColors {
 
   static Color backgroundColor = const Color.fromRGBO(0, 116, 227, 1);
 
-  static const Color blueCyan = const Color.fromRGBO(0, 176, 240, 1);
+  static const Color blueCyan = Color.fromRGBO(0, 176, 240, 1);
 
   static const Color greyDark = Color(0xFF888888);
   static const Color greyLight = Color(0xFFf1f1f1);
@@ -54,7 +53,7 @@ class gColors {
 
   static const Color btnMoveDark = Color(0xFF512c7a);
   static const Color btnMove = Color(0xFF67389a);
-  static TextStyle get btnMove_B_W => TextStyle(
+  static TextStyle get btnMove_B_W => const TextStyle(
         color: white,
         fontSize: 12,
         fontWeight: FontWeight.bold,
@@ -98,7 +97,7 @@ class gColors {
 
   static const Color fillColor = Color(0xFFF3F3F3);
 
-  static Random random = new Random();
+  static Random random = Random();
   static int ImageRandom = random.nextInt(10444) + 1;
 
   static Size textSize(String text, TextStyle style) {
@@ -111,14 +110,14 @@ class gColors {
       Container(
         height: 6,
         alignment: Alignment.center,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: Colors.white,
         gradient: LinearGradient(
         begin: Alignment.topCenter,
         end: Alignment.bottomCenter,
         colors: [
-          const Color(0x88888888),
-          const Color(0x10999999)
+          Color(0x88888888),
+          Color(0x10999999)
         ],
     ),
     ));
@@ -139,7 +138,7 @@ class gColors {
                 color: gColors.LinearGradient1.withOpacity(0.9),
                 spreadRadius: 1,
                 blurRadius: 2,
-                offset: Offset(0, 2),
+                offset: const Offset(0, 2),
               ),
             ],
           ),
@@ -164,7 +163,7 @@ class gColors {
                 color: Colors.grey.withOpacity(0.9),
                 spreadRadius: 1,
                 blurRadius: 2,
-                offset: Offset(0, 2),
+                offset: const Offset(0, 2),
               ),
             ],
           ),
@@ -189,7 +188,7 @@ class gColors {
                 color: gColors.LinearGradient1.withOpacity(0.9),
                 spreadRadius: 1,
                 blurRadius: 2,
-                offset: Offset(0, 2),
+                offset: const Offset(0, 2),
               ),
             ],
           ),
@@ -201,16 +200,16 @@ class gColors {
   }
   static Widget wBoxDecorationvv(BuildContext context) {
     return ClipRRect(
-      borderRadius: BorderRadius.all(Radius.circular(13)),
+      borderRadius: const BorderRadius.all(Radius.circular(13)),
       child: Container(
-        child: gObj.wImage,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
 //          DecorationImage(image: MemoryImage(gObj.pic), fit: BoxFit.fill),
           color: Colors.cyan,
           boxShadow: <BoxShadow>[
             BoxShadow(color: Color(0xffaaaaaa), blurRadius: 10, spreadRadius: 10),
           ],
         ),
+        child: gObj.wImage,
       ),
     );
   }
@@ -220,7 +219,7 @@ class gColors {
       width: 40,
       height: 200,
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(13)),
+        borderRadius: const BorderRadius.all(Radius.circular(13)),
         image: DecorationImage(image: MemoryImage(gObj.picUser), fit: BoxFit.fill),
         color: Colors.white,
 //        shape: BoxShape.circle,
@@ -239,8 +238,8 @@ class gColors {
   static Map<int, Color> getSwatch(Color color) {
     final hslColor = HSLColor.fromColor(color);
     final lightness = hslColor.lightness;
-    final lowDivisor = 6;
-    final highDivisor = 5;
+    const lowDivisor = 6;
+    const highDivisor = 5;
     final lowStep = (1.0 - lightness) / lowDivisor;
     final highStep = lightness / highDivisor;
 
@@ -260,157 +259,163 @@ class gColors {
 
   static double wNorm = 14;
 
-  static TextStyle get bodyTitle1_B_P => TextStyle(
+  static TextStyle get bodyTitle1_B_P => const TextStyle(
         color: primary,
         fontSize: 32,
         fontWeight: FontWeight.bold,
       );
 
-  static TextStyle get bodyTitle1_B_G32 => TextStyle(
+  static TextStyle get bodyTitle1_B_G32 => const TextStyle(
         color: grey,
         fontSize: 32,
         fontWeight: FontWeight.bold,
       );
 
-  static TextStyle get bodyTitle1_B_R32 => TextStyle(
+  static TextStyle get bodyTitle1_B_R32 => const TextStyle(
         color: Colors.redAccent,
         fontSize: 32,
         fontWeight: FontWeight.bold,
       );
 
-  static TextStyle get bodyTitle1_B_W32 => TextStyle(
+  static TextStyle get bodyTitle1_B_W32 => const TextStyle(
         color: white,
         fontSize: 32,
         fontWeight: FontWeight.bold,
       );
 
-  static TextStyle get bodyTitle1_B_G28 => TextStyle(
+  static TextStyle get bodyTitle1_B_G28 => const TextStyle(
         color: grey,
         fontSize: 28,
         fontWeight: FontWeight.bold,
       );
 
-  static TextStyle get bodyTitle1_B_G24 => TextStyle(
+  static TextStyle get bodyTitle1_B_G24 => const TextStyle(
         color: grey,
         fontSize: 24,
         fontWeight: FontWeight.bold,
       );
 
-  static TextStyle get bodyTitle1_N_G24 => TextStyle(
+  static TextStyle get bodyTitle1_N_G24 => const TextStyle(
         color: grey,
         fontSize: 24,
         fontWeight: FontWeight.normal,
       );
 
-  static TextStyle get bodyTitle1_N_GD24 => TextStyle(
+  static TextStyle get bodyTitle1_N_GD24 => const TextStyle(
         color: greyDark,
         fontSize: 24,
         fontWeight: FontWeight.normal,
       );
 
-  static TextStyle get bodyTitle1_N_W24 => TextStyle(
+  static TextStyle get bodyTitle1_N_W24 => const TextStyle(
         color: white,
         fontSize: 24,
         fontWeight: FontWeight.normal,
       );
 
-  static TextStyle get bodyTitle1_B_G22 => TextStyle(
+  static TextStyle get bodyTitle1_B_G22 => const TextStyle(
         color: grey,
         fontSize: 22,
         fontWeight: FontWeight.bold,
       );
 
-  static TextStyle get bodyTitle1_N_G22 => TextStyle(
+  static TextStyle get bodyTitle1_N_G22 => const TextStyle(
         color: grey,
         fontSize: 22,
         fontWeight: FontWeight.normal,
       );
 
-  static TextStyle get bodyTitle1_B_S32 => TextStyle(
+  static TextStyle get bodyTitle1_B_S32 => const TextStyle(
         color: secondary,
         fontSize: 32,
         fontWeight: FontWeight.bold,
       );
 
-  static TextStyle get bodyTitle1_B_Pr => TextStyle(
+  static TextStyle get bodyTitle1_B_Pr => const TextStyle(
         color: primary,
         fontSize: 20,
         fontWeight: FontWeight.bold,
       );
 
-  static TextStyle get bodyTitle1_B_S => TextStyle(
+  static TextStyle get bodyTitle1_B_S => const TextStyle(
         color: secondary,
         fontSize: 32,
         fontWeight: FontWeight.bold,
       );
 
-  static TextStyle get bodyTitle1_B_Sr => TextStyle(
+  static TextStyle get bodyTitle1_B_Sr => const TextStyle(
         color: secondary,
         fontSize: 20,
         fontWeight: FontWeight.bold,
       );
 
-  static TextStyle get bodyTitle1_B_Wr => TextStyle(
+  static TextStyle get bodyTitle1_B_Wr => const TextStyle(
         color: white,
         fontSize: 20,
         fontWeight: FontWeight.bold,
       );
 
-  static TextStyle get bodyTitle1_B_G => TextStyle(
+  static TextStyle get bodyTitle1_B_G => const TextStyle(
         color: grey,
         fontSize: 24,
         fontWeight: FontWeight.bold,
       );
 
-  static TextStyle get bodyTitle1_B_G_20 => TextStyle(
+  static TextStyle get bodyTitle1_B_G_20 => const TextStyle(
         color: grey,
         fontSize: 20,
         fontWeight: FontWeight.bold,
       );
 
-  static TextStyle get bodyTitle1_N_G_20 => TextStyle(
+  static TextStyle get bodyTitle1_N_G_20 => const TextStyle(
         color: grey,
         fontSize: 20,
         fontWeight: FontWeight.normal,
       );
 
-  static TextStyle get bodyTitle1_N_G => TextStyle(
+  static TextStyle get bodyTitle1_N_G => const TextStyle(
         color: grey,
         fontSize: 24,
         fontWeight: FontWeight.normal,
       );
 
-  static TextStyle get bodyTitle1_B_W24 => TextStyle(
+  static TextStyle get bodyTitle1_B_W24 => const TextStyle(
         color: white,
         fontSize: 24,
         fontWeight: FontWeight.bold,
       );
 
-  static TextStyle get bodyTitle1_B_W => TextStyle(
+  static TextStyle get bodyTitle1_B_W => const TextStyle(
         color: white,
         fontSize: 16,
         fontWeight: FontWeight.bold,
       );
 
-  static TextStyle get bodyTitle1_B_Green => TextStyle(
+  static TextStyle get bodyTitle1_B_Green => const TextStyle(
         color: primaryGreen,
         fontSize: 16,
         fontWeight: FontWeight.bold,
       );
 
-  static TextStyle get bodyTitle1_N_W => TextStyle(
+  static TextStyle get bodyTitle1_N_W => const TextStyle(
         color: white,
         fontSize: 16,
         fontWeight: FontWeight.normal,
       );
 
-  static TextStyle get bodyTitle1_B_Gr => TextStyle(
+  static TextStyle get bodyTitle1_B_Gr => const TextStyle(
         color: grey,
         fontSize: 16,
         fontWeight: FontWeight.bold,
       );
 
-  static TextStyle get bodyTitle1_N_Gr => TextStyle(
+  static TextStyle get bodyTitle1_B_O => const TextStyle(
+    color: Colors.red,
+    fontSize: 16,
+    fontWeight: FontWeight.bold,
+  );
+
+  static TextStyle get bodyTitle1_N_Gr => const TextStyle(
     color: grey,
     fontSize: 16,
     fontWeight: FontWeight.normal,
@@ -418,7 +423,7 @@ class gColors {
 
 
 
-  static TextStyle get bodyTitle1_B_R => TextStyle(
+  static TextStyle get bodyTitle1_B_R => const TextStyle(
         color: Colors.red,
         fontSize: 16,
         fontWeight: FontWeight.bold,
@@ -426,13 +431,13 @@ class gColors {
 
 
 
-  static TextStyle get bodyTitle1_N_R => TextStyle(
+  static TextStyle get bodyTitle1_N_R => const TextStyle(
         color: Colors.red,
         fontSize: 16,
         fontWeight: FontWeight.normal,
       );
 
-  static TextStyle get bodyTitle1_Aide => TextStyle(
+  static TextStyle get bodyTitle1_Aide => const TextStyle(
         color: GrdBtn_Colors3sel,
         fontSize: 16,
         fontWeight: FontWeight.normal,
@@ -452,7 +457,7 @@ class gColors {
         fontWeight: FontWeight.normal,
       );
 
-  static TextStyle get smallSaisie_N_G => TextStyle(
+  static TextStyle get smallSaisie_N_G => const TextStyle(
         color: grey,
         fontSize: 12,
         fontWeight: FontWeight.normal,
@@ -538,13 +543,13 @@ class gColors {
         fontWeight: FontWeight.bold,
       );
 
-  static TextStyle get smallText_P_N => TextStyle(
+  static TextStyle get smallText_P_N => const TextStyle(
         color: primary,
         fontSize: 8,
         fontWeight: FontWeight.normal,
       );
 
-  static TextStyle get smallText_P_B => TextStyle(
+  static TextStyle get smallText_P_B => const TextStyle(
         color: primary,
         fontSize: 8,
         fontWeight: FontWeight.bold,
@@ -559,7 +564,7 @@ class gColors {
                 aIcon,
                 color: Colors.grey,
               ),
-        SizedBox(
+        const SizedBox(
           width: 2,
         ),
         Container(
@@ -588,7 +593,7 @@ class gColors {
                 aIcon,
                 color: Colors.grey,
               ),
-        SizedBox(
+        const SizedBox(
           width: 2,
         ),
         Container(
@@ -617,7 +622,7 @@ class gColors {
                 aIcon,
                 color: Colors.grey,
               ),
-        SizedBox(
+        const SizedBox(
           width: 2,
         ),
         Container(
@@ -633,17 +638,17 @@ class gColors {
   static Widget wNumber(String aLabel, String aData) {
     return Row(
       children: [
-        SizedBox(
+        const SizedBox(
           width: 50,
         ),
-        Icon(
+        const Icon(
           Icons.local_offer,
           color: Colors.grey,
         ),
-        SizedBox(
+        const SizedBox(
           width: 2,
         ),
-        Container(
+        SizedBox(
           width: 60,
           child: Text(
             aLabel,
@@ -664,7 +669,7 @@ class gColors {
   static Widget wDoubleLigne() {
     return Column(
       children: [
-        SizedBox(height: 8.0),
+        const SizedBox(height: 8.0),
         Container(
           height: 1,
           color: gColors.primary,
@@ -676,7 +681,7 @@ class gColors {
           height: 1,
           color: gColors.primary,
         ),
-        SizedBox(height: 8.0),
+        const SizedBox(height: 8.0),
       ],
     );
   }
@@ -695,12 +700,12 @@ class gColors {
   static Widget wSimpleLigne() {
     return Column(
       children: [
-        SizedBox(height: 8.0),
+        const SizedBox(height: 8.0),
         Container(
           height: 1,
           color: gColors.LinearGradient1,
         ),
-        SizedBox(height: 8.0),
+        const SizedBox(height: 8.0),
       ],
     );
   }
@@ -758,7 +763,7 @@ class gColors {
     return Container(
       width: width,
       color: Color1,
-      padding: EdgeInsets.fromLTRB(1, 1, 1, 1),
+      padding: const EdgeInsets.fromLTRB(1, 1, 1, 1),
       child: Container(
         color: Color2,
         padding: EdgeInsets.fromLTRB(p, p, p, p),
@@ -773,12 +778,12 @@ class gColors {
   static AffZoomImage(BuildContext context, Image wImageArt) async {
     return showDialog(
         context: context,
-        builder: (_) => new AlertDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+        builder: (_) => AlertDialog(
+              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
               contentPadding: EdgeInsets.zero,
-              content: Container(
-                child: wImageArt!,
+              content: SizedBox(
                 width: 700,
+                child: wImageArt,
               ),
             ));
   }
@@ -787,14 +792,14 @@ class gColors {
     return showDialog(
         context: context,
         builder: (_) => AlertDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+              shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
               title: InkWell(
                 onTap: () async {
                   Navigator.of(context).pop();
                 },
                 child: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
                   Text(
-                    "$wTxt",
+                    wTxt,
                     textAlign: TextAlign.center,
                     style: gColors.bodyTitle1_B_Gr,
                   ),
@@ -802,7 +807,7 @@ class gColors {
                     height: 8,
                   ),
                   Text(
-                    "$wTxt2",
+                    wTxt2,
                     textAlign: TextAlign.center,
                     style: gColors.bodyTitle1_N_Gr,
                   ),
@@ -816,7 +821,7 @@ class gColors {
                   onTap: () async {
                     Navigator.of(context).pop();
                   },
-                  child: Container(
+                  child: SizedBox(
                       height: 620,
                       child: Column(
                         children: [
@@ -827,10 +832,10 @@ class gColors {
                           Container(
                             height: 8,
                           ),
-                          Container(
+                          SizedBox(
                             height: 600,
                             width: 600,
-                            child: wImageArt!,
+                            child: wImageArt,
                           ),
                           Container(
                             height: 8,
@@ -855,48 +860,48 @@ class gColors {
 
     return showDialog(
         context: context,
-        builder: (_) => new AlertDialog(
+        builder: (_) => AlertDialog(
               surfaceTintColor: Colors.white,
               title: Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
                 gObj.wImage,
-                SizedBox(height: 8.0),
+                const SizedBox(height: 8.0),
                 Container(color: Colors.grey, height: 1.0),
-                SizedBox(height: 8.0),
+                const SizedBox(height: 8.0),
                 Text(
                   "Utilisateur ${Srv_DbTools.gUserLogin.UserID}",
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 22,
                   ),
                 ),
                 Text(
-                  "${Srv_DbTools.gUserLogin.User_TypeUser}",
-                  style: TextStyle(
+                  Srv_DbTools.gUserLogin.User_TypeUser,
+                  style: const TextStyle(
                     fontSize: 12,
                   ),
                 ),
               ]),
-              content: Container(
+              content: SizedBox(
                 height: 120,
                 child: Column(
                   children: [
                     Row(
                       children: [
-                        Text('N° matricule : '),
-                        Spacer(),
+                        const Text('N° matricule : '),
+                        const Spacer(),
                         Text(Srv_DbTools.gUserLogin.User_Matricule),
                       ],
                     ),
                     Row(
                       children: [
-                        Text('Prénom : '),
-                        Spacer(),
+                        const Text('Prénom : '),
+                        const Spacer(),
                         Text(Srv_DbTools.gUserLogin.User_Prenom),
                       ],
                     ),
                     Row(
                       children: [
-                        Text('Nom : '),
-                        Spacer(),
+                        const Text('Nom : '),
+                        const Spacer(),
                         Text(Srv_DbTools.gUserLogin.User_Nom),
                       ],
                     ),
@@ -904,15 +909,15 @@ class gColors {
                 ),
               ),
               actions: <Widget>[
-                Text("${DbTools.gVersion}\n${width}x${height}",
-                    style: TextStyle(
+                Text("${DbTools.gVersion}\n${width}x$height",
+                    style: const TextStyle(
                       fontSize: 12,
                     )),
                 Container(
                   width: 90,
                 ),
                 ElevatedButton(
-                  child: Text(
+                  child: const Text(
                     "OK",
                     style: TextStyle(
                       fontSize: 22,
@@ -927,31 +932,31 @@ class gColors {
   }
 
   static String AbrevTxt(String wTxt) {
-    Srv_DbTools.ListParam_Param_Abrev.forEach((element) {
+    for (var element in Srv_DbTools.ListParam_Param_Abrev) {
 //      print("element.Param_Param_ID ${element.Param_Param_ID} ${element.Param_Param_Text}");
 
       wTxt = wTxt.replaceAll(element.Param_Param_ID, element.Param_Param_Text);
-    });
+    }
     return wTxt;
   }
 
-  static String AbrevTxt_Param_Param(String wTxt, String wParam_Id) {
-    if (wParam_Id.isNotEmpty) {
-      Srv_DbTools.getParam_Saisie_ParamMem(wParam_Id);
+  static String AbrevTxt_Param_Param(String wTxt, String wparamId) {
+    if (wparamId.isNotEmpty) {
+      Srv_DbTools.getParam_Saisie_ParamMem(wparamId);
 
-      Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
+      for (var element in Srv_DbTools.ListParam_Saisie_Param) {
         String wTmp = element.Param_Saisie_Param_Label.replaceAll(" - ", "-");
         if (wTmp.compareTo(wTxt) == 0) {
           wTxt = element.Param_Saisie_Param_Abrev;
         }
-      });
+      }
     }
 
 //    print("AbrevTxt_Param_Param A $wTxt ${Srv_DbTools.ListParam_Param_Abrev.length}");
 
-    Srv_DbTools.ListParam_Param_Abrev.forEach((element) {
+    for (var element in Srv_DbTools.ListParam_Param_Abrev) {
       wTxt = wTxt.replaceAll(element.Param_Param_ID, element.Param_Param_Text);
-    });
+    }
 
 //    print("AbrevTxt_Param_Param B $wTxt");
 
@@ -970,14 +975,14 @@ class gColors {
     fillColor: gColors.LinearGradient2,
     enabledBorder: OutlineInputBorder(
       borderRadius: BorderRadius.circular(1.0),
-      borderSide: BorderSide(
+      borderSide: const BorderSide(
         color: gColors.primary,
         width: 0.5,
       ),
     ),
     hintText: 'Recherche',
     isDense: true,
-    contentPadding: EdgeInsets.fromLTRB(8, 12, 0, 12),
+    contentPadding: const EdgeInsets.fromLTRB(8, 12, 0, 12),
   );
 
   static Widget gCircle(Color wColor, {double wSize = 15}) {
@@ -986,9 +991,9 @@ class gColors {
 
   static Color getColorTypeCde(String wType) {
     Color wColor = Colors.transparent;
-    if (wType == "Devis")
+    if (wType == "Devis") {
       wColor = gColors.TypeCDE_DEV;
-    else if (wType == "Commande")
+    } else if (wType == "Commande")
       wColor = gColors.TypeCDE_BDC;
     else if (wType == "Bon de livraison")
       wColor = gColors.TypeCDE_BDL;
@@ -1001,10 +1006,10 @@ class gColors {
     Color wColor = Colors.transparent;
 
     for (int p = 0; p < Srv_DbTools.ListParam_Param_Etat_Devis.length; p++) {
-      Param_Param wParam_Param = Srv_DbTools.ListParam_Param_Etat_Devis[p];
+      Param_Param wparamParam = Srv_DbTools.ListParam_Param_Etat_Devis[p];
 
-      if (wParam_Param.Param_Param_ID == Status) {
-        wColor = gColors.getColor(wParam_Param.Param_Param_Color);
+      if (wparamParam.Param_Param_ID == Status) {
+        wColor = gColors.getColor(wparamParam.Param_Param_Color);
         break;
       }
     }
@@ -1015,10 +1020,10 @@ class gColors {
     Color wColor = Colors.transparent;
 
     for (int p = 0; p < Srv_DbTools.ListParam_Param_Etat_Cde.length; p++) {
-      Param_Param wParam_Param = Srv_DbTools.ListParam_Param_Etat_Cde[p];
+      Param_Param wparamParam = Srv_DbTools.ListParam_Param_Etat_Cde[p];
 
-      if (wParam_Param.Param_Param_ID == Status) {
-        wColor = gColors.getColor(wParam_Param.Param_Param_Color);
+      if (wparamParam.Param_Param_ID == Status) {
+        wColor = gColors.getColor(wparamParam.Param_Param_Color);
         break;
       }
     }
@@ -1029,9 +1034,9 @@ class gColors {
     Color wColor = Colors.transparent;
 
     for (int p = 0; p < Srv_DbTools.ListParam_Param_Etat_Livr.length; p++) {
-      Param_Param wParam_Param = Srv_DbTools.ListParam_Param_Etat_Livr[p];
-      if (wParam_Param.Param_Param_ID == Status) {
-        wColor = gColors.getColor(wParam_Param.Param_Param_Color);
+      Param_Param wparamParam = Srv_DbTools.ListParam_Param_Etat_Livr[p];
+      if (wparamParam.Param_Param_ID == Status) {
+        wColor = gColors.getColor(wparamParam.Param_Param_Color);
         break;
       }
     }
@@ -1042,9 +1047,9 @@ class gColors {
     Color wColor = Colors.transparent;
 
     for (int p = 0; p < Srv_DbTools.ListParam_Param_Status_Interv.length; p++) {
-      Param_Param wParam_Param = Srv_DbTools.ListParam_Param_Status_Interv[p];
-      if (wParam_Param.Param_Param_ID == Status) {
-        wColor = gColors.getColor(wParam_Param.Param_Param_Color);
+      Param_Param wparamParam = Srv_DbTools.ListParam_Param_Status_Interv[p];
+      if (wparamParam.Param_Param_ID == Status) {
+        wColor = gColors.getColor(wparamParam.Param_Param_Color);
         break;
       }
     }
@@ -1073,10 +1078,10 @@ class gColors {
         wColor = Colors.deepPurple;
         break;
       case "Jaune":
-        wColor = Color(0xFFFFC000);
+        wColor = const Color(0xFFFFC000);
         break;
       case "RougeF":
-        wColor = Color(0xFFC00000);
+        wColor = const Color(0xFFC00000);
         break;
     }
     return wColor;
@@ -1085,7 +1090,7 @@ class gColors {
   static Future<Uint8List> getImage(String url) async {
     try {
       var request = http.MultipartRequest('POST', Uri.parse(Srv_DbTools.SrvUrl.toString()));
-      request.fields.addAll({'zasq': 'getImage', 'img': '$url'});
+      request.fields.addAll({'zasq': 'getImage', 'img': url});
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
@@ -1094,32 +1099,32 @@ class gColors {
 
 
 
-        return await wRep;
+        return wRep;
         // print("getImage wTmp $wTmp");
       } else {
         print("-----------x getImage Error ${response.statusCode}");
-        return new Uint8List(0);
+        return Uint8List(0);
       }
     } catch (e) {
-      print("-----------x getImage Error ${e}");
+      print("-----------x getImage Error $e");
 
-      return new Uint8List(0);
+      return Uint8List(0);
     }
   }
 
   static Future<Uint8List> getDoc(String url) async {
     try {
       var request = http.MultipartRequest('POST', Uri.parse(Srv_DbTools.SrvUrl.toString()));
-      request.fields.addAll({'zasq': 'getDoc', 'doc': '$url'});
+      request.fields.addAll({'zasq': 'getDoc', 'doc': url});
       http.StreamedResponse response = await request.send();
 
       if (response.statusCode == 200) {
         return await response.stream.toBytes();
       } else {
-        return new Uint8List(0);
+        return Uint8List(0);
       }
     } catch (e) {
-      return new Uint8List(0);
+      return Uint8List(0);
     }
   }
 
@@ -1152,7 +1157,7 @@ class gColors {
             style: gColors.bodySaisie_N_G,
           ),
         ),
-        Container(
+        SizedBox(
             width: wWidth * 6,
             child: TextFormField(
               obscureText: obscureText,
@@ -1163,10 +1168,10 @@ class gColors {
               decoration: InputDecoration(
                 errorText: wErrorText.isEmpty ? null : wErrorText,
                 isDense: true,
-                enabledBorder: UnderlineInputBorder(
+                enabledBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blueAccent),
                 ),
-                focusedBorder: UnderlineInputBorder(
+                focusedBorder: const UnderlineInputBorder(
                   borderSide: BorderSide(color: Colors.blueAccent),
                 ),
               ),
@@ -1192,7 +1197,7 @@ class gColors {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
+        SizedBox(
 //          color: Colors.red,
             width: wWidth,
             child: Text(
@@ -1208,7 +1213,7 @@ class gColors {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Container(
+        SizedBox(
 //          color: Colors.red,
             width: wWidth,
             child: Text(

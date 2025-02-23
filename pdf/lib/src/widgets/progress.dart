@@ -141,22 +141,22 @@ class LinearProgressIndicator extends Widget {
     super.paint(context);
 
     final vc = value.clamp(0.0, 1.0);
-    final _valueColor = valueColor ?? PdfColors.blue;
-    final _backgroundColor = backgroundColor ?? _valueColor.shade(0.1);
+    final valueColor = this.valueColor ?? PdfColors.blue;
+    final backgroundColor = this.backgroundColor ?? valueColor.shade(0.1);
 
     if (vc < 1.0) {
       final epsilon = vc == 0 ? 0 : 0.01;
       context.canvas
         ..drawRect(box!.left + box!.width * vc - epsilon, box!.bottom,
             box!.width * (1 - vc) + epsilon, box!.height)
-        ..setFillColor(_backgroundColor)
+        ..setFillColor(backgroundColor)
         ..fillPath();
     }
 
     if (vc > 0.0) {
       context.canvas
         ..drawRect(box!.left, box!.bottom, box!.width * vc, box!.height)
-        ..setFillColor(_valueColor)
+        ..setFillColor(valueColor)
         ..fillPath();
     }
   }

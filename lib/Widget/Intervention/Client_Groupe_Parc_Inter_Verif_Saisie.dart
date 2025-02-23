@@ -16,16 +16,16 @@ class Client_Groupe_Parc_Inter_Verif_Saisie_Dialog {
   static Future<void> Dialogs_Saisie(
     BuildContext context,
     VoidCallback onSaisie,
-    Param_Saisie param_Saisie,
-    Parc_Desc parc_Desc,
+    Param_Saisie paramSaisie,
+    Parc_Desc parcDesc,
   ) async {
     await showDialog(
       context: context,
       builder: (BuildContext context) =>
           Client_Groupe_Parc_Inter_Verif_SaisieDialog(
         onSaisie: onSaisie,
-        param_Saisie: param_Saisie,
-        parc_Desc: parc_Desc,
+        param_Saisie: paramSaisie,
+        parc_Desc: parcDesc,
       ),
     );
   }
@@ -151,22 +151,22 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
 
 
     return AlertDialog(
-      shape: RoundedRectangleBorder(
+      shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(24.0))),
       surfaceTintColor: Colors.white,
       backgroundColor: gColors.white,
       title: Container(
           color: gColors.white,
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
           child: Column(
             children: [
               Text(
-                "${wT1}",
+                wT1,
                 textAlign: TextAlign.center,
                 style: gColors.bodyTitle1_B_G_20,
               ),
               Text(
-                "${widget.param_Saisie.Param_Saisie_Aide}",
+                widget.param_Saisie.Param_Saisie_Aide,
                 textAlign: TextAlign.center,
                 style: gColors.bodyTitle1_N_Gr,
               ),
@@ -175,7 +175,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
               ),
             ],
           )),
-      contentPadding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 20.0),
+      contentPadding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 20.0),
       content: Container(
           color: gColors.greyLight,
           height: wDialogHeight,
@@ -192,7 +192,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
                 padding:  EdgeInsets.fromLTRB(0, wMargeH, 0, 0),
                 child: Ctrl,
               ),
-              Spacer(),
+              const Spacer(),
               Container(
                 color: gColors.black,
                 height: 1,
@@ -223,7 +223,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
               widget.parc_Desc.ParcsDesc_Lib = initParcsDesc_Lib;
@@ -240,7 +240,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
               if (widget.parc_Desc.ParcsDesc_Lib!.compareTo("Annuler") == 0) {
@@ -250,10 +250,11 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
                   "VERIF VALIDER ${widget.parc_Desc.ParcsDescId} ${widget.parc_Desc.ParcsDesc_Type}  ${widget.parc_Desc.ParcsDesc_Id} ${widget.parc_Desc.ParcsDesc_Lib}");
               await DbTools.updateParc_Desc_NoRaz(widget.parc_Desc, initParcsDesc_Lib);
               if (widget.parc_Desc.ParcsDesc_Type!.compareTo("Result") == 0) {
-                if (widget.parc_Desc.ParcsDesc_Lib!.contains("Non"))
+                if (widget.parc_Desc.ParcsDesc_Lib!.contains("Non")) {
                   DbTools.gParc_Ent.Parcs_Date_Rev = "";
-                else
+                } else {
                   DbTools.gParc_Ent.Parcs_Date_Rev = DateTime.now().toIso8601String();
+                }
                 DbTools.updateParc_Ent(DbTools.gParc_Ent);
                 print(
                     "VERIF SAISIE gIntervention ${Srv_DbTools.gIntervention.Desc()}");
@@ -285,7 +286,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
     List<Widget> BtnCards = [];
     int nbBtn = 0;
     wAide = "Aide : ";
-    Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
+    for (var element in Srv_DbTools.ListParam_Saisie_Param) {
       if (widget.parc_Desc.ParcsDesc_Lib!.compareTo("---") == 0) {
         if (element.Param_Saisie_Param_Default) {
           print(" A Param_Saisie_Param_Default");
@@ -305,7 +306,9 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
 
       if (element.Param_Saisie_Param_Label.compareTo(
               widget.parc_Desc.ParcsDesc_Lib!) ==
-          0) wAide += element.Param_Saisie_Param_Aide;
+          0) {
+        wAide += element.Param_Saisie_Param_Aide;
+      }
 
       nbBtn++;
       if (nbBtn == 3) {
@@ -318,7 +321,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
         Rows.add(wRow);
         BtnCards = [];
       }
-    });
+    }
 
     if (nbBtn > 0) {
       nbBtn = 0;
@@ -369,7 +372,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
     List<Widget> BtnCards = [];
     int nbBtn = 0;
     wAide = "Aide : ";
-    Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
+    for (var element in Srv_DbTools.ListParam_Saisie_Param) {
       print(
           "element.Param_Saisie_Param_Label B ${element.Param_Saisie_Param_Label} ${widget.parc_Desc.ParcsDesc_Lib}");
 
@@ -391,7 +394,9 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
 
       if (element.Param_Saisie_Param_Label.compareTo(
               widget.parc_Desc.ParcsDesc_Lib!) ==
-          0) wAide += element.Param_Saisie_Param_Aide;
+          0) {
+        wAide += element.Param_Saisie_Param_Aide;
+      }
 
       nbBtn++;
       if (nbBtn == 3) {
@@ -404,7 +409,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
         Rows.add(wRow);
         BtnCards = [];
       }
-    });
+    }
 
     if (nbBtn > 0) {
       nbBtn = 0;
@@ -442,7 +447,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
     return Container(
         child: Column(
       children: [
-        Container(
+        SizedBox(
           height: wEditFocus ? 220 : null,
           child: SingleChildScrollView(
             child: Column(
@@ -452,16 +457,16 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
             ),
           ),
         ),
-        Container(
+        SizedBox(
           height: 50,
           width: 450,
           child: Padding(
-              padding: EdgeInsets.fromLTRB(5.0, 10.0, 0.0, 10.0),
+              padding: const EdgeInsets.fromLTRB(5.0, 10.0, 0.0, 10.0),
               child: Focus(
                 child: TextFormField(
                   onChanged: (value) async {
                     await HapticFeedback.vibrate();
-                    widget.parc_Desc.ParcsDesc_Lib = "${value}";
+                    widget.parc_Desc.ParcsDesc_Lib = value;
                   },
                   controller: tec_Saisie,
                   decoration: InputDecoration(
@@ -517,7 +522,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
         }
     }
     try {
-      double wDouble = double.parse(initParcsDesc_Id!);
+      double wDouble = double.parse(initParcsDesc_Id);
       for (var i = 0; i < ListPrs.length; i++) {
         if (ListPrs[i] ==  wDouble )
         {
@@ -533,7 +538,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
     scrollControllerPRS = FixedExtentScrollController(initialItem: index2);
     Image wImagePrs = Image.asset("assets/images/Prs1_2.png");
 
-    return Container(
+    return SizedBox(
         height: 565,
         width: 480,
         child: Column(
@@ -544,11 +549,11 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
             Container(
               height: 45,
               width: 480,
-              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+              padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
               color: gColors.greyTitre,
               child :
               Text(
-                "${DbTools.DescAff}",
+                DbTools.DescAff,
                 style: gColors.bodyTitle1_B_G_20,
                 textAlign: TextAlign.center,
               ),
@@ -561,7 +566,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
+                SizedBox(
                   height: 250,
                   width: 260,
                   child: CupertinoPicker(
@@ -590,7 +595,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
                 ),
               ],
             ),
-            Spacer(),
+            const Spacer(),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -629,7 +634,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
                 ),
               ],
             ),
-            Spacer(),
+            const Spacer(),
 
             InkWell(
           onTap: () async {
@@ -672,7 +677,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
       dPivotM = 7;
     }
 
-    wLib = "Pression entre ${dPivotm} et ${dPivotM} bar = ";
+    wLib = "Pression entre $dPivotm et $dPivotM bar = ";
 
 
     int iLen = ((dEnd - dStart) * 1 / dPas).round();
@@ -696,7 +701,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
       }
     }
     try {
-      double wDouble = double.parse(initParcsDesc_Id!);
+      double wDouble = double.parse(initParcsDesc_Id);
       for (var i = 0; i < ListPrs.length; i++) {
         if (ListPrs[i] ==  wDouble )
         {
@@ -712,7 +717,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
     scrollControllerPRS = FixedExtentScrollController(initialItem: index2);
     Image wImagePrs = Image.asset("assets/images/Prs2_2.png");
 
-    return Container(
+    return SizedBox(
         height: 565,
         width: 480,
         child: Column(
@@ -723,11 +728,11 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
             Container(
               height: 45,
               width: 480,
-              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+              padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
               color: gColors.greyTitre,
               child :
               Text(
-                "${DbTools.DescAff}",
+                DbTools.DescAff,
                 style: gColors.bodyTitle1_B_G_20,
                 textAlign: TextAlign.center,
               ),
@@ -740,7 +745,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
+                SizedBox(
                   height: 250,
                   width: 260,
                   child: CupertinoPicker(
@@ -769,7 +774,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
                 ),
               ],
             ),
-            Spacer(),
+            const Spacer(),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -783,7 +788,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
                 RichText(
                   textAlign: TextAlign.start,
                   text: TextSpan(
-                    text: "Pession au robinet d'arrêt du RIA le plus défavorisé en régime d'écoulement\n${wLib}",
+                    text: "Pession au robinet d'arrêt du RIA le plus défavorisé en régime d'écoulement\n$wLib",
                     style: gColors.bodyTitle1_N_Gr,
                     children: <TextSpan>[
                       TextSpan(
@@ -800,7 +805,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
                 ),
               ],
             ),
-            Spacer(),
+            const Spacer(),
 
             InkWell(
               onTap: () async {
@@ -842,7 +847,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
       }
     }
     try {
-      double wDouble = double.parse(initParcsDesc_Id!);
+      double wDouble = double.parse(initParcsDesc_Id);
       for (var i = 0; i < ListPrs.length; i++) {
         if (ListPrs[i] ==  wDouble )
         {
@@ -858,7 +863,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
     scrollControllerPRS = FixedExtentScrollController(initialItem: index2);
     Image wImagePrs = Image.asset("assets/images/Prs3_2.png");
 
-    return Container(
+    return SizedBox(
         height: 565,
         width: 480,
         child: Column(
@@ -869,11 +874,11 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
             Container(
               height: 45,
               width: 480,
-              padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+              padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
               color: gColors.greyTitre,
               child :
               Text(
-                "${DbTools.DescAff}",
+                DbTools.DescAff,
                 style: gColors.bodyTitle1_B_G_20,
                 textAlign: TextAlign.center,
               ),
@@ -886,7 +891,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Container(
+                SizedBox(
                   height: 229,
                   width: 260,
                   child: CupertinoPicker(
@@ -898,8 +903,8 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
                     itemExtent: 32,
                     onSelectedItemChanged: (int selectedItem) async {
                       await HapticFeedback.vibrate();
-                      widget.parc_Desc.ParcsDesc_Lib = "${ListPrs[selectedItem].toStringAsFixed(0)}";
-                      widget.parc_Desc.ParcsDesc_Id = "${ListPrs[selectedItem].toStringAsFixed(0)}";
+                      widget.parc_Desc.ParcsDesc_Lib = ListPrs[selectedItem].toStringAsFixed(0);
+                      widget.parc_Desc.ParcsDesc_Id = ListPrs[selectedItem].toStringAsFixed(0);
                       setState(() {});
                     },
                     children:
@@ -915,7 +920,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
                 ),
               ],
             ),
-            Spacer(),
+            const Spacer(),
             Column(
               mainAxisAlignment: MainAxisAlignment.start,
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -931,7 +936,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
                   text: TextSpan(
                     text: "Débit au robinet diffuseur du RIA le plus favorisé correspondant tuyau entièrement déroulé et diffuseur réglé en position jet droit.\n\nCoformité : Voir notice technique du fabricant de RIA",
                     style: gColors.bodyTitle1_N_Gr,
-                    children: <TextSpan>[
+                    children: const <TextSpan>[
 
                     ],
                   ),
@@ -943,7 +948,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
                 ),
               ],
             ),
-            Spacer(),
+            const Spacer(),
 
             InkWell(
               onTap: () async {
@@ -957,7 +962,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
   }
 
 
-  Widget BtnCard(String wText, String wId, bool wSel, int Param_Saisie_ParamId,
+  Widget BtnCard(String wText, String wId, bool wSel, int paramSaisieParamid,
       String color) {
     Color BgColor = gColors.white;
     Color TxtColor = gColors.black;
@@ -969,7 +974,7 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
 
     return wText.contains("---")
         ? Container()
-        : Container(
+        : SizedBox(
             width: 160,
             height: 60,
             child: Card(
@@ -977,12 +982,12 @@ class Client_Groupe_Parc_Inter_Verif_SaisieDialogState
               elevation: 0.2,
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8.0),
-                  side: BorderSide(width: 1, color: Colors.grey)),
+                  side: const BorderSide(width: 1, color: Colors.grey)),
               child: InkWell(
                 onTap: () async {
                   await HapticFeedback.vibrate();
                   widget.parc_Desc.ParcsDesc_Lib = wText;
-                  widget.parc_Desc.ParcsDesc_Id = Param_Saisie_ParamId.toString();
+                  widget.parc_Desc.ParcsDesc_Id = paramSaisieParamid.toString();
                   print(
                       " FlipFlop ${widget.parc_Desc.ParcsDesc_Id} ${widget.parc_Desc.ParcsDesc_Lib}");
                   await Reload();

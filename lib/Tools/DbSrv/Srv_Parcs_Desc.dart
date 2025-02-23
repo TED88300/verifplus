@@ -8,33 +8,32 @@ class Parc_Desc_Srv {
   String? ParcsDesc_Id = "";
   String? ParcsDesc_Lib = "";
 
-  static Parc_DescInit(int wParcsDesc_ParcsId, String wParcsDesc_Type) {
+  static Parc_DescInit(int wparcsdescParcsid, String wparcsdescType) {
 
-    String ParcsDesc_Lib = "---";
-    int ParcsDesc_Id = -1;
+    String parcsdescLib = "---";
+    int parcsdescId = -1;
 
 //    print("Parc_DescInit Parc_DescInit Parc_DescInit Parc_DescInit ${wParcsDesc_Type}");
 
-    Srv_DbTools.getParam_Saisie_ParamMem(wParcsDesc_Type);
+    Srv_DbTools.getParam_Saisie_ParamMem(wparcsdescType);
 
-    Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
+    for (var element in Srv_DbTools.ListParam_Saisie_Param) {
       if (element.Param_Saisie_Param_Init) {
-        ParcsDesc_Lib = element.Param_Saisie_Param_Label;
-        ParcsDesc_Id = element.Param_Saisie_ParamId;
+        parcsdescLib = element.Param_Saisie_Param_Label;
+        parcsdescId = element.Param_Saisie_ParamId;
         print(">><<<<<<<<<>>>>>>><<<<<<<<<>>>>>>> Parc_DescInit ${element.Desc()}");
 
-        return;
+        continue;
         }
       }
-    );
-    Parc_Desc_Srv wParc_Desc = Parc_Desc_Srv(0,0,"","","");
-    wParc_Desc.ParcsDescId = -1;
-    wParc_Desc.ParcsDesc_ParcsId = wParcsDesc_ParcsId;
-    wParc_Desc.ParcsDesc_Type = wParcsDesc_Type;
-    wParc_Desc.ParcsDesc_Id = "${ParcsDesc_Id}";
-    wParc_Desc.ParcsDesc_Lib = ParcsDesc_Lib;
+    Parc_Desc_Srv wparcDesc = Parc_Desc_Srv(0,0,"","","");
+    wparcDesc.ParcsDescId = -1;
+    wparcDesc.ParcsDesc_ParcsId = wparcsdescParcsid;
+    wparcDesc.ParcsDesc_Type = wparcsdescType;
+    wparcDesc.ParcsDesc_Id = "$parcsdescId";
+    wparcDesc.ParcsDesc_Lib = parcsdescLib;
 
-    return wParc_Desc;
+    return wparcDesc;
   }
 
 

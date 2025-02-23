@@ -7,6 +7,8 @@ import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 
 
 class P_Notifications extends StatefulWidget {
+  const P_Notifications({super.key});
+
 
   @override
   P_NotificationsState createState() => P_NotificationsState();
@@ -23,6 +25,7 @@ class P_NotificationsState extends State<P_Notifications> {
 
 
 
+  @override
   void initState() {
     initLib();
     super.initState();
@@ -31,30 +34,30 @@ class P_NotificationsState extends State<P_Notifications> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
 
       color: gColors.white,
       child:  Column(
         children: <Widget>[
-          SizedBox(height: 8.0),
+          const SizedBox(height: 8.0),
 
 
-          Spacer(),
+          const Spacer(),
 
 
-          SizedBox(height: 8.0),
+          const SizedBox(height: 8.0),
           Row(
             children: [
 
-              Spacer(),
+              const Spacer(),
               Text(DbTools.gVersion,
                   textAlign: TextAlign.center,
-                  style: TextStyle(
+                  style: const TextStyle(
                     fontSize: 12,
                   )),
             ],
           ),
-          SizedBox(height: 8.0),
+          const SizedBox(height: 8.0),
         ],
       ),
     );

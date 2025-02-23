@@ -268,11 +268,11 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
     print("Import_DataDialog ListParam_Saisie ${Srv_DbTools.ListParam_Saisie.length}");
     await DbTools.TrunckParam_Saisie();
     for (int i = 0; i < Srv_DbTools.ListParam_Saisie.length; i++) {
-      Param_Saisie wParam_Saisie = Srv_DbTools.ListParam_Saisie[i];
+      Param_Saisie wparamSaisie = Srv_DbTools.ListParam_Saisie[i];
 
-      print(" Import_DataDialog wParam_Saisie ${wParam_Saisie.Param_Saisie_Type} ${wParam_Saisie.Param_Saisie_Triger}");
+      print(" Import_DataDialog wParam_Saisie ${wparamSaisie.Param_Saisie_Type} ${wparamSaisie.Param_Saisie_Triger}");
 
-      await DbTools.inserParam_Saisie(wParam_Saisie);
+      await DbTools.inserParam_Saisie(wparamSaisie);
     }
 
 
@@ -291,8 +291,8 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
     print("Import_DataDialog ListParam_ParamAll ${Srv_DbTools.ListParam_ParamAll.length}");
     await DbTools.TrunckParam_Param();
     for (int i = 0; i < Srv_DbTools.ListParam_ParamAll.length; i++) {
-      Param_Param wParam_Param = Srv_DbTools.ListParam_ParamAll[i];
-      await DbTools.inserParam_Param(wParam_Param);
+      Param_Param wparamParam = Srv_DbTools.ListParam_ParamAll[i];
+      await DbTools.inserParam_Param(wparamParam);
     }
 
     Srv_DbTools.ListParam_ParamAll = await  DbTools.getParam_Param();
@@ -311,8 +311,8 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
     print("Import_DataDialog ListParam_Saisie_ParamAll ${Srv_DbTools.ListParam_Saisie_ParamAll.length}");
     await DbTools.TrunckParam_Saisie_Param();
     for (int i = 0; i < Srv_DbTools.ListParam_Saisie_ParamAll.length; i++) {
-      Param_Saisie_Param wParam_Saisie_Param = Srv_DbTools.ListParam_Saisie_ParamAll[i];
-      await DbTools.inserParam_Saisie_Param(wParam_Saisie_Param);
+      Param_Saisie_Param wparamSaisieParam = Srv_DbTools.ListParam_Saisie_ParamAll[i];
+      await DbTools.inserParam_Saisie_Param(wparamSaisieParam);
     }
     Srv_DbTools.ListParam_Saisie_ParamAll = await  DbTools.getParam_Saisie_ParamAll();
 
@@ -331,14 +331,14 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
 
     await DbTools.TrunckParam_Av();
     for (int i = 0; i < Srv_DbTools.ListParam_Av.length; i++) {
-      SrvParam_Av wParam_Av = Srv_DbTools.ListParam_Av[i];
-      await DbTools.inserParam_Av(wParam_Av);
+      SrvParam_Av wparamAv = Srv_DbTools.ListParam_Av[i];
+      await DbTools.inserParam_Av(wparamAv);
     }
 
-    List<Param_Av> ListParam_Av = await  DbTools.getParam_Av();
-    print("Import_DataDialog Srv_DbTools.ListParam_Av ${ListParam_Av.length}");
+    List<Param_Av> listparamAv = await  DbTools.getParam_Av();
+    print("Import_DataDialog Srv_DbTools.ListParam_Av ${listparamAv.length}");
     setState(() {
-      wSt += "► Param_Av : ${ListParam_Av.length} Params\n";
+      wSt += "► Param_Av : ${listparamAv.length} Params\n";
     });
 
 
@@ -351,8 +351,8 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
 
     await DbTools.TrunckUser_Hab();
     for (int i = 0; i < Srv_DbTools.ListUser_Hab.length; i++) {
-      User_Hab wUser_Hab = Srv_DbTools.ListUser_Hab[i];
-      await DbTools.inserUser_Hab(wUser_Hab);
+      User_Hab wuserHab = Srv_DbTools.ListUser_Hab[i];
+      await DbTools.inserUser_Hab(wuserHab);
     }
     Srv_DbTools.ListUser_Hab = await  DbTools.getUser_Hab();
     print("Import_DataDialog Srv_DbTools.ListUser_Hab ${Srv_DbTools.ListUser_Hab}");
@@ -367,8 +367,8 @@ class Import_DataDialogState extends State<Import_DataDialog> with TickerProvide
 
     await DbTools.TrunckUser_Desc();
     for (int i = 0; i < Srv_DbTools.ListUser_Desc.length; i++) {
-      User_Desc wUser_Desc = Srv_DbTools.ListUser_Desc[i];
-      await DbTools.inserUser_Desc(wUser_Desc);
+      User_Desc wuserDesc = Srv_DbTools.ListUser_Desc[i];
+      await DbTools.inserUser_Desc(wuserDesc);
     }
     Srv_DbTools.ListUser_Desc = await  DbTools.getUser_Desc();
     print("Import_DataDialog Srv_DbTools.ListUser_Desc ${Srv_DbTools.ListUser_Desc}");
@@ -421,8 +421,8 @@ return;
     print("IMPORT_DataDialog ListRIA_Gammes ${Srv_DbTools.ListRIA_Gammes.length}");
     DbTools.TrunckRIA_Gammes();
     for (int i = 0; i < Srv_DbTools.ListRIA_Gammes.length; i++) {
-      RIA_Gammes wRIA_Gammes = Srv_DbTools.ListRIA_Gammes[i];
-      DbTools.insertRIA_Gammes(wRIA_Gammes);
+      RIA_Gammes wriaGammes = Srv_DbTools.ListRIA_Gammes[i];
+      DbTools.insertRIA_Gammes(wriaGammes);
     }
     DbTools.glfRIA_Gammes = await  DbTools.getRIA_Gammes();
     print("IMPORT_DataDialog glfRIA_Gammes ${DbTools.glfRIA_Gammes.length}");
@@ -434,8 +434,8 @@ return;
     print("IMPORT_DataDialog ListNF074_Gammes ${Srv_DbTools.ListNF074_Gammes.length}");
     DbTools.TrunckNF074_Gammes();
     for (int i = 0; i < Srv_DbTools.ListNF074_Gammes.length; i++) {
-      NF074_Gammes nF074_Gammes = Srv_DbTools.ListNF074_Gammes[i];
-      DbTools.insertNF074_Gammes(nF074_Gammes);
+      NF074_Gammes nf074Gammes = Srv_DbTools.ListNF074_Gammes[i];
+      DbTools.insertNF074_Gammes(nf074Gammes);
     }
     DbTools.glfNF074_Gammes = await  DbTools.getNF074_Gammes();
     print("IMPORT_DataDialog glfNF074_Gammes ${DbTools.glfNF074_Gammes.length}");
@@ -450,8 +450,8 @@ return;
     print("IMPORT_DataDialog ListNF074_Histo_Normes ${Srv_DbTools.ListNF074_Histo_Normes.length}");
     DbTools.TrunckNF074_Histo_Normes();
     for (int i = 0; i < Srv_DbTools.ListNF074_Histo_Normes.length; i++) {
-      NF074_Histo_Normes nF074_Histo_Normes = Srv_DbTools.ListNF074_Histo_Normes[i];
-      DbTools.insertNF074_Histo_Normes(nF074_Histo_Normes);
+      NF074_Histo_Normes nf074HistoNormes = Srv_DbTools.ListNF074_Histo_Normes[i];
+      DbTools.insertNF074_Histo_Normes(nf074HistoNormes);
     }
     DbTools.glfNF074_Histo_Normes = await  DbTools.getNF074_Histo_Normes();
     print("IMPORT_DataDialog glfNF074_Histo_Normes ${DbTools.glfNF074_Histo_Normes.length}");
@@ -465,8 +465,8 @@ return;
     print("IMPORT_DataDialog ListNF074_Pieces_Det ${Srv_DbTools.ListNF074_Pieces_Det.length}");
     DbTools.TrunckNF074_Pieces_Det();
     for (int i = 0; i < Srv_DbTools.ListNF074_Pieces_Det.length; i++) {
-      NF074_Pieces_Det nF074_Pieces_Det = Srv_DbTools.ListNF074_Pieces_Det[i];
-      DbTools.insertNF074_Pieces_Det(nF074_Pieces_Det);
+      NF074_Pieces_Det nf074PiecesDet = Srv_DbTools.ListNF074_Pieces_Det[i];
+      DbTools.insertNF074_Pieces_Det(nf074PiecesDet);
     }
     DbTools.glfNF074_Pieces_Det = await  DbTools.getNF074_Pieces_Det();
     print("IMPORT_DataDialog glfNF074_Pieces_Det ${DbTools.glfNF074_Pieces_Det.length}");
@@ -480,8 +480,8 @@ return;
     print("IMPORT_DataDialog ListNF074_Pieces_Det_Inc ${Srv_DbTools.ListNF074_Pieces_Det_Inc.length}");
     DbTools.TrunckNF074_Pieces_Det_Inc();
     for (int i = 0; i < Srv_DbTools.ListNF074_Pieces_Det_Inc.length; i++) {
-      NF074_Pieces_Det_Inc nF074_Pieces_Det_Inc = Srv_DbTools.ListNF074_Pieces_Det_Inc[i];
-      DbTools.insertNF074_Pieces_Det_Inc(nF074_Pieces_Det_Inc);
+      NF074_Pieces_Det_Inc nf074PiecesDetInc = Srv_DbTools.ListNF074_Pieces_Det_Inc[i];
+      DbTools.insertNF074_Pieces_Det_Inc(nf074PiecesDetInc);
     }
     DbTools.glfNF074_Pieces_Det_Inc = await  DbTools.getNF074_Pieces_Det_Inc();
     print("IMPORT_DataDialog glfNF074_Pieces_Det_Inc ${DbTools.glfNF074_Pieces_Det_Inc.length}");
@@ -495,8 +495,8 @@ return;
     print("IMPORT_DataDialog ListNF074_Mixte_Produit ${Srv_DbTools.ListNF074_Mixte_Produit.length}");
     DbTools.TrunckNF074_Mixte_Produit();
     for (int i = 0; i < Srv_DbTools.ListNF074_Mixte_Produit.length; i++) {
-      NF074_Mixte_Produit nF074_Mixte_Produit = Srv_DbTools.ListNF074_Mixte_Produit[i];
-      DbTools.insertNF074_Mixte_Produit(nF074_Mixte_Produit);
+      NF074_Mixte_Produit nf074MixteProduit = Srv_DbTools.ListNF074_Mixte_Produit[i];
+      DbTools.insertNF074_Mixte_Produit(nf074MixteProduit);
     }
     DbTools.glfNF074_Mixte_Produit = await  DbTools.getNF074_Mixte_Produit();
     print("IMPORT_DataDialog glfNF074_Mixte_Produit ${DbTools.glfNF074_Mixte_Produit.length}");
@@ -510,8 +510,8 @@ return;
     print("IMPORT_DataDialog ListNF074_Pieces_Actions ${Srv_DbTools.ListNF074_Pieces_Actions.length}");
     DbTools.TrunckNF074_Pieces_Actions();
     for (int i = 0; i < Srv_DbTools.ListNF074_Pieces_Actions.length; i++) {
-      NF074_Pieces_Actions nF074_Pieces_Actions = Srv_DbTools.ListNF074_Pieces_Actions[i];
-      DbTools.insertNF074_Pieces_Actions(nF074_Pieces_Actions);
+      NF074_Pieces_Actions nf074PiecesActions = Srv_DbTools.ListNF074_Pieces_Actions[i];
+      DbTools.insertNF074_Pieces_Actions(nf074PiecesActions);
     }
     DbTools.glfNF074_Pieces_Actions = await  DbTools.getNF074_Pieces_Actions();
     print("IMPORT_DataDialog glfNF074_Pieces_Actions ${DbTools.glfNF074_Pieces_Actions.length}");
@@ -530,8 +530,8 @@ return;
 
     await Article_Fam_Ebp.TrunckArticle_Fam_Ebp();
     for (int i = 0; i < Srv_DbTools.ListArticle_Fam_Ebp.length; i++) {
-      Article_Fam_Ebp article_Fam_Ebp = Srv_DbTools.ListArticle_Fam_Ebp[i];
-      Article_Fam_Ebp.insertArticle_Fam_Ebp(article_Fam_Ebp);
+      Article_Fam_Ebp articleFamEbp = Srv_DbTools.ListArticle_Fam_Ebp[i];
+      Article_Fam_Ebp.insertArticle_Fam_Ebp(articleFamEbp);
     }
 
     
@@ -546,10 +546,10 @@ return;
 
     await Article_Ebp.TrunckArticle_Ebp();
     for (int i = 0; i < Srv_DbTools.ListArticle_Ebp.length; i++) {
-      Article_Ebp article_Ebp = Srv_DbTools.ListArticle_Ebp[i];
-      if (article_Ebp.Article_Groupe.startsWith("0") || article_Ebp.Article_Groupe.startsWith("1"))
+      Article_Ebp articleEbp = Srv_DbTools.ListArticle_Ebp[i];
+      if (articleEbp.Article_Groupe.startsWith("0") || articleEbp.Article_Groupe.startsWith("1"))
         {
-          Article_Ebp.insertArticle_Ebp(article_Ebp);
+          Article_Ebp.insertArticle_Ebp(articleEbp);
         }
     }
     Srv_DbTools.ListArticle_Ebp = await Article_Ebp.getArticle_Ebp();
@@ -574,20 +574,20 @@ return;
     Srv_DbTools.list_Article_GrpFamSsFam_Ebp.clear();
     for (int i = 0; i < Srv_DbTools.ListArticle_Ebp.length; i++) {
       Article_Ebp art = Srv_DbTools.ListArticle_Ebp[i];
-      Article_GrpFamSsFam_Ebp wArticle_GrpFamSsFam_Ebp = Article_GrpFamSsFam_Ebp();
-      wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Groupe = art.Article_Groupe;
-      wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam = art.Article_LibelleFamilleArticle;
-      wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam = art.Article_LibelleSousFamilleArticle;
+      Article_GrpFamSsFam_Ebp warticleGrpfamssfamEbp = Article_GrpFamSsFam_Ebp();
+      warticleGrpfamssfamEbp.Article_GrpFamSsFam_Groupe = art.Article_Groupe;
+      warticleGrpfamssfamEbp.Article_GrpFamSsFam_Fam = art.Article_LibelleFamilleArticle;
+      warticleGrpfamssfamEbp.Article_GrpFamSsFam_Sous_Fam = art.Article_LibelleSousFamilleArticle;
 
-      var contain = Srv_DbTools.list_Article_GrpFamSsFam_Ebp.where((element) => element.Article_GrpFamSsFam_Groupe == wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Groupe && element.Article_GrpFamSsFam_Fam == wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam && element.Article_GrpFamSsFam_Sous_Fam == wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam);
+      var contain = Srv_DbTools.list_Article_GrpFamSsFam_Ebp.where((element) => element.Article_GrpFamSsFam_Groupe == warticleGrpfamssfamEbp.Article_GrpFamSsFam_Groupe && element.Article_GrpFamSsFam_Fam == warticleGrpfamssfamEbp.Article_GrpFamSsFam_Fam && element.Article_GrpFamSsFam_Sous_Fam == warticleGrpfamssfamEbp.Article_GrpFamSsFam_Sous_Fam);
       if (contain.isEmpty)
       {
-        if (wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Groupe.contains("03 - SERVICE"))
+        if (warticleGrpfamssfamEbp.Article_GrpFamSsFam_Groupe.contains("03 - SERVICE"))
         {
-          print("wArticle_GrpFamSsFam_Ebp ${wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Groupe} - ${wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Fam}  - ${wArticle_GrpFamSsFam_Ebp.Article_GrpFamSsFam_Sous_Fam}");
+          print("wArticle_GrpFamSsFam_Ebp ${warticleGrpfamssfamEbp.Article_GrpFamSsFam_Groupe} - ${warticleGrpfamssfamEbp.Article_GrpFamSsFam_Fam}  - ${warticleGrpfamssfamEbp.Article_GrpFamSsFam_Sous_Fam}");
 
         }
-        Srv_DbTools.list_Article_GrpFamSsFam_Ebp.add(wArticle_GrpFamSsFam_Ebp);
+        Srv_DbTools.list_Article_GrpFamSsFam_Ebp.add(warticleGrpfamssfamEbp);
 
       }
 
@@ -623,9 +623,9 @@ return;
 
   @override
   void initLib() async {
-    if (widget.ImportType == "Listing")
+    if (widget.ImportType == "Listing") {
       await Reload_Listing();
-    else if (widget.ImportType == "Param")
+    } else if (widget.ImportType == "Param")
       await Reload_Param();
     else if (widget.ImportType == "NF74")
       await Reload_NF74();
@@ -659,12 +659,12 @@ return;
   @override
   Widget build(BuildContext context) {
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
       surfaceTintColor: Colors.white,
       backgroundColor: gColors.white,
       title: Container(
           color: gColors.white,
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
           child: Column(
             children: [
               Text(
@@ -716,7 +716,7 @@ return;
                 ),
               ),
               ]),
-              Spacer(),
+              const Spacer(),
               Container(
                 color: gColors.black,
                 height: 1,
@@ -725,7 +725,7 @@ return;
           )),
       actions: <Widget>[
         iStrfExp ? Container() : ElevatedButton(
-          child: Text(
+          child: const Text(
             "OK",
             style: TextStyle(
               fontSize: 22,

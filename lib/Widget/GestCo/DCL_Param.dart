@@ -2,11 +2,11 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+//import 'package:file_picker/file_picker.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:multi_dropdown/models/value_item.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DCL_Ent_Img.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
@@ -156,10 +156,11 @@ class _DCLParamDialog_ssTrState extends State<DCLParamDialog_ssTr> {
         onTap: () async {
           setState(() {
             for (int j = 0; j < itemlistApp.length; j++) {
-              if (i != j)
+              if (i != j) {
                 itemlistApp[j] = false;
-              else
+              } else {
                 itemlistApp[i] = !itemlistApp[i];
+              }
             }
           });
         },
@@ -170,12 +171,12 @@ class _DCLParamDialog_ssTrState extends State<DCLParamDialog_ssTr> {
                 width: 0.7,
                 color: gColors.black,
               ),
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(8.0),
               ),
             ),
-            margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
-            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
             height: wHeightBtn,
             width: wWidth,
             child: Row(
@@ -195,7 +196,7 @@ class _DCLParamDialog_ssTrState extends State<DCLParamDialog_ssTr> {
       scrollDirection: Axis.vertical,
       itemCount: cclistMes.length, // number of items in your list
       itemBuilder: (BuildContext context, int Itemindex) {
-        return Container(
+        return SizedBox(
           height: 80,
           child: cclistMes[Itemindex],
         );
@@ -259,12 +260,12 @@ class _DCLParamDialog_ssTrState extends State<DCLParamDialog_ssTr> {
                       height: 99,
                       margin: const EdgeInsets.fromLTRB(0, 90, 0, 0),
                       padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
-                      decoration: BoxDecoration(color: Colors.yellowAccent, borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+                      decoration: const BoxDecoration(color: Colors.yellowAccent, borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
+                          SizedBox(
                             width: wWidth,
                             child: Text(
                               widget.wTitre,
@@ -298,7 +299,7 @@ class _DCLParamDialog_ssTrState extends State<DCLParamDialog_ssTr> {
                       width: wWidth,
                       height: 100,
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      decoration: BoxDecoration(color: gColors.LinearGradient3, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
+                      decoration: const BoxDecoration(color: gColors.LinearGradient3, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -415,10 +416,11 @@ class _DCLParamDialog_aideTechState extends State<DCLParamDialog_aideTech> {
         onTap: () async {
           setState(() {
             for (int j = 0; j < itemlistApp.length; j++) {
-              if (i != j)
+              if (i != j) {
                 itemlistApp[j] = false;
-              else
+              } else {
                 itemlistApp[i] = !itemlistApp[i];
+              }
             }
           });
         },
@@ -429,12 +431,12 @@ class _DCLParamDialog_aideTechState extends State<DCLParamDialog_aideTech> {
                 width: 0.7,
                 color: gColors.black,
               ),
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(8.0),
               ),
             ),
-            margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
-            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
             height: wHeightBtn,
             width: wWidth,
             child: Row(
@@ -454,7 +456,7 @@ class _DCLParamDialog_aideTechState extends State<DCLParamDialog_aideTech> {
       scrollDirection: Axis.vertical,
       itemCount: cclistMes.length, // number of items in your list
       itemBuilder: (BuildContext context, int Itemindex) {
-        return Container(
+        return SizedBox(
           height: 80,
           child: cclistMes[Itemindex],
         );
@@ -518,12 +520,12 @@ class _DCLParamDialog_aideTechState extends State<DCLParamDialog_aideTech> {
                       height: 99,
                       margin: const EdgeInsets.fromLTRB(0, 90, 0, 0),
                       padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
-                      decoration: BoxDecoration(color: Colors.yellowAccent, borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+                      decoration: const BoxDecoration(color: Colors.yellowAccent, borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
+                          SizedBox(
                             width: wWidth,
                             child: Text(
                               widget.wTitre,
@@ -557,7 +559,7 @@ class _DCLParamDialog_aideTechState extends State<DCLParamDialog_aideTech> {
                       width: wWidth,
                       height: 100,
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      decoration: BoxDecoration(color: gColors.LinearGradient3, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
+                      decoration: const BoxDecoration(color: gColors.LinearGradient3, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -682,12 +684,12 @@ class _DCLParamDialog_ContributeursState extends State<DCLParamDialog_Contribute
                 width: 0.7,
                 color: gColors.black,
               ),
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(8.0),
               ),
             ),
-            margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
-            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
             height: wHeightBtn,
             width: wWidth,
             child: Row(
@@ -707,7 +709,7 @@ class _DCLParamDialog_ContributeursState extends State<DCLParamDialog_Contribute
       scrollDirection: Axis.vertical,
       itemCount: cclistMes.length, // number of items in your list
       itemBuilder: (BuildContext context, int Itemindex) {
-        return Container(
+        return SizedBox(
           height: 80,
           child: cclistMes[Itemindex],
         );
@@ -771,12 +773,12 @@ class _DCLParamDialog_ContributeursState extends State<DCLParamDialog_Contribute
                       height: 99,
                       margin: const EdgeInsets.fromLTRB(0, 90, 0, 0),
                       padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
-                      decoration: BoxDecoration(color: Colors.yellowAccent, borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+                      decoration: const BoxDecoration(color: Colors.yellowAccent, borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
+                          SizedBox(
                             width: wWidth,
                             child: Text(
                               widget.wTitre,
@@ -810,7 +812,7 @@ class _DCLParamDialog_ContributeursState extends State<DCLParamDialog_Contribute
                       width: wWidth,
                       height: 100,
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      decoration: BoxDecoration(color: gColors.LinearGradient3, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
+                      decoration: const BoxDecoration(color: gColors.LinearGradient3, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -936,12 +938,12 @@ class _DCLParamDialog_PartageState extends State<DCLParamDialog_Partage> {
                 width: 0.7,
                 color: gColors.black,
               ),
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(8.0),
               ),
             ),
-            margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
-            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
             height: wHeightBtn,
             width: wWidth,
             child: Row(
@@ -961,7 +963,7 @@ class _DCLParamDialog_PartageState extends State<DCLParamDialog_Partage> {
       scrollDirection: Axis.vertical,
       itemCount: cclistMes.length, // number of items in your list
       itemBuilder: (BuildContext context, int Itemindex) {
-        return Container(
+        return SizedBox(
           height: 80,
           child: cclistMes[Itemindex],
         );
@@ -1025,12 +1027,12 @@ class _DCLParamDialog_PartageState extends State<DCLParamDialog_Partage> {
                       height: 99,
                       margin: const EdgeInsets.fromLTRB(0, 90, 0, 0),
                       padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
-                      decoration: BoxDecoration(color: Colors.yellowAccent, borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+                      decoration: const BoxDecoration(color: Colors.yellowAccent, borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
+                          SizedBox(
                             width: wWidth,
                             child: Text(
                               widget.wTitre,
@@ -1064,7 +1066,7 @@ class _DCLParamDialog_PartageState extends State<DCLParamDialog_Partage> {
                       width: wWidth,
                       height: 100,
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      decoration: BoxDecoration(color: gColors.LinearGradient3, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
+                      decoration: const BoxDecoration(color: gColors.LinearGradient3, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1179,7 +1181,6 @@ class _DCLParamDialog_RgltState extends State<DCLParamDialog_Rglt> {
   Widget RGLT(BuildContext context) {
     double wWidth = 510;
     double wHeightBtn = 45;
-
     print("_buildPopupDialog");
 
     List<Widget> cclistMes = [];
@@ -1203,12 +1204,12 @@ class _DCLParamDialog_RgltState extends State<DCLParamDialog_Rglt> {
                 width: 0.7,
                 color: gColors.black,
               ),
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(8.0),
               ),
             ),
-            margin: EdgeInsets.fromLTRB(20, 0, 20, 20),
-            padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+            margin: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+            padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
             height: wHeightBtn,
             width: wWidth,
             child: Row(
@@ -1216,7 +1217,7 @@ class _DCLParamDialog_RgltState extends State<DCLParamDialog_Rglt> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Expanded(
-                  child: Text("$wlistMes", textAlign: TextAlign.left, maxLines: 1, style: gColors.bodyTitle1_N_Gr),
+                  child: Text(wlistMes, textAlign: TextAlign.left, maxLines: 1, style: gColors.bodyTitle1_N_Gr),
                 ),
                 gColors.gCircle(witemlistApp ? gColors.primaryGreen : gColors.LinearGradient5, wSize: 24),
               ],
@@ -1228,7 +1229,7 @@ class _DCLParamDialog_RgltState extends State<DCLParamDialog_Rglt> {
       scrollDirection: Axis.vertical,
       itemCount: cclistMes.length, // number of items in your list
       itemBuilder: (BuildContext context, int Itemindex) {
-        return Container(
+        return SizedBox(
           height: 80,
           child: cclistMes[Itemindex],
         );
@@ -1297,12 +1298,12 @@ class _DCLParamDialog_RgltState extends State<DCLParamDialog_Rglt> {
                       height: 99,
                       margin: const EdgeInsets.fromLTRB(0, 90, 0, 0),
                       padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
-                      decoration: BoxDecoration(color: Colors.yellowAccent, borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+                      decoration: const BoxDecoration(color: Colors.yellowAccent, borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
+                          SizedBox(
                             width: wWidth,
                             child: Text(
                               widget.wTitre,
@@ -1336,7 +1337,7 @@ class _DCLParamDialog_RgltState extends State<DCLParamDialog_Rglt> {
                       width: wWidth,
                       height: 100,
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      decoration: BoxDecoration(color: gColors.LinearGradient3, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
+                      decoration: const BoxDecoration(color: gColors.LinearGradient3, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -1444,36 +1445,36 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
     print("getDCL_Ent_ImgID ADD");
 
     print("getDCL_Ent_ImgID ADD");
-    DCL_Ent_Img wDCL_Ent_Img = DCL_Ent_Img();
-    wDCL_Ent_Img.dCLEntImgEntID = Srv_DbTools.gDCL_Ent.DCL_EntID;
-    wDCL_Ent_Img.DCL_Ent_Img_Type = "D";
-    wDCL_Ent_Img.DCL_Ent_Img_No = 0;
-    wDCL_Ent_Img.DCL_Ent_Img_Name = "";
-    wDCL_Ent_Img.dCLEntImgData = "";
-    await Srv_DbTools.InsertUpdateDCL_Ent_Img_Srv(wDCL_Ent_Img);
+    DCL_Ent_Img wdclEntImg = DCL_Ent_Img();
+    wdclEntImg.dCLEntImgEntID = Srv_DbTools.gDCL_Ent.DCL_EntID;
+    wdclEntImg.DCL_Ent_Img_Type = "D";
+    wdclEntImg.DCL_Ent_Img_No = 0;
+    wdclEntImg.DCL_Ent_Img_Name = "";
+    wdclEntImg.dCLEntImgData = "";
+    await Srv_DbTools.InsertUpdateDCL_Ent_Img_Srv(wdclEntImg);
 
-    wDCL_Ent_Img = DCL_Ent_Img();
-    wDCL_Ent_Img.dCLEntImgEntID = Srv_DbTools.gDCL_Ent.DCL_EntID;
-    wDCL_Ent_Img.DCL_Ent_Img_Type = "D";
-    wDCL_Ent_Img.DCL_Ent_Img_No = 1;
-    wDCL_Ent_Img.DCL_Ent_Img_Name = "";
-    wDCL_Ent_Img.dCLEntImgData = "";
-    await Srv_DbTools.InsertUpdateDCL_Ent_Img_Srv(wDCL_Ent_Img);
+    wdclEntImg = DCL_Ent_Img();
+    wdclEntImg.dCLEntImgEntID = Srv_DbTools.gDCL_Ent.DCL_EntID;
+    wdclEntImg.DCL_Ent_Img_Type = "D";
+    wdclEntImg.DCL_Ent_Img_No = 1;
+    wdclEntImg.DCL_Ent_Img_Name = "";
+    wdclEntImg.dCLEntImgData = "";
+    await Srv_DbTools.InsertUpdateDCL_Ent_Img_Srv(wdclEntImg);
 
-    wDCL_Ent_Img = DCL_Ent_Img();
-    wDCL_Ent_Img.dCLEntImgEntID = Srv_DbTools.gDCL_Ent.DCL_EntID;
-    wDCL_Ent_Img.DCL_Ent_Img_Type = "D";
-    wDCL_Ent_Img.DCL_Ent_Img_No = 2;
-    wDCL_Ent_Img.DCL_Ent_Img_Name = "";
-    wDCL_Ent_Img.dCLEntImgData = "";
-    await Srv_DbTools.InsertUpdateDCL_Ent_Img_Srv(wDCL_Ent_Img);
+    wdclEntImg = DCL_Ent_Img();
+    wdclEntImg.dCLEntImgEntID = Srv_DbTools.gDCL_Ent.DCL_EntID;
+    wdclEntImg.DCL_Ent_Img_Type = "D";
+    wdclEntImg.DCL_Ent_Img_No = 2;
+    wdclEntImg.DCL_Ent_Img_Name = "";
+    wdclEntImg.dCLEntImgData = "";
+    await Srv_DbTools.InsertUpdateDCL_Ent_Img_Srv(wdclEntImg);
 
     await Srv_DbTools.getDCL_Ent_ImgID(Srv_DbTools.gDCL_Ent.DCL_EntID!, "D");
 
     lDCL_Ent_Doc.clear();
     for (int i = 0; i < Srv_DbTools.ListDCL_Ent_Img.length; i++) {
-      var wDCL_Ent_Img = Srv_DbTools.ListDCL_Ent_Img[i];
-      lDCL_Ent_Doc.add(wDCL_Ent_Img);
+      var wdclEntImg = Srv_DbTools.ListDCL_Ent_Img[i];
+      lDCL_Ent_Doc.add(wdclEntImg);
     }
 
     print("Reload ${Srv_DbTools.ListDCL_Ent_Img.length} ${lDCL_Ent_Doc.length}");
@@ -1481,10 +1482,10 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
     await Srv_DbTools.getDCL_Ent_ImgID(Srv_DbTools.gDCL_Ent.DCL_EntID!, "I");
 
     for (int i = 0; i < Srv_DbTools.ListDCL_Ent_Img.length; i++) {
-      var wDCL_Ent_Img = Srv_DbTools.ListDCL_Ent_Img[i];
-      var bytes = base64Decode(wDCL_Ent_Img.dCLEntImgData!);
+      var wdclEntImg = Srv_DbTools.ListDCL_Ent_Img[i];
+      var bytes = base64Decode(wdclEntImg.dCLEntImgData!);
       Widget wWidget = Container();
-      if (bytes.length > 0) {
+      if (bytes.isNotEmpty) {
         wWidget = Container(
           height: 130,
           width: 130,
@@ -1504,7 +1505,7 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
             ),
           ),
         );
-        lDCL_Ent_Img.add(wDCL_Ent_Img);
+        lDCL_Ent_Img.add(wdclEntImg);
         Uint8ListList.add(bytes);
       } else {
         wWidget = Container(
@@ -1574,10 +1575,10 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
   }
 
   Widget Photo2(BuildContext context) {
-    var gDCL_Ent_Img = Srv_DbTools.ListDCL_Ent_Img[zoomIndex];
-    var bytes = base64Decode(gDCL_Ent_Img.dCLEntImgData!);
+    var gdclEntImg = Srv_DbTools.ListDCL_Ent_Img[zoomIndex];
+    var bytes = base64Decode(gdclEntImg.dCLEntImgData!);
     Widget wWidget = Container();
-    if (bytes.length > 0) {
+    if (bytes.isNotEmpty) {
       wWidget = Column(
         children: [
           Container(
@@ -1602,7 +1603,7 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
       );
     }
 
-    return Container(
+    return SizedBox(
       width: 550,
       child: Stack(
         alignment: Alignment.bottomCenter,
@@ -1641,7 +1642,7 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
               right: 20,
               child: InkWell(
                   child: Padding(
-                    padding: EdgeInsets.only(right: 12),
+                    padding: const EdgeInsets.only(right: 12),
                     child: Image.asset(
                       "assets/images/ico5b.png",
                       fit: BoxFit.contain,
@@ -1666,8 +1667,8 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
   Widget slideLeftBackground() {
     return Container(
       color: gColors.trred,
-      margin: EdgeInsets.fromLTRB(0, 10, 0, 3),
-      child: Row(
+      margin: const EdgeInsets.fromLTRB(0, 10, 0, 3),
+      child: const Row(
         mainAxisAlignment: MainAxisAlignment.end,
         children: <Widget>[
           Icon(Icons.delete, color: Colors.red, size: 40),
@@ -1695,7 +1696,7 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
     print(" B U I L D ");
 
     return SimpleDialog(
-      insetPadding: EdgeInsets.all(60),
+      insetPadding: const EdgeInsets.all(60),
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
@@ -1720,11 +1721,11 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
               left: 0,
               child: Material(
                 elevation: 5,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
                 child: Container(
                   height: wHeightTitre,
                   width: wWidth,
-                  decoration: BoxDecoration(color: Colors.yellowAccent, borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))),
+                  decoration: const BoxDecoration(color: Colors.yellowAccent, borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))),
                   child: Container(
                       color: Colors.transparent,
                       height: wHeightTitre - 26,
@@ -1861,7 +1862,7 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                 child: Column(
                   children: [
                     Text(
-                      "${wTitre}",
+                      wTitre,
                       maxLines: 3,
                       style: gColors.bodyTitle1_B_G24,
                       textAlign: TextAlign.center,
@@ -1878,7 +1879,7 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
 
   @override
   Widget build(BuildContext context) {
-    if (lDCL_Ent_Doc.length == 0) return Container();
+    if (lDCL_Ent_Doc.isEmpty) return Container();
 
     print(" Srv_DbTools.SelDCL_DateDeb ${Srv_DbTools.SelDCL_DateDeb}");
 
@@ -1891,23 +1892,23 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
 
     double wHeightBtnValider = 40;
 
-    String DCL_Ent_Img_Name0 = "";
-    String DCL_Ent_Img_Name1 = "";
-    String DCL_Ent_Img_Name2 = "";
+    String dclEntImgName0 = "";
+    String dclEntImgName1 = "";
+    String dclEntImgName2 = "";
 
     try {
-      DCL_Ent_Img_Name0 = lDCL_Ent_Doc[0].DCL_Ent_Img_Name!;
+      dclEntImgName0 = lDCL_Ent_Doc[0].DCL_Ent_Img_Name!;
     } catch (_) {}
     try {
-      DCL_Ent_Img_Name1 = lDCL_Ent_Doc[1].DCL_Ent_Img_Name!;
+      dclEntImgName1 = lDCL_Ent_Doc[1].DCL_Ent_Img_Name!;
     } catch (_) {}
     try {
-      DCL_Ent_Img_Name2 = lDCL_Ent_Doc[2].DCL_Ent_Img_Name!;
+      dclEntImgName2 = lDCL_Ent_Doc[2].DCL_Ent_Img_Name!;
     } catch (_) {}
 
-    print(" DCL_Ent_Img_Name0 ${DCL_Ent_Img_Name0} ${lDCL_Ent_Doc.length}");
-    print(" DCL_Ent_Img_Name1 ${DCL_Ent_Img_Name1}");
-    print(" DCL_Ent_Img_Name2 ${DCL_Ent_Img_Name2}");
+    print(" DCL_Ent_Img_Name0 $dclEntImgName0 ${lDCL_Ent_Doc.length}");
+    print(" DCL_Ent_Img_Name1 $dclEntImgName1");
+    print(" DCL_Ent_Img_Name2 $dclEntImgName2");
 
     return SimpleDialog(
       titlePadding: EdgeInsets.zero,
@@ -1932,12 +1933,12 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                       height: 99,
                       margin: const EdgeInsets.fromLTRB(0, 90, 0, 0),
                       padding: const EdgeInsets.fromLTRB(0, 40, 0, 0),
-                      decoration: BoxDecoration(color: Colors.yellowAccent, borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))),
+                      decoration: const BoxDecoration(color: Colors.yellowAccent, borderRadius: BorderRadius.only(topLeft: Radius.circular(15), topRight: Radius.circular(15))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
+                          SizedBox(
                             width: wWidth,
                             child: Text(
                               widget.wTitre,
@@ -1973,12 +1974,12 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                                         width: 0.7,
                                         color: gColors.primaryGreen,
                                       ),
-                                      borderRadius: BorderRadius.all(
+                                      borderRadius: const BorderRadius.all(
                                         Radius.circular(8.0),
                                       ),
                                     ),
-                                    margin: EdgeInsets.fromLTRB(50, 0, 50, 0),
-                                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    margin: const EdgeInsets.fromLTRB(50, 0, 50, 0),
+                                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                     height: wHeightBtn,
                                     width: wWidth,
                                     child: Column(
@@ -1990,13 +1991,13 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                                   background: slideLeftBackground(),
                                   secondaryBackground: slideLeftBackground(),
                                   direction: DismissDirection.endToStart,
-                                  key: ValueKey<int>(0),
+                                  key: const ValueKey<int>(0),
                                   confirmDismiss: (DismissDirection direction) async {
                                     await HapticFeedback.vibrate();
                                     Srv_DbTools.gDCL_Ent_Img = lDCL_Ent_Doc[0];
-                                    ;
                                     await showDialog(context: context, builder: (BuildContext context) => DialogSuppr(context, lDCL_Ent_Doc[0].DCL_Ent_Img_Name!));
                                     print("confirmDismiss");
+                                    return null;
                                   },
                                   child: GestureDetector(
                                     onTap: () async {
@@ -2010,10 +2011,10 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                                         Uint8List fileBytes = docFile.readAsBytesSync();
 
                                         if (wFile1.isEmpty) {
-                                          DCL_Ent_Img wDCL_Ent_Img = lDCL_Ent_Doc[0];
-                                          wDCL_Ent_Img.DCL_Ent_Img_Name = result.files.single.name;
-                                          wDCL_Ent_Img.dCLEntImgData = await base64Encode(fileBytes);
-                                          await Srv_DbTools.setDCL_Ent_Img(wDCL_Ent_Img);
+                                          DCL_Ent_Img wdclEntImg = lDCL_Ent_Doc[0];
+                                          wdclEntImg.DCL_Ent_Img_Name = result.files.single.name;
+                                          wdclEntImg.dCLEntImgData = base64Encode(fileBytes);
+                                          await Srv_DbTools.setDCL_Ent_Img(wdclEntImg);
                                           await Reload();
                                         }
                                       } else {
@@ -2021,7 +2022,7 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                                       }
                                     },
                                     child: Container(
-                                        margin: EdgeInsets.fromLTRB(50, 0, 50, 0),
+                                        margin: const EdgeInsets.fromLTRB(50, 0, 50, 0),
                                         height: 57,
                                         width: wWidth,
                                         child: Row(
@@ -2034,7 +2035,7 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                                             ),
                                             Expanded(
                                               child: Container(
-                                                child: Text("${DCL_Ent_Img_Name0}", textAlign: TextAlign.left, maxLines: 1, style: gColors.bodyTitle1_N_G),
+                                                child: Text(dclEntImgName0, textAlign: TextAlign.left, maxLines: 1, style: gColors.bodyTitle1_N_G),
                                               ),
                                             ),
                                             GestureDetector(
@@ -2043,14 +2044,14 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                                                 late SfPdfViewer wSfPdfViewer;
                                                 PdfViewerController wPdfViewerController = PdfViewerController();
                                                 print("wDocPath ${lDCL_Ent_Doc[1].DCL_Ent_Img_Name} ");
-                                                var _bytes = base64Decode(lDCL_Ent_Doc[0].dCLEntImgData!);
-                                                print("wDocPath  length ${_bytes.length}");
-                                                if (_bytes.length > 0) {
-                                                  wSfPdfViewer = await SfPdfViewer.memory(
+                                                var bytes = base64Decode(lDCL_Ent_Doc[0].dCLEntImgData!);
+                                                print("wDocPath  length ${bytes.length}");
+                                                if (bytes.isNotEmpty) {
+                                                  wSfPdfViewer = SfPdfViewer.memory(
                                                     controller: wPdfViewerController,
                                                     initialZoomLevel: 1,
                                                     maxZoomLevel: 12,
-                                                    _bytes,
+                                                    bytes,
                                                     enableDocumentLinkAnnotation: false,
                                                     enableTextSelection: false,
                                                     interactionMode: PdfInteractionMode.pan,
@@ -2072,12 +2073,12 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                                     background: slideLeftBackground(),
                                     secondaryBackground: slideLeftBackground(),
                                     direction: DismissDirection.endToStart,
-                                    key: ValueKey<int>(1),
+                                    key: const ValueKey<int>(1),
                                     confirmDismiss: (DismissDirection direction) async {
                                       await HapticFeedback.vibrate();
                                       Srv_DbTools.gDCL_Ent_Img = lDCL_Ent_Doc[1];
-                                      ;
                                       await showDialog(context: context, builder: (BuildContext context) => DialogSuppr(context, lDCL_Ent_Doc[1].DCL_Ent_Img_Name!));
+                                      return null;
                                     },
                                     child: GestureDetector(
                                       onTap: () async {
@@ -2091,10 +2092,10 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                                           Uint8List fileBytes = docFile.readAsBytesSync();
 
                                           if (wFile1.isEmpty) {
-                                            DCL_Ent_Img wDCL_Ent_Img = lDCL_Ent_Doc[1];
-                                            wDCL_Ent_Img.DCL_Ent_Img_Name = result.files.single.name;
-                                            wDCL_Ent_Img.dCLEntImgData = await base64Encode(fileBytes);
-                                            await Srv_DbTools.setDCL_Ent_Img(wDCL_Ent_Img);
+                                            DCL_Ent_Img wdclEntImg = lDCL_Ent_Doc[1];
+                                            wdclEntImg.DCL_Ent_Img_Name = result.files.single.name;
+                                            wdclEntImg.dCLEntImgData = base64Encode(fileBytes);
+                                            await Srv_DbTools.setDCL_Ent_Img(wdclEntImg);
                                             await Reload();
                                           }
                                         } else {
@@ -2102,7 +2103,7 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                                         }
                                       },
                                       child: Container(
-                                          margin: EdgeInsets.fromLTRB(50, 0, 50, 0),
+                                          margin: const EdgeInsets.fromLTRB(50, 0, 50, 0),
                                           height: 57,
                                           width: wWidth,
                                           child: Row(
@@ -2115,7 +2116,7 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                                               ),
                                               Expanded(
                                                 child: Container(
-                                                  child: Text("${DCL_Ent_Img_Name1}", textAlign: TextAlign.left, maxLines: 1, style: gColors.bodyTitle1_N_G),
+                                                  child: Text(dclEntImgName1, textAlign: TextAlign.left, maxLines: 1, style: gColors.bodyTitle1_N_G),
                                                 ),
                                               ),
                                               GestureDetector(
@@ -2124,14 +2125,14 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                                                   late SfPdfViewer wSfPdfViewer;
                                                   PdfViewerController wPdfViewerController = PdfViewerController();
                                                   print("wDocPath ${lDCL_Ent_Doc[1].DCL_Ent_Img_Name} ");
-                                                  var _bytes = base64Decode(lDCL_Ent_Doc[1].dCLEntImgData!);
-                                                  print("wDocPath  length ${_bytes.length}");
-                                                  if (_bytes.length > 0) {
-                                                    wSfPdfViewer = await SfPdfViewer.memory(
+                                                  var bytes = base64Decode(lDCL_Ent_Doc[1].dCLEntImgData!);
+                                                  print("wDocPath  length ${bytes.length}");
+                                                  if (bytes.isNotEmpty) {
+                                                    wSfPdfViewer = SfPdfViewer.memory(
                                                       controller: wPdfViewerController,
                                                       initialZoomLevel: 1,
                                                       maxZoomLevel: 12,
-                                                      _bytes,
+                                                      bytes,
                                                       enableDocumentLinkAnnotation: false,
                                                       enableTextSelection: false,
                                                       interactionMode: PdfInteractionMode.pan,
@@ -2152,11 +2153,12 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                                   background: slideLeftBackground(),
                                   secondaryBackground: slideLeftBackground(),
                                   direction: DismissDirection.endToStart,
-                                  key: ValueKey<int>(2),
+                                  key: const ValueKey<int>(2),
                                   confirmDismiss: (DismissDirection direction) async {
                                     await HapticFeedback.vibrate();
                                     Srv_DbTools.gDCL_Ent_Img = lDCL_Ent_Doc[2];
                                     await showDialog(context: context, builder: (BuildContext context) => DialogSuppr(context, lDCL_Ent_Doc[2].DCL_Ent_Img_Name!));
+                                    return null;
                                   },
                                   child: GestureDetector(
                                     onTap: () async {
@@ -2170,10 +2172,10 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                                         Uint8List fileBytes = docFile.readAsBytesSync();
 
                                         if (wFile1.isEmpty) {
-                                          DCL_Ent_Img wDCL_Ent_Img = lDCL_Ent_Doc[2];
-                                          wDCL_Ent_Img.DCL_Ent_Img_Name = result.files.single.name;
-                                          wDCL_Ent_Img.dCLEntImgData = await base64Encode(fileBytes);
-                                          await Srv_DbTools.setDCL_Ent_Img(wDCL_Ent_Img);
+                                          DCL_Ent_Img wdclEntImg = lDCL_Ent_Doc[2];
+                                          wdclEntImg.DCL_Ent_Img_Name = result.files.single.name;
+                                          wdclEntImg.dCLEntImgData = base64Encode(fileBytes);
+                                          await Srv_DbTools.setDCL_Ent_Img(wdclEntImg);
                                           await Reload();
                                         }
                                       } else {
@@ -2181,7 +2183,7 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                                       }
                                     },
                                     child: Container(
-                                        margin: EdgeInsets.fromLTRB(50, 0, 50, 0),
+                                        margin: const EdgeInsets.fromLTRB(50, 0, 50, 0),
                                         height: 57,
                                         width: wWidth,
                                         child: Row(
@@ -2194,7 +2196,7 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                                             ),
                                             Expanded(
                                               child: Container(
-                                                child: Text("${DCL_Ent_Img_Name2}", textAlign: TextAlign.left, maxLines: 1, style: gColors.bodyTitle1_N_G),
+                                                child: Text(dclEntImgName2, textAlign: TextAlign.left, maxLines: 1, style: gColors.bodyTitle1_N_G),
                                               ),
                                             ),
                                             GestureDetector(
@@ -2203,14 +2205,14 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                                                 late SfPdfViewer wSfPdfViewer;
                                                 PdfViewerController wPdfViewerController = PdfViewerController();
                                                 print("wDocPath ${lDCL_Ent_Doc[1].DCL_Ent_Img_Name} ");
-                                                var _bytes = base64Decode(lDCL_Ent_Doc[2].dCLEntImgData!);
-                                                print("wDocPath  length ${_bytes.length}");
-                                                if (_bytes.length > 0) {
-                                                  wSfPdfViewer = await SfPdfViewer.memory(
+                                                var bytes = base64Decode(lDCL_Ent_Doc[2].dCLEntImgData!);
+                                                print("wDocPath  length ${bytes.length}");
+                                                if (bytes.isNotEmpty) {
+                                                  wSfPdfViewer = SfPdfViewer.memory(
                                                     controller: wPdfViewerController,
                                                     initialZoomLevel: 1,
                                                     maxZoomLevel: 12,
-                                                    _bytes,
+                                                    bytes,
                                                     enableDocumentLinkAnnotation: false,
                                                     enableTextSelection: false,
                                                     interactionMode: PdfInteractionMode.pan,
@@ -2235,13 +2237,13 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                                         width: 0.7,
                                         color: gColors.primaryGreen,
                                       ),
-                                      borderRadius: BorderRadius.all(
+                                      borderRadius: const BorderRadius.all(
                                         Radius.circular(8.0),
                                       ),
                                     ),
-                                    margin: EdgeInsets.fromLTRB(50, 0, 50, 50),
+                                    margin: const EdgeInsets.fromLTRB(50, 0, 50, 50),
                                     // TED
-                                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                     // TED
                                     height: wHeightBtn,
                                     width: wWidth,
@@ -2250,9 +2252,9 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                                       crossAxisAlignment: CrossAxisAlignment.center,
                                       children: [Text("Prendre une photo", textAlign: TextAlign.left, maxLines: 1, style: gColors.bodyTitle1_B_W)],
                                     )),
-                                Spacer(),
+                                const Spacer(),
                                 Container(
-                                  margin: EdgeInsets.fromLTRB(50, 0, 50, 0),
+                                  margin: const EdgeInsets.fromLTRB(50, 0, 50, 0),
                                   padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                                   height: 250,
                                   child: ListView.builder(
@@ -2265,14 +2267,14 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                                               onTap: () async {
                                                 print("onTap $Itemindex ${Uint8ListList[Itemindex].length}");
 
-                                                if (Uint8ListList[Itemindex].length == 0) {
+                                                if (Uint8ListList[Itemindex].isEmpty) {
                                                   print("onTap $Itemindex VIDE");
 
                                                   DbTools.gImagePath = "";
                                                   gPhotos.wImg = 1;
                                                   gPhotos.ImgDoc = Itemindex;
 
-                                                  await Navigator.push(context, MaterialPageRoute(builder: (context) => gPhotos()));
+                                                  await Navigator.push(context, MaterialPageRoute(builder: (context) => const gPhotos()));
                                                   print("gImagePath ${DbTools.gImagePath}");
                                                   if (DbTools.gImagePath != "") {
                                                     print("Add ${DbTools.gImagePath}");
@@ -2296,7 +2298,6 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                                                   setState(() {});
                                                 }
 
-                                                ;
                                               },
                                               child: Container(
                                                 child: Column(
@@ -2313,7 +2314,7 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                                         );
                                       }),
                                 ),
-                                Spacer(),
+                                const Spacer(),
                               ],
                             )),
 
@@ -2323,7 +2324,7 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                       width: wWidth,
                       height: 100,
                       padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
-                      decoration: BoxDecoration(color: gColors.LinearGradient3, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
+                      decoration: const BoxDecoration(color: gColors.LinearGradient3, borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15), bottomRight: Radius.circular(15))),
                       child: Column(
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -2379,8 +2380,9 @@ class _DCLParamDialog_ScanDocState extends State<DCLParamDialog_ScanDoc> {
                                   if (isZoom) {
                                     isZoom = false;
                                     setState(() {});
-                                  } else
+                                  } else {
                                     Navigator.pop(context);
+                                  }
                                 },
                               )
                             ],
@@ -2413,9 +2415,9 @@ class DCLParamDialog_Relance extends StatefulWidget {
 }
 
 class _DCLParamDialog_RelanceState extends State<DCLParamDialog_Relance> {
-  TextEditingController wContactController = new TextEditingController();
-  TextEditingController wMailController = new TextEditingController();
-  TextEditingController wTelController = new TextEditingController();
+  TextEditingController wContactController = TextEditingController();
+  TextEditingController wMailController = TextEditingController();
+  TextEditingController wTelController = TextEditingController();
 
   void Reload() async {
     setState(() {});
@@ -2476,7 +2478,7 @@ class _DCLParamDialog_RelanceState extends State<DCLParamDialog_Relance> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
+                          SizedBox(
                             width: wWidth,
                             child: Text(
                               widget.wTitre,
@@ -2601,12 +2603,12 @@ class _DCLParamDialog_RelanceState extends State<DCLParamDialog_Relance> {
                                       width: 0.7,
                                       color: (item.compareTo(DCL_Param_Dialog.wSel) == 0) ? gColors.primaryGreen : gColors.grey,
                                     ),
-                                    borderRadius: BorderRadius.all(
+                                    borderRadius: const BorderRadius.all(
                                       Radius.circular(8.0),
                                     ),
                                   ),
-                                  margin: EdgeInsets.fromLTRB(50, 0, 50, 20),
-                                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  margin: const EdgeInsets.fromLTRB(50, 0, 50, 20),
+                                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                   height: wHeightBtn,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -2631,7 +2633,7 @@ class _DCLParamDialog_RelanceState extends State<DCLParamDialog_Relance> {
                         height: 20,
                       ),
                       Container(
-                        padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
                         width: wWidth,
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -2651,12 +2653,12 @@ class _DCLParamDialog_RelanceState extends State<DCLParamDialog_Relance> {
                                         width: 0.7,
                                         color: DCL_Param_Dialog.RelanceMode == "Mail" ? gColors.primaryGreen : gColors.grey,
                                       ),
-                                      borderRadius: BorderRadius.all(
+                                      borderRadius: const BorderRadius.all(
                                         Radius.circular(8.0),
                                       ),
                                     ),
                                     // TED
-                                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                     // TED
                                     height: wHeightBtn,
                                     child: Column(
@@ -2686,12 +2688,12 @@ class _DCLParamDialog_RelanceState extends State<DCLParamDialog_Relance> {
                                         width: 0.7,
                                         color: DCL_Param_Dialog.RelanceMode == "SMS" ? gColors.primaryGreen : gColors.grey,
                                       ),
-                                      borderRadius: BorderRadius.all(
+                                      borderRadius: const BorderRadius.all(
                                         Radius.circular(8.0),
                                       ),
                                     ),
                                     // TED
-                                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                     // TED
                                     height: wHeightBtn,
                                     child: Column(
@@ -2721,12 +2723,12 @@ class _DCLParamDialog_RelanceState extends State<DCLParamDialog_Relance> {
                                         width: 0.7,
                                         color: DCL_Param_Dialog.RelanceMode == "WhatsApp" ? gColors.primaryGreen : gColors.grey,
                                       ),
-                                      borderRadius: BorderRadius.all(
+                                      borderRadius: const BorderRadius.all(
                                         Radius.circular(8.0),
                                       ),
                                     ),
                                     // TED
-                                    padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                    padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                     // TED
                                     height: wHeightBtn,
                                     child: Column(
@@ -2755,12 +2757,12 @@ class _DCLParamDialog_RelanceState extends State<DCLParamDialog_Relance> {
                             width: 0.7,
                             color: gColors.grey,
                           ),
-                          borderRadius: BorderRadius.all(
+                          borderRadius: const BorderRadius.all(
                             Radius.circular(8.0),
                           ),
                         ),
-                        margin: EdgeInsets.fromLTRB(20, 0, 20, 20), // TED
-                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0), // TED
+                        margin: const EdgeInsets.fromLTRB(20, 0, 20, 20), // TED
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0), // TED
                         child: TextField(
                           decoration: InputDecoration(
                             labelText: "Contact :",
@@ -2782,12 +2784,12 @@ class _DCLParamDialog_RelanceState extends State<DCLParamDialog_Relance> {
                             width: 0.7,
                             color: gColors.grey,
                           ),
-                          borderRadius: BorderRadius.all(
+                          borderRadius: const BorderRadius.all(
                             Radius.circular(8.0),
                           ),
                         ),
-                        margin: EdgeInsets.fromLTRB(20, 0, 20, 20), // TED
-                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0), // TED
+                        margin: const EdgeInsets.fromLTRB(20, 0, 20, 20), // TED
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0), // TED
                         child: TextField(
                           decoration: InputDecoration(
                             labelText: "Mail :",
@@ -2809,12 +2811,12 @@ class _DCLParamDialog_RelanceState extends State<DCLParamDialog_Relance> {
                             width: 0.7,
                             color: gColors.grey,
                           ),
-                          borderRadius: BorderRadius.all(
+                          borderRadius: const BorderRadius.all(
                             Radius.circular(8.0),
                           ),
                         ),
-                        margin: EdgeInsets.fromLTRB(20, 0, 20, 20), // TED
-                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0), // TED
+                        margin: const EdgeInsets.fromLTRB(20, 0, 20, 20), // TED
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0), // TED
                         child: TextField(
                           decoration: InputDecoration(
                             labelText: "Tél :",
@@ -2853,7 +2855,7 @@ class DCLParamDialog_Note extends StatefulWidget {
 }
 
 class _DCLParamDialog_NoteState extends State<DCLParamDialog_Note> {
-  TextEditingController wNoteController = new TextEditingController();
+  TextEditingController wNoteController = TextEditingController();
 
   void Reload() async {
     setState(() {});
@@ -2914,7 +2916,7 @@ class _DCLParamDialog_NoteState extends State<DCLParamDialog_Note> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
+                          SizedBox(
                             width: wWidth,
                             child: Text(
                               widget.wTitre,
@@ -3039,13 +3041,13 @@ class _DCLParamDialog_NoteState extends State<DCLParamDialog_Note> {
                                       width: 0.7,
                                       color: (item.compareTo(DCL_Param_Dialog.wSel) == 0) ? gColors.primaryGreen : gColors.grey,
                                     ),
-                                    borderRadius: BorderRadius.all(
+                                    borderRadius: const BorderRadius.all(
                                       Radius.circular(8.0),
                                     ),
                                   ),
-                                  margin: EdgeInsets.fromLTRB(50, 0, 50, 20),
+                                  margin: const EdgeInsets.fromLTRB(50, 0, 50, 20),
                                   // TED
-                                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                   // TED
                                   height: wHeightBtn,
                                   child: Column(
@@ -3070,12 +3072,12 @@ class _DCLParamDialog_NoteState extends State<DCLParamDialog_Note> {
                             width: 0.7,
                             color: gColors.grey,
                           ),
-                          borderRadius: BorderRadius.all(
+                          borderRadius: const BorderRadius.all(
                             Radius.circular(8.0),
                           ),
                         ),
-                        margin: EdgeInsets.fromLTRB(50, 0, 50, 20), // TED
-                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0), // TED
+                        margin: const EdgeInsets.fromLTRB(50, 0, 50, 20), // TED
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0), // TED
 
                         child: TextField(
                           keyboardType: TextInputType.multiline,
@@ -3111,7 +3113,7 @@ class DCLParamDialog_Text extends StatefulWidget {
 }
 
 class _DCLParamDialog_TextState extends State<DCLParamDialog_Text> {
-  TextEditingController wNoteController = new TextEditingController();
+  TextEditingController wNoteController = TextEditingController();
 
   void Reload() async {
     setState(() {});
@@ -3172,7 +3174,7 @@ class _DCLParamDialog_TextState extends State<DCLParamDialog_Text> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
+                          SizedBox(
                             width: wWidth,
                             child: Text(
                               widget.wTitre,
@@ -3284,12 +3286,12 @@ class _DCLParamDialog_TextState extends State<DCLParamDialog_Text> {
                             width: 0.7,
                             color: gColors.grey,
                           ),
-                          borderRadius: BorderRadius.all(
+                          borderRadius: const BorderRadius.all(
                             Radius.circular(8.0),
                           ),
                         ),
-                        margin: EdgeInsets.fromLTRB(50, 0, 50, 20), // TED
-                        padding: EdgeInsets.fromLTRB(10, 0, 10, 0), // TED
+                        margin: const EdgeInsets.fromLTRB(50, 0, 50, 20), // TED
+                        padding: const EdgeInsets.fromLTRB(10, 0, 10, 0), // TED
 
                         child: TextField(
                           keyboardType: TextInputType.multiline,
@@ -3346,12 +3348,12 @@ class _DCLParamDialogState extends State<DCLParamDialog> {
     double wHeight = 1084;
     double wHeightDet = 645;
     double wHeightDet2 = 670;
-
     double wHeightBtn = 45;
-
     double wHeightBtnValider = 40;
 
     return SimpleDialog(
+      insetPadding: const EdgeInsets.fromLTRB(0, 200, 0, 0),
+
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
@@ -3382,10 +3384,10 @@ class _DCLParamDialogState extends State<DCLParamDialog> {
                         mainAxisAlignment: MainAxisAlignment.start,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
+                          SizedBox(
                             width: wWidth,
                             child: Text(
-                              widget.wTitre,
+                              "${widget.wTitre}",
                               style: gColors.bodyTitle1_B_G,
                               textAlign: TextAlign.center,
                             ),
@@ -3506,12 +3508,12 @@ class _DCLParamDialogState extends State<DCLParamDialog> {
                                       width: 0.7,
                                       color: (item.compareTo(DCL_Param_Dialog.wSel) == 0) ? gColors.primaryGreen : gColors.grey,
                                     ),
-                                    borderRadius: BorderRadius.all(
+                                    borderRadius: const BorderRadius.all(
                                       Radius.circular(8.0),
                                     ),
                                   ),
-                                  margin: EdgeInsets.fromLTRB(50, 0, 50, 20), // TED
-                                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0), // TED
+                                  margin: const EdgeInsets.fromLTRB(50, 0, 50, 20), // TED
+                                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0), // TED
                                   height: wHeightBtn,
                                   child: Column(
                                     mainAxisAlignment: MainAxisAlignment.center,

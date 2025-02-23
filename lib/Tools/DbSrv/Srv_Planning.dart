@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 
 class Planning {
   int? PlanningId = -1;
@@ -35,8 +34,8 @@ class Planning {
       'PlanningId': PlanningId,
       'Planning_InterventionId': Planning_InterventionId,
       'Planning_ResourceId': Planning_ResourceId,
-      'Planning_InterventionstartTime': '${Planning_InterventionstartTime}',
-      'Planning_InterventionendTime': '${Planning_InterventionendTime}',
+      'Planning_InterventionstartTime': '$Planning_InterventionstartTime',
+      'Planning_InterventionendTime': '$Planning_InterventionendTime',
       'Planning_Libelle': Planning_Libelle,
     };
   }

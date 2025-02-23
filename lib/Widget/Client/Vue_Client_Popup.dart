@@ -119,7 +119,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
 
     for (int i = 0; i < ListParam_ParamFam.length; i++) {
       String element = ListParam_ParamFam[i];
-      if (element.compareTo("${wClient_Famille}") == 0) {
+      if (element.compareTo(wClient_Famille) == 0) {
         selectedValueFam = element;
         selectedValueFamID = ListParam_ParamFamID[i];
       }
@@ -130,14 +130,14 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
 
     await DbTools.getAdresseType( "AGENCE");
     ListParam_ParamDepot.clear();
-    Srv_DbTools.ListAdressesearchresult.forEach((wAdresse) {
+    for (var wAdresse in Srv_DbTools.ListAdressesearchresult) {
       ListParam_ParamDepot.add(wAdresse.Adresse_Nom);
-    });
+    }
 
     selectedValueDepot = ListParam_ParamDepot[0];
     for (int i = 0; i < ListParam_ParamDepot.length; i++) {
       String element = ListParam_ParamDepot[i];
-      if (element.compareTo("${wClient_Depot}") == 0) {
+      if (element.compareTo(wClient_Depot) == 0) {
         selectedValueDepot = element;
       }
     }
@@ -149,7 +149,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
     selectedValueRglt = ListParam_ParamRglt[0];
     for (int i = 0; i < ListParam_ParamRglt.length; i++) {
       String element = ListParam_ParamRglt[i];
-      if (element.compareTo("${wClient_Rglt}") == 0) {
+      if (element.compareTo(wClient_Rglt) == 0) {
         selectedValueRglt = element;
       }
     }
@@ -160,17 +160,17 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
     ListParam_ParamUserID.clear();
 
     await Srv_DbTools.getUserAll();
-    Srv_DbTools.ListUser.forEach((element) {
+    for (var element in Srv_DbTools.ListUser) {
       ListParam_ParamUser.add("${element.User_Nom} ${element.User_Prenom}");
       ListParam_ParamUserFam.add("${element.User_Famille} ");
       ListParam_ParamUserID.add("${element.UserID}");
-    });
+    }
     selectedValueUser = ListParam_ParamUser[0];
     selectedValueUserID = ListParam_ParamUserID[0];
 
     for (int i = 0; i < ListParam_ParamUser.length; i++) {
       String element = ListParam_ParamUser[i];
-      if (element.compareTo("${wClient_Commercial}") == 0) {
+      if (element.compareTo(wClient_Commercial) == 0) {
         selectedValueUser = element;
         selectedValueUserID = ListParam_ParamUserID[i];
       }
@@ -302,8 +302,8 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
           Container(
             height: 44,
             width: 450,
-            margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: AutoAdresseFact(textController_Adresse_Geo),
           ),
           gColors.wLigne(),
@@ -335,8 +335,8 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
           Container(
             height: 44,
             width: 450,
-            margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: AutoAdresseLivr(textController_Adresse_Geo),
           ),
           gColors.wLigne(),
@@ -412,20 +412,20 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
       );
     }
 
-    print("Contact     Srv_DbTools.gContact.Contact_Nom       ${Srv_DbTools.gContact.Contact_Nom}     ${wContact_Nom}");
-    print("ContactLivr Srv_DbTools.gContactLivr.Contact_Nom   ${Srv_DbTools.gContactLivr.Contact_Nom} ${wLivr_Contact_Nom}");
+    print("Contact     Srv_DbTools.gContact.Contact_Nom       ${Srv_DbTools.gContact.Contact_Nom}     $wContact_Nom");
+    print("ContactLivr Srv_DbTools.gContactLivr.Contact_Nom   ${Srv_DbTools.gContactLivr.Contact_Nom} $wLivr_Contact_Nom");
 
     return AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
         surfaceTintColor: Colors.white,
         backgroundColor: gColors.white,
         title: Container(
             color: gColors.white,
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
             child: Column(
               children: [
                 Text(
-                  "${wTitle}",
+                  wTitle,
                   textAlign: TextAlign.center,
                   style: gColors.bodyTitle1_B_G_20,
                 ),
@@ -434,7 +434,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
                 ),
               ],
             )),
-        contentPadding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 20.0),
+        contentPadding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 20.0),
         content: SingleChildScrollView(
           // won't be scrollable
           child: Container(
@@ -452,7 +452,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
                     padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                     child: Ctrl,
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Container(
                     color: gColors.black,
                     height: 1,
@@ -500,7 +500,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
                         Srv_DbTools.gAdresseLivr.Adresse_isUpdate = wRes;
                         if (!wRes) DbTools.setBoolErrorSync(true);
                         await DbTools.updateAdresse(Srv_DbTools.gAdresseLivr);
-                        print("VALIDER AdresseLivr wRes ${wRes}");
+                        print("VALIDER AdresseLivr wRes $wRes");
 
                       }
 
@@ -521,7 +521,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
                       Srv_DbTools.gContact.Contact_isUpdate = wRes;
                       if (!wRes) DbTools.setBoolErrorSync(true);
                       await DbTools.updateContact(Srv_DbTools.gContact);
-                      print("VALIDER gContact wRes ${wRes}");
+                      print("VALIDER gContact wRes $wRes");
 
                     }
 
@@ -533,8 +533,8 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
                   child: Text('Factutration / Livraison', style: gColors.bodyTitle1_N_W),
                 )
               : Container(),
-          Spacer(),
-          new ElevatedButton(
+          const Spacer(),
+          ElevatedButton(
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -547,7 +547,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               print("VALIDER");
 
@@ -563,7 +563,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
               Srv_DbTools.gClient.Client_Commercial = wClient_Commercial;
               await DbTools.updateClients(Srv_DbTools.gClient);
               bool wRes = await Srv_DbTools.setClient(Srv_DbTools.gClient);
-              print("•••• setClient ${wRes}");
+              print("•••• setClient $wRes");
               Srv_DbTools.gClient.Client_isUpdate = wRes;
               await DbTools.updateClients(Srv_DbTools.gClient);
 
@@ -582,7 +582,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
                wRes = await Srv_DbTools.setAdresse(Srv_DbTools.gAdresse);
               Srv_DbTools.gAdresse.Adresse_isUpdate = wRes;
               await DbTools.updateAdresse(Srv_DbTools.gAdresse);
-              print("VALIDER Adresse wRes ${wRes}");
+              print("VALIDER Adresse wRes $wRes");
 
 
               Srv_DbTools.gAdresseLivr.Adresse_Adr1 = wLivr_Adresse_Adr1;
@@ -595,11 +595,11 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
 
               await DbTools.updateAdresse(Srv_DbTools.gAdresseLivr);
               wRes = await Srv_DbTools.setAdresse(Srv_DbTools.gAdresseLivr);
-              print("•••• setAdresse wRes ${wRes}");
+              print("•••• setAdresse wRes $wRes");
               Srv_DbTools.gAdresseLivr.Adresse_isUpdate = wRes;
               if (!wRes) DbTools.setBoolErrorSync(true);
               await DbTools.updateAdresse(Srv_DbTools.gAdresseLivr);
-              print("VALIDER AdresseLivr wRes ${wRes}");
+              print("VALIDER AdresseLivr wRes $wRes");
 
               await DbTools.getAdresseAll();
 
@@ -613,7 +613,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
               Srv_DbTools.gContact.Contact_eMail = wContact_eMail;
               await DbTools.updateContact(Srv_DbTools.gContact);
               wRes = await  Srv_DbTools.setContact(Srv_DbTools.gContact);
-              print("•••• setContact wRes ${wRes}");
+              print("•••• setContact wRes $wRes");
               Srv_DbTools.gContact.Contact_isUpdate = wRes;
               if (!wRes) DbTools.setBoolErrorSync(true);
               await DbTools.updateContact(Srv_DbTools.gContact);
@@ -621,7 +621,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
 
 
 
-              print("Contact     Srv_DbTools.gContactLivr.Contact_Nom       ${Srv_DbTools.gContactLivr.Contact_Nom}     ${wLivr_Contact_Nom}");
+              print("Contact     Srv_DbTools.gContactLivr.Contact_Nom       ${Srv_DbTools.gContactLivr.Contact_Nom}     $wLivr_Contact_Nom");
               Srv_DbTools.gContactLivr.Contact_Civilite   = wLivr_Contact_Civilite;
               Srv_DbTools.gContactLivr.Contact_Prenom     = wLivr_Contact_Prenom;
               Srv_DbTools.gContactLivr.Contact_Nom        = wLivr_Contact_Nom;
@@ -633,7 +633,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
 
               await DbTools.updateContact(Srv_DbTools.gContactLivr);
               wRes = await  Srv_DbTools.setContact(Srv_DbTools.gContactLivr);
-              print("•••• setContact LIVR  wRes ${wRes}");
+              print("•••• setContact LIVR  wRes $wRes");
               Srv_DbTools.gContactLivr.Contact_isUpdate = wRes;
               if (!wRes) DbTools.setBoolErrorSync(true);
               await DbTools.updateContact(Srv_DbTools.gContactLivr);
@@ -803,18 +803,18 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
       hintText = "EMail";
     }
 
-    return new Container(
+    return Container(
       height: 50,
       width: 450,
-      margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+      margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+      padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
       decoration: BoxDecoration(
         color: gColors.white,
         border: Border.all(
           /**/
           color: Colors.grey,
         ),
-        borderRadius: BorderRadius.all(
+        borderRadius: const BorderRadius.all(
           Radius.circular(12.0),
         ),
       ),
@@ -826,7 +826,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "${hintText}",
+                hintText,
                 textAlign: TextAlign.center,
                 style: gColors.bodyTitle1_B_Gr,
               ),
@@ -835,7 +835,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
                   keyboardType: TextInputType.visiblePassword,
                   controller: txtController,
                   autofocus: false,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: InputBorder.none,
 //                  hintText: hintText,
                     contentPadding: EdgeInsets.fromLTRB(20.0, 1.0, 20.0, 10.0),
@@ -975,8 +975,8 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
       wSel = wClient_OK_DataPerso;
     }
 
-    return new Container(
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+    return Container(
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       width: 450,
       height: 45,
       child: Card(
@@ -987,7 +987,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
             Text(
-              "${wLabel}",
+              wLabel,
               textAlign: TextAlign.center,
               style: gColors.bodyTitle1_B_Gr,
             ),
@@ -1025,45 +1025,45 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
   }
 
   Widget DropdownButton(String wChamps) {
-    List<String> ListParam_Param = [];
-    List<String> ListParam_ParamID = [];
+    List<String> listparamParam = [];
+    List<String> listparamParamid = [];
     String selectedValue = "";
     String selectedValueID = "";
     String wLabel = "";
 
-    print("wChamps ${wChamps}");
+    print("wChamps $wChamps");
 
 
     if (wChamps.compareTo("Client_Commercial") == 0) {
-      ListParam_Param = ListParam_ParamUser;
-      ListParam_ParamID = ListParam_ParamUserID;
+      listparamParam = ListParam_ParamUser;
+      listparamParamid = ListParam_ParamUserID;
       selectedValue = selectedValueUser;
       selectedValueID = selectedValueUserID;
       wLabel = "Commercial";
     }
 
     if (wChamps.compareTo("Client_Famille") == 0) {
-      ListParam_Param = ListParam_ParamFam;
-      ListParam_ParamID = ListParam_ParamFamID;
+      listparamParam = ListParam_ParamFam;
+      listparamParamid = ListParam_ParamFamID;
       selectedValue = selectedValueFam;
       selectedValueID = selectedValueFamID;
       wLabel = "Famille";
     }
 
     if (wChamps.compareTo("Client_Depot") == 0) {
-      ListParam_Param = ListParam_ParamDepot;
+      listparamParam = ListParam_ParamDepot;
       selectedValue = selectedValueDepot;
       wLabel = "Rattaché à l'Agence";
     }
 
     if (wChamps.compareTo("Client_Rglt") == 0) {
-      ListParam_Param = ListParam_ParamRglt;
+      listparamParam = ListParam_ParamRglt;
       selectedValue = selectedValueRglt;
       wLabel = "Condition de réglements";
     }
 
     return Container(
-        padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+        padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
         width: 450,
         height: 45,
         child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, crossAxisAlignment: CrossAxisAlignment.center, children: [
@@ -1079,40 +1079,40 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
               alignment: AlignmentDirectional.centerEnd,
 //              itemHighlightColor: Colors.green,
   //            selectedItemHighlightColor: Colors.green,
-              items: ListParam_Param.map((item) => DropdownMenuItem<String>(
+              items: listparamParam.map((item) => DropdownMenuItem<String>(
                     alignment: AlignmentDirectional.centerEnd,
                     value: item,
                     child: Container(
 //                      color: item.compareTo(wClient_Commercial)==0 ? Colors.green : Colors.white,
                       child: Text(
-                        "${item}",
+                        item,
                         style: gColors.bodySaisie_N_B,
                       ),
                     ),
                   )).toList(),
               value: selectedValue,
               selectedItemBuilder: (BuildContext ctxt) {
-                return ListParam_Param.map((item) {
-                  return DropdownMenuItem(child: Text("${item}", style: gColors.bodySaisie_B_B), value: item);
+                return listparamParam.map((item) {
+                  return DropdownMenuItem(value: item, child: Text(item, style: gColors.bodySaisie_B_B));
                 }).toList();
               },
               onChanged: (value) {
                 setState(() {
                   selectedValue = value as String;
-                  selectedValue = value as String;
+                  selectedValue = value;
 
-                  print("onChanged selectedValue ${selectedValue}");
-                  print("onChanged selectedValueID ${selectedValueID}");
+                  print("onChanged selectedValue $selectedValue");
+                  print("onChanged selectedValueID $selectedValueID");
 
                   if (wChamps.compareTo("Client_Commercial") == 0) {
-                    selectedValueID = ListParam_ParamID[ListParam_Param.indexOf(selectedValue!)];
+                    selectedValueID = listparamParamid[listparamParam.indexOf(selectedValue)];
                     selectedValueUser = selectedValue;
                     selectedValueUserID = selectedValueID;
                     wClient_Commercial = selectedValue;
                   }
 
                   if (wChamps.compareTo("Client_Famille") == 0) {
-                    selectedValueID = ListParam_ParamID[ListParam_Param.indexOf(selectedValue!)];
+                    selectedValueID = listparamParamid[listparamParam.indexOf(selectedValue)];
                     selectedValueFam = selectedValue;
                     selectedValueUserID = selectedValueID;
                     wClient_Famille = selectedValueFam;
@@ -1129,13 +1129,13 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
                 });
               },
                   buttonStyleData: const ButtonStyleData(
-                      padding: const EdgeInsets.only(left: 5, right: 5),
+                      padding: EdgeInsets.only(left: 5, right: 5),
                       height: 30,
                   ),
                   menuItemStyleData: const MenuItemStyleData(
                     height: 44,
                   ),
-                  dropdownStyleData: DropdownStyleData(
+                  dropdownStyleData: const DropdownStyleData(
                     maxHeight: 800,
                   ),
             )),
@@ -1155,7 +1155,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
         context: context,
         style: alertStyle,
         alertAnimation: fadeAlertAnimation,
-        image: Container(
+        image: SizedBox(
           height: 100,
           width: 100,
           child: Image.asset('assets/images/AppIco.png'),
@@ -1164,15 +1164,15 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
         desc: "Le numéro de Siret doit comporter 14 caractères",
         buttons: [
           DialogButton(
-            child: Text(
-              "Ok",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
             onPressed: () {
               Navigator.pop(context);
               return;
             },
             width: 120,
+            child: const Text(
+              "Ok",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
           )
         ],
       ).show();
@@ -1190,34 +1190,30 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
       String sCleTva = iCleTva.toString().padLeft(2, '0');
       print("iSiret97_2 $iSiret97_2 iCleTva $iCleTva sCleTva $sCleTva");
 
-      String NoTVA = "FR${sCleTva}${iSiret}";
+      String NoTVA = "FR$sCleTva$iSiret";
 
       Alert(
         context: context,
         style: confirmStyle,
         alertAnimation: fadeAlertAnimation,
-        image: Container(
+        image: SizedBox(
           height: 100,
           width: 100,
           child: Image.asset('assets/images/AppIco.png'),
         ),
         title: "RECHERCHE DU SIRET DANS INSEE",
-        desc: "Êtes-vous sûre de vouloir remplacer les données ?\n${Api_Gouv.siret_Nom}\n${Api_Gouv.siret_Rue}\n${Api_Gouv.siret_Cp} ${Api_Gouv.siret_Ville}\n\nNAF : ${Api_Gouv.siret_NAF}\n\nTVA : ${NoTVA}",
+        desc: "Êtes-vous sûre de vouloir remplacer les données ?\n${Api_Gouv.siret_Nom}\n${Api_Gouv.siret_Rue}\n${Api_Gouv.siret_Cp} ${Api_Gouv.siret_Ville}\n\nNAF : ${Api_Gouv.siret_NAF}\n\nTVA : $NoTVA",
         buttons: [
           DialogButton(
-              child: Text(
-                "Annuler",
-                style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
               onPressed: () {
                 Navigator.pop(context);
               },
-              color: Colors.black12),
-          DialogButton(
-              child: Text(
-                "Remplacer",
+              color: Colors.black12,
+              child: const Text(
+                "Annuler",
                 style: TextStyle(color: Colors.white, fontSize: 20),
-              ),
+              )),
+          DialogButton(
               onPressed: () async {
                 Srv_DbTools.gClient.Client_Nom = Api_Gouv.siret_Nom;
                 Srv_DbTools.gClient.Client_NAF = Api_Gouv.siret_NAF;
@@ -1237,7 +1233,11 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
 
                 Navigator.pop(context);
               },
-              color: Colors.green)
+              color: Colors.green,
+              child: const Text(
+                "Remplacer",
+                style: TextStyle(color: Colors.white, fontSize: 20),
+              ))
         ],
       ).show();
     } else {
@@ -1245,7 +1245,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
         context: context,
         style: alertStyle,
         alertAnimation: fadeAlertAnimation,
-        image: Container(
+        image: SizedBox(
           height: 100,
           width: 100,
           child: Image.asset('assets/images/AppIco.png'),
@@ -1254,15 +1254,15 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
         desc: Api_Gouv.siret_Nom,
         buttons: [
           DialogButton(
-            child: Text(
-              "Ok",
-              style: TextStyle(color: Colors.white, fontSize: 20),
-            ),
             onPressed: () {
               Navigator.pop(context);
               return;
             },
             width: 120,
+            child: const Text(
+              "Ok",
+              style: TextStyle(color: Colors.white, fontSize: 20),
+            ),
           )
         ],
       ).show();
@@ -1273,16 +1273,16 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
       animationType: AnimationType.fromTop,
       isCloseButton: false,
       isOverlayTapDismiss: false,
-      descStyle: TextStyle(fontWeight: FontWeight.bold),
-      animationDuration: Duration(milliseconds: 400),
+      descStyle: const TextStyle(fontWeight: FontWeight.bold),
+      animationDuration: const Duration(milliseconds: 400),
       alertBorder: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
-        side: BorderSide(
+        side: const BorderSide(
           color: Colors.grey,
         ),
       ),
       titleStyle: gColors.bodyText_B_R,
-      overlayColor: Color(0x88000000),
+      overlayColor: const Color(0x88000000),
       alertElevation: 20,
       alertAlignment: Alignment.center);
 
@@ -1290,16 +1290,16 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
       animationType: AnimationType.fromTop,
       isCloseButton: false,
       isOverlayTapDismiss: false,
-      descStyle: TextStyle(fontWeight: FontWeight.bold),
-      animationDuration: Duration(milliseconds: 400),
+      descStyle: const TextStyle(fontWeight: FontWeight.bold),
+      animationDuration: const Duration(milliseconds: 400),
       alertBorder: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(20.0),
-        side: BorderSide(
+        side: const BorderSide(
           color: Colors.grey,
         ),
       ),
       titleStyle: gColors.bodyTitle1_B_Green,
-      overlayColor: Color(0x88000000),
+      overlayColor: const Color(0x88000000),
       alertElevation: 20,
       alertAlignment: Alignment.center);
 
@@ -1322,7 +1322,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(
+        const Icon(
           Icons.search,
           color: Colors.black,
           size: 30,
@@ -1337,24 +1337,24 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
             suggestionsCallback: (pattern) async {
               await Api_Gouv.ApiAdresse(textController_Adresse_Geo.text);
               List<String> matches = <String>[];
-              Api_Gouv.properties.forEach((propertie) {
+              for (var propertie in Api_Gouv.properties) {
                 matches.add(propertie.label!);
-              });
+              }
               return matches;
             },
             itemBuilder: (context, sone) {
               return Card(
                   child: Container(
-                padding: EdgeInsets.all(5),
+                padding: const EdgeInsets.all(5),
                 child: Text(sone.toString()),
               ));
             },
             onSelected: (suggestion) {
-              Api_Gouv.properties.forEach((propertie) {
+              for (var propertie in Api_Gouv.properties) {
                 if (propertie.label!.compareTo(suggestion.toString()) == 0) {
                   Api_Gouv.gProperties = propertie;
                 }
-              });
+              }
               textController_Adresse_Geo.text = suggestion.toString();
             },
           )),
@@ -1379,7 +1379,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(
+        const Icon(
           Icons.search,
           color: Colors.black,
           size: 30,
@@ -1392,24 +1392,24 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
             suggestionsCallback: (pattern) async {
               await Api_Gouv.ApiAdresse(textController_Adresse_Geo.text);
               List<String> matches = <String>[];
-              Api_Gouv.properties.forEach((propertie) {
+              for (var propertie in Api_Gouv.properties) {
                 matches.add(propertie.label!);
-              });
+              }
               return matches;
             },
             itemBuilder: (context, sone) {
               return Card(
                   child: Container(
-                padding: EdgeInsets.all(5),
+                padding: const EdgeInsets.all(5),
                 child: Text(sone.toString()),
               ));
             },
             onSelected: (suggestion) {
-              Api_Gouv.properties.forEach((propertie) {
+              for (var propertie in Api_Gouv.properties) {
                 if (propertie.label!.compareTo(suggestion.toString()) == 0) {
                   Api_Gouv.gProperties = propertie;
                 }
-              });
+              }
               textController_Adresse_Geo.text = suggestion.toString();
             },
           )),
@@ -1435,20 +1435,20 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
       Container(
         height: 50,
         width: 450,
-        margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-        padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+        margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+        padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
         decoration: BoxDecoration(
           color: gColors.white,
           border: Border.all(
             /**/
             color: Colors.grey,
           ),
-          borderRadius: BorderRadius.all(
+          borderRadius: const BorderRadius.all(
             Radius.circular(12.0),
           ),
         ),
         child: Row(children: [
-          Container(
+          SizedBox(
             width: 74,
             child: Text("Civilité",
               style: gColors.bodyTitle1_B_Gr,),
@@ -1464,7 +1464,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
                   items: Srv_DbTools.ListParam_ParamCiv.map((item) => DropdownMenuItem<String>(
                     value: item,
                     child: Text(
-                      "$item",
+                      item,
                       style: gColors.bodySaisie_B_G,
                     ),
                   )).toList(),
@@ -1477,13 +1477,13 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
                     });
                   },
                   buttonStyleData: const ButtonStyleData(
-                    padding: const EdgeInsets.only(left: 5, right: 5),
+                    padding: EdgeInsets.only(left: 5, right: 5),
                     height: 30,
                   ),
                   menuItemStyleData: const MenuItemStyleData(
                     height: 32,
                   ),
-                  dropdownStyleData: DropdownStyleData(
+                  dropdownStyleData: const DropdownStyleData(
                     maxHeight: 800,
                   ),
 
@@ -1500,20 +1500,20 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
       Container(
           height: 50,
           width: 450,
-          margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-          padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+          margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+          padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
           decoration: BoxDecoration(
             color: gColors.white,
             border: Border.all(
               /**/
               color: Colors.grey,
             ),
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(12.0),
             ),
           ),
           child: Row(children: [
-            Container(
+            SizedBox(
               width: 74,
               child: Text("Civilité",
                 style: gColors.bodyTitle1_B_Gr,),
@@ -1529,7 +1529,7 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
                     items: Srv_DbTools.ListParam_ParamCiv.map((item) => DropdownMenuItem<String>(
                       value: item,
                       child: Text(
-                        "$item",
+                        item,
                         style: gColors.bodySaisie_B_G,
                       ),
                     )).toList(),
@@ -1544,13 +1544,13 @@ class _Client_Vue_PopupState extends State<Client_Vue_Popup> {
 
 
                     buttonStyleData: const ButtonStyleData(
-                      padding: const EdgeInsets.only(left: 14, right: 14),
+                      padding: EdgeInsets.only(left: 14, right: 14),
                       height: 30,
                     ),
                     menuItemStyleData: const MenuItemStyleData(
                       height: 32,
                     ),
-                    dropdownStyleData: DropdownStyleData(
+                    dropdownStyleData: const DropdownStyleData(
                       maxHeight: 800,
                     ),
 

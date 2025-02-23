@@ -105,8 +105,8 @@ print("wZone_Nom $wZone_Nom" "${widget.wChamps}");
           Container(
             height: 44,
             width: 450,
-            margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+            margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
             child: AutoAdresseFact(textController_Adresse_Geo),
           ),
 
@@ -156,20 +156,20 @@ print("wZone_Nom $wZone_Nom" "${widget.wChamps}");
       );
     }
 
-    print("Contact     Srv_DbTools.gContact.Contact_Nom       ${Srv_DbTools.gContact.Contact_Nom}     ${wContact_Nom}");
+    print("Contact     Srv_DbTools.gContact.Contact_Nom       ${Srv_DbTools.gContact.Contact_Nom}     $wContact_Nom");
 
 
     return AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+        shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
         surfaceTintColor: Colors.white,
         backgroundColor: gColors.white,
         title: Container(
             color: gColors.white,
-            padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+            padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
             child: Column(
               children: [
                 Text(
-                  "${wTitle}",
+                  wTitle,
                   textAlign: TextAlign.center,
                   style: gColors.bodyTitle1_B_G_20,
                 ),
@@ -178,7 +178,7 @@ print("wZone_Nom $wZone_Nom" "${widget.wChamps}");
                 ),
               ],
             )),
-        contentPadding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 20.0),
+        contentPadding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 20.0),
         content:
         SingleChildScrollView( // won't be scrollable
           child:
@@ -197,7 +197,7 @@ print("wZone_Nom $wZone_Nom" "${widget.wChamps}");
                     padding: const EdgeInsets.fromLTRB(0, 15, 0, 0),
                     child: Ctrl,
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Container(
                     color: gColors.black,
                     height: 1,
@@ -228,7 +228,7 @@ print("wZone_Nom $wZone_Nom" "${widget.wChamps}");
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               Navigator.of(context).pop();
             },
@@ -241,7 +241,7 @@ print("wZone_Nom $wZone_Nom" "${widget.wChamps}");
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               print("VALIDER");
 
@@ -359,18 +359,18 @@ print("wZone_Nom $wZone_Nom" "${widget.wChamps}");
     }
 
 
-    return new Container(
+    return Container(
       height: 50,
       width: 450,
-      margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-      padding: EdgeInsets.fromLTRB(10, 0, 0, 0),
+      margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+      padding: const EdgeInsets.fromLTRB(10, 0, 0, 0),
       decoration: BoxDecoration(
         color: gColors.white,
         border: Border.all(
           /**/
           color: Colors.grey,
         ),
-        borderRadius: BorderRadius.all(
+        borderRadius: const BorderRadius.all(
           Radius.circular(12.0),
         ),
       ),
@@ -382,7 +382,7 @@ print("wZone_Nom $wZone_Nom" "${widget.wChamps}");
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "${hintText}",
+                hintText,
                 textAlign: TextAlign.center,
                 style: gColors.bodyTitle1_B_Gr,
               ),
@@ -391,7 +391,7 @@ print("wZone_Nom $wZone_Nom" "${widget.wChamps}");
                   keyboardType: TextInputType.visiblePassword,
                   controller: txtController,
                   autofocus: false,
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     border: InputBorder.none,
 //                  hintText: hintText,
                     contentPadding: EdgeInsets.fromLTRB(20.0, 1.0, 20.0, 10.0),
@@ -464,7 +464,7 @@ print("wZone_Nom $wZone_Nom" "${widget.wChamps}");
       mainAxisAlignment: MainAxisAlignment.start,
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Icon(
+        const Icon(
           Icons.search,
           color: Colors.black,
           size: 30,
@@ -476,24 +476,24 @@ print("wZone_Nom $wZone_Nom" "${widget.wChamps}");
                 suggestionsCallback: (pattern) async {
                   await Api_Gouv.ApiAdresse(textController_Adresse_Geo.text);
                   List<String> matches = <String>[];
-                  Api_Gouv.properties.forEach((propertie) {
+                  for (var propertie in Api_Gouv.properties) {
                     matches.add(propertie.label!);
-                  });
+                  }
                   return matches;
                 },
                 itemBuilder: (context, sone) {
                   return Card(
                       child: Container(
-                        padding: EdgeInsets.all(5),
+                        padding: const EdgeInsets.all(5),
                         child: Text(sone.toString()),
                       ));
                 },
                 onSelected: (suggestion) {
-                  Api_Gouv.properties.forEach((propertie) {
+                  for (var propertie in Api_Gouv.properties) {
                     if (propertie.label!.compareTo(suggestion.toString()) == 0) {
                       Api_Gouv.gProperties = propertie;
                     }
-                  });
+                  }
                   textController_Adresse_Geo.text = suggestion.toString();
                 },
 

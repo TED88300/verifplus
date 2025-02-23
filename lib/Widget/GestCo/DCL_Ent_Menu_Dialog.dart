@@ -2,22 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_DCL_Ent.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Widget/GestCo/DCL_Ent_Param.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'dart:async';
 
-import 'package:verifplus/Widget/Widget_Tools/gDialogs.dart';
-
 class DCL_Ent_Menu_Dialog {
   DCL_Ent_Menu_Dialog();
   static Future<void> Dialogs_DCL_Ent_Menu(BuildContext context) async {
     await showDialog(
       context: context,
-      barrierColor: Color(0x00000000),
-      builder: (BuildContext context) => DCL_EntMenuDialog(),
+      barrierColor: const Color(0x00000000),
+      builder: (BuildContext context) => const DCL_EntMenuDialog(),
     );
   }
 }
@@ -66,423 +63,353 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
     double wWidth = MediaQuery.of(context).size.width;
 
     var formatter = DateFormat('dd/MM/yyyy');
-    String fSelDCL_DateDeb = formatter.format(Srv_DbTools.SelDCL_DateDeb);
+    String fseldclDatedeb = formatter.format(Srv_DbTools.SelDCL_DateDeb);
 
-    String fSelDCL_DateFin = formatter.format(Srv_DbTools.SelDCL_DateFin);
+    String fseldclDatefin = formatter.format(Srv_DbTools.SelDCL_DateFin);
     bool isSel = false;
 
     print(" B U I L D  $ModeParams");
 
-
-    return
-
-
-      !ModeParams ?
-        SimpleDialog(
-      insetPadding: const EdgeInsets.fromLTRB(0, 200, 0, 0),
-      titlePadding: EdgeInsets.zero,
-      contentPadding: EdgeInsets.zero,
-      surfaceTintColor: Colors.transparent,
-      backgroundColor: gColors.white,
-      shadowColor: gColors.transparent,
-      children: [
-        Column(
-          children: [
-            Container(
-                padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
-                color: gColors.LinearGradient3,
-                height: wHeight,
-                width: wWidth,
-                child: Column(
-                  children: [
-                    Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                      Container(
-                        width: 16,
-                      ),
-                      InkWell(
-                          child: Container(
-                            width: icoWidth + 10,
-                            child: Stack(children: <Widget>[
-                              Image.asset(
-                                "assets/images/Btn_Burger.png",
-                                color: Colors.red,
-                                height: icoWidth,
-                                width: icoWidth,
-                              ),
-                            ]),
-                          ),
-                          onTap: () async {
-                            await HapticFeedback.vibrate();
-                            print("ModeParams $ModeParams");
-                                Navigator.of(context).pop();
-
-
-                          }),
-                      Expanded(
-                          child: Container(
-                              padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-                              child: Text(
-                                "Menu documents de vente",
-                                maxLines: 1,
-                                textAlign: TextAlign.left,
-                                style: gColors.bodySaisie_B_O,
-                              ))),
-                    ]),
-                    Container(
-                        padding: const EdgeInsets.fromLTRB(0, 45, 0, 0),
-                        child: Column(
-                          children: [
-                            Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                              Container(
-                                  child: Text(
-                                "Choisissez une Date",
-                                maxLines: 1,
-                                textAlign: TextAlign.left,
-                                style: gColors.bodyTitle1_B_G.copyWith(color: gColors.LinearGradient5),
-                              )),
-                            ]),
+    return !ModeParams
+        ? SimpleDialog(
+            insetPadding: const EdgeInsets.fromLTRB(0, 200, 0, 0),
+            titlePadding: EdgeInsets.zero,
+            contentPadding: EdgeInsets.zero,
+            surfaceTintColor: Colors.transparent,
+            backgroundColor: gColors.white,
+            shadowColor: gColors.transparent,
+            children: [
+              Column(
+                children: [
+                  Container(
+                      padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
+                      color: gColors.LinearGradient3,
+                      height: wHeight,
+                      width: wWidth,
+                      child: Column(
+                        children: [
+                          Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.center, children: [
                             Container(
-                              padding: const EdgeInsets.fromLTRB(25, 15, 25, 0),
+                              width: 16,
+                            ),
+                            InkWell(
+                                child: SizedBox(
+                                  width: icoWidth + 10,
+                                  child: Stack(children: <Widget>[
+                                    Image.asset(
+                                      "assets/images/Btn_Burger.png",
+                                      color: Colors.red,
+                                      height: icoWidth,
+                                      width: icoWidth,
+                                    ),
+                                  ]),
+                                ),
+                                onTap: () async {
+                                  await HapticFeedback.vibrate();
+                                  print("ModeParams $ModeParams");
+                                  Navigator.of(context).pop();
+                                }),
+                            Expanded(
+                                child: Container(
+                                    padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
+                                    child: Text(
+                                      "Menu documents de vente",
+                                      maxLines: 1,
+                                      textAlign: TextAlign.left,
+                                      style: gColors.bodyTitle1_B_O,
+                                    ))),
+                          ]),
+                          Container(
+                              padding: const EdgeInsets.fromLTRB(0, 45, 0, 0),
                               child: Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Container(
-                                          color: gColors.transparent,
-                                          height: 210,
-                                          child: Column(
-                                            children: [
-                                              Container(
+                                  Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                                    Container(
+                                        child: Text(
+                                      "Choisissez une Date",
+                                      maxLines: 1,
+                                      textAlign: TextAlign.left,
+                                      style: gColors.bodyTitle1_B_G.copyWith(color: gColors.LinearGradient5),
+                                    )),
+                                  ]),
+                                  Container(
+                                    padding: const EdgeInsets.fromLTRB(25, 15, 25, 0),
+                                    child: Column(
+                                      mainAxisAlignment: MainAxisAlignment.start,
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Row(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Container(
+                                                color: gColors.transparent,
+                                                height: 120,
                                                 child: Column(
-                                                  mainAxisAlignment: MainAxisAlignment.start,
-                                                  crossAxisAlignment: CrossAxisAlignment.start,
                                                   children: [
-                                                    Row(
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        InkWell(
-                                                          child: Container(
-                                                              decoration: BoxDecoration(
-                                                                color: Colors.white,
-                                                                borderRadius: BorderRadius.circular(12),
-                                                                border: Border.all(
-                                                                  color: Colors.black,
-                                                                  width: 1.5,
-                                                                ),
-                                                              ),
-                                                              width: 580,
-                                                              height: 71,
-                                                              padding: const EdgeInsets.fromLTRB(60, 0, 35, 0),
-                                                              child: Row(
-                                                                children: [
-                                                                  Row(
-                                                                    children: [
-                                                                      Text(
-                                                                        "Du ",
-                                                                        style: gColors.bodySaisie_B_G,
-                                                                      ),
-                                                                      Text(
-                                                                        "${fSelDCL_DateDeb}",
-                                                                        style: gColors.bodySaisie_N_G,
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                  Spacer(),
-                                                                  popMenu(),
-                                                                  Container(
-                                                                    width: 16,
-                                                                  ),
-                                                                  InkWell(
-                                                                    child: Row(
-                                                                      children: [
-                                                                        Image.asset(
-                                                                          "assets/images/DCL_Date.png",
-                                                                          height: 40,
-                                                                          width: 40,
-                                                                        ),
-                                                                      ],
-                                                                    ),
-                                                                    onTap: () async {
-                                                                      setState(() {});
-                                                                      Navigator.of(context).pop();
-                                                                    },
-                                                                  ),
-                                                                ],
-                                                              )),
-                                                          onTap: () async {
-                                                            selectedDate = Srv_DbTools.SelDCL_DateDeb;
-                                                            await _selectDate(context, DateTime(1900), DateTime(DateTime.now().year + 1, 12, 31));
-                                                            Srv_DbTools.SelDCL_DateDeb = selectedDate;
-                                                            isSel = true;
-                                                            setState(() {});
-                                                          },
-                                                        ),
-                                                      ],
-                                                    ),
                                                     Container(
-                                                      height: 20,
-                                                    ),
-                                                    Row(
-                                                      mainAxisAlignment: MainAxisAlignment.center,
-                                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                                      children: [
-                                                        InkWell(
-                                                          child: Container(
-                                                              decoration: BoxDecoration(
-                                                                color: Colors.white,
-                                                                borderRadius: BorderRadius.circular(12),
-                                                                border: Border.all(
-                                                                  color: Colors.black,
-                                                                  width: 1.5,
-                                                                ),
-                                                              ),
-                                                              width: 580,
-                                                              height: 71,
-                                                              padding: const EdgeInsets.fromLTRB(60, 0, 35, 0),
-                                                              child: Row(
-                                                                children: [
-                                                                  Row(
-                                                                    children: [
-                                                                      Text(
-                                                                        "Au ",
-                                                                        style: gColors.bodySaisie_B_G,
+                                                      child: Column(
+                                                        mainAxisAlignment: MainAxisAlignment.start,
+                                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                                        children: [
+                                                          Row(
+                                                            mainAxisAlignment: MainAxisAlignment.center,
+                                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                                            children: [
+                                                              InkWell(
+                                                                child: Container(
+                                                                    decoration: BoxDecoration(
+                                                                      color: Colors.white,
+                                                                      borderRadius: BorderRadius.circular(12),
+                                                                      border: Border.all(
+                                                                        color: gColors.LinearGradient5,
+                                                                        width: 1.5,
                                                                       ),
-                                                                      Text(
-                                                                        "${fSelDCL_DateFin}",
-                                                                        style: gColors.bodySaisie_N_G,
-                                                                      ),
-                                                                    ],
-                                                                  ),
-                                                                  Spacer(),
-                                                                  popMenu(),
-                                                                  Container(
-                                                                    width: 16,
-                                                                  ),
-                                                                  InkWell(
+                                                                    ),
+                                                                    width: 580,
+                                                                    height: 71,
+                                                                    padding: const EdgeInsets.fromLTRB(60, 0, 35, 0),
                                                                     child: Row(
                                                                       children: [
-                                                                        Image.asset(
-                                                                          "assets/images/DCL_Date.png",
-                                                                          height: 40,
-                                                                          width: 40,
+                                                                        Row(
+                                                                          children: [
+                                                                            Text(
+                                                                              "Du ",
+                                                                              style: gColors.bodySaisie_B_G,
+                                                                            ),
+                                                                            Text(
+                                                                              fseldclDatedeb,
+                                                                              style: gColors.bodySaisie_N_G,
+                                                                            ),
+                                                                            Container(
+                                                                              width: 30,
+                                                                            ),
+                                                                            InkWell(
+                                                                              child: Container(
+                                                                                  width: 200,
+                                                                                  height: 71,
+                                                                                  padding: const EdgeInsets.fromLTRB(60, 0, 35, 0),
+                                                                                  child: Row(
+                                                                                    children: [
+                                                                                      Row(
+                                                                                        children: [
+                                                                                          Text(
+                                                                                            "Au ",
+                                                                                            style: gColors.bodySaisie_B_G,
+                                                                                          ),
+                                                                                          Text(
+                                                                                            fseldclDatefin,
+                                                                                            style: gColors.bodySaisie_N_G,
+                                                                                          ),
+                                                                                        ],
+                                                                                      ),
+                                                                                    ],
+                                                                                  )),
+                                                                              onTap: () async {
+                                                                                selectedDate = Srv_DbTools.SelDCL_DateFin;
+                                                                                await _selectDate(context, DateTime(1900), DateTime(DateTime.now().year + 1, 12, 31));
+                                                                                Srv_DbTools.SelDCL_DateFin = selectedDate;
+                                                                                isSel = true;
+                                                                                setState(() {});
+                                                                              },
+                                                                            ),
+                                                                          ],
+                                                                        ),
+                                                                        const Spacer(),
+                                                                        popMenu(),
+                                                                        Container(
+                                                                          width: 16,
+                                                                        ),
+                                                                        InkWell(
+                                                                          child: Row(
+                                                                            children: [
+                                                                              Image.asset(
+                                                                                "assets/images/DCL_Date.png",
+                                                                                height: 40,
+                                                                                width: 40,
+                                                                              ),
+                                                                            ],
+                                                                          ),
+                                                                          onTap: () async {
+                                                                            setState(() {});
+                                                                            Navigator.of(context).pop();
+                                                                          },
                                                                         ),
                                                                       ],
-                                                                    ),
-                                                                    onTap: () async {
-                                                                      setState(() {});
-                                                                      Navigator.of(context).pop();
-                                                                    },
-                                                                  ),
-                                                                ],
-                                                              )),
-                                                          onTap: () async {
-                                                            selectedDate = Srv_DbTools.SelDCL_DateFin;
-                                                            await _selectDate(context, DateTime(1900), DateTime(DateTime.now().year + 1, 12, 31));
-                                                            Srv_DbTools.SelDCL_DateFin = selectedDate;
-                                                            isSel = true;
-                                                            setState(() {});
-                                                          },
-                                                        ),
-                                                      ],
+                                                                    )),
+                                                                onTap: () async {
+                                                                  selectedDate = Srv_DbTools.SelDCL_DateDeb;
+                                                                  await _selectDate(context, DateTime(1900), DateTime(DateTime.now().year + 1, 12, 31));
+                                                                  Srv_DbTools.SelDCL_DateDeb = selectedDate;
+                                                                  isSel = true;
+                                                                  setState(() {});
+                                                                },
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ],
+                                                      ),
                                                     ),
+                                                    const Spacer(),
                                                   ],
-                                                ),
-                                              ),
-                                              const Spacer(),
-                                            ],
-                                          )),
-                                    ],
+                                                )),
+                                          ],
+                                        ),
+                                      ],
+                                    ),
                                   ),
                                 ],
-                              ),
-                            ),
-                          ],
-                        )),
-                    gColors.wLigne(),
-
-                    AffBtnParam("", "Paramètres des documents de vente", "", "DCL_Param.svg", gColors.LinearGradient3, gColors.primaryBlue, "Param"),
-
-                    Container(
-                      height: 6,
-                    ),
-
-                    AffBtnParam("", "Statistiques des documents de vente", "", "DCL_Stat.svg", gColors.LinearGradient3, gColors.primaryBlue, "Stat"),
-
-                    Container(
-                      height: 6,
-                    ),
-
-
-                  ],
-                )),
-          ],
-        ),
-      ],
-    ) :
-
-
-      !ModeParamsDevis ?
-        SimpleDialog(
-      insetPadding: const EdgeInsets.fromLTRB(0, 200, 0, 0),
-      titlePadding: EdgeInsets.zero,
-      contentPadding: EdgeInsets.zero,
-      surfaceTintColor: Colors.transparent,
-      backgroundColor: gColors.white,
-      shadowColor: gColors.transparent,
-      children: [
-        Column(
-          children: [
-            Container(
-                padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
-                color: gColors.LinearGradient3,
-                height: wHeight,
-                width: wWidth,
-                child: Column(
-                  children: [
-                    Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                      Container(
-                        width: 16,
-                      ),
-                      InkWell(
-                          child: Container(
-                            width: icoWidth + 10,
-                            child: Stack(children: <Widget>[
-                              Image.asset(
-                                "assets/images/Btn_Burger.png",
-                                color: Colors.red,
-                                height: icoWidth,
-                                width: icoWidth,
-                              ),
-                            ]),
+                              )),
+                          gColors.wLigne(),
+                          AffBtnParam("", "Paramètres des documents de vente", "", "DCL_Param.svg", gColors.LinearGradient3, gColors.primaryBlue, "Param"),
+                          Container(
+                            height: 6,
                           ),
-                          onTap: () async {
-                            await HapticFeedback.vibrate();
-                            ModeParams = false;
-                            setState(() {
-
-                            });
-                          }),
-                      Expanded(
-                          child: Container(
-                              padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-                              child: Text(
-                                "Menu documents de vente",
-                                maxLines: 1,
-                                textAlign: TextAlign.left,
-                                style: gColors.bodySaisie_B_O,
-                              ))),
-                    ]),
-
-                    Container(
-                      height: 16,
-                    ),
-
-
-
-                    AffBtnParam("", "Paramètres des Devis", "", "DCL_Param.svg", gColors.LinearGradient3, gColors.primaryBlue, "Devis"),
-                    Container(
-                      height: 6,
-                    ),
-
-                    AffBtnParam("", "Paramètres des bons de commande", "", "DCL_Param.svg", gColors.LinearGradient3, gColors.primaryBlue, "BDC"),
-                    Container(
-                      height: 6,
-                    ),
-
-                    AffBtnParam("", "Paramètres des bons de livraison", "", "DCL_Param.svg", gColors.LinearGradient3, gColors.primaryBlue, "BDL"),
-                    Container(
-                      height: 6,
-                    ),
-                    AffBtnParam("", "Paramètres des bons de retour", "", "DCL_Param.svg", gColors.LinearGradient3, gColors.primaryBlue, "BDR``"),
-                    Container(
-                      height: 6,
-                    ),
-
-
-                  ],
-                )),
-          ],
-        ),
-      ],
-    ) :
-
-    SimpleDialog(
-      insetPadding: const EdgeInsets.fromLTRB(0, 200, 0, 0),
-      titlePadding: EdgeInsets.zero,
-      contentPadding: EdgeInsets.zero,
-      surfaceTintColor: Colors.transparent,
-      backgroundColor: gColors.white,
-      shadowColor: gColors.transparent,
-      children: [
-        Column(
-          children: [
-            Container(
-                padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
-                color: gColors.red,
-                height: 300,
-                width: wWidth,
-                child: Column(
-                  children: [
-                    Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      Container(
-                        width: 16,
-                      ),
-                      InkWell(
-                          child: Container(
-                            width: icoWidth + 10,
-                            child: Stack(children: <Widget>[
-                              Image.asset(
-                                "assets/images/Btn_Burger.png",
-                                color: Colors.red,
-                                height: icoWidth,
-                                width: icoWidth,
-                              ),
-                            ]),
+                          AffBtnParam("", "Statistiques des documents de vente", "", "DCL_Stat.svg", gColors.LinearGradient3, gColors.primaryBlue, "Stat"),
+                          Container(
+                            height: 6,
                           ),
-                          onTap: () async {
-                            await HapticFeedback.vibrate();
-                            ModeParamsDevis = false;
-                            setState(() {
+                        ],
+                      )),
+                ],
+              ),
+            ],
+          )
+        : !ModeParamsDevis
+            ? SimpleDialog(
+                insetPadding: const EdgeInsets.fromLTRB(0, 200, 0, 0),
+                titlePadding: EdgeInsets.zero,
+                contentPadding: EdgeInsets.zero,
+                surfaceTintColor: Colors.transparent,
+                backgroundColor: gColors.white,
+                shadowColor: gColors.transparent,
+                children: [
+                  Column(
+                    children: [
+                      Container(
+                          padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
+                          color: gColors.LinearGradient3,
+                          height: wHeight,
+                          width: wWidth,
+                          child: Column(
+                            children: [
+                              Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.center, children: [
+                                Container(
+                                  width: 16,
+                                ),
+                                InkWell(
+                                    child: SizedBox(
+                                      width: icoWidth + 10,
+                                      child: Stack(children: <Widget>[
+                                        Image.asset(
+                                          "assets/images/Btn_Burger.png",
+                                          color: Colors.red,
+                                          height: icoWidth,
+                                          width: icoWidth,
+                                        ),
+                                      ]),
+                                    ),
+                                    onTap: () async {
+                                      await HapticFeedback.vibrate();
+                                      ModeParams = false;
+                                      setState(() {});
+                                    }),
+                                Expanded(
+                                    child: Container(
+                                        padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
+                                        child: Text(
+                                          "Menu documents de vente",
+                                          maxLines: 1,
+                                          textAlign: TextAlign.left,
+                                          style: gColors.bodySaisie_B_O,
+                                        ))),
+                              ]),
+                              Container(
+                                height: 16,
+                              ),
+                              AffBtnParam("", "Paramètres des Devis", "", "DCL_Param.svg", gColors.LinearGradient3, gColors.primaryBlue, "Devis"),
+                              Container(
+                                height: 6,
+                              ),
+                              AffBtnParam("", "Paramètres des bons de commande", "", "DCL_Param.svg", gColors.LinearGradient3, gColors.primaryBlue, "BDC"),
+                              Container(
+                                height: 6,
+                              ),
+                              AffBtnParam("", "Paramètres des bons de livraison", "", "DCL_Param.svg", gColors.LinearGradient3, gColors.primaryBlue, "BDL"),
+                              Container(
+                                height: 6,
+                              ),
+                              AffBtnParam("", "Paramètres des bons de retour", "", "DCL_Param.svg", gColors.LinearGradient3, gColors.primaryBlue, "BDR``"),
+                              Container(
+                                height: 6,
+                              ),
+                            ],
+                          )),
+                    ],
+                  ),
+                ],
+              )
+            : SimpleDialog(
+                insetPadding: const EdgeInsets.fromLTRB(0, 200, 0, 0),
+                titlePadding: EdgeInsets.zero,
+                contentPadding: EdgeInsets.zero,
+                surfaceTintColor: Colors.transparent,
+                backgroundColor: gColors.white,
+                shadowColor: gColors.transparent,
+                children: [
+                  Column(
+                    children: [
+                      Container(
+                          padding: const EdgeInsets.fromLTRB(0, 16, 0, 0),
+                          color: gColors.red,
+                          height: 300,
+                          width: wWidth,
+                          child: Column(
+                            children: [
+                              Row(mainAxisAlignment: MainAxisAlignment.start, crossAxisAlignment: CrossAxisAlignment.start, children: [
+                                Container(
+                                  width: 16,
+                                ),
+                                InkWell(
+                                    child: SizedBox(
+                                      width: icoWidth + 10,
+                                      child: Stack(children: <Widget>[
+                                        Image.asset(
+                                          "assets/images/Btn_Burger.png",
+                                          color: Colors.red,
+                                          height: icoWidth,
+                                          width: icoWidth,
+                                        ),
+                                      ]),
+                                    ),
+                                    onTap: () async {
+                                      await HapticFeedback.vibrate();
+                                      ModeParamsDevis = false;
+                                      Navigator.of(context).pop();
 
-                            });
-                          }),
-                      Expanded(
-                          child: Container(
-                              padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
-                              child: Text(
-                                "Menu Paramètres Devis",
-                                maxLines: 1,
-                                textAlign: TextAlign.left,
-                                style: gColors.bodySaisie_B_O,
-                              ))),
-                    ]),
-
-
-
-
-
-
-
-                  ],
-                )),
-          ],
-        ),
-      ],
-    );
-
-
-
-
+                                      setState(() {});
+                                    }),
+                                Expanded(
+                                    child: Container(
+                                        padding: const EdgeInsets.fromLTRB(16, 0, 0, 0),
+                                        child: Text(
+                                          "Menu Paramètres Devis",
+                                          maxLines: 1,
+                                          textAlign: TextAlign.left,
+                                          style: gColors.bodySaisie_B_O,
+                                        ))),
+                              ]),
+                            ],
+                          )),
+                    ],
+                  ),
+                ],
+              );
   }
 
   DateTime selectedDate = DateTime.now();
   Future<void> _selectDate(BuildContext context, DateTime firstDate, DateTime lastDate) async {
-    print("selectedDate >> ${selectedDate}");
+    print("selectedDate >> $selectedDate");
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
@@ -492,7 +419,7 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
           return Theme(
             data: ThemeData(
               dividerColor: gColors.LinearGradient5,
-              colorScheme: ColorScheme.light(
+              colorScheme: const ColorScheme.light(
                 primary: gColors.LinearGradient5,
                 onPrimary: Colors.white, // header text color
                 surface: Colors.white, // fond
@@ -506,7 +433,7 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        print("selectedDate << ${selectedDate}");
+        print("selectedDate << $selectedDate");
       });
     }
   }
@@ -515,9 +442,9 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
     double hLigne = 72;
 
     return PopupMenuButton(
-      child: Tooltip(textStyle: TextStyle(color: Colors.white, fontWeight: FontWeight.normal), decoration: BoxDecoration(color: Colors.orange), message: "Filtre Date", child: Container(width: 40, height: 40, child: SvgPicture.asset("assets/images/Icon_circle_down2.svg", height: 40, width: 40, colorFilter: ColorFilter.mode(Colors.grey, BlendMode.srcIn), semanticsLabel: 'A red up arrow'))),
+      child: Tooltip(textStyle: const TextStyle(color: Colors.white, fontWeight: FontWeight.normal), decoration: const BoxDecoration(color: Colors.orange), message: "Filtre Date", child: SizedBox(width: 40, height: 40, child: SvgPicture.asset("assets/images/Icon_circle_down2.svg", height: 40, width: 40, colorFilter: const ColorFilter.mode(Colors.grey, BlendMode.srcIn), semanticsLabel: 'A red up arrow'))),
       onSelected: (value) async {
-        print(" onSelected ${value}");
+        print(" onSelected $value");
 
         if (value == "S0") {
           Srv_DbTools.selDateTools(0);
@@ -560,7 +487,7 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Aujourd'hui",
                 style: gColors.bodySaisie_N_G,
@@ -573,7 +500,7 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Hier",
                 style: gColors.bodySaisie_N_G,
@@ -586,7 +513,7 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Avant hier",
                 style: gColors.bodySaisie_N_G,
@@ -599,7 +526,7 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Semaine courante",
                 style: gColors.bodySaisie_N_G,
@@ -612,7 +539,7 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Semaine précédente",
                 style: gColors.bodySaisie_N_G,
@@ -625,7 +552,7 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Semaine précédent la précédente",
                 style: gColors.bodySaisie_N_G,
@@ -638,7 +565,7 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Mois courant",
                 style: gColors.bodySaisie_N_G,
@@ -651,7 +578,7 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Mois précédent",
                 style: gColors.bodySaisie_N_G,
@@ -664,7 +591,7 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Mois précédent le précédent",
                 style: gColors.bodySaisie_N_G,
@@ -677,7 +604,7 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Année courante",
                 style: gColors.bodySaisie_N_G,
@@ -690,7 +617,7 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
           height: hLigne,
           child: Row(
             children: [
-              Container(padding: const EdgeInsets.only(right: 8.0), child: Icon(Icons.date_range)),
+              Container(padding: const EdgeInsets.only(right: 8.0), child: const Icon(Icons.date_range)),
               Text(
                 "Année précédente",
                 style: gColors.bodySaisie_N_G,
@@ -705,7 +632,6 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
   //***************************
   //***************************
   //***************************
-
 
   Widget AffBtnParam(String wChamps, String wTitle, String wValue, String ImgL, Color BckGrd, Color ForeGrd, String wParam, {String wChampsNote = "", bool bLigne = true}) {
     return TextButton(
@@ -725,10 +651,9 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
             await HapticFeedback.vibrate();
             await showDialog(
               context: context,
-              barrierColor: Color(0x00000000),
-              builder: (BuildContext context) => DCL_Ent_Param(),
+              barrierColor: const Color(0x00000000),
+              builder: (BuildContext context) => const DCL_Ent_Param(),
             );
-
           }
 
           setState(() {});
@@ -745,7 +670,7 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
     double mTop = 28;
     double icoWidth = 48;
     return Container(
-        padding: EdgeInsets.fromLTRB(20, 0, 40, 0),
+        padding: const EdgeInsets.fromLTRB(20, 0, 40, 0),
         color: BckGrd,
         child: Column(
           children: [
@@ -754,31 +679,31 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
                 ImgL.isEmpty
                     ? Container()
                     : ImgL.contains(".svg")
-                    ? Container(
-                  padding: EdgeInsets.only(left: 10),
-                  child: SvgPicture.asset(
-                    "assets/images/${ImgL}",
-                    height: icoWidth,
-                    width: icoWidth,
-                  ),
-                )
-                    : Container(
-                  padding: EdgeInsets.only(left: 10),
-                  child: Image.asset(
-                    "assets/images/${ImgL}.png",
-                    height: icoWidth,
-                    width: icoWidth,
-                  ),
-                ),
+                        ? Container(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: SvgPicture.asset(
+                              "assets/images/$ImgL",
+                              height: icoWidth,
+                              width: icoWidth,
+                            ),
+                          )
+                        : Container(
+                            padding: const EdgeInsets.only(left: 10),
+                            child: Image.asset(
+                              "assets/images/$ImgL.png",
+                              height: icoWidth,
+                              width: icoWidth,
+                            ),
+                          ),
                 Expanded(
                   child: Container(
                       padding: EdgeInsets.only(left: 10, top: mTop),
                       height: wHeight,
                       child: Text(
-                        "${wTextL}",
+                        wTextL,
                         textAlign: TextAlign.start,
                         maxLines: 1,
-                        style: gColors.bodySaisie_B_B,
+                        style: gColors.bodyTitle1_B_Gr,
                       )),
                 ),
                 SvgPicture.asset(
@@ -786,16 +711,9 @@ class _DCL_EntMenuDialogState extends State<DCL_EntMenuDialog> {
                   height: 40,
                   width: 40,
                 ),
-
               ],
             ),
-
           ],
         ));
   }
-
-
-
-
-
 }

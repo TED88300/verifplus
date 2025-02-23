@@ -257,7 +257,7 @@ class BorderRadius extends BorderRadiusGeometry {
 
   void paint(Context context, PdfRect box) {
     // Ellipse 4-spline magic number
-    const _m4 = 0.551784;
+    const m4 = 0.551784;
 
     context.canvas
       // Start
@@ -265,8 +265,8 @@ class BorderRadius extends BorderRadiusGeometry {
       // bottomLeft
       ..curveTo(
           box.x,
-          box.y - _m4 * bottomLeft.y + bottomLeft.y,
-          box.x - _m4 * bottomLeft.x + bottomLeft.x,
+          box.y - m4 * bottomLeft.y + bottomLeft.y,
+          box.x - m4 * bottomLeft.x + bottomLeft.x,
           box.y,
           box.x + bottomLeft.x,
           box.y)
@@ -274,10 +274,10 @@ class BorderRadius extends BorderRadiusGeometry {
       ..lineTo(box.x + box.width - bottomRight.x, box.y)
       // bottomRight
       ..curveTo(
-          box.x + _m4 * bottomRight.x + box.width - bottomRight.x,
+          box.x + m4 * bottomRight.x + box.width - bottomRight.x,
           box.y,
           box.x + box.width,
-          box.y - _m4 * bottomRight.y + bottomRight.y,
+          box.y - m4 * bottomRight.y + bottomRight.y,
           box.x + box.width,
           box.y + bottomRight.y)
       // right
@@ -285,8 +285,8 @@ class BorderRadius extends BorderRadiusGeometry {
       // topRight
       ..curveTo(
           box.x + box.width,
-          box.y + _m4 * topRight.y + box.height - topRight.y,
-          box.x + _m4 * topRight.x + box.width - topRight.x,
+          box.y + m4 * topRight.y + box.height - topRight.y,
+          box.x + m4 * topRight.x + box.width - topRight.x,
           box.y + box.height,
           box.x + box.width - topRight.x,
           box.y + box.height)
@@ -294,10 +294,10 @@ class BorderRadius extends BorderRadiusGeometry {
       ..lineTo(box.x + topLeft.x, box.y + box.height)
       // topLeft
       ..curveTo(
-          box.x - _m4 * topLeft.x + topLeft.x,
+          box.x - m4 * topLeft.x + topLeft.x,
           box.y + box.height,
           box.x,
-          box.y + _m4 * topLeft.y + box.height - topLeft.y,
+          box.y + m4 * topLeft.y + box.height - topLeft.y,
           box.x,
           box.y + box.height - topLeft.y)
       // left

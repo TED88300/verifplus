@@ -1,16 +1,11 @@
 import 'dart:async';
 
-import 'package:barcode_scan2/barcode_scan2.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/date_symbol_data_local.dart';
-import 'package:intl/intl.dart';
-import 'package:toggle_switch/toggle_switch.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Param_Saisie.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Desc.dart';
 import 'package:verifplus/Tools/DbTools/Db_Parcs_Desc.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 
@@ -20,15 +15,15 @@ class Client_Groupe_Parc_Inter_Audit_Saisie_Dialog {
   static Future<void> Dialogs_Saisie(
     BuildContext context,
     VoidCallback onSaisie,
-    Param_Saisie param_Saisie,
-    Parc_Desc parc_Desc,
+    Param_Saisie paramSaisie,
+    Parc_Desc parcDesc,
   ) async {
     await showDialog(
       context: context,
       builder: (BuildContext context) => Client_Groupe_Parc_Inter_Audit_SaisieDialog(
         onSaisie: onSaisie,
-        param_Saisie: param_Saisie,
-        parc_Desc: parc_Desc,
+        param_Saisie: paramSaisie,
+        parc_Desc: parcDesc,
       ),
     );
   }
@@ -107,21 +102,21 @@ class Client_Groupe_Parc_Inter_Audit_SaisieDialogState extends State<Client_Grou
     wDialogHeight = wDialogBase + nbL * wLigneHeight + 44;
 
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
       surfaceTintColor: Colors.white,
       backgroundColor: gColors.white,
       title: Container(
           color: gColors.white,
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 15),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 15),
           child: Column(
             children: [
               Text(
-                "${widget.param_Saisie.Param_Saisie_Label}",
+                widget.param_Saisie.Param_Saisie_Label,
                 textAlign: TextAlign.center,
                 style: gColors.bodyTitle1_B_G_20,
               ),
               Text(
-                "${widget.param_Saisie.Param_Saisie_Aide}",
+                widget.param_Saisie.Param_Saisie_Aide,
                 textAlign: TextAlign.center,
                 style: gColors.bodyTitle1_N_Gr,
               ),
@@ -130,7 +125,7 @@ class Client_Groupe_Parc_Inter_Audit_SaisieDialogState extends State<Client_Grou
               ),
             ],
           )),
-      contentPadding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+      contentPadding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
       content: Container(
           color: gColors.greyLight,
           height: wDialogHeight,
@@ -146,7 +141,7 @@ class Client_Groupe_Parc_Inter_Audit_SaisieDialogState extends State<Client_Grou
                 padding: const EdgeInsets.fromLTRB(0, 25, 0, 0),
                 child: Ctrl,
               ),
-              Spacer(),
+              const Spacer(),
               Container(
                 color: gColors.black,
                 height: 1,
@@ -182,7 +177,7 @@ class Client_Groupe_Parc_Inter_Audit_SaisieDialogState extends State<Client_Grou
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
               widget.parc_Desc.ParcsDesc_Lib = initParcsDesc_Lib;
@@ -199,7 +194,7 @@ class Client_Groupe_Parc_Inter_Audit_SaisieDialogState extends State<Client_Grou
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
               print(" VALIDER AUDIT ${widget.parc_Desc.ParcsDescId} ${widget.parc_Desc.ParcsDesc_Id} ${widget.parc_Desc.ParcsDesc_Lib}");
@@ -230,7 +225,7 @@ class Client_Groupe_Parc_Inter_Audit_SaisieDialogState extends State<Client_Grou
     List<Widget> BtnCards = [];
     int nbBtn = 0;
     wAide = "Aide : ";
-    Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
+    for (var element in Srv_DbTools.ListParam_Saisie_Param) {
       if (widget.parc_Desc.ParcsDesc_Lib!.compareTo("---") == 0) {
         if (element.Param_Saisie_Param_Default) {
           print(" F Param_Saisie_Param_Default");
@@ -254,7 +249,7 @@ class Client_Groupe_Parc_Inter_Audit_SaisieDialogState extends State<Client_Grou
         Rows.add(wRow);
         BtnCards = [];
       }
-    });
+    }
 
     if (nbBtn > 0) {
       nbBtn = 0;
@@ -299,7 +294,7 @@ class Client_Groupe_Parc_Inter_Audit_SaisieDialogState extends State<Client_Grou
     ]));
   }
 
-  Widget BtnCard(String wText, String wId, bool wSel, int Param_Saisie_ParamId, String color) {
+  Widget BtnCard(String wText, String wId, bool wSel, int paramSaisieParamid, String color) {
     Color BgColor = gColors.white;
     Color TxtColor = gColors.black;
 
@@ -308,18 +303,18 @@ class Client_Groupe_Parc_Inter_Audit_SaisieDialogState extends State<Client_Grou
       TxtColor = gColors.white;
     }
 
-    return new Container(
+    return SizedBox(
       width: 160,
       height: 60,
       child: Card(
         color: BgColor,
         elevation: 0.2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0), side: BorderSide(width: 1, color: Colors.grey)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0), side: const BorderSide(width: 1, color: Colors.grey)),
         child: InkWell(
           onTap: () async {
             await HapticFeedback.vibrate();
             widget.parc_Desc.ParcsDesc_Lib = wText;
-            widget.parc_Desc.ParcsDesc_Id = Param_Saisie_ParamId.toString();
+            widget.parc_Desc.ParcsDesc_Id = paramSaisieParamid.toString();
             print(" FlipFlop ${widget.parc_Desc.ParcsDesc_Id} ${widget.parc_Desc.ParcsDesc_Lib}");
             await Reload();
           },
@@ -356,10 +351,10 @@ class Client_Groupe_Parc_Inter_Audit_SaisieDialogState extends State<Client_Grou
       double ii = 27.0 * (index);
 
       scrollController.animateTo(ii, //scrollController.position.maxScrollExtent,
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           curve: Curves.elasticOut);
     } else {
-      Timer(Duration(milliseconds: 400), () => _scrollToBottom(index));
+      Timer(const Duration(milliseconds: 400), () => _scrollToBottom(index));
     }
   }
 
@@ -368,19 +363,20 @@ class Client_Groupe_Parc_Inter_Audit_SaisieDialogState extends State<Client_Grou
     print("tec_Saisie.text ${tec_Saisie.text}");
 
     Srv_DbTools.ListParam_Saisie_Paramsearchresult.clear();
-    if (tec_Search.text.isEmpty)
+    if (tec_Search.text.isEmpty) {
       Srv_DbTools.ListParam_Saisie_Paramsearchresult.addAll(Srv_DbTools.ListParam_Saisie_Param);
-    else
-      Srv_DbTools.ListParam_Saisie_Param.forEach((element) {
+    } else {
+      for (var element in Srv_DbTools.ListParam_Saisie_Param) {
         if (element.Param_Saisie_Param_Label.toLowerCase().contains(tec_Search.text.toLowerCase())) {
           Srv_DbTools.ListParam_Saisie_Paramsearchresult.add(element);
         }
-      });
+      }
+    }
 
     double index = 0;
     for (int i = 0; i < Srv_DbTools.ListParam_Saisie_Paramsearchresult.length; i++) {
       if (Srv_DbTools.ListParam_Saisie_Paramsearchresult[i].Param_Saisie_Param_Label.compareTo(widget.parc_Desc.ParcsDesc_Lib!) == 0) {
-        index = double.parse("${i}");
+        index = double.parse("$i");
         break;
       }
     }
@@ -389,7 +385,7 @@ class Client_Groupe_Parc_Inter_Audit_SaisieDialogState extends State<Client_Grou
 
     return Column(
       children: [
-        Container(
+        SizedBox(
           height: 40,
           width: 450,
           child: Padding(
@@ -402,7 +398,7 @@ class Client_Groupe_Parc_Inter_Audit_SaisieDialogState extends State<Client_Grou
             child: TextFormField(
               onChanged: (value) {
                 setState(() {
-                  print("value ${value}");
+                  print("value $value");
                 });
               },
               controller: tec_Search,
@@ -431,7 +427,7 @@ class Client_Groupe_Parc_Inter_Audit_SaisieDialogState extends State<Client_Grou
             border: Border.all(
               color: Colors.grey,
             ),
-            borderRadius: BorderRadius.all(
+            borderRadius: const BorderRadius.all(
               Radius.circular(12.0),
             ),
           ),
@@ -453,7 +449,7 @@ class Client_Groupe_Parc_Inter_Audit_SaisieDialogState extends State<Client_Grou
                           await Reload();
                         },
                         child: Container(
-                            padding: EdgeInsets.fromLTRB(10, 5, 10, 5), // TED
+                            padding: const EdgeInsets.fromLTRB(10, 5, 10, 5), // TED
 
                             color: (item.Param_Saisie_Param_Label.compareTo(widget.parc_Desc.ParcsDesc_Lib!) == 0) ? gColors.primaryGreen : Colors.transparent,
                             child: Column(

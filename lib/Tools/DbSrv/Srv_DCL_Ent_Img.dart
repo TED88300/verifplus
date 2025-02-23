@@ -19,13 +19,13 @@ class DCL_Ent_Img {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['DCL_Ent_Imgid'] = this.dCLEntImgid;
-    data['DCL_Ent_Img_EntID'] = this.dCLEntImgEntID;
-    data['DCL_Ent_Img_Type'] = this.DCL_Ent_Img_Type;
-    data['DCL_Ent_Img_No'] = this.DCL_Ent_Img_No;
-    data['DCL_Ent_Img_Data'] = this.dCLEntImgData;
-    data['DCL_Ent_Img_Name'] = this.DCL_Ent_Img_Name;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['DCL_Ent_Imgid'] = dCLEntImgid;
+    data['DCL_Ent_Img_EntID'] = dCLEntImgEntID;
+    data['DCL_Ent_Img_Type'] = DCL_Ent_Img_Type;
+    data['DCL_Ent_Img_No'] = DCL_Ent_Img_No;
+    data['DCL_Ent_Img_Data'] = dCLEntImgData;
+    data['DCL_Ent_Img_Name'] = DCL_Ent_Img_Name;
     return data;
   }
 }

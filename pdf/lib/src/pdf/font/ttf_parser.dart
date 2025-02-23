@@ -218,7 +218,7 @@ class TtfParser {
     final count = bytes.getUint16(basePosition + 2);
     final stringOffset = bytes.getUint16(basePosition + 4);
     var pos = basePosition + 6;
-    String? _fontName;
+    String? fontName;
 
     for (var i = 0; i < count; i++) {
       final platformID = bytes.getUint16(pos);
@@ -229,7 +229,7 @@ class TtfParser {
 
       if (platformID == 1 && nameID == fontNameID.index) {
         try {
-          _fontName = utf8.decode(bytes.buffer
+          fontName = utf8.decode(bytes.buffer
               .asUint8List(basePosition + stringOffset + offset, length));
         } catch (a) {
           print('Error: $platformID $nameID $a');
@@ -245,7 +245,7 @@ class TtfParser {
         }
       }
     }
-    return _fontName;
+    return fontName;
   }
 
   void _parseCMap() {

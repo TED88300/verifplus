@@ -9,11 +9,9 @@ import 'package:intl/intl.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_Articles_Ebp.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DCL_Det.dart';
 import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
-import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/Tools/Upload.dart';
 import 'package:verifplus/Widget/GestCo/DCL_Ent_Garantie_Dialog.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
-import 'package:verifplus/Widget/Widget_Tools/gDialogs.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
 //**********************************
@@ -72,38 +70,38 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
 
 
     for (int i = 0; i < Srv_DbTools.ListArticle_Ebpsearchresult.length; i++) {
-      Article_Ebp wArticle_Ebp = Srv_DbTools.ListArticle_Ebpsearchresult[i];
-      if (!wArticle_Ebp.Art_Sel) continue;
-      wTitres.add("${wArticle_Ebp.Article_descriptionCommercialeEnClair} (${wArticle_Ebp.Article_codeArticle})");
+      Article_Ebp warticleEbp = Srv_DbTools.ListArticle_Ebpsearchresult[i];
+      if (!warticleEbp.Art_Sel) continue;
+      wTitres.add("${warticleEbp.Article_descriptionCommercialeEnClair} (${warticleEbp.Article_codeArticle})");
 
-      wArticle_Ebp.Art_Qte = 1;
-      wArticle_Ebp.DCL_Det_PU = wArticle_Ebp.Article_Promo_PVHT > 0 ? wArticle_Ebp.Article_Promo_PVHT : wArticle_Ebp.Article_PVHT;
+      warticleEbp.Art_Qte = 1;
+      warticleEbp.DCL_Det_PU = warticleEbp.Article_Promo_PVHT > 0 ? warticleEbp.Article_Promo_PVHT : warticleEbp.Article_PVHT;
 
-      wArticle_Ebp.DCL_Det_RemP = 0;
-      if (wArticle_Ebp.Article_PVHT > 0) wArticle_Ebp.DCL_Det_RemP = (wArticle_Ebp.Article_PVHT - wArticle_Ebp.DCL_Det_PU) / wArticle_Ebp.Article_PVHT * 100;
-      wArticle_Ebp.DCL_Det_RemMt = wArticle_Ebp.Article_PVHT - wArticle_Ebp.DCL_Det_PU;
+      warticleEbp.DCL_Det_RemP = 0;
+      if (warticleEbp.Article_PVHT > 0) warticleEbp.DCL_Det_RemP = (warticleEbp.Article_PVHT - warticleEbp.DCL_Det_PU) / warticleEbp.Article_PVHT * 100;
+      warticleEbp.DCL_Det_RemMt = warticleEbp.Article_PVHT - warticleEbp.DCL_Det_PU;
 
 
 
-      wArticle_Ebp.DCL_Det_Livr = 0;
-      wArticle_Ebp.DCL_Det_Statut = "Facturable";
+      warticleEbp.DCL_Det_Livr = 0;
+      warticleEbp.DCL_Det_Statut = "Facturable";
 
-      StatePage wStatePage = StatePage(wArticle_Ebp: wArticle_Ebp, index: i, callback: Erase);
+      StatePage wStatePage = StatePage(wArticle_Ebp: warticleEbp, index: i, callback: Erase);
       widgets.add(wStatePage);
 
-      StatePageDetail wStatePageDetail = StatePageDetail(wArticle_Ebp: wArticle_Ebp, index: i, callback: Erase);
+      StatePageDetail wStatePageDetail = StatePageDetail(wArticle_Ebp: warticleEbp, index: i, callback: Erase);
       widgetsDetail.add(wStatePageDetail);
 
-      StatePageTarif wStatePageTarif = StatePageTarif(wArticle_Ebp: wArticle_Ebp, index: i, callback: Erase);
+      StatePageTarif wStatePageTarif = StatePageTarif(wArticle_Ebp: warticleEbp, index: i, callback: Erase);
       widgetsTarif.add(wStatePageTarif);
-      wImages.add(buildImage(context, wArticle_Ebp!));
-      print(" ADD ${wArticle_Ebp.Article_descriptionCommercialeEnClair}");
+      wImages.add(buildImage(context, warticleEbp));
+      print(" ADD ${warticleEbp.Article_descriptionCommercialeEnClair}");
 
-      wArticle_Ebp.wImageG1 = Image.memory(blankBytes, height: 1,);
-      wArticle_Ebp.wImageG2 = Image.memory(blankBytes, height: 1,);
-      wArticle_Ebp.wImageG3 = Image.memory(blankBytes, height: 1,);
+      warticleEbp.wImageG1 = Image.memory(blankBytes, height: 1,);
+      warticleEbp.wImageG2 = Image.memory(blankBytes, height: 1,);
+      warticleEbp.wImageG3 = Image.memory(blankBytes, height: 1,);
 
-      wArticle_Ebp!.DCL_Det_Garantie = "...";
+      warticleEbp.DCL_Det_Garantie = "...";
 
       wPage++;
     }
@@ -120,10 +118,11 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
 
     print(" ADD ${widgets.length}");
 
-    if (widgets.length == 0)
+    if (widgets.isEmpty) {
       Navigator.pop(context);
-    else
+    } else {
       setState(() {});
+    }
   }
 
   @override
@@ -148,7 +147,7 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
 
     await Srv_DbTools.getArticlesImg_Ebp(art.Article_codeArticle);
     gObj.pic = base64Decode(Srv_DbTools.gArticlesImg_Ebp.ArticlesImg_Image);
-    if (gObj.pic.length > 0) {
+    if (gObj.pic.isNotEmpty) {
       art.wImgeTrvL = true;
       art.wImageL = Image.memory(
         gObj.pic,
@@ -165,18 +164,17 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
       height: wIcoWidth,
       width: wIcoWidth,
     );
-    ;
     return art.wImageL!;
   }
 
   Widget buildImage(BuildContext context, Article_Ebp art) {
-    return new FutureBuilder(
+    return FutureBuilder(
       future: GetImage(art, 400),
       builder: (BuildContext context, AsyncSnapshot<Image> image) {
         if (image.hasData) {
           return image.data!;
         } else {
-          return new Container(width: 30);
+          return Container(width: 30);
         }
       },
     );
@@ -219,12 +217,12 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
               top: 0,
               left: 0,
               child: Material(
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
                 child: Container(
                   height: wHeightTitre,
                   width: wWidth,
                   padding: const EdgeInsets.fromLTRB(0, 20, 0, 0),
-                  decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))),
+                  decoration: const BoxDecoration(color: Colors.white, borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -336,66 +334,66 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
                           onPressed: () async {
                             print("Ajouter Srv_DbTools.ListArticle_Ebpsearchresult.length ${Srv_DbTools.ListArticle_Ebpsearchresult.length}");
 
-                            if (Srv_DbTools.ListArticle_Ebpsearchresult.length > 0) {
+                            if (Srv_DbTools.ListArticle_Ebpsearchresult.isNotEmpty) {
 
                               for (int i = 0; i < Srv_DbTools.ListArticle_Ebpsearchresult.length; i++) {
-                                Article_Ebp wArticle_Ebp = Srv_DbTools.ListArticle_Ebpsearchresult[i];
-                                if (!wArticle_Ebp.Art_Sel) continue;
+                                Article_Ebp warticleEbp = Srv_DbTools.ListArticle_Ebpsearchresult[i];
+                                if (!warticleEbp.Art_Sel) continue;
 
                                 print("Ajouter B $i");
                                 print(" Ajouter    ${Srv_DbTools.ListArticle_Ebpsearchresult[0].Art_Qte} ${Srv_DbTools.ListArticle_Ebpsearchresult[0].DCL_Det_Statut}");
 
-                                print(" Ajouter   ${wArticle_Ebp.Art_Qte} ${wArticle_Ebp.DCL_Det_Statut}");
+                                print(" Ajouter   ${warticleEbp.Art_Qte} ${warticleEbp.DCL_Det_Statut}");
 
-                                DCL_Det aDCL_Det = DCL_Det();
-                                aDCL_Det.DCL_Det_EntID = Srv_DbTools.gDCL_Ent.DCL_EntID;
-                                aDCL_Det.DCL_Det_Type = "A";
-                                aDCL_Det.DCL_Det_ParcsArtId = 0;
-                                aDCL_Det.DCL_Det_Ordre = Srv_DbTools.getLastOrder() + 1;
-                                aDCL_Det.DCL_Det_NoArt = wArticle_Ebp.Article_codeArticle;
-                                aDCL_Det.DCL_Det_Lib = wArticle_Ebp.Article_descriptionCommercialeEnClair;
+                                DCL_Det adclDet = DCL_Det();
+                                adclDet.DCL_Det_EntID = Srv_DbTools.gDCL_Ent.DCL_EntID;
+                                adclDet.DCL_Det_Type = "A";
+                                adclDet.DCL_Det_ParcsArtId = 0;
+                                adclDet.DCL_Det_Ordre = Srv_DbTools.getLastOrder() + 1;
+                                adclDet.DCL_Det_NoArt = warticleEbp.Article_codeArticle;
+                                adclDet.DCL_Det_Lib = warticleEbp.Article_descriptionCommercialeEnClair;
 
-                                aDCL_Det.DCL_Det_Qte = wArticle_Ebp.Art_Qte;
-                                aDCL_Det.DCL_Det_Livr = wArticle_Ebp.DCL_Det_Livr;
-                                aDCL_Det.DCL_Det_DateLivr = wArticle_Ebp.DCL_Det_DateLivr;
-                                aDCL_Det.DCL_Det_Statut = wArticle_Ebp.DCL_Det_Statut;
-                                aDCL_Det.DCL_Det_PU = wArticle_Ebp.DCL_Det_PU;
-                                aDCL_Det.DCL_Det_RemP = wArticle_Ebp.DCL_Det_RemP;
-                                aDCL_Det.DCL_Det_RemMt = wArticle_Ebp.DCL_Det_RemMt;
-                                aDCL_Det.DCL_Det_TVA = wArticle_Ebp.DCL_Det_TVA;
+                                adclDet.DCL_Det_Qte = warticleEbp.Art_Qte;
+                                adclDet.DCL_Det_Livr = warticleEbp.DCL_Det_Livr;
+                                adclDet.DCL_Det_DateLivr = warticleEbp.DCL_Det_DateLivr;
+                                adclDet.DCL_Det_Statut = warticleEbp.DCL_Det_Statut;
+                                adclDet.DCL_Det_PU = warticleEbp.DCL_Det_PU;
+                                adclDet.DCL_Det_RemP = warticleEbp.DCL_Det_RemP;
+                                adclDet.DCL_Det_RemMt = warticleEbp.DCL_Det_RemMt;
+                                adclDet.DCL_Det_TVA = warticleEbp.DCL_Det_TVA;
 
-                                aDCL_Det.DCL_Det_Rel = 0;
-                                aDCL_Det.DCL_Det_DateRel = '';
-                                aDCL_Det.DCL_Det_Note = '';
+                                adclDet.DCL_Det_Rel = 0;
+                                adclDet.DCL_Det_DateRel = '';
+                                adclDet.DCL_Det_Note = '';
 
-                                aDCL_Det.DCL_Det_Garantie = wArticle_Ebp.DCL_Det_Garantie;
+                                adclDet.DCL_Det_Garantie = warticleEbp.DCL_Det_Garantie;
 
-                                print(" GARANTIE VALIDER aDCL_Det.DCL_Det_Garantie ${wArticle_Ebp.DCL_Det_Garantie}");
+                                print(" GARANTIE VALIDER aDCL_Det.DCL_Det_Garantie ${warticleEbp.DCL_Det_Garantie}");
 
 
-                                await Srv_DbTools.InsertUpdateDCL_Det(aDCL_Det);
+                                await Srv_DbTools.InsertUpdateDCL_Det(adclDet);
 
                                 print(" Srv_DbTools.gLastID ${Srv_DbTools.gLastID}" );
 
 
                                 String wName = "";
-                                if(wArticle_Ebp.DCL_Det_Path1!.length > 0)
+                                if(warticleEbp.DCL_Det_Path1.isNotEmpty)
                                 {
                                   wName = "DCL_Det_Garantie${Srv_DbTools.gLastID}_1.jpg";
-                                  print(" Ajouter IMAGE 1  ${wName}");
-                                  await Upload.SaveMem400(wName, wArticle_Ebp.DCL_Det_Path1!);
+                                  print(" Ajouter IMAGE 1  $wName");
+                                  await Upload.SaveMem400(wName, warticleEbp.DCL_Det_Path1);
                                 }
-                                if(wArticle_Ebp.DCL_Det_Path2!.length > 0)
+                                if(warticleEbp.DCL_Det_Path2.isNotEmpty)
                                 {
                                   wName = "DCL_Det_Garantie${Srv_DbTools.gLastID}_2.jpg";
-                                  print(" Ajouter IMAGE 2  ${wName}");
-                                  await Upload.SaveMem400(wName, wArticle_Ebp.DCL_Det_Path2!);
+                                  print(" Ajouter IMAGE 2  $wName");
+                                  await Upload.SaveMem400(wName, warticleEbp.DCL_Det_Path2);
                                 }
-                                if(wArticle_Ebp.DCL_Det_Path3!.length > 0)
+                                if(warticleEbp.DCL_Det_Path3.isNotEmpty)
                                 {
                                   wName = "DCL_Det_Garantie${Srv_DbTools.gLastID}_3.jpg";
-                                  print(" Ajouter IMAGE 3  ${wName}");
-                                  await Upload.SaveMem400(wName, wArticle_Ebp.DCL_Det_Path3!);
+                                  print(" Ajouter IMAGE 3  $wName");
+                                  await Upload.SaveMem400(wName, warticleEbp.DCL_Det_Path3);
                                 }
                               }
                             }
@@ -424,7 +422,7 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
                 height: 674,
                 width: wWidth,
                 color: gColors.white,
-                child: (widgets.length > 0)
+                child: (widgets.isNotEmpty)
                     ? PageView.builder(
                         itemCount: widgets.length,
                         controller: pageController,
@@ -434,7 +432,7 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
                       indexPage = page;
                       indexScreenBase = 1;
 
-                      print("ARTICLE Changed ${indexPage}");
+                      print("ARTICLE Changed $indexPage");
 
                     });
                   },
@@ -458,7 +456,7 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
     screens.add(widgetsTarif[index]);
 
 
-    print("pageBuilder indexScreenBase ${indexScreenBase} ${index} indexPage ${indexPage}");
+    print("pageBuilder indexScreenBase $indexScreenBase $index indexPage $indexPage");
 
     return AnimatedBuilder(
       animation: pageController,
@@ -470,7 +468,7 @@ class _DCL_Article_DetState extends State<DCL_Article_Det> {
           onPageChanged: (page) {
             setState(() {
               indexScreenBase = page;
-              print("SCREEN Changed ${indexScreenBase}");
+              print("SCREEN Changed $indexScreenBase");
               setState(() {});
             });
           },
@@ -495,7 +493,7 @@ class StatePage extends StatefulWidget {
   final int? index;
   final Function()? callback;
 
-  StatePage({
+  const StatePage({
     Key? key,
     @required this.wArticle_Ebp,
     @required this.index,
@@ -567,7 +565,7 @@ class StatePageState extends State<StatePage> {
                             ],
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Container(
                           height: 80,
                           padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
@@ -578,18 +576,18 @@ class StatePageState extends State<StatePage> {
                             textAlign: TextAlign.right,
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Container(
                           height: 80,
                           padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
                           color: gColors.LinearGradient2,
                           child: Text(
-                            "${wRem}%",
+                            "$wRem%",
                             style: gColors.bodyTitle1_N_G24,
                             textAlign: TextAlign.right,
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Container(
                           height: 80,
                           padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
@@ -625,7 +623,7 @@ class StatePageState extends State<StatePage> {
                             ],
                           ),
                         ),
-                        Spacer(),
+                        const Spacer(),
                         Container(
                           height: 80,
                           padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
@@ -694,7 +692,7 @@ class StatePageState extends State<StatePage> {
                             style: gColors.bodyTitle1_N_Gr,
                             textAlign: TextAlign.center,
                           ),
-                          Spacer(),
+                          const Spacer(),
                           SvgPicture.asset(
                             "assets/images/DCL_ChH.svg",
                             width: 60,
@@ -704,7 +702,7 @@ class StatePageState extends State<StatePage> {
                           ),
                         ],
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         crossAxisAlignment: CrossAxisAlignment.end,
@@ -712,7 +710,7 @@ class StatePageState extends State<StatePage> {
                           buildImage(context, widget.wArticle_Ebp!),
                         ],
                       ),
-                      Spacer(),
+                      const Spacer(),
                       Row(
                         children: [
                           Container(
@@ -724,7 +722,7 @@ class StatePageState extends State<StatePage> {
                               height: SizeBtn,
                               child: GestureDetector(
                                 child: Container(
-                                  child: Icon(
+                                  child: const Icon(
                                     Icons.delete,
                                     color: gColors.red,
                                     size: 60,
@@ -735,21 +733,21 @@ class StatePageState extends State<StatePage> {
                                   await showDialog(context: context, builder: (BuildContext context) => DialogSuppr(context, widget.wArticle_Ebp!.Article_descriptionCommercialeEnClair));
                                 },
                               )),
-                          Spacer(),
+                          const Spacer(),
                           Row(
                             children: [
-                              Container(
+                              SizedBox(
                                   width: SizeBtn,
                                   height: SizeBtn,
                                   child: GestureDetector(
                                     child: Container(
                                       decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.all(
+                                        borderRadius: const BorderRadius.all(
                                           Radius.circular(60),
                                         ),
                                         color: (widget.wArticle_Ebp!.Art_Qte == 1) ? gColors.LinearGradient1 : gColors.greyDark2,
                                       ),
-                                      child: Icon(
+                                      child: const Icon(
                                         Icons.remove,
                                         color: gColors.white,
                                         size: 46,
@@ -791,7 +789,7 @@ class StatePageState extends State<StatePage> {
                               Container(
                                 width: 10,
                               ),
-                              Container(
+                              SizedBox(
                                 width: 50,
                                 child: Text(
                                   "${widget.wArticle_Ebp?.Art_Qte}",
@@ -802,18 +800,18 @@ class StatePageState extends State<StatePage> {
                               Container(
                                 width: 10,
                               ),
-                              Container(
+                              SizedBox(
                                   width: SizeBtn,
                                   height: SizeBtn,
                                   child: GestureDetector(
                                     child: Container(
-                                      decoration: BoxDecoration(
+                                      decoration: const BoxDecoration(
                                         borderRadius: BorderRadius.all(
                                           Radius.circular(60),
                                         ),
                                         color: gColors.greyDark2,
                                       ),
-                                      child: Icon(
+                                      child: const Icon(
                                         Icons.add,
                                         color: gColors.white,
                                         size: 46,
@@ -858,7 +856,7 @@ class StatePageState extends State<StatePage> {
                                   )),
                             ],
                           ),
-                          Spacer(),
+                          const Spacer(),
                           SvgPicture.asset(
                             "assets/images/DCL_ChB.svg",
                             width: 60,
@@ -896,7 +894,7 @@ class StatePageState extends State<StatePage> {
 
 
     return SimpleDialog(
-      insetPadding: EdgeInsets.all(60),
+      insetPadding: const EdgeInsets.all(60),
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
@@ -921,11 +919,11 @@ class StatePageState extends State<StatePage> {
               left: 0,
               child: Material(
                 elevation: 5,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
                 child: Container(
                   height: wHeightTitre - 22,
                   width: wWidth,
-                  decoration: BoxDecoration(color: Colors.yellowAccent, borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))),
+                  decoration: const BoxDecoration(color: Colors.yellowAccent, borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))),
                   child: Container(
                       color: Colors.transparent,
                       padding: const EdgeInsets.fromLTRB(30, 0, 10, 0),
@@ -1065,7 +1063,7 @@ class StatePageState extends State<StatePage> {
                       ],
                     ),
                     Text(
-                      "${wTitre}",
+                      wTitre,
                       maxLines: 3,
                       style: gColors.bodyTitle1_B_G24,
                       textAlign: TextAlign.center,
@@ -1096,7 +1094,7 @@ class StatePageState extends State<StatePage> {
 
 
     return SimpleDialog(
-      insetPadding: EdgeInsets.all(60),
+      insetPadding: const EdgeInsets.all(60),
       titlePadding: EdgeInsets.zero,
       contentPadding: EdgeInsets.zero,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
@@ -1122,11 +1120,11 @@ class StatePageState extends State<StatePage> {
               left: 0,
               child: Material(
                 elevation: 5,
-                borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
+                borderRadius: const BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24)),
                 child: Container(
                   height: wHeightTitre - 22,
                   width: wWidth,
-                  decoration: BoxDecoration(color: Colors.yellowAccent, borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))),
+                  decoration: const BoxDecoration(color: Colors.yellowAccent, borderRadius: BorderRadius.only(topLeft: Radius.circular(24), topRight: Radius.circular(24))),
                   child: Container(
                       color: Colors.transparent,
                       padding: const EdgeInsets.fromLTRB(30, 0, 10, 0),
@@ -1240,7 +1238,7 @@ class StatePageState extends State<StatePage> {
                     Container(
                       padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                       child: Text(
-                        "${wTitre}",
+                        wTitre,
                         maxLines: 3,
                         style: gColors.bodyTitle1_B_G24,
                         textAlign: TextAlign.center,
@@ -1261,7 +1259,7 @@ class StatePageState extends State<StatePage> {
 
     await Srv_DbTools.getArticlesImg_Ebp(art.Article_codeArticle);
     gObj.pic = base64Decode(Srv_DbTools.gArticlesImg_Ebp.ArticlesImg_Image);
-    if (gObj.pic.length > 0) {
+    if (gObj.pic.isNotEmpty) {
       art.wImgeTrvL = true;
       art.wImageL = Image.memory(
         gObj.pic,
@@ -1278,18 +1276,17 @@ class StatePageState extends State<StatePage> {
       height: wIcoWidth,
       width: wIcoWidth,
     );
-    ;
     return art.wImageL!;
   }
 
   Widget buildImage(BuildContext context, Article_Ebp art) {
-    return new FutureBuilder(
+    return FutureBuilder(
       future: GetImage(art, 400),
       builder: (BuildContext context, AsyncSnapshot<Image> image) {
         if (image.hasData) {
           return image.data!;
         } else {
-          return new Container(width: 30);
+          return Container(width: 30);
         }
       },
     );
@@ -1305,7 +1302,7 @@ class StatePageDetail extends StatefulWidget {
   final int? index;
   final Function()? callback;
 
-  StatePageDetail({
+  const StatePageDetail({
     Key? key,
     @required this.wArticle_Ebp,
     @required this.index,
@@ -1346,7 +1343,7 @@ class StatePageDetailState extends State<StatePageDetail> {
       Container(
         padding: const EdgeInsets.fromLTRB(10, 10, 10, 10),
         child: Text(
-          "${widget.wArticle_Ebp!.Article_Notes}",
+          widget.wArticle_Ebp!.Article_Notes,
           style: gColors.bodyTitle1_N_Gr,
 
         ),
@@ -1383,15 +1380,15 @@ class StatePageDetailState extends State<StatePageDetail> {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Container(
+              SizedBox(
                 height: 80,
                 child: Container(
                   decoration: BoxDecoration(
                     color: Colors.grey,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  margin: EdgeInsets.fromLTRB(0, 10, 0, 10),
-                  padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                  margin: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                  padding: const EdgeInsets.fromLTRB(10, 0, 10, 0),
                   height: 40,
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -1420,7 +1417,7 @@ class StatePageDetailState extends State<StatePageDetail> {
                             alignment: Alignment.center,
                             elevation: 0,
                           ),
-                          buttons: ['Détails', 'Offres', 'Fiche Tech.'],
+                          buttons: const ['Détails', 'Offres', 'Fiche Tech.'],
                           onSelected: (val, index, selected) {
                             pageController.animateToPage(
                               index,
@@ -1444,8 +1441,8 @@ class StatePageDetailState extends State<StatePageDetail> {
 //              screensDetail[SelectOnglet],
               Expanded(
                 child: PageView(
-                  children: screensDetail,
                   controller: pageController,
+                  children: screensDetail,
                 ),
               ),
             ],
@@ -1464,7 +1461,7 @@ class StatePageTarif extends StatefulWidget {
   final int? index;
   final Function()? callback;
 
-  StatePageTarif({
+  const StatePageTarif({
     Key? key,
     @required this.wArticle_Ebp,
     @required this.index,
@@ -1539,17 +1536,17 @@ class StatePageTarifState extends State<StatePageTarif> {
       wStringNombre = widget.wArticle_Ebp!.DCL_Det_RemMt.toStringAsFixed(2);
     }
 
-    print("wStringNombre ${wStringNombre}");
+    print("wStringNombre $wStringNombre");
 
     wStringNombre = wStringNombre.replaceAll(".", "");
 
-    if (wStringNombre != null && wStringNombre.length > 0) {
+    if (wStringNombre.isNotEmpty) {
       wStringNombre = wStringNombre.substring(0, wStringNombre.length - 1);
     }
 
-    print("wStringNombre ${wStringNombre}");
+    print("wStringNombre $wStringNombre");
     wNombre = int.tryParse(wStringNombre) ?? 0;
-    print("wNombre ${wNombre}");
+    print("wNombre $wNombre");
 
     if (wSelNombre == 0) {
       widget.wArticle_Ebp!.DCL_Det_PU = wNombre / 100;
@@ -1648,7 +1645,7 @@ class StatePageTarifState extends State<StatePageTarif> {
 
   DateTime selectedDate = DateTime.now();
   Future<void> _selectDate(BuildContext context, DateTime firstDate, DateTime lastDate) async {
-    print("selectedDate >> ${selectedDate}");
+    print("selectedDate >> $selectedDate");
 
     final DateTime? picked = await showDatePicker(
         context: context,
@@ -1659,7 +1656,7 @@ class StatePageTarifState extends State<StatePageTarif> {
           return Theme(
             data: ThemeData(
               dividerColor: gColors.LinearGradient5,
-              colorScheme: ColorScheme.light(
+              colorScheme: const ColorScheme.light(
                 primary: gColors.LinearGradient5,
                 onPrimary: Colors.white, // header text color
                 surface: Colors.white, // fond
@@ -1672,7 +1669,7 @@ class StatePageTarifState extends State<StatePageTarif> {
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
-        print("selectedDate << ${selectedDate}");
+        print("selectedDate << $selectedDate");
       });
     }
   }
@@ -1692,9 +1689,9 @@ class StatePageTarifState extends State<StatePageTarif> {
 
     DateTime wDate = DateTime.now();
     try {
-      wDate = new DateFormat("dd/MM/yyyy").parse(widget.wArticle_Ebp!.DCL_Det_DateLivr);
+      wDate = DateFormat("dd/MM/yyyy").parse(widget.wArticle_Ebp!.DCL_Det_DateLivr);
     } catch (e) {}
-    var formatdate = new DateFormat('EEEE\ndd/MM/yyyy', 'fr_FR');
+    var formatdate = DateFormat('EEEE\ndd/MM/yyyy', 'fr_FR');
     String formattedDate = formatdate.format(wDate);
     formattedDate = formattedDate.replaceRange(
       0,
@@ -1737,7 +1734,7 @@ class StatePageTarifState extends State<StatePageTarif> {
                                 ],
                               ),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             Container(
                               height: 80,
                               padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
@@ -1748,18 +1745,18 @@ class StatePageTarifState extends State<StatePageTarif> {
                                 textAlign: TextAlign.right,
                               ),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             Container(
                               height: 80,
                               padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
                               color: gColors.LinearGradient2,
                               child: Text(
-                                "${wRem}%",
+                                "$wRem%",
                                 style: gColors.bodyTitle1_N_G24,
                                 textAlign: TextAlign.right,
                               ),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             Container(
                               height: 80,
                               padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
@@ -1795,7 +1792,7 @@ class StatePageTarifState extends State<StatePageTarif> {
                                 ],
                               ),
                             ),
-                            Spacer(),
+                            const Spacer(),
                             Container(
                               height: 80,
                               padding: const EdgeInsets.fromLTRB(0, 25, 20, 0),
@@ -1885,7 +1882,7 @@ class StatePageTarifState extends State<StatePageTarif> {
                                 onPressed: () async {
                                   widget.wArticle_Ebp!.DCL_Det_Livr = 1;
                                   try {
-                                    selectedDate = new DateFormat("dd/MM/yyyy").parse(widget.wArticle_Ebp!.DCL_Det_DateLivr);
+                                    selectedDate = DateFormat("dd/MM/yyyy").parse(widget.wArticle_Ebp!.DCL_Det_DateLivr);
                                   } catch (e) {}
                                   await _selectDate(context, DateTime(1900), DateTime(DateTime.now().year + 1, 12, 31));
                                   widget.wArticle_Ebp!.DCL_Det_DateLivr = DateFormat('dd/MM/yyyy').format(selectedDate);
@@ -2150,7 +2147,7 @@ class StatePageTarifState extends State<StatePageTarif> {
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                       elevation: 0,
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                         color: gColors.LinearGradient1,
                                       ),
                                       backgroundColor: gColors.white,
@@ -2177,7 +2174,7 @@ class StatePageTarifState extends State<StatePageTarif> {
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                       elevation: 0,
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                         color: gColors.LinearGradient1,
                                       ),
                                       backgroundColor: gColors.white,
@@ -2204,7 +2201,7 @@ class StatePageTarifState extends State<StatePageTarif> {
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                       elevation: 0,
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                         color: gColors.LinearGradient1,
                                       ),
                                       backgroundColor: gColors.white,
@@ -2231,7 +2228,7 @@ class StatePageTarifState extends State<StatePageTarif> {
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                       elevation: 0,
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                         color: gColors.LinearGradient1,
                                       ),
                                       backgroundColor: gColors.white,
@@ -2265,7 +2262,7 @@ class StatePageTarifState extends State<StatePageTarif> {
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                       elevation: 0,
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                         color: gColors.LinearGradient1,
                                       ),
                                       backgroundColor: gColors.white,
@@ -2292,7 +2289,7 @@ class StatePageTarifState extends State<StatePageTarif> {
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                       elevation: 0,
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                         color: gColors.LinearGradient1,
                                       ),
                                       backgroundColor: gColors.white,
@@ -2319,7 +2316,7 @@ class StatePageTarifState extends State<StatePageTarif> {
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                       elevation: 0,
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                         color: gColors.LinearGradient1,
                                       ),
                                       backgroundColor: gColors.white,
@@ -2346,7 +2343,7 @@ class StatePageTarifState extends State<StatePageTarif> {
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                       elevation: 0,
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                         color: gColors.LinearGradient1,
                                       ),
                                       backgroundColor: gColors.white,
@@ -2380,7 +2377,7 @@ class StatePageTarifState extends State<StatePageTarif> {
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                       elevation: 0,
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                         color: gColors.LinearGradient1,
                                       ),
                                       backgroundColor: gColors.white,
@@ -2407,7 +2404,7 @@ class StatePageTarifState extends State<StatePageTarif> {
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                       elevation: 0,
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                         color: gColors.LinearGradient1,
                                       ),
                                       backgroundColor: gColors.white,
@@ -2434,7 +2431,7 @@ class StatePageTarifState extends State<StatePageTarif> {
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                       elevation: 0,
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                         color: gColors.LinearGradient1,
                                       ),
                                       backgroundColor: gColors.white,
@@ -2461,7 +2458,7 @@ class StatePageTarifState extends State<StatePageTarif> {
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                       elevation: 0,
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                         color: gColors.LinearGradient1,
                                       ),
                                       backgroundColor: gColors.GrdBtn_Colors5,
@@ -2495,7 +2492,7 @@ class StatePageTarifState extends State<StatePageTarif> {
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                       elevation: 0,
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                         color: gColors.LinearGradient1,
                                       ),
                                       backgroundColor: gColors.white,
@@ -2522,7 +2519,7 @@ class StatePageTarifState extends State<StatePageTarif> {
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                       elevation: 0,
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                         color: gColors.LinearGradient1,
                                       ),
                                       backgroundColor: gColors.white,
@@ -2550,7 +2547,7 @@ class StatePageTarifState extends State<StatePageTarif> {
                                 ElevatedButton(
                                   style: ElevatedButton.styleFrom(
                                       elevation: 0,
-                                      side: BorderSide(
+                                      side: const BorderSide(
                                         color: gColors.LinearGradient1,
                                       ),
                                       backgroundColor: gColors.LinearGradient3,

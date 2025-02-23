@@ -1,7 +1,5 @@
 import 'dart:convert';
-import 'dart:typed_data';
 
-import 'package:davi/davi.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
@@ -18,12 +16,14 @@ class Missions_Dialog {
   ) async {
     await showDialog(
       context: context,
-      builder: (BuildContext context) => new Missions(),
+      builder: (BuildContext context) => const Missions(),
     );
   }
 }
 
 class Missions extends StatefulWidget {
+  const Missions({super.key});
+
   @override
   State<Missions> createState() => _MissionsState();
 }
@@ -46,7 +46,7 @@ class _MissionsState extends State<Missions> {
 
 
 
-  List<Uint8List> _images = [];
+  final List<Uint8List> _images = [];
 
   late SfPdfViewer wSfPdfViewer;
   PdfViewerController wPdfViewerController = PdfViewerController();
@@ -58,16 +58,16 @@ class _MissionsState extends State<Missions> {
   Uint8List pic = Uint8List.fromList([0]);
 
   Future Reload() async {
-    await Srv_DbTools.getInterMissionsIntervention(Srv_DbTools.gIntervention.InterventionId!);
+    await Srv_DbTools.getInterMissionsIntervention(Srv_DbTools.gIntervention.InterventionId);
     await Filtre();
   }
 
   Future Filtre() async {
     Srv_DbTools.ListInterMissionsearchresult.clear();
     Srv_DbTools.ListInterMissionsearchresult.addAll(Srv_DbTools.ListInterMission);
-    Srv_DbTools.ListInterMissionsearchresult.forEach((element) {
+    for (var element in Srv_DbTools.ListInterMissionsearchresult) {
       print("Srv_DbTools ${element.InterMission_InterventionId} ${element.InterMissionId}");
-    });
+    }
     setState(() {});
   }
 
@@ -81,11 +81,11 @@ class _MissionsState extends State<Missions> {
     selectedMission = List_Mission[0];
     selectedMissionID = List_MissionID[0];
 
-    await Srv_DbTools.getInterMissionsIntervention(Srv_DbTools.gIntervention.InterventionId!);
+    await Srv_DbTools.getInterMissionsIntervention(Srv_DbTools.gIntervention.InterventionId);
 
-    await Srv_DbTools.getInterMissionsIntervention(Srv_DbTools.gIntervention.InterventionId!);
+    await Srv_DbTools.getInterMissionsIntervention(Srv_DbTools.gIntervention.InterventionId);
 
-    if (Srv_DbTools.ListInterMission.length > 0) {
+    if (Srv_DbTools.ListInterMission.isNotEmpty) {
       isSelect = true;
       wInterMission = Srv_DbTools.ListInterMission[0];
       crtDoc();
@@ -94,6 +94,7 @@ class _MissionsState extends State<Missions> {
     Reload();
   }
 
+  @override
   void initState() {
     initLib();
     super.initState();
@@ -105,17 +106,17 @@ class _MissionsState extends State<Missions> {
     double height = MediaQuery.of(context).size.height - 100;
 
     return AlertDialog(
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
+      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24.0))),
       backgroundColor: gColors.white,
       surfaceTintColor: Colors.white,
-      contentPadding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 20),
+      contentPadding: const EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 20),
       title: Container(
           color: gColors.white,
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 20),
+          padding: const EdgeInsets.fromLTRB(0, 0, 0, 20),
           child: Row(
             children: [
               Container(
-                padding: EdgeInsets.only(right: 10),
+                padding: const EdgeInsets.only(right: 10),
                 child: Image.asset(
                   "assets/images/IM4.png",
                   height: 32,
@@ -131,7 +132,7 @@ class _MissionsState extends State<Missions> {
           )),
       content: Container(
         color: gColors.greyLight,
-        child: Container(
+        child: SizedBox(
           width: width,
           height: height,
           child: Column(
@@ -143,8 +144,8 @@ class _MissionsState extends State<Missions> {
                 height: 1,
               ),
               Container(
-                margin: EdgeInsets.fromLTRB(10, 5, 10, 5),
-                padding: EdgeInsets.fromLTRB(5, 5, 5, 5),
+                margin: const EdgeInsets.fromLTRB(10, 5, 10, 5),
+                padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
                   border: Border.all(
@@ -160,7 +161,7 @@ class _MissionsState extends State<Missions> {
                           width: 1,
                         ),
                         Container(
-                          padding: EdgeInsets.fromLTRB(5, 5, 0, 0),
+                          padding: const EdgeInsets.fromLTRB(5, 5, 0, 0),
                           width: 560,
                           child: _buildText(context, wInterMission),
                         ),
@@ -172,7 +173,7 @@ class _MissionsState extends State<Missions> {
                     iPhotoDoc == 2 ? Container() : Row(
                       children: [
                         Container(
-                          padding: EdgeInsets.fromLTRB(5, 0, 0, 5),
+                          padding: const EdgeInsets.fromLTRB(5, 0, 0, 5),
                           width: 560,
                           height: 245,
                           child: _buildNote(context, wInterMission),
@@ -182,12 +183,12 @@ class _MissionsState extends State<Missions> {
                     Container(
                       height: 5,
                     ),
-                    Container(
+                    SizedBox(
                       height: iPhotoDoc == 1 ? 275 : 520,
                       child:
                       iPhotoDoc == 1 ? buildimage(context) : buildDoc(context),
                     ),
-                    Container(
+                    SizedBox(
                       height: 40,
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -304,10 +305,10 @@ class _MissionsState extends State<Missions> {
         //Expanded(child:
         Container(
             child: Container(
-                padding: EdgeInsets.fromLTRB(0, 1, 0, 0),
+                padding: const EdgeInsets.fromLTRB(0, 1, 0, 0),
                 color: gColors.greyDark,
                 child: Container(
-                  padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                  padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                   color: gColors.greyLight,
                   child: ListView.separated(
                     padding: const EdgeInsets.all(0.0),
@@ -339,9 +340,9 @@ class _MissionsState extends State<Missions> {
               Expanded(
                 child: Container(
                   height: 20,
-                  padding: EdgeInsets.fromLTRB(10, 2, 8, 0),
+                  padding: const EdgeInsets.fromLTRB(10, 2, 8, 0),
                   child: Text(
-                    "${interMission.InterMission_Nom}",
+                    interMission.InterMission_Nom,
                     style: gColors.bodyTitle1_B_Gr,
                   ),
                 ),
@@ -359,8 +360,8 @@ class _MissionsState extends State<Missions> {
   Widget BtnCard(InterMission interMission) {
     Color wColor = Colors.black;
     double IcoWidth = 40;
-    return new Container(
-      padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+    return Container(
+      padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
       height: 45,
       child: Card(
         color: gColors.transparent,
@@ -400,12 +401,12 @@ class _MissionsState extends State<Missions> {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisSize: MainAxisSize.max,
         children: <Widget>[
-          Spacer(),
+          const Spacer(),
           Container(
             color: gColors.primary,
             width: 8,
           ),
-          new ElevatedButton(
+          ElevatedButton(
             onPressed: () async {
               await HapticFeedback.vibrate();
 
@@ -431,16 +432,16 @@ class _MissionsState extends State<Missions> {
 
     for (int i = 0; i < 5; i++) {
       String wUserImg = "Intervention_${Srv_DbTools.gIntervention.InterventionId}_${wInterMission.InterMissionId}_$i.jpg";
-      print("  wUserImg ${wUserImg}");
+      print("  wUserImg $wUserImg");
 
       try {
         Uint8List? pic = await gColors.getImage(wUserImg);
         if (pic.length > 300) {
           print("pic ${pic.length}");
-          _images.add(pic!);
+          _images.add(pic);
         }
       } catch (e) {
-        print("ERROR ${wUserImg}");
+        print("ERROR $wUserImg");
       }
     }
 
@@ -453,9 +454,9 @@ class _MissionsState extends State<Missions> {
     await Srv_DbTools.getInterMissions_Document_MissonID(wInterMission.InterMissionId);
 
     for (int i = 0; i < Srv_DbTools.ListInterMissions_Document.length; i++) {
-      var interMissions_Document = Srv_DbTools.ListInterMissions_Document[i];
-      print("•••••• ListInterMissions_Document ${interMissions_Document.toJson()} ");
-      Widget wWidget = await getDdoc(interMissions_Document.DocNom!);
+      var intermissionsDocument = Srv_DbTools.ListInterMissions_Document[i];
+      print("•••••• ListInterMissions_Document ${intermissionsDocument.toJson()} ");
+      Widget wWidget = await getDdoc(intermissionsDocument.DocNom!);
       listPdf.add(wWidget);
     }
 
@@ -467,27 +468,27 @@ class _MissionsState extends State<Missions> {
 
   Future<Widget> getDdoc(String wName) async {
     Widget wWidget = Container();
-    String wDocPath = "${wName}";
+    String wDocPath = wName;
     if (wDocPath.toLowerCase().contains(".txt")) {
-      Uint8List? _bytes = await gColors.getDoc(wDocPath);
-      print("wDocPath $wDocPath length ${_bytes.length}");
+      Uint8List? bytes = await gColors.getDoc(wDocPath);
+      print("wDocPath $wDocPath length ${bytes.length}");
 
       wWidget = Column(
         children: [
           Container(
-            margin: EdgeInsets.fromLTRB(0, 0, 0, 10),
+            margin: const EdgeInsets.fromLTRB(0, 0, 0, 10),
             width: 500,
             height: 440,
             color: Colors.white,
             child: Text(
-              "${utf8.decode(_bytes)}",
+              utf8.decode(bytes),
               style: gColors.bodyTitle1_N_Gr,
             ),
           ),
           Row(
             children: [
               Container(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
 //                child: CommonAppBar.SquareRoundPng(context, 30, 8, Colors.white, Colors.red, "ico_Del", ToolsBarDelete, tooltip: "Suppression"),
               ),
             ],
@@ -496,14 +497,14 @@ class _MissionsState extends State<Missions> {
       );
     } else {
 
-      Uint8List? _bytes = await gColors.getDoc(wDocPath);
-      print("wDocPath $wDocPath length ${_bytes.length}");
-      if (_bytes.length > 0) {
-        wSfPdfViewer = await SfPdfViewer.memory(
+      Uint8List? bytes = await gColors.getDoc(wDocPath);
+      print("wDocPath $wDocPath length ${bytes.length}");
+      if (bytes.isNotEmpty) {
+        wSfPdfViewer = SfPdfViewer.memory(
           controller: wPdfViewerController,
           initialZoomLevel: 1,
           maxZoomLevel: 12,
-          _bytes,
+          bytes,
 //          key: _pdfViewerKey,
           enableDocumentLinkAnnotation: false,
           enableTextSelection: false,
@@ -525,7 +526,7 @@ class _MissionsState extends State<Missions> {
                     await Navigator.push(context, MaterialPageRoute(builder: (context) => PdfView(pdf: wSfPdfViewer)));
                     Reload();
                   },
-                  icon: Icon(Icons.open_with, color: Colors.green),
+                  icon: const Icon(Icons.open_with, color: Colors.green),
                 ),
 
               ],
@@ -561,7 +562,7 @@ class _MissionsState extends State<Missions> {
                   shape: BoxShape.rectangle,
                   color: gColors.white,
                 ),
-                child: Center(child: Text("Pas de photo")))
+                child: const Center(child: Text("Pas de photo")))
             : Container(
                 decoration: BoxDecoration(
                   border: Border.all(color: gColors.LinearGradient3, width: 1),
@@ -622,7 +623,7 @@ class _MissionsState extends State<Missions> {
                   shape: BoxShape.rectangle,
                   color: gColors.white,
                 ),
-                child: Center(child: Text("Pas de document")))
+                child: const Center(child: Text("Pas de document")))
                 : Container(
               decoration: BoxDecoration(
                 border: Border.all(color: gColors.LinearGradient3, width: 1),

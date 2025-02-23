@@ -1,5 +1,4 @@
 
-import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 
 class Parc_Art_Srv {
   int?    ParcsArtId          = 0;
@@ -12,12 +11,12 @@ class Parc_Art_Srv {
   String? ParcsArt_Lib        = "";
   int?    ParcsArt_Qte        = 0;
 
-  static Parc_ArtInit(int wParcsArt_ParcsId, String wParcsArt_Type) {
+  static Parc_ArtInit(int wparcsartParcsid, String wparcsartType) {
 
-    Parc_Art_Srv wParc_Art = Parc_Art_Srv(0,0,"","","","","","",0);
-    wParc_Art.ParcsArtId  = -1;
-    wParc_Art.ParcsArt_ParcsId  = wParcsArt_ParcsId;
-    return wParc_Art;
+    Parc_Art_Srv wparcArt = Parc_Art_Srv(0,0,"","","","","","",0);
+    wparcArt.ParcsArtId  = -1;
+    wparcArt.ParcsArt_ParcsId  = wparcsartParcsid;
+    return wparcArt;
   }
 
 

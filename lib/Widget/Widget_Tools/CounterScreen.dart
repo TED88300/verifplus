@@ -2,7 +2,6 @@ import 'dart:async';
 
 import 'package:flutter/widgets.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
-import 'package:verifplus/Tools/DbSrv/Srv_Parcs_Desc.dart';
 import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 
 class CounterScreen extends StatefulWidget {
@@ -27,7 +26,7 @@ class _CounterScreenState extends State<CounterScreen> {
     }
 
     timer = Timer.periodic(
-      Duration(seconds: 1),
+      const Duration(seconds: 1),
       (timer) {
 //        if (!DbTools.gTED)
         setState(() {
@@ -50,6 +49,6 @@ class _CounterScreenState extends State<CounterScreen> {
   @override
   Widget build(BuildContext context) {
     final now = Duration(seconds: count);
-    return Text("${gObj.printDuration(now)}");
+    return Text(gObj.printDuration(now));
   }
 }

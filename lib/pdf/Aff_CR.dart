@@ -1,7 +1,6 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:printing/printing.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
@@ -71,7 +70,7 @@ class Aff_CRState extends State<Aff_CR> with SingleTickerProviderStateMixin {
           await HapticFeedback.vibrate();
           Navigator.of(context).pop();
         },
-        child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+        child: const Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
           AutoSizeText(
             "COMPTE-RENDU",
             maxLines: 1,
@@ -106,10 +105,10 @@ class Aff_CRState extends State<Aff_CR> with SingleTickerProviderStateMixin {
     return Scaffold(
         appBar: appBar(),
         body: !genBdC
-            ? Center(
-                child: new Scaffold(
-                    body: new Center(
-                  child: new SizedBox(width: 40.0, height: 40.0, child: const CircularProgressIndicator()),
+            ? const Center(
+                child: Scaffold(
+                    body: Center(
+                  child: SizedBox(width: 40.0, height: 40.0, child: CircularProgressIndicator()),
                 )),
               )
             : PdfPreview(

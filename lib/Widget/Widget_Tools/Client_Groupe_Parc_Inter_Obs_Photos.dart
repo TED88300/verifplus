@@ -2,7 +2,6 @@ import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:camera/camera.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
@@ -11,6 +10,8 @@ import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 import 'package:verifplus/main.dart';
 
 class Client_Groupe_Parc_Inter_Obs_Photos extends StatefulWidget {
+  const Client_Groupe_Parc_Inter_Obs_Photos({super.key});
+
   @override
   Client_Groupe_Parc_Inter_Obs_PhotosState createState() =>
       Client_Groupe_Parc_Inter_Obs_PhotosState();
@@ -58,7 +59,7 @@ class Client_Groupe_Parc_Inter_Obs_PhotosState
 
     return Scaffold(
       appBar: AppBar(
-        title: AutoSizeText(
+        title: const AutoSizeText(
 //          "Client : ${DbTools.gClient.Clients_Nom} (${DbTools.gClient.Clients_Cp}) / ${DbTools.gSite.Sites_Nom} (${DbTools.gSite.Sites_Cp})",
           "Client : XXXXX",
           maxLines: 1,
@@ -147,7 +148,7 @@ class DisplayPictureScreen extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: AutoSizeText(
+        title: const AutoSizeText(
   //        "Client : ${DbTools.gClient.Clients_Nom} (${DbTools.gClient.Clients_Cp}) / ${DbTools.gSite.Sites_Nom} (${DbTools.gSite.Sites_Cp})",
           "Client :xxxxx",
           maxLines: 1,
@@ -190,19 +191,19 @@ class DisplayPictureScreen extends StatelessWidget {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () async {
-          Parc_Img wParc_Img = Parc_Img();
+          Parc_Img wparcImg = Parc_Img();
 
-          wParc_Img.Parc_Imgs_ParcsId = DbTools.gParc_Ent.ParcsId;
-          wParc_Img.Parc_Imgs_Path = imagePath;
-          wParc_Img.Parc_Imgs_Type = 99;
-          wParc_Img.Parc_Imgs_Data = "";
-          wParc_Img.Parc_Imgs_Principale = 0;
+          wparcImg.Parc_Imgs_ParcsId = DbTools.gParc_Ent.ParcsId;
+          wparcImg.Parc_Imgs_Path = imagePath;
+          wparcImg.Parc_Imgs_Type = 99;
+          wparcImg.Parc_Imgs_Data = "";
+          wparcImg.Parc_Imgs_Principale = 0;
 
-          var now = new DateTime.now();
-          var formatter = new DateFormat('dd/MM/yyyy');
-          wParc_Img.Parc_Imgs_Date= formatter.format(now);
+          var now = DateTime.now();
+          var formatter = DateFormat('dd/MM/yyyy');
+          wparcImg.Parc_Imgs_Date= formatter.format(now);
 
-          DbTools.insertParc_Img(wParc_Img);
+          DbTools.insertParc_Img(wparcImg);
           DbTools.gImagePath = imagePath;
           DbTools.glfParc_Imgs = await DbTools.getParc_Imgs(DbTools.gParc_Ent.ParcsId!, 99);
         //  print("glfParc_Imgs lenght ${DbTools.glfParc_Imgs.length}");

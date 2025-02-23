@@ -46,17 +46,17 @@ class SvgText extends SvgOperation {
   factory SvgText.fromXml(
     XmlElement element,
     SvgPainter painter,
-    SvgBrush brush, [
+    SvgBrush wbrush, [
     PdfPoint offset = PdfPoint.zero,
   ]) {
-    final _brush = SvgBrush.fromXml(element, brush, painter);
+    final brush = SvgBrush.fromXml(element, wbrush, painter);
 
     final dx =
-        SvgParser.getNumeric(element, 'dx', _brush, defaultValue: 0)!.sizeValue;
+        SvgParser.getNumeric(element, 'dx', brush, defaultValue: 0)!.sizeValue;
     final dy =
-        SvgParser.getNumeric(element, 'dy', _brush, defaultValue: 0)!.sizeValue;
-    final x = SvgParser.getNumeric(element, 'x', _brush)?.sizeValue;
-    final y = SvgParser.getNumeric(element, 'y', _brush)?.sizeValue;
+        SvgParser.getNumeric(element, 'dy', brush, defaultValue: 0)!.sizeValue;
+    final x = SvgParser.getNumeric(element, 'x', brush)?.sizeValue;
+    final y = SvgParser.getNumeric(element, 'y', brush)?.sizeValue;
 
     final text = element.children
         .where((node) => node is XmlText || node is XmlCDATA)
@@ -65,12 +65,12 @@ class SvgText extends SvgOperation {
         .trim();
 
     final font = painter.getFontCache(
-        _brush.fontFamily!, _brush.fontStyle!, _brush.fontWeight!)!;
+        brush.fontFamily!, brush.fontStyle!, brush.fontWeight!)!;
     final pdfFont = font.getFont(Context(document: painter.document));
-    final metrics = pdfFont.stringMetrics(text) * _brush.fontSize!.sizeValue;
+    final metrics = pdfFont.stringMetrics(text) * brush.fontSize!.sizeValue;
     offset = PdfPoint((x ?? offset.x) + dx, (y ?? offset.y) + dy);
 
-    switch (_brush.textAnchor!) {
+    switch (brush.textAnchor!) {
       case SvgTextAnchor.start:
         break;
       case SvgTextAnchor.middle:
@@ -84,7 +84,7 @@ class SvgText extends SvgOperation {
     var childOffset = PdfPoint(offset.x + metrics.advanceWidth, offset.y);
 
     final tspan = element.children.whereType<XmlElement>().map<SvgText>((e) {
-      final child = SvgText.fromXml(e, painter, _brush, childOffset);
+      final child = SvgText.fromXml(e, painter, brush, childOffset);
       childOffset = PdfPoint(child.x! + child.dx, child.y!);
       return child;
     });
@@ -97,8 +97,8 @@ class SvgText extends SvgOperation {
       pdfFont,
       tspan,
       metrics,
-      _brush,
-      SvgClipPath.fromXml(element, painter, _brush),
+      brush,
+      SvgClipPath.fromXml(element, painter, brush),
       SvgTransform.fromXml(element),
       painter,
     );

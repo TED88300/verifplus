@@ -185,18 +185,17 @@ class MultiPage extends Page {
   /// This is not checked with a Release build.
   final int maxPages;
 
-  void _paintChild(
-      Context context, Widget child, double x, double y, double pageHeight) {
+  void _paintChild(Context context, Widget child, double x, double y, double pageHeight) {
     if (mustRotate) {
-      final _margin = resolvedMargin!;
+      final margin = resolvedMargin!;
       context.canvas
         ..saveContext()
         ..setTransform(
           Matrix4.identity()
             ..rotateZ(-math.pi / 2)
             ..translate(
-              x - pageHeight + _margin.top - _margin.left,
-              y + _margin.left - _margin.bottom,
+              x - pageHeight + margin.top - margin.left,
+              y + margin.left - margin.bottom,
             ),
         );
       child.paint(context);
@@ -212,27 +211,27 @@ class MultiPage extends Page {
     assert(pageFormat.width > 0 && pageFormat.width < double.infinity);
     assert(pageFormat.height > 0 && pageFormat.height < double.infinity);
 
-    final _margin = resolvedMargin!;
-    final _mustRotate = mustRotate;
-    final pageHeight = _mustRotate ? pageFormat.width : pageFormat.height;
+    final margin = resolvedMargin!;
+    final mustRotate = this.mustRotate;
+    final pageHeight = mustRotate ? pageFormat.width : pageFormat.height;
     final pageHeightMargin =
-        _mustRotate ? _margin.horizontal : _margin.vertical;
+        mustRotate ? margin.horizontal : margin.vertical;
     final constraints = BoxConstraints(
-        maxWidth: _mustRotate
-            ? (pageFormat.height - _margin.vertical)
-            : (pageFormat.width - _margin.horizontal));
+        maxWidth: mustRotate
+            ? (pageFormat.height - margin.vertical)
+            : (pageFormat.width - margin.horizontal));
     final fullConstraints = mustRotate
         ? BoxConstraints(
-            maxWidth: pageFormat.height - _margin.vertical,
-            maxHeight: pageFormat.width - _margin.horizontal)
+            maxWidth: pageFormat.height - margin.vertical,
+            maxHeight: pageFormat.width - margin.horizontal)
         : BoxConstraints(
-            maxWidth: pageFormat.width - _margin.horizontal,
-            maxHeight: pageFormat.height - _margin.vertical);
+            maxWidth: pageFormat.width - margin.horizontal,
+            maxHeight: pageFormat.height - margin.vertical);
     final calculatedTheme = theme ?? document.theme ?? ThemeData.base();
     Context? context;
     late double offsetEnd;
     double? offsetStart;
-    var _index = 0;
+    var index0 = 0;
     var sameCount = 0;
     final baseContext =
         Context(document: document.document).inheritFromAll(<Inherited>[
@@ -243,8 +242,8 @@ class MultiPage extends Page {
     final children = _buildList(baseContext);
     WidgetContext? widgetContext;
 
-    while (_index < children.length) {
-      final child = children[_index];
+    while (index0 < children.length) {
+      final child = children[index0];
 
       // Detect too big widgets
       if (sameCount++ > maxPages) {
@@ -271,9 +270,9 @@ class MultiPage extends Page {
         }());
 
         offsetStart = pageHeight -
-            (_mustRotate ? pageHeightMargin - _margin.bottom : _margin.top);
+            (mustRotate ? pageHeightMargin - margin.bottom : margin.top);
         offsetEnd =
-            _mustRotate ? pageHeightMargin - _margin.left : _margin.bottom;
+            mustRotate ? pageHeightMargin - margin.left : margin.bottom;
 
         _pages.add(_MultiPageInstance(
           context: context,
@@ -354,7 +353,7 @@ class MultiPage extends Page {
         // Has it finished spanning?
         if (!span.hasMoreWidgets) {
           sameCount = 0;
-          _index++;
+          index0++;
         }
 
         // Schedule a new page
@@ -373,26 +372,26 @@ class MultiPage extends Page {
 
       offsetStart -= child.box!.height;
       sameCount = 0;
-      _index++;
+      index0++;
     }
   }
 
   @override
   void postProcess(Document document) {
-    final _margin = resolvedMargin!;
-    final _mustRotate = mustRotate;
-    final pageHeight = _mustRotate ? pageFormat.width : pageFormat.height;
-    final pageWidth = _mustRotate ? pageFormat.height : pageFormat.width;
+    final margin = resolvedMargin!;
+    final mustRotate = this.mustRotate;
+    final pageHeight = mustRotate ? pageFormat.width : pageFormat.height;
+    final pageWidth = mustRotate ? pageFormat.height : pageFormat.width;
     final pageHeightMargin =
-        _mustRotate ? _margin.horizontal : _margin.vertical;
-    final pageWidthMargin = _mustRotate ? _margin.vertical : _margin.horizontal;
+        mustRotate ? margin.horizontal : margin.vertical;
+    final pageWidthMargin = mustRotate ? margin.vertical : margin.horizontal;
     final availableWidth = pageWidth - pageWidthMargin;
     final isRTL = pageTheme.textDirection == TextDirection.rtl;
     for (final page in _pages) {
       var offsetStart = pageHeight -
-          (_mustRotate ? pageHeightMargin - _margin.bottom : _margin.top);
+          (mustRotate ? pageHeightMargin - margin.bottom : margin.top);
       var offsetEnd =
-          _mustRotate ? pageHeightMargin - _margin.left : _margin.bottom;
+          mustRotate ? pageHeightMargin - margin.left : margin.bottom;
 
       if (pageTheme.buildBackground != null) {
         final child = pageTheme.buildBackground!(page.context);
@@ -400,10 +399,10 @@ class MultiPage extends Page {
         child.layout(page.context, page.fullConstraints, parentUsesSize: false);
         assert(child.box != null);
         final xPos = isRTL
-            ? _margin.left + (availableWidth - child.box!.width)
-            : _margin.left;
+            ? margin.left + (availableWidth - child.box!.width)
+            : margin.left;
         _paintChild(
-            page.context, child, xPos, _margin.bottom, pageFormat.height);
+            page.context, child, xPos, margin.bottom, pageFormat.height);
       }
 
       var totalFlex = 0;
@@ -433,8 +432,8 @@ class MultiPage extends Page {
         assert(headerWidget.box != null);
         offsetStart -= headerWidget.box!.height;
         final xPos = isRTL
-            ? _margin.left + (availableWidth - headerWidget.box!.width)
-            : _margin.left;
+            ? margin.left + (availableWidth - headerWidget.box!.width)
+            : margin.left;
         _paintChild(page.context, headerWidget, xPos,
             page.offsetStart! - headerWidget.box!.height, pageFormat.height);
       }
@@ -445,10 +444,10 @@ class MultiPage extends Page {
             parentUsesSize: false);
         assert(footerWidget.box != null);
         final xPos = isRTL
-            ? _margin.left + (availableWidth - footerWidget.box!.width)
-            : _margin.left;
+            ? margin.left + (availableWidth - footerWidget.box!.width)
+            : margin.left;
         offsetEnd += footerWidget.box!.height;
-        _paintChild(page.context, footerWidget, xPos, _margin.bottom,
+        _paintChild(page.context, footerWidget, xPos, margin.bottom,
             pageFormat.height);
       }
 
@@ -557,7 +556,7 @@ class MultiPage extends Page {
         if (child is SpanningWidget && child.canSpan) {
           child.applyContext(widget.widgetContext!);
         }
-        _paintChild(page.context, widget.child, _margin.left + x, pos,
+        _paintChild(page.context, widget.child, margin.left + x, pos,
             pageFormat.height);
         pos -= betweenSpace;
       }
@@ -568,10 +567,10 @@ class MultiPage extends Page {
         child.layout(page.context, page.fullConstraints, parentUsesSize: false);
         assert(child.box != null);
         final xPos = isRTL
-            ? _margin.left + (availableWidth - child.box!.width)
-            : _margin.left;
+            ? margin.left + (availableWidth - child.box!.width)
+            : margin.left;
         _paintChild(
-            page.context, child, xPos, _margin.bottom, pageFormat.height);
+            page.context, child, xPos, margin.bottom, pageFormat.height);
       }
     }
   }

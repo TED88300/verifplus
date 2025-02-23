@@ -1,5 +1,4 @@
 
-import 'package:verifplus/Tools/DbSrv/Srv_DbTools.dart';
 
 class Parc_Imgs_Srv {
   int?    Parc_Imgid          = 0;
@@ -11,13 +10,13 @@ class Parc_Imgs_Srv {
   String? Parc_Imgs_Path       = "";
 
 
-  static Parc_Imgs_SrvInit(int wParc_Imgs_ParcsId, int wParc_Imgs_Type) {
-    Parc_Imgs_Srv wParc_Art = Parc_Imgs_Srv(0,0,0,0,"","","");
-    wParc_Art.Parc_Imgid  = -1;
-    wParc_Art.Parc_Imgs_ParcsId  = wParc_Imgs_ParcsId;
-    wParc_Art.Parc_Imgs_Type  = wParc_Imgs_Type;
-    wParc_Art.Parc_Imgs_Principale  = 0;
-    return wParc_Art;
+  static Parc_Imgs_SrvInit(int wparcImgsParcsid, int wparcImgsType) {
+    Parc_Imgs_Srv wparcArt = Parc_Imgs_Srv(0,0,0,0,"","","");
+    wparcArt.Parc_Imgid  = -1;
+    wparcArt.Parc_Imgs_ParcsId  = wparcImgsParcsid;
+    wparcArt.Parc_Imgs_Type  = wparcImgsType;
+    wparcArt.Parc_Imgs_Principale  = 0;
+    return wparcArt;
   }
 
 

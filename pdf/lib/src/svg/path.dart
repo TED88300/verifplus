@@ -38,19 +38,19 @@ class SvgPath extends SvgOperation {
   factory SvgPath.fromXml(
     XmlElement element,
     SvgPainter painter,
-    SvgBrush brush,
+    SvgBrush wbrush,
   ) {
     final d = element.getAttribute('d');
     if (d == null) {
       throw Exception('Path element must contain "d" attribute');
     }
 
-    final _brush = SvgBrush.fromXml(element, brush, painter);
+    final brush = SvgBrush.fromXml(element, wbrush, painter);
 
     return SvgPath(
       d,
-      _brush,
-      SvgClipPath.fromXml(element, painter, _brush),
+      brush,
+      SvgClipPath.fromXml(element, painter, brush),
       SvgTransform.fromXml(element),
       painter,
     );
@@ -59,22 +59,22 @@ class SvgPath extends SvgOperation {
   factory SvgPath.fromRectXml(
     XmlElement element,
     SvgPainter painter,
-    SvgBrush brush,
+    SvgBrush wbrush,
   ) {
-    final _brush = SvgBrush.fromXml(element, brush, painter);
+    final brush = SvgBrush.fromXml(element, wbrush, painter);
 
     final x =
-        SvgParser.getNumeric(element, 'x', _brush, defaultValue: 0)!.sizeValue;
+        SvgParser.getNumeric(element, 'x', brush, defaultValue: 0)!.sizeValue;
     final y =
-        SvgParser.getNumeric(element, 'y', _brush, defaultValue: 0)!.sizeValue;
+        SvgParser.getNumeric(element, 'y', brush, defaultValue: 0)!.sizeValue;
     final width =
-        SvgParser.getNumeric(element, 'width', _brush, defaultValue: 0)!
+        SvgParser.getNumeric(element, 'width', brush, defaultValue: 0)!
             .sizeValue;
     final height =
-        SvgParser.getNumeric(element, 'height', _brush, defaultValue: 0)!
+        SvgParser.getNumeric(element, 'height', brush, defaultValue: 0)!
             .sizeValue;
-    var rx = SvgParser.getNumeric(element, 'rx', _brush)?.sizeValue;
-    var ry = SvgParser.getNumeric(element, 'ry', _brush)?.sizeValue;
+    var rx = SvgParser.getNumeric(element, 'rx', brush)?.sizeValue;
+    var ry = SvgParser.getNumeric(element, 'ry', brush)?.sizeValue;
 
     ry ??= rx ?? 0;
     rx ??= ry;
@@ -88,8 +88,8 @@ class SvgPath extends SvgOperation {
 
     return SvgPath(
       d,
-      _brush,
-      SvgClipPath.fromXml(element, painter, _brush),
+      brush,
+      SvgClipPath.fromXml(element, painter, brush),
       SvgTransform.fromXml(element),
       painter,
     );
@@ -98,20 +98,20 @@ class SvgPath extends SvgOperation {
   factory SvgPath.fromCircleXml(
     XmlElement element,
     SvgPainter painter,
-    SvgBrush brush,
+    SvgBrush wbrush,
   ) {
-    final _brush = SvgBrush.fromXml(element, brush, painter);
+    final brush = SvgBrush.fromXml(element, wbrush, painter);
 
-    final cx = SvgParser.getNumeric(element, 'cx', _brush)!.sizeValue;
-    final cy = SvgParser.getNumeric(element, 'cy', _brush)!.sizeValue;
-    final r = SvgParser.getNumeric(element, 'r', _brush)!.sizeValue;
+    final cx = SvgParser.getNumeric(element, 'cx', brush)!.sizeValue;
+    final cy = SvgParser.getNumeric(element, 'cy', brush)!.sizeValue;
+    final r = SvgParser.getNumeric(element, 'r', brush)!.sizeValue;
     final d =
         'M${cx - r},${cy}A$r,$r 0,0,0 ${cx + r},${cy}A$r,$r 0,0,0 ${cx - r},${cy}z';
 
     return SvgPath(
       d,
-      _brush,
-      SvgClipPath.fromXml(element, painter, _brush),
+      brush,
+      SvgClipPath.fromXml(element, painter, brush),
       SvgTransform.fromXml(element),
       painter,
     );
@@ -120,21 +120,21 @@ class SvgPath extends SvgOperation {
   factory SvgPath.fromEllipseXml(
     XmlElement element,
     SvgPainter painter,
-    SvgBrush brush,
+    SvgBrush wbrush,
   ) {
-    final _brush = SvgBrush.fromXml(element, brush, painter);
+    final brush = SvgBrush.fromXml(element, wbrush, painter);
 
-    final cx = SvgParser.getNumeric(element, 'cx', _brush)!.sizeValue;
-    final cy = SvgParser.getNumeric(element, 'cy', _brush)!.sizeValue;
-    final rx = SvgParser.getNumeric(element, 'rx', _brush)!.sizeValue;
-    final ry = SvgParser.getNumeric(element, 'ry', _brush)!.sizeValue;
+    final cx = SvgParser.getNumeric(element, 'cx', brush)!.sizeValue;
+    final cy = SvgParser.getNumeric(element, 'cy', brush)!.sizeValue;
+    final rx = SvgParser.getNumeric(element, 'rx', brush)!.sizeValue;
+    final ry = SvgParser.getNumeric(element, 'ry', brush)!.sizeValue;
     final d =
         'M${cx - rx},${cy}A$rx,$ry 0,0,0 ${cx + rx},${cy}A$rx,$ry 0,0,0 ${cx - rx},${cy}z';
 
     return SvgPath(
       d,
-      _brush,
-      SvgClipPath.fromXml(element, painter, _brush),
+      brush,
+      SvgClipPath.fromXml(element, painter, brush),
       SvgTransform.fromXml(element),
       painter,
     );
@@ -143,17 +143,17 @@ class SvgPath extends SvgOperation {
   factory SvgPath.fromPolylineXml(
     XmlElement element,
     SvgPainter painter,
-    SvgBrush brush,
+    SvgBrush wbrush,
   ) {
     final points = element.getAttribute('points');
     final d = 'M$points';
 
-    final _brush = SvgBrush.fromXml(element, brush, painter);
+    final brush = SvgBrush.fromXml(element, wbrush, painter);
 
     return SvgPath(
       d,
-      _brush,
-      SvgClipPath.fromXml(element, painter, _brush),
+      brush,
+      SvgClipPath.fromXml(element, painter, brush),
       SvgTransform.fromXml(element),
       painter,
     );
@@ -162,16 +162,16 @@ class SvgPath extends SvgOperation {
   factory SvgPath.fromPolygonXml(
     XmlElement element,
     SvgPainter painter,
-    SvgBrush brush,
+    SvgBrush wbrush,
   ) {
     final points = element.getAttribute('points');
     final d = 'M${points}z';
-    final _brush = SvgBrush.fromXml(element, brush, painter);
+    final brush = SvgBrush.fromXml(element, wbrush, painter);
 
     return SvgPath(
       d,
-      _brush,
-      SvgClipPath.fromXml(element, painter, _brush),
+      brush,
+      SvgClipPath.fromXml(element, painter, brush),
       SvgTransform.fromXml(element),
       painter,
     );
@@ -180,20 +180,20 @@ class SvgPath extends SvgOperation {
   factory SvgPath.fromLineXml(
     XmlElement element,
     SvgPainter painter,
-    SvgBrush brush,
+    SvgBrush wbrush,
   ) {
-    final _brush = SvgBrush.fromXml(element, brush, painter);
+    final brush = SvgBrush.fromXml(element, wbrush, painter);
 
-    final x1 = SvgParser.getNumeric(element, 'x1', _brush)!.sizeValue;
-    final y1 = SvgParser.getNumeric(element, 'y1', _brush)!.sizeValue;
-    final x2 = SvgParser.getNumeric(element, 'x2', _brush)!.sizeValue;
-    final y2 = SvgParser.getNumeric(element, 'y2', _brush)!.sizeValue;
+    final x1 = SvgParser.getNumeric(element, 'x1', brush)!.sizeValue;
+    final y1 = SvgParser.getNumeric(element, 'y1', brush)!.sizeValue;
+    final x2 = SvgParser.getNumeric(element, 'x2', brush)!.sizeValue;
+    final y2 = SvgParser.getNumeric(element, 'y2', brush)!.sizeValue;
     final d = 'M$x1 $y1 $x2 $y2';
 
     return SvgPath(
       d,
-      _brush,
-      SvgClipPath.fromXml(element, painter, _brush),
+      brush,
+      SvgClipPath.fromXml(element, painter, brush),
       SvgTransform.fromXml(element),
       painter,
     );

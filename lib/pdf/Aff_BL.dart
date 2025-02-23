@@ -1,12 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
 import 'package:printing/printing.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 import 'package:verifplus/Tools/DbTools/DbTools.dart';
 import 'package:verifplus/pdf/Pdf_BL.dart';
-import 'package:verifplus/pdf/Pdf_CR.dart';
 import 'package:verifplus/Widget/Widget_Tools/gColors.dart';
 
 
@@ -75,7 +73,7 @@ class Aff_BLState extends State<Aff_BL> with SingleTickerProviderStateMixin {
           Navigator.of(context).pop();
         },
         child:
-        Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
+        const Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
           AutoSizeText(
             "BON DE LIVRAISON",
             maxLines: 1,
@@ -114,10 +112,10 @@ class Aff_BLState extends State<Aff_BL> with SingleTickerProviderStateMixin {
     return Scaffold(
       appBar: appBar(),
       body: !genBdC
-          ? Center(
-              child: new Scaffold(
-                  body: new Center(
-                child: new SizedBox(width: 40.0, height: 40.0, child: const CircularProgressIndicator()),
+          ? const Center(
+              child: Scaffold(
+                  body: Center(
+                child: SizedBox(width: 40.0, height: 40.0, child: CircularProgressIndicator()),
               )),
             )
           :PdfPreview(

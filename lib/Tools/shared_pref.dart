@@ -40,7 +40,7 @@ class SharedPref {
   static SaveFLS() async {
     String toSave = "$gIsIntroPass,$gIsRememberLogin";
 
-    print("$toSave");
+    print(toSave);
 
     file.writeAsString(toSave);
   }

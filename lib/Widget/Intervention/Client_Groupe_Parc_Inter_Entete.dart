@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:io';
 
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:fbroadcast/fbroadcast.dart';
@@ -30,6 +29,8 @@ import 'package:verifplus/Widget/Widget_Tools/gObj.dart';
 bool Client_Groupe_Parc_Inter_Entete_affAll = true;
 
 class Client_Groupe_Parc_Inter_Entete extends StatefulWidget {
+  const Client_Groupe_Parc_Inter_Entete({super.key});
+
   @override
   Client_Site_ParcState createState() => Client_Site_ParcState();
 }
@@ -74,14 +75,14 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
     await Client_Groupe_Parc_Tools.InitArt();
 
     DbTools.glfParc_Imgs = await DbTools.getParc_Imgs(DbTools.gParc_Ent.ParcsId!, 0);
-    if (DbTools.glfParc_Imgs.length > 0) {
+    if (DbTools.glfParc_Imgs.isNotEmpty) {
       imgList.clear();
 
       for (int i = 0; i < DbTools.glfParc_Imgs.length; i++) {
         var element = DbTools.glfParc_Imgs[i];
         var bytes = base64Decode(element.Parc_Imgs_Data!);
         Widget wWidget = Container();
-        if (bytes.length > 0) {
+        if (bytes.isNotEmpty) {
           wWidget = ClipRRect(
             borderRadius: BorderRadius.circular(8.0),
             child: Image.memory(
@@ -111,6 +112,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
     Reload();
   }
 
+  @override
   void initState() {
     subTitle = subTitleArray[0];
     widgets = [
@@ -138,7 +140,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
 
     String DescAffnewParamBig = "";
     Srv_DbTools.getParam_ParamMemDet("Param_Div", "${Srv_DbTools.gIntervention.Intervention_Parcs_Type}_Desc_Big");
-    if (Srv_DbTools.ListParam_Param.length > 0) DescAffnewParamBig = Srv_DbTools.ListParam_Param[0].Param_Param_Text;
+    if (Srv_DbTools.ListParam_Param.isNotEmpty) DescAffnewParamBig = Srv_DbTools.ListParam_Param[0].Param_Param_Text;
 
 
     DbTools.glfParcs_Desc = await DbTools.getParcs_Desc(DbTools.gParc_Ent.ParcsId!);
@@ -148,7 +150,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
       await DbTools.getParcs_Desc_Id_Type_Add(DbTools.gParc_Ent.ParcsId!, element.Param_Saisie_ID);
     }
 
-    DbTools.glfParcs_Desc.forEach((wParcs_Desc) {
+    for (var wParcs_Desc in DbTools.glfParcs_Desc) {
       switch (wParcs_Desc.ParcsDesc_Type) {
         case "DESC":
         case "DESC2":
@@ -215,141 +217,142 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
           DescAff3 = "${Srv_DbTools.REF_Lib} ${Srv_DbTools.gArticle_EbpEnt.Article_descriptionCommercialeEnClair}";
           break;
       }
-    });
+    }
 
 
 
     print("⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ${Srv_DbTools.DESC_Lib}  ${Srv_DbTools.PDT_Lib}");
 
-    List<Param_Saisie> ListParam_Saisie_Tmp = [];
-    ListParam_Saisie_Tmp.addAll(Srv_DbTools.ListParam_Saisie);
-    ListParam_Saisie_Tmp.addAll(Srv_DbTools.ListParam_Saisie_Base);
+    List<Param_Saisie> listparamSaisieTmp = [];
+    listparamSaisieTmp.addAll(Srv_DbTools.ListParam_Saisie);
+    listparamSaisieTmp.addAll(Srv_DbTools.ListParam_Saisie_Base);
 
     DescAff = "N°${DbTools.gParc_Ent.Parcs_order} ${DbTools.gParc_Ent.Parcs_NoSpec!.isEmpty ? '': DbTools.gParc_Ent.Parcs_NoSpec}\n";
 
-    if (DbTools.gParc_Ent.Parcs_Intervention_Timer == null) DbTools.gParc_Ent.Parcs_Intervention_Timer = 0;
+    DbTools.gParc_Ent.Parcs_Intervention_Timer ??= 0;
 
     print("<<<<<<<<<<<<<<<<<<< StrTimer A ${DbTools.gParc_Ent.Parcs_Intervention_Timer}");
     StrTimer = gObj.printDuration(Duration(seconds: DbTools.gParc_Ent.Parcs_Intervention_Timer!));
-    print("<<<<<<<<<<<<<<<<<<< StrTimer B ${StrTimer}");
+    print("<<<<<<<<<<<<<<<<<<< StrTimer B $StrTimer");
 
 //    PDT POIDS PRS MOB ANN FAB
 
-    ListParam_Saisie_Tmp.sort(Srv_DbTools.affL1SortComparison);
-    ListParam_Saisie_Tmp.forEach((element) async {
+    listparamSaisieTmp.sort(Srv_DbTools.affL1SortComparison);
+    listparamSaisieTmp.forEach((element) async {
 
       if (element.Param_Saisie_Affichage_L1) {
         if (element.Param_Saisie_ID.compareTo("FREQ") == 0) {
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FREQ_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FREQ_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("ANN") == 0) {
           DbTools.gDateMS = DbTools.gParc_Ent.Parcs_ANN_Label!;
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ANN_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ANN_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("AFAB") == 0) {
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FAB_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FAB_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("NIV") == 0) {
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_NIV_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_NIV_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("ZNE") == 0) {
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ZNE_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ZNE_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("EMP") == 0) {
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_EMP_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_EMP_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("LOT") == 0) {
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_LOT_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_LOT_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("SERIE") == 0) {
-          DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_SERIE_Label!, element.Param_Saisie_ID)}";
+          DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_SERIE_Label!, element.Param_Saisie_ID)}";
         } else {
           // !!! Suppression Doublon
           bool trv = false;
           for (int i = 0; i < DbTools.glfParcs_Desc.length; i++) {
-            Parc_Desc wParc_Desc = DbTools.glfParcs_Desc[i];
-            if (element.Param_Saisie_ID == wParc_Desc.ParcsDesc_Type) {
+            Parc_Desc wparcDesc = DbTools.glfParcs_Desc[i];
+            if (element.Param_Saisie_ID == wparcDesc.ParcsDesc_Type) {
               if (!trv)
                 {
-                  DescAff = "${DescAff} ${gColors.AbrevTxt_Param_Param(wParc_Desc.ParcsDesc_Lib!, element.Param_Saisie_ID)}";
-                  print("⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ${wParc_Desc.toMap()}");
+                  DescAff = "$DescAff ${gColors.AbrevTxt_Param_Param(wparcDesc.ParcsDesc_Lib!, element.Param_Saisie_ID)}";
+                  print("⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ⛔︎ ${wparcDesc.toMap()}");
                   trv = true;
                 }
               else
                 {
-                  DbTools.deleteParc_Desc(wParc_Desc.ParcsDescId!);
+                  DbTools.deleteParc_Desc(wparcDesc.ParcsDescId!);
                 }
             }
-          };
+          }
         }
       }
-     print(">>>>>>>>>>>>>>>>>>>>>>>> DescAff ${DescAff}");
+     print(">>>>>>>>>>>>>>>>>>>>>>>> DescAff $DescAff");
     });
 
     ///////////
     // BIG ////
     ///////////
 
-    DescAff = "${DescAffnewParamBig}";
-    List<String?>? Parcs_Cols = [];
-    for (int j = 0; j < ListParam_Saisie_Tmp.length; j++) {
-      Param_Saisie param_Saisie = ListParam_Saisie_Tmp[j];
-      if (param_Saisie.Param_Saisie_Affichage.compareTo("DESC") == 0) {
-        if (param_Saisie.Param_Saisie_ID.compareTo("FREQ") == 0) {
-          DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FREQ_Label!, param_Saisie.Param_Saisie_ID)}");
-        } else if (param_Saisie.Param_Saisie_ID.compareTo("ANN") == 0) {
+    DescAff = DescAffnewParamBig;
+    List<String?>? parcsCols = [];
+    for (int j = 0; j < listparamSaisieTmp.length; j++) {
+      Param_Saisie paramSaisie = listparamSaisieTmp[j];
+      if (paramSaisie.Param_Saisie_Affichage.compareTo("DESC") == 0) {
+        if (paramSaisie.Param_Saisie_ID.compareTo("FREQ") == 0) {
+          DescAff = DescAff.replaceAll(paramSaisie.Param_Saisie_ID, gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FREQ_Label!, paramSaisie.Param_Saisie_ID));
+        } else if (paramSaisie.Param_Saisie_ID.compareTo("ANN") == 0) {
           DbTools.gDateMS = DbTools.gParc_Ent.Parcs_ANN_Label!;
-          String s = gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ANN_Label!, param_Saisie.Param_Saisie_ID);
+          String s = gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ANN_Label!, paramSaisie.Param_Saisie_ID);
           int pos = s.indexOf('-');
           String ws = (pos != -1) ? s.substring(pos + 1) : s;
-          DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${ws}");
-        } else if (param_Saisie.Param_Saisie_ID.compareTo("AFAB") == 0) {
-          DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FAB_Label!, param_Saisie.Param_Saisie_ID)}");
-        } else if (param_Saisie.Param_Saisie_ID.compareTo("NIV") == 0) {
-          DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_NIV_Label!, param_Saisie.Param_Saisie_ID)}");
-        } else if (param_Saisie.Param_Saisie_ID.compareTo("ZNE") == 0) {
-          DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ZNE_Label!, param_Saisie.Param_Saisie_ID)}");
-        } else if (param_Saisie.Param_Saisie_ID.compareTo("EMP") == 0) {
-          DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_EMP_Label!, param_Saisie.Param_Saisie_ID)}");
-        } else if (param_Saisie.Param_Saisie_ID.compareTo("LOT") == 0) {
-          DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_LOT_Label!, param_Saisie.Param_Saisie_ID)}");
-        } else if (param_Saisie.Param_Saisie_ID.compareTo("SERIE") == 0) {
-          DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_SERIE_Label!, param_Saisie.Param_Saisie_ID)}");
+          DescAff = DescAff.replaceAll(paramSaisie.Param_Saisie_ID, ws);
+        } else if (paramSaisie.Param_Saisie_ID.compareTo("AFAB") == 0) {
+          DescAff = DescAff.replaceAll(paramSaisie.Param_Saisie_ID, gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FAB_Label!, paramSaisie.Param_Saisie_ID));
+        } else if (paramSaisie.Param_Saisie_ID.compareTo("NIV") == 0) {
+          DescAff = DescAff.replaceAll(paramSaisie.Param_Saisie_ID, gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_NIV_Label!, paramSaisie.Param_Saisie_ID));
+        } else if (paramSaisie.Param_Saisie_ID.compareTo("ZNE") == 0) {
+          DescAff = DescAff.replaceAll(paramSaisie.Param_Saisie_ID, gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ZNE_Label!, paramSaisie.Param_Saisie_ID));
+        } else if (paramSaisie.Param_Saisie_ID.compareTo("EMP") == 0) {
+          DescAff = DescAff.replaceAll(paramSaisie.Param_Saisie_ID, gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_EMP_Label!, paramSaisie.Param_Saisie_ID));
+        } else if (paramSaisie.Param_Saisie_ID.compareTo("LOT") == 0) {
+          DescAff = DescAff.replaceAll(paramSaisie.Param_Saisie_ID, gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_LOT_Label!, paramSaisie.Param_Saisie_ID));
+        } else if (paramSaisie.Param_Saisie_ID.compareTo("SERIE") == 0) {
+          DescAff = DescAff.replaceAll(paramSaisie.Param_Saisie_ID, gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_SERIE_Label!, paramSaisie.Param_Saisie_ID));
         } else {
           bool trv = false;
           for (int j = 0; j < DbTools.glfParcs_Desc.length; j++) {
             Parc_Desc element2 = DbTools.glfParcs_Desc[j];
-            if (DbTools.gParc_Ent.ParcsId == element2.ParcsDesc_ParcsId && param_Saisie.Param_Saisie_ID == element2.ParcsDesc_Type) {
-              if (param_Saisie.Param_Saisie_ID == "POIDS")
-                DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, param_Saisie.Param_Saisie_ID)}");
-              else
-                DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${element2.ParcsDesc_Lib}");
+            if (DbTools.gParc_Ent.ParcsId == element2.ParcsDesc_ParcsId && paramSaisie.Param_Saisie_ID == element2.ParcsDesc_Type) {
+              if (paramSaisie.Param_Saisie_ID == "POIDS") {
+                DescAff = DescAff.replaceAll(paramSaisie.Param_Saisie_ID, gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, paramSaisie.Param_Saisie_ID));
+              } else {
+                DescAff = DescAff.replaceAll(paramSaisie.Param_Saisie_ID, "${element2.ParcsDesc_Lib}");
+              }
 
               trv = true;
             }
           }
-          if (!trv) DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "");
+          if (!trv) DescAff = DescAff.replaceAll(paramSaisie.Param_Saisie_ID, "");
         }
-      } else if (param_Saisie.Param_Saisie_ID.compareTo("DESC2") == 0) {
+      } else if (paramSaisie.Param_Saisie_ID.compareTo("DESC2") == 0) {
         bool trv = false;
         for (int j = 0; j < DbTools.glfParcs_Desc.length; j++) {
           Parc_Desc element2 = DbTools.glfParcs_Desc[j];
-          if (DbTools.gParc_Ent.ParcsId == element2.ParcsDesc_ParcsId && param_Saisie.Param_Saisie_ID == element2.ParcsDesc_Type) {
-            DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, param_Saisie.Param_Saisie_ID)}");
+          if (DbTools.gParc_Ent.ParcsId == element2.ParcsDesc_ParcsId && paramSaisie.Param_Saisie_ID == element2.ParcsDesc_Type) {
+            DescAff = DescAff.replaceAll(paramSaisie.Param_Saisie_ID, gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, paramSaisie.Param_Saisie_ID));
             trv = true;
           }
         }
-        if (!trv) DescAff = DescAff.replaceAll("${param_Saisie.Param_Saisie_ID}", "");
+        if (!trv) DescAff = DescAff.replaceAll(paramSaisie.Param_Saisie_ID, "");
       }
 
-      if (param_Saisie.Param_Saisie_Affichage.compareTo("COL") == 0) {
+      if (paramSaisie.Param_Saisie_Affichage.compareTo("COL") == 0) {
         for (int j = 0; j < DbTools.glfParcs_Desc.length; j++) {
           Parc_Desc element2 = DbTools.glfParcs_Desc[j];
-          if (DbTools.gParc_Ent.ParcsId == element2.ParcsDesc_ParcsId && param_Saisie.Param_Saisie_ID == element2.ParcsDesc_Type) {
-            Parcs_Cols.add(element2.ParcsDesc_Lib);
+          if (DbTools.gParc_Ent.ParcsId == element2.ParcsDesc_ParcsId && paramSaisie.Param_Saisie_ID == element2.ParcsDesc_Type) {
+            parcsCols.add(element2.ParcsDesc_Lib);
           }
         }
-        ;
       }
     }
 
-    if (DbTools.gParc_Ent.Parcs_NoSpec!.isNotEmpty)
+    if (DbTools.gParc_Ent.Parcs_NoSpec!.isNotEmpty) {
       DescAff = DescAff.replaceAll("SPEC ", "N° ${DbTools.gParc_Ent.Parcs_order} / N°Sp : ${DbTools.gParc_Ent.Parcs_NoSpec}\n");
-    else
+    } else {
       DescAff = DescAff.replaceAll("SPEC ", "N° ${DbTools.gParc_Ent.Parcs_order}\n");
+    }
 
 
 //    DescAff = "N° ${DbTools.gParc_Ent.Parcs_order} / ${DescAff}";
@@ -361,7 +364,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
     wTmp = wTmp.replaceAll("/", "");
     wTmp = wTmp.replaceAll(" ", "");
 
-    if (wTmp.length == 0) DescAff = "";
+    if (wTmp.isEmpty) DescAff = "";
 
     DbTools.gParc_Ent.Parcs_Date_DescBig = DescAff;
 
@@ -370,37 +373,37 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
 
 
     DescAff2 = "";
-    ListParam_Saisie_Tmp.sort(Srv_DbTools.affL2SortComparison);
-    ListParam_Saisie_Tmp.forEach((element) async {
+    listparamSaisieTmp.sort(Srv_DbTools.affL2SortComparison);
+    listparamSaisieTmp.forEach((element) async {
       if (element.Param_Saisie_Affichage_L2) {
         if (element.Param_Saisie_ID.compareTo("FREQ") == 0) {
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FREQ_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FREQ_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("ANN") == 0) {
           DbTools.gDateMS = DbTools.gParc_Ent.Parcs_ANN_Label!;
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ANN_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ANN_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("AFAB") == 0) {
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FAB_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_FAB_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("NIV") == 0) {
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_NIV_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_NIV_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("ZNE") == 0) {
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ZNE_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_ZNE_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("EMP") == 0) {
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_EMP_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_EMP_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("LOT") == 0) {
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_LOT_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_LOT_Label!, element.Param_Saisie_ID)}";
         } else if (element.Param_Saisie_ID.compareTo("SERIE") == 0) {
-          DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_SERIE_Label!, element.Param_Saisie_ID)}";
+          DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(DbTools.gParc_Ent.Parcs_SERIE_Label!, element.Param_Saisie_ID)}";
         } else {
           DbTools.glfParcs_Desc.forEach((element2) async {
             if (element.Param_Saisie_ID == element2.ParcsDesc_Type) {
-              DescAff2 = "${DescAff2} ${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, element.Param_Saisie_ID)}";
+              DescAff2 = "$DescAff2 ${gColors.AbrevTxt_Param_Param(element2.ParcsDesc_Lib!, element.Param_Saisie_ID)}";
             }
           });
         }
       }
     });
 
-    DbTools.gParc_Ent.Parcs_Date_DescBig = "${DescAff}";
+    DbTools.gParc_Ent.Parcs_Date_DescBig = DescAff;
     DbTools.gParc_Ent.Parcs_Date_Desc2 = "${DbTools.gParc_Ent.Parcs_FAB_Label} / ${Srv_DbTools.GAM_Lib}";
     DbTools.gParc_Ent.Parcs_Date_Desc3 =  "${DbTools.gParc_Ent.Parcs_ZNE_Label} / ${DbTools.gParc_Ent.Parcs_EMP_Label} / ${DbTools.gParc_Ent.Parcs_NIV_Label}";
     await DbTools.updateParc_Ent(DbTools.gParc_Ent);
@@ -447,7 +450,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
             await Client_Dialog.Dialogs_Client(context);
           },
           child: AutoSizeText(
-            "${Srv_DbTools.DESC_Lib.length == 0 || Srv_DbTools.DESC_Lib == "---" ? DbTools.OrgLib : Srv_DbTools.DESC_Lib}",
+            Srv_DbTools.DESC_Lib.isEmpty || Srv_DbTools.DESC_Lib == "---" ? DbTools.OrgLib : Srv_DbTools.DESC_Lib,
             style: gColors.bodyTitle1_B_G_20,
             textAlign: TextAlign.center,
           ),
@@ -495,7 +498,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
           fit: StackFit.expand,
           children: <Widget>[
             Padding(
-                padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                 child: Column(
                   children: [
                     Client_Groupe_Parc_Inter_Entete_affAll ? Container() : gObj.InfoWidget(context, false),
@@ -505,9 +508,9 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                       child: Container(
                         color: gColors.LinearGradient2,
                         height: 47,
-                        padding: EdgeInsets.fromLTRB(10, 15, 10, 10),
+                        padding: const EdgeInsets.fromLTRB(10, 15, 10, 10),
                         child: Row(mainAxisAlignment: MainAxisAlignment.center, crossAxisAlignment: CrossAxisAlignment.center, children: [
-                          Container(
+                          SizedBox(
                             width: 60,
                             child: GestureDetector(
                               //You need to make my child interactive
@@ -524,14 +527,14 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                           ),
                           Expanded(
                             child: Text(
-                              "${wTitre2}",
+                              wTitre2,
                               maxLines: 1,
                               style: gColors.bodyTitle1_B_Gr,
                             ),
                           ),
-                          Container(
+                          SizedBox(
                             width: 60,
-                            child: (Srv_DbTools.gIntervention.Intervention_Status == "En cours") ? CounterScreen() : Text("${StrTimer}"),
+                            child: (Srv_DbTools.gIntervention.Intervention_Status == "En cours") ? const CounterScreen() : Text(StrTimer),
                           ),
                         ]),
                       ),
@@ -541,7 +544,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         IconButton(
-                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                           icon: DbTools.gParc_Ent.Parcs_QRCode!.isEmpty ? Image.asset("assets/images/QrCode.png") : Image.asset("assets/images/QrCodeok.png"),
                           onPressed: () async {
                             await gDialogs.Dialog_QrCode(context);
@@ -563,7 +566,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
 //                          Expanded(child:
                               Container(
 //                            width: 600,
-                            padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                            padding: const EdgeInsets.fromLTRB(0, 10, 0, 0),
                             child: Column(
                               children: [
                                 Container(
@@ -571,7 +574,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                                 ),
                                 Container(
                                   child: Text(
-                                    "${DescAff}",
+                                    DescAff,
                                     style: gColors.bodyTitle1_B_G_20,
                                     textAlign: TextAlign.center,
                                   ),
@@ -579,7 +582,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                                 Container(
                                   height: 5,
                                 ),
-                                Container(
+                                SizedBox(
                                   width: 500,
                                   child: Text(
                                     DescAff2,
@@ -590,7 +593,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                                 Container(
                                   height: 5,
                                 ),
-                                Container(
+                                SizedBox(
                                   width: 500,
                                   child: Text(
                                     DescAff3,
@@ -604,7 +607,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                         ),
                         //   ),
                         IconButton(
-                          padding: EdgeInsets.fromLTRB(0, 0, 0, 0),
+                          padding: const EdgeInsets.fromLTRB(0, 0, 0, 0),
                           icon: isImage ? imgList[0] : Image.asset("assets/images/Icon_Photo.png"),
                           onPressed: () async {
                             print("on Photo");
@@ -626,7 +629,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                                 child: Container(
                                   foregroundDecoration: Srv_DbTools.Hab_PDT > 0
                                       ? null
-                                      : BoxDecoration(
+                                      : const BoxDecoration(
                                           color: Colors.grey,
                                           backgroundBlendMode: BlendMode.saturation,
                                         ),
@@ -634,9 +637,9 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
                                     children: [
                                       Expanded(
                                         child: PageView(
-                                          children: widgets,
                                           controller: pageController,
                                           onPageChanged: onBottomIconPressed,
+                                          children: widgets,
                                         ),
                                       ),
                                       Container(
@@ -706,7 +709,7 @@ class Client_Site_ParcState extends State<Client_Groupe_Parc_Inter_Entete> with 
     return Container(
       width: gColors.MediaQuerysizewidth,
 //        margin: EdgeInsets.fromLTRB(10, 0, 10, 0),
-      padding: EdgeInsets.fromLTRB(16, 5, 10, 8),
+      padding: const EdgeInsets.fromLTRB(16, 5, 10, 8),
       color: gColors.white,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,

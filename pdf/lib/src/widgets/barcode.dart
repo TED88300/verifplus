@@ -260,7 +260,7 @@ class BarcodeWidget extends StatelessWidget {
           lineSpacing: 1,
           fontSize: height != null ? height! * 0.2 : null,
         );
-    final _textStyle = defaultStyle.merge(textStyle);
+    final textStyle = defaultStyle.merge(this.textStyle);
 
     Widget child = _BarcodeWidget(
       dataBytes,
@@ -268,7 +268,7 @@ class BarcodeWidget extends StatelessWidget {
       barcode,
       color,
       drawText,
-      _textStyle,
+      textStyle,
       textPadding,
     );
 
